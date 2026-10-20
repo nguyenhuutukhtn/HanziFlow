@@ -195,6 +195,8 @@ Each published audio track has a timeline, `timeline_<track>.json`, listed in `c
   switch TTS to ElevenLabs' with-timestamps endpoint (store the alignment next to
   each cached clip), and use local forced alignment for clips already in the cache.
   Character times must be divided by the segment's `playback_speed`.
+- **Cue metadata:** each cue also carries `language` (`zh-CN` / `vi-VN`), `type` (segment type) and `section_id`, so clients never re-derive them from `reference.json` for playback decisions (Chinese-only mode, section replay).
+- **Sections:** a top-level `sections` list, one entry per run of consecutive segments with the same `activity`: `{ "id", "title" (the activity label, e.g. "Nghe chuyện"), "start_ms", "end_ms" }`, contiguous and covering the whole track. Section boundaries include the silences inside the run.
 
 ```json
 {
@@ -203,8 +205,11 @@ Each published audio track has a timeline, `timeline_<track>.json`, listed in `c
   "lesson_version": 2,
   "track": "guided",
   "duration_ms": 204889,
+  "sections": [
+    { "id": "sec_03", "title": "Nghe chuyện", "start_ms": 30602, "end_ms": 70059 }
+  ],
   "cues": [
-    { "line_id": "r1_food", "start_ms": 12400, "end_ms": 14800 }
+    { "line_id": "r1_food", "start_ms": 12400, "end_ms": 14800, "language": "zh-CN", "type": "prompt", "section_id": "sec_05" }
   ]
 }
 ```
@@ -278,6 +283,26 @@ Display is one dataset with several views, switched instantly, never separate au
 The learner chooses the default view in Settings, and can change it per track (guided / practice) and on the fly in the player. Recommended default is text hidden or pinyin only, because audio is the main channel (see [lesson design principles](lesson_design_principles.md)), but it is a preference, not a lock. Opening the text is normal and never penalized: if a line still can't be heard or said correctly after many listens, looking at it is the right move. The app does not count opening the text against progress.
 
 One rule is not configurable: a `model_answer` line is never shown before the audio reaches it, so the answer gap for speaking aloud is preserved whatever view is selected.
+
+### Chinese-only listening ("Chỉ nghe tiếng Trung")
+
+For a learner who has heard a lesson many times and now understands the Chinese directly, so the Vietnamese restatement gets in the way. Decided 2026-10-20.
+
+- A toggle in Now Playing (and in Settings as a per-track default), stored per lesson + track, always off for a lesson's first listen. Manual only: no automatic switch based on listen counts.
+- When on, `PlaybackService` skips every `vi-VN` cue and the silence that follows it, jumping to the next `zh-CN` cue with a short natural gap (~400 ms) instead of a long pause. All Chinese stays, including model answers whose question was asked in Vietnamese, and the answer gaps between Chinese lines are kept as they are.
+- Implemented in the service from the timeline (works with the screen off and the UI closed), reusing the loop/seek mechanism; no regenerated audio and no extra TTS.
+- Vietnamese text is hidden in the transcript while it is on. The player shows the effective duration of the remaining audio.
+- Seeking, tap-to-seek, headset next/previous and section replay all respect it (never land inside a skipped Vietnamese cue).
+
+### Section replay
+
+A lesson is divided into sections (timeline `sections`, from consecutive segments with the same `activity`, e.g. "Nghe chuyện", "Hỏi đáp", "Kể lại"). Decided 2026-10-20.
+
+- Now Playing shows a section list (chapter style) and section markers on the seek bar; tapping a section jumps to its start.
+- "Lặp phần này" repeats the current section **up to 5 times**, then playback continues into the next section automatically. The player shows "Lần n/5".
+- The learner can end the repetition at any moment: **"Bỏ lặp"** (finish this pass, then continue) and **"Sang phần sau"** (jump to the next section now). Both are also reachable from the mini-player while a section loop is active.
+- Section loop and line loop share the service's single loop state (only one is active at a time); state is published to controllers like the line loop.
+- Combined with Chinese-only mode, repeating "Nghe chuyện" works as a self-made Chinese-only practice track.
 
 ### Progress sync
 
