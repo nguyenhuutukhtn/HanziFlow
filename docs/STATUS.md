@@ -22,9 +22,11 @@ Last updated: 2026-10-20 · branch `app-publish-pipeline` (not merged to `main`)
 
 ## Next (in order)
 
-1. **G2** — rebuild UI per `docs/ui/` (bottom nav, mini-player, Now Playing, Learn, Review/test flow, Settings, lookup copy/share). Includes the pass-rule change in `kmp/shared` TestSession: passed = no first-try mistakes and no reveal.
-2. **D2** — Android sign-in + progress sync.
-3. Known follow-ups: test question type balancing (C2: cloze dominates); merge multi-character names in tokenizer + vocab (A3: 李明 split into 李/明).
+1. **G2a** — app shell: theme tokens + bundled Noto fonts, bottom nav (Học / Ôn tập / Cài đặt), persistent mini-player, Now Playing as a full-screen route, track display names.
+2. **G2b** — Learn tab card states + lesson detail, lookup sheet actions (copy word/line, select text, send to), Settings tab.
+3. **G2c** — Review tab + test flow + result; pass-rule change in `kmp/shared` TestSession (passed = no first-try mistakes and no reveal); attempts stored in Room.
+4. **D2** — Android sign-in + progress sync. Starts with a migration fix: lesson_progress merge monotonic in a trigger (status max started<listened<passed, keep earliest passed_at, never downgrade even if the incoming write is newer); drop the update policy on test_attempts (push = insert ignore-duplicates).
+5. Known follow-ups: test question type balancing (C2: cloze dominates); merge multi-character names in tokenizer + vocab (A3: 李明 split into 李/明).
 
 ## Open decisions (user)
 
