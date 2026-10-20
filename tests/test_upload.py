@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 from pathlib import Path
 from urllib.parse import unquote
 
@@ -22,11 +23,20 @@ from mandarin_course.upload import (
 
 URL = "https://example.supabase.co"
 SERVICE_KEY = "test-service-role-key-0123456789abcdef"
+OBJECT_PREFIX = "/storage/v1/object/course/"
+PUBLIC_PREFIX = "/storage/v1/object/public/course/"
+LIST_PATH = "/storage/v1/object/list/course"
+DELETE_PATH = "/storage/v1/object/course"
+
+CATALOG_V1 = json.dumps({
+    "schema_version": 1, "catalog_version": 1,
+    "lessons": [{"id": "lesson_001", "version": 1, "order": 1}],
+}).encode()
 
 FILES = {
     "lessons/lesson_001/v1/lesson.json": b'{"lesson_id": "lesson_001"}',
     "lessons/lesson_001/v1/guided.mp3": b"ID3\x04\x00\x00fake-audio",
-    "catalog.json": b'{"schema_version": 1, "catalog_version": 1}',
+    "catalog.json": CATALOG_V1,
 }
 
 
@@ -40,46 +50,93 @@ class FakeStorage:
     @staticmethod
     def _relative(request: httpx.Request) -> str:
         path = unquote(request.url.path)
-        return path.split("/storage/v1/object/course/", 1)[1]
+        return path.split(OBJECT_PREFIX, 1)[1]
 
     def handler(self, request: httpx.Request) -> httpx.Response:
         self.requests.append(request)
-        relative = self._relative(request)
-        if request.method == "HEAD":
-            data = self.objects.get(relative)
-            if data is None:
-                return httpx.Response(
-                    400,
-                    json={"statusCode": "404", "error": "not_found", "message": "Object not found"},
-                )
+        path = unquote(request.url.path)
+        if path == LIST_PATH:
+            return self._list(request)
+        if path == DELETE_PATH and request.method == "DELETE":
+            return self._delete(request)
+        if path.startswith(PUBLIC_PREFIX):
+            return self._get(path[len(PUBLIC_PREFIX):])
+        if path.startswith(OBJECT_PREFIX):
+            relative = path[len(OBJECT_PREFIX):]
+            if request.method == "HEAD":
+                return self._head(relative)
+            if request.method == "POST":
+                return self._post(relative, request)
+        return httpx.Response(404)
+
+    def _head(self, relative: str) -> httpx.Response:
+        data = self.objects.get(relative)
+        if data is None:
             return httpx.Response(
-                200,
-                headers={
-                    "content-length": str(len(data)),
-                    "etag": hashlib.md5(data, usedforsecurity=False).hexdigest(),
-                },
+                400,
+                json={"statusCode": "404", "error": "not_found", "message": "Object not found"},
             )
-        assert request.method == "POST"
+        return httpx.Response(
+            200,
+            headers={
+                "content-length": str(len(data)),
+                "etag": hashlib.md5(data, usedforsecurity=False).hexdigest(),
+            },
+        )
+
+    def _post(self, relative: str, request: httpx.Request) -> httpx.Response:
         self.objects[relative] = request.read()
         return httpx.Response(200, json={"Key": relative})
+
+    def _get(self, relative: str) -> httpx.Response:
+        data = self.objects.get(relative)
+        if data is None:
+            return httpx.Response(400, json={"message": "Object not found"})
+        return httpx.Response(200, content=data)
+
+    def _list(self, request: httpx.Request) -> httpx.Response:
+        body = json.loads(request.content)
+        prefix = body.get("prefix", "")
+        entries: dict[str, dict] = {}
+        for key, data in self.objects.items():
+            if not key.startswith(prefix):
+                continue
+            remainder = key[len(prefix):]
+            if not remainder:
+                continue
+            name = remainder.split("/", 1)[0]
+            if "/" in remainder:
+                entries.setdefault(name, {"name": name, "id": None, "metadata": None})
+            else:
+                entries[name] = {"name": name, "id": "fake-id", "metadata": {"size": len(data)}}
+        return httpx.Response(200, json=list(entries.values()))
+
+    def _delete(self, request: httpx.Request) -> httpx.Response:
+        body = json.loads(request.content)
+        removed = []
+        for prefix in body.get("prefixes", []):
+            if prefix in self.objects:
+                del self.objects[prefix]
+                removed.append(prefix)
+        return httpx.Response(200, json=removed)
 
     def transport(self) -> httpx.MockTransport:
         return httpx.MockTransport(self.handler)
 
     def uploads(self) -> list[str]:
-        return [self._relative(request) for request in self.requests if request.method == "POST"]
+        return [self._relative(request) for request in self.requests if request.method == "POST" and request.url.path.startswith(OBJECT_PREFIX)]
 
     def request_for(self, method: str, relative: str) -> httpx.Request:
         return next(
             request
             for request in self.requests
-            if request.method == method and self._relative(request) == relative
+            if request.method == method and request.url.path.startswith(OBJECT_PREFIX) and self._relative(request) == relative
         )
 
 
-def write_package(tmp_path: Path) -> Path:
+def write_package(tmp_path: Path, files: dict[str, bytes] = FILES) -> Path:
     root = tmp_path / "publish"
-    for relative, content in FILES.items():
+    for relative, content in files.items():
         path = root / relative
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(content)
@@ -90,10 +147,10 @@ def config() -> StorageConfig:
     return StorageConfig(url=URL, service_key=SERVICE_KEY)
 
 
-def run(root: Path, storage: FakeStorage, *, dry_run: bool = False):
+def run(root: Path, storage: FakeStorage, *, dry_run: bool = False, prune: bool = True):
     lines: list[str] = []
     report = upload_package(
-        root, config(), dry_run=dry_run, echo=lines.append, transport=storage.transport()
+        root, config(), dry_run=dry_run, prune=prune, echo=lines.append, transport=storage.transport()
     )
     return report, lines
 
@@ -135,13 +192,12 @@ def test_unchanged_versioned_file_is_skipped(tmp_path):
     root = write_package(tmp_path)
     storage = FakeStorage({"lessons/lesson_001/v1/guided.mp3": FILES["lessons/lesson_001/v1/guided.mp3"]})
 
-    report, lines = run(root, storage)
+    report, _ = run(root, storage)
 
     assert "lessons/lesson_001/v1/guided.mp3" not in storage.uploads()
     assert report.skipped == 1
     assert report.uploaded == 2
     assert "catalog.json" in storage.uploads()
-    assert any("skip" in line and "guided.mp3" in line for line in lines)
 
 
 @pytest.mark.parametrize(
@@ -159,21 +215,132 @@ def test_changed_versioned_file_is_never_overwritten(tmp_path, remote):
         run(root, storage)
 
     assert storage.uploads() == []
-    assert "catalog.json" not in storage.objects or storage.objects["catalog.json"] != FILES["catalog.json"]
+    assert storage.objects.get("catalog.json") != FILES["catalog.json"]
 
 
-def test_dry_run_makes_no_write_calls(tmp_path):
+def test_default_output_is_short_and_reports_counts(tmp_path):
     root = write_package(tmp_path)
     storage = FakeStorage()
 
+    report, lines = run(root, storage)
+
+    assert len(lines) <= 20
+    assert any(line.startswith("Uploaded 3 file(s)") for line in lines)
+    assert any(line.startswith("Verified: ok") for line in lines)
+    assert any(line.startswith("Pruned: 0 remote object(s), 0 local version dir(s)") for line in lines)
+    assert report.verified is True
+    assert report.pruned_remote == 0
+    assert report.pruned_local == 0
+
+
+def test_verification_checks_every_new_version_file_from_the_public_endpoint(tmp_path):
+    root = write_package(tmp_path)
+    storage = FakeStorage()
+
+    run(root, storage)
+
+    get_requests = [request for request in storage.requests if request.method == "GET"]
+    fetched = {unquote(request.url.path).split(PUBLIC_PREFIX, 1)[1] for request in get_requests}
+    assert fetched == set(FILES)
+
+
+def test_verification_failure_raises_and_deletes_nothing(tmp_path, monkeypatch):
+    root = write_package(tmp_path)
+    storage = FakeStorage()
+    real_get = storage._get
+
+    def tampered_get(relative: str) -> httpx.Response:
+        if relative == "lessons/lesson_001/v1/guided.mp3":
+            return httpx.Response(200, content=b"not-what-was-uploaded")
+        return real_get(relative)
+
+    monkeypatch.setattr(storage, "_get", tampered_get)
+
+    with pytest.raises(UploadError, match="Verification failed"):
+        run(root, storage)
+
+    # Nothing was pruned: every uploaded object is still present.
+    assert set(FILES).issubset(storage.objects)
+
+
+def test_prune_removes_only_superseded_version_remote_and_local(tmp_path):
+    old_and_new = {
+        "lessons/lesson_001/v1/lesson.json": b'{"lesson_id": "lesson_001", "version": 1}',
+        "lessons/lesson_001/v1/guided.mp3": b"ID3 old audio in v1",
+        "lessons/lesson_001/v2/lesson.json": b'{"lesson_id": "lesson_001", "version": 2}',
+        "lessons/lesson_001/v2/guided.mp3": b"ID3 new audio in v2",
+        "catalog.json": json.dumps({
+            "schema_version": 1, "catalog_version": 2,
+            "lessons": [{"id": "lesson_001", "version": 2, "order": 1}],
+        }).encode(),
+    }
+    root = write_package(tmp_path, old_and_new)
+    storage = FakeStorage({
+        "lessons/lesson_001/v1/lesson.json": old_and_new["lessons/lesson_001/v1/lesson.json"],
+        "lessons/lesson_001/v1/guided.mp3": old_and_new["lessons/lesson_001/v1/guided.mp3"],
+    })
+
+    report, lines = run(root, storage)
+
+    assert report.pruned_remote == 2
+    assert report.pruned_local == 1
+    assert not any(key.startswith("lessons/lesson_001/v1/") for key in storage.objects)
+    assert not (root / "lessons/lesson_001/v1").exists()
+    assert (root / "lessons/lesson_001/v2").exists()
+    assert any(key.startswith("lessons/lesson_001/v2/") for key in storage.objects)
+    assert len(lines) <= 20
+
+
+def test_no_prune_skips_deletion(tmp_path):
+    old_and_new = {
+        "lessons/lesson_001/v1/lesson.json": b'{"lesson_id": "lesson_001", "version": 1}',
+        "lessons/lesson_001/v2/lesson.json": b'{"lesson_id": "lesson_001", "version": 2}',
+        "catalog.json": json.dumps({
+            "schema_version": 1, "catalog_version": 2,
+            "lessons": [{"id": "lesson_001", "version": 2, "order": 1}],
+        }).encode(),
+    }
+    root = write_package(tmp_path, old_and_new)
+    storage = FakeStorage({"lessons/lesson_001/v1/lesson.json": old_and_new["lessons/lesson_001/v1/lesson.json"]})
+
+    report, lines = run(root, storage, prune=False)
+
+    assert report.pruned_remote == 0
+    assert report.pruned_local == 0
+    assert "lessons/lesson_001/v1/lesson.json" in storage.objects
+    assert (root / "lessons/lesson_001/v1").exists()
+    assert any("--no-prune" in line for line in lines)
+
+
+def test_dry_run_makes_no_write_or_delete_calls(tmp_path):
+    old_and_new = {
+        "lessons/lesson_001/v1/lesson.json": b'{"lesson_id": "lesson_001", "version": 1}',
+        "lessons/lesson_001/v2/lesson.json": b'{"lesson_id": "lesson_001", "version": 2}',
+        "catalog.json": json.dumps({
+            "schema_version": 1, "catalog_version": 2,
+            "lessons": [{"id": "lesson_001", "version": 2, "order": 1}],
+        }).encode(),
+    }
+    root = write_package(tmp_path, old_and_new)
+    storage = FakeStorage({"lessons/lesson_001/v1/lesson.json": old_and_new["lessons/lesson_001/v1/lesson.json"]})
+
     report, lines = run(root, storage, dry_run=True)
 
-    assert [request.method for request in storage.requests] == ["HEAD"] * len(FILES)
-    assert storage.objects == {}
+    # No uploads, deletes, or verification GETs were made — only HEAD checks and the list call.
+    assert all(request.method in ("HEAD", "POST") for request in storage.requests)
+    assert all(not (request.method == "POST" and request.url.path.startswith(OBJECT_PREFIX)) for request in storage.requests)
+    assert all(request.method != "GET" for request in storage.requests)
+    assert all(request.method != "DELETE" for request in storage.requests)
+    assert storage.objects == {
+        "lessons/lesson_001/v1/lesson.json": old_and_new["lessons/lesson_001/v1/lesson.json"],
+    }
     assert report.dry_run is True
-    assert report.uploaded == len(FILES)
-    assert all(line.startswith("  upload") for line in lines[1:])
-    assert "Dry run" in lines[0]
+    # Counts reflect what WOULD be pruned; nothing was actually deleted (checked above).
+    assert report.pruned_remote == 1
+    assert report.pruned_local == 1
+    assert (root / "lessons/lesson_001/v1").exists()
+    assert any(line.startswith("  delete  (local)") and "v1" in line for line in lines)
+    assert any("Dry run only" in line for line in lines)
 
 
 def test_dry_run_reports_size_for_every_file(tmp_path):

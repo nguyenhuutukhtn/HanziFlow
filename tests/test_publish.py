@@ -15,6 +15,7 @@ from mandarin_course.publish import (
     _enrich_timeline,
     _reference_lines,
     publish_lesson,
+    render_publish_report,
     sentence_item_id,
     tokenize_mandarin,
     word_item_id,
@@ -128,11 +129,15 @@ def test_publish_is_deterministic_and_records_correct_digests(tmp_path):
     lesson_path, settings = _write_fixture(tmp_path, practice_audio=True)
     out = tmp_path / "published"
     report = publish_lesson(lesson_path, settings, out)
+    assert report.published is True
+    assert report.version == 1
     first_catalog = (out / "catalog.json").read_bytes()
-    publish_lesson(lesson_path, settings, out, force=True)
+    second = publish_lesson(lesson_path, settings, out)
+    assert second.published is False
+    assert second.version == 1
     assert (out / "catalog.json").read_bytes() == first_catalog
     catalog = json.loads(first_catalog)
-    guided = out / "lessons/lesson_001/v2/guided.mp3"
+    guided = out / "lessons/lesson_001/v1/guided.mp3"
     descriptor = catalog["lessons"][0]["tracks"]["guided"]
     assert descriptor["bytes"] == guided.stat().st_size
     assert descriptor["sha256"] == hashlib.sha256(guided.read_bytes()).hexdigest()
@@ -148,14 +153,70 @@ def test_publish_is_deterministic_and_records_correct_digests(tmp_path):
     assert items["sentences"][0]["speaker"] == "coach_zh"
     assert items["qa"][0]["activity"] == "a"
     assert items["qa"][0]["speaker"] == "coach_zh"
+    # Every file in the package agrees on the version.
+    manifest = json.loads((report.package_dir / "lesson.json").read_text())
+    guided_timeline = json.loads((report.package_dir / "timeline_guided.json").read_text())
+    practice_timeline = json.loads((report.package_dir / "timeline_practice.json").read_text())
+    assert manifest["version"] == items["lesson_version"] == guided_timeline["lesson_version"] == practice_timeline["lesson_version"] == 1
 
 
-def test_publish_refuses_existing_version_without_force(tmp_path):
+def test_publish_ignores_the_lesson_json_version_field(tmp_path):
+    """The authored `version` field is kept in the schema but never drives packaging."""
+    lesson_path, settings = _write_fixture(tmp_path)
+    lesson_data = json.loads(lesson_path.read_text(encoding="utf-8"))
+    assert lesson_data["version"] == 2  # authored value, unrelated to the assigned package version
+    report = publish_lesson(lesson_path, settings, tmp_path / "published")
+    assert report.version == 1
+    assert report.package_dir.name == "v1"
+
+
+def test_publish_unchanged_reports_no_new_version(tmp_path):
     lesson_path, settings = _write_fixture(tmp_path)
     out = tmp_path / "published"
-    publish_lesson(lesson_path, settings, out)
-    with pytest.raises(PublishError, match="--force"):
-        publish_lesson(lesson_path, settings, out)
+    first = publish_lesson(lesson_path, settings, out)
+    assert render_publish_report(first).startswith("Published")
+
+    second = publish_lesson(lesson_path, settings, out)
+
+    assert second.published is False
+    assert second.version == first.version == 1
+    assert second.package_dir == first.package_dir
+    assert render_publish_report(second) == "unchanged v1\n"
+    # Nothing was written: still exactly one version directory.
+    assert sorted(p.name for p in (out / "lessons/lesson_001").iterdir()) == ["v1"]
+
+
+def test_publish_changed_content_bumps_to_next_version_and_keeps_the_old_one(tmp_path):
+    lesson_path, settings = _write_fixture(tmp_path, practice_audio=True)
+    out = tmp_path / "published"
+    first = publish_lesson(lesson_path, settings, out)
+    assert first.version == 1
+
+    vocab_path = lesson_path.parent / "lesson_001_vocab.json"
+    vocab = json.loads(vocab_path.read_text(encoding="utf-8"))
+    vocab["words"][0]["meaning_vi"] = "changed meaning"
+    vocab_path.write_text(json.dumps(vocab, ensure_ascii=False), encoding="utf-8")
+
+    second = publish_lesson(lesson_path, settings, out)
+
+    assert second.published is True
+    assert second.version == 2
+    assert second.package_dir.name == "v2"
+    # The old version is kept locally until upload has verified the new one.
+    assert (out / "lessons/lesson_001/v1").is_dir()
+    assert (out / "lessons/lesson_001/v2").is_dir()
+    catalog = json.loads((out / "catalog.json").read_text())
+    assert catalog["lessons"][0]["version"] == 2
+    assert catalog["lessons"][0]["base_url"] == "lessons/lesson_001/v2/"
+    items = json.loads((second.package_dir / "items.json").read_text())
+    assert items["lesson_version"] == 2
+    manifest = json.loads((second.package_dir / "lesson.json").read_text())
+    assert manifest["version"] == 2
+    # Every file in the package must agree on the version — including both timelines.
+    guided_timeline = json.loads((second.package_dir / "timeline_guided.json").read_text())
+    assert guided_timeline["lesson_version"] == 2
+    practice_timeline = json.loads((second.package_dir / "timeline_practice.json").read_text())
+    assert practice_timeline["lesson_version"] == 2
 
 
 def test_publish_omits_missing_practice_and_warns(tmp_path):
@@ -224,8 +285,9 @@ def test_enrich_timeline_joins_language_type_and_section_including_turns_and_rep
         {"line_id": "b", "start_ms": 30, "end_ms": 40},
     ])
 
-    enriched = _enrich_timeline(timeline, lesson, "guided")
+    enriched = _enrich_timeline(timeline, lesson, "guided", 3)
 
+    assert enriched["lesson_version"] == 3
     assert [(cue["language"], cue["type"], cue["section_id"]) for cue in enriched["cues"]] == [
         ("zh-CN", "narration", "sec_01"),
         ("zh-CN", "narration", "sec_01"),
@@ -257,7 +319,7 @@ def test_enrich_timeline_sections_are_contiguous_and_cover_the_track(lesson_data
         {"line_id": "d", "start_ms": 30, "end_ms": 40},
     ], duration_ms=40)
 
-    enriched = _enrich_timeline(timeline, lesson, "guided")
+    enriched = _enrich_timeline(timeline, lesson, "guided", 1)
 
     sections = enriched["sections"]
     assert [section["id"] for section in sections] == ["sec_01", "sec_02", "sec_03"]
@@ -273,7 +335,7 @@ def test_enrich_timeline_sections_are_contiguous_and_cover_the_track(lesson_data
 def test_enrich_timeline_fails_when_cue_has_no_matching_segment(lesson):
     timeline = _timeline([{"line_id": "ghost", "start_ms": 0, "end_ms": 10}])
     with pytest.raises(PublishError, match="no longer matches"):
-        _enrich_timeline(timeline, lesson, "guided")
+        _enrich_timeline(timeline, lesson, "guided", 1)
 
 
 def test_enrich_timeline_fails_when_segment_order_differs(lesson_data):
@@ -289,7 +351,7 @@ def test_enrich_timeline_fails_when_segment_order_differs(lesson_data):
         {"line_id": "a", "start_ms": 10, "end_ms": 20},
     ])
     with pytest.raises(PublishError, match="Regenerate the audio"):
-        _enrich_timeline(timeline, lesson, "guided")
+        _enrich_timeline(timeline, lesson, "guided", 1)
 
 
 def test_publish_writes_enriched_sections_and_cue_metadata(tmp_path):

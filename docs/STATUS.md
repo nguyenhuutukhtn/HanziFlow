@@ -2,7 +2,7 @@
 
 Read this first in a new session instead of past chat history. Keep it short; update it at the end of every task.
 
-Last updated: 2026-10-20 (L1) · branch `app-publish-pipeline` (not merged to `main`)
+Last updated: 2026-10-21 (V1-fix) · branch `app-publish-pipeline` (not merged to `main`)
 
 ## Working rules
 
@@ -25,11 +25,12 @@ Last updated: 2026-10-20 (L1) · branch `app-publish-pipeline` (not merged to `m
 - **G2a**: app shell — amber dark/light theme + bundled Noto Sans (Hanzi uses system sans), bottom nav (Học / Ôn tập / Cài đặt), persistent mini-player (play/pause + Nghe lại câu), Now Playing full-screen route with reused transcript/transport/loop chip, track display names; verified on device (tabs, seek-to-line-start, loop chip, lock-screen notification).
 - **G2a.1**: headset/Bluetooth next/previous cue navigation in PlaybackService (shared `CueNavigation`, own timeline cache, notification actions); Supabase content URL via BuildConfig from `kmp/local.properties`; transcript punctuation baseline + 4dp token gaps + duplicate Vietnamese suppression; Roborazzi/Compose UI tests; verified on device (fresh Supabase sync/download/play, keyevents 87/88 with screen off and UI closed).
 - **L1**: `publish` enriches each timeline cue with `language`/`type`/`section_id` (joined from the lesson JSON by line id, turns included) and derives top-level `sections` (one per run of consecutive same-`activity` segments); fails with a "regenerate" message if cue line ids/order no longer match the current lesson segments. `kmp/shared` `TimelineCue`/`Timeline` models gained the matching optional fields (old timelines still parse) + a new `TimelineSection` model; `commonTest/resources/contract/*` refreshed from a real publish and `ContractParsingTest` asserts sections are contiguous, cover the track, and every cue has one. Lesson 1 republished as v3 (guided track rebuilt from cache, 0 paid TTS) and uploaded; public catalog + guided MP3 SHA-256 verified against Supabase; superseded v2 removed from local `publish/` and Storage.
+- **V1**: `publish` now assigns the package version itself instead of reading the lesson JSON `version` field (kept in the schema, ignored for packaging): it builds into a temp dir, compares every artifact digest (tracks, timelines, lesson/reference/items — the clip set is covered by items.json's embedded clip refs) against the current `catalog.json` entry, and either reports `unchanged vN` (nothing written) or writes `vN+1` and keeps the old version locally. `upload` verifies catalog.json plus every newly-uploaded version's files from the public endpoint (GET + sha256), then prunes every remote `lessons/<id>/v*/` prefix and local version dir not referenced by the catalog — skipped entirely if verification fails or `--no-prune` is passed; `--dry-run` lists uploads and prune candidates with no writes/deletes. Default output is now a short counts-only summary (uploaded/skipped/verified/pruned). Real run against Supabase: `publish` reported `unchanged v3`, `upload` pruned nothing (already clean), bucket and local `publish/` confirmed to hold only `lesson_001/v3`.
+- **V1-fix**: `timeline_guided.json`/`timeline_practice.json` now carry `lesson_version` = the assigned package version (`_enrich_timeline` overwrites it, patched again alongside lesson.json/items.json on the vN+1 bump path) instead of leaking the authored lesson JSON `version` field, so every file in a package agrees. The staleness check comparing the input timeline against the lesson JSON is untouched. `--force` help text now says it bypasses the unchanged check. No longer blocks committing V1.
 
 ## Next (in order)
 
 0. **Now (before G2b, which is paused):** listening features from real use — see app_architecture.md "Chinese-only listening" and "Section replay".
-   - **V1 (Python):** auto-versioning in publish + prune superseded versions in upload (app_architecture.md "Versioning rule").
    - **T1:** justfile + short-by-default CLI output (docs/workflow.md); `just check` also reruns `scripts/codemap.py` and lists files over 300 lines.
    - **T2:** compact lesson story source + generic builder + export/import bundles for any AI (docs/workflow.md). Before L2 and before lesson 2.
    - then **L2 (Android):** first split `PlaybackService.kt` (425 lines) into loop/cue-navigation/skip collaborators, then Chinese-only mode in PlaybackService + toggle; section list, seek-bar markers, section loop up to 5× with Bỏ lặp / Sang phần sau.

@@ -10,6 +10,12 @@ Immutability rules (see docs/app_architecture.md, "Lesson package contract"):
   upload;
 * ``catalog.json`` is uploaded last, with ``no-cache``, and may be replaced.
 
+Versioning rule (see docs/app_architecture.md, "Versioning rule"): only the
+version referenced by the current ``catalog.json`` is kept. After uploading and
+verifying the new files from the public endpoint, every other local version
+directory and every other remote ``lessons/<id>/v*/`` prefix for a cataloged
+lesson is deleted.
+
 The service-role key is read from the environment and never printed: errors
 name the file and the HTTP status only.
 """
@@ -17,7 +23,10 @@ name the file and the HTTP status only.
 from __future__ import annotations
 
 import hashlib
+import json
 import os
+import re
+import shutil
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
@@ -33,6 +42,7 @@ CONTENT_TYPES = {
     ".mp3": "audio/mpeg",
 }
 DEFAULT_CONTENT_TYPE = "application/octet-stream"
+_VERSION_DIR = re.compile(r"^v(\d+)$")
 
 
 class UploadError(Exception):
@@ -92,6 +102,9 @@ class UploadReport:
     uploaded: int
     skipped: int
     dry_run: bool
+    verified: bool
+    pruned_remote: int
+    pruned_local: int
 
 
 def package_files(root: Path) -> list[PackageFile]:
@@ -121,12 +134,40 @@ def _object_url(config: StorageConfig, relative: str) -> str:
     return f"{config.url}/storage/v1/object/{config.bucket}/{quote(relative, safe='/')}"
 
 
+def _public_object_url(config: StorageConfig, relative: str) -> str:
+    return f"{config.url}/storage/v1/object/public/{config.bucket}/{quote(relative, safe='/')}"
+
+
+def _list_url(config: StorageConfig) -> str:
+    return f"{config.url}/storage/v1/object/list/{config.bucket}"
+
+
+def _delete_url(config: StorageConfig) -> str:
+    return f"{config.url}/storage/v1/object/{config.bucket}"
+
+
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
 def _md5(path: Path) -> str:
     digest = hashlib.md5(usedforsecurity=False)
     with path.open("rb") as handle:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def _version_prefix(relative: str) -> str | None:
+    """``lessons/<id>/v<N>/...`` -> ``lessons/<id>/v<N>/``, or ``None`` if not versioned that way."""
+    parts = relative.split("/")
+    if len(parts) >= 3 and parts[0] == "lessons" and _VERSION_DIR.match(parts[2]):
+        return "/".join(parts[:3]) + "/"
+    return None
 
 
 def _remote_object(client: httpx.Client, config: StorageConfig, item: PackageFile) -> RemoteObject | None:
@@ -187,34 +228,179 @@ def _upload(client: httpx.Client, config: StorageConfig, item: PackageFile) -> N
         )
 
 
+def _verify_from_public_endpoint(client: httpx.Client, config: StorageConfig, item: PackageFile) -> None:
+    response = client.get(_public_object_url(config, item.relative))
+    if response.status_code != 200:
+        raise UploadError(
+            f"Verification failed for {item.relative}: public endpoint returned HTTP {response.status_code}"
+        )
+    body = response.content
+    if len(body) != item.size:
+        raise UploadError(
+            f"Verification failed for {item.relative}: public size {len(body)} B != local {item.size} B"
+        )
+    if hashlib.sha256(body).hexdigest() != _sha256(item.path):
+        raise UploadError(f"Verification failed for {item.relative}: public content differs from local file")
+
+
+def _list_remote(client: httpx.Client, config: StorageConfig, prefix: str) -> list[str]:
+    """Every object path under ``prefix`` (folders are listed one level at a time)."""
+    paths: list[str] = []
+    offset = 0
+    while True:
+        response = client.post(
+            _list_url(config),
+            headers=_headers(config),
+            json={"prefix": prefix, "limit": 1000, "offset": offset},
+        )
+        if response.status_code != 200:
+            raise UploadError(
+                f"Could not list {prefix} in bucket {config.bucket}: HTTP {response.status_code}"
+            )
+        batch = response.json()
+        if not batch:
+            break
+        for entry in batch:
+            name = entry.get("name", "")
+            full = prefix + name
+            if entry.get("id") is None and entry.get("metadata") is None:
+                paths.extend(_list_remote(client, config, full + "/"))
+            else:
+                paths.append(full)
+        offset += len(batch)
+        if len(batch) < 1000:
+            break
+    return paths
+
+
+def _delete_remote(client: httpx.Client, config: StorageConfig, paths: list[str]) -> None:
+    if not paths:
+        return
+    response = client.request(
+        "DELETE", _delete_url(config), headers=_headers(config), json={"prefixes": paths}
+    )
+    if response.status_code != 200:
+        raise UploadError(
+            f"Could not delete {len(paths)} object(s) in bucket {config.bucket}: HTTP {response.status_code}"
+        )
+
+
+def _read_local_catalog(root: Path) -> dict:
+    return json.loads((root / CATALOG_NAME).read_text(encoding="utf-8"))
+
+
+def _kept_versions(catalog: dict) -> dict[str, int]:
+    return {entry["id"]: int(entry["version"]) for entry in catalog.get("lessons", [])}
+
+
+def _remote_prune_candidates(
+    client: httpx.Client, config: StorageConfig, lesson_id: str, keep_version: int
+) -> list[str]:
+    keep = f"v{keep_version}"
+    objects = _list_remote(client, config, f"lessons/{lesson_id}/")
+    return [path for path in objects if _version_prefix(path) != f"lessons/{lesson_id}/{keep}/"]
+
+
+def _local_prune_candidates(root: Path, lesson_id: str, keep_version: int) -> list[Path]:
+    lesson_dir = root / "lessons" / lesson_id
+    if not lesson_dir.is_dir():
+        return []
+    keep = f"v{keep_version}"
+    return sorted(
+        path
+        for path in lesson_dir.iterdir()
+        if path.is_dir() and _VERSION_DIR.match(path.name) and path.name != keep
+    )
+
+
 def upload_package(
     root: Path,
     config: StorageConfig,
     *,
     dry_run: bool = False,
+    prune: bool = True,
     echo: Callable[[str], None] = print,
     transport: httpx.BaseTransport | None = None,
 ) -> UploadReport:
-    """Mirror ``root`` into the Storage bucket; ``catalog.json`` goes last."""
+    """Mirror ``root`` into the Storage bucket, verify what's new, then prune.
+
+    Default output is a short summary (counts only). ``dry_run`` instead lists
+    every file that would be uploaded or deleted and makes no write or delete
+    calls (including no verification, since nothing new would exist to check).
+    """
     files = package_files(root)
     uploaded = 0
     skipped = 0
-    echo(f"{'Dry run' if dry_run else 'Upload'} to bucket `{config.bucket}` from {root} ({len(files)} file(s)):")
+    new_version_prefixes: set[str] = set()
+    verified = False
+    pruned_remote = 0
+    pruned_local = 0
+
     with _client(transport) as client:
+        if dry_run:
+            echo(f"Dry run to bucket `{config.bucket}` from {root} ({len(files)} file(s)):")
         for item in files:
             remote = _remote_object(client, config, item)
             if remote is not None and item.versioned:
                 _ensure_unchanged(item, remote)
                 skipped += 1
-                echo(f"  skip    {item.relative} ({item.size:,} B, unchanged)")
+                if dry_run:
+                    echo(f"  skip    {item.relative} ({item.size:,} B, unchanged)")
                 continue
+            note = "catalog, no-cache, uploaded last" if not item.versioned else "new version"
             if dry_run:
                 uploaded += 1
-                note = "catalog, no-cache, uploaded last" if not item.versioned else "new version"
                 echo(f"  upload  {item.relative} ({item.size:,} B, {note})")
                 continue
             _upload(client, config, item)
             uploaded += 1
-            note = "catalog, no-cache, uploaded last" if not item.versioned else "new version"
-            echo(f"  upload  {item.relative} ({item.size:,} B, {note})")
-    return UploadReport(total=len(files), uploaded=uploaded, skipped=skipped, dry_run=dry_run)
+            if item.versioned:
+                prefix = _version_prefix(item.relative)
+                if prefix:
+                    new_version_prefixes.add(prefix)
+
+        catalog = _read_local_catalog(root)
+        kept_versions = _kept_versions(catalog)
+
+        if not dry_run:
+            to_verify = [CATALOG_NAME] + [
+                item.relative
+                for item in files
+                if item.versioned and _version_prefix(item.relative) in new_version_prefixes
+            ]
+            for relative in to_verify:
+                item = next(candidate for candidate in files if candidate.relative == relative)
+                _verify_from_public_endpoint(client, config, item)
+            verified = True
+
+        if prune and (dry_run or verified):
+            for lesson_id, keep_version in kept_versions.items():
+                remote_targets = _remote_prune_candidates(client, config, lesson_id, keep_version)
+                local_targets = _local_prune_candidates(root, lesson_id, keep_version)
+                if dry_run:
+                    for path in remote_targets:
+                        echo(f"  delete  (remote) {path}")
+                    for path in local_targets:
+                        echo(f"  delete  (local)  {path.relative_to(root)}/")
+                else:
+                    _delete_remote(client, config, remote_targets)
+                    for path in local_targets:
+                        shutil.rmtree(path)
+                pruned_remote += len(remote_targets)
+                pruned_local += len(local_targets)
+
+    if dry_run:
+        echo("Dry run only: no files were uploaded or deleted.")
+    else:
+        echo(f"Uploaded {uploaded} file(s); skipped {skipped} unchanged file(s).")
+        checked = len(new_version_prefixes)
+        echo(f"Verified: ok ({checked} new version(s) checked against the public endpoint)")
+        if prune:
+            echo(f"Pruned: {pruned_remote} remote object(s), {pruned_local} local version dir(s)")
+        else:
+            echo("Pruned: skipped (--no-prune)")
+
+    return UploadReport(
+        total=len(files), uploaded=uploaded, skipped=skipped, dry_run=dry_run,
+        verified=verified, pruned_remote=pruned_remote, pruned_local=pruned_local,
+    )

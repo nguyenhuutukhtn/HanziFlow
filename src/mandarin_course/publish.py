@@ -319,11 +319,15 @@ def _segment_line_ids(segment: Segment) -> list[str]:
     return [segment.id]
 
 
-def _enrich_timeline(timeline: dict[str, Any], lesson: Lesson, track: str) -> dict[str, Any]:
+def _enrich_timeline(timeline: dict[str, Any], lesson: Lesson, track: str, package_version: int) -> dict[str, Any]:
     """Join cues to their segment's language/type/activity and derive top-level sections.
 
     Fails loudly rather than guessing when the timeline (built from cached audio) no
     longer matches the current lesson JSON, since that means the audio is stale.
+    ``lesson_version`` in the returned timeline is overwritten with ``package_version``
+    (the assigned package version), not the input timeline's own value — every file in
+    a package must agree on the version. The staleness check above still compares the
+    *input* timeline against the lesson JSON's own ``version`` field, unrelated to this.
     """
     segment_by_line_id: dict[str, Segment] = {}
     expected_sequence: list[str] = []
@@ -365,7 +369,7 @@ def _enrich_timeline(timeline: dict[str, Any], lesson: Lesson, track: str) -> di
     if sections:
         sections[-1]["end_ms"] = timeline["duration_ms"]
 
-    return {**timeline, "cues": cues, "sections": sections}
+    return {**timeline, "lesson_version": package_version, "cues": cues, "sections": sections}
 
 
 @dataclass
@@ -378,10 +382,61 @@ class PublishReport:
     sentences_without_clips: list[str]
     qa_without_clips: list[str]
     practice_present: bool
+    version: int
+    published: bool
     warnings: list[str] = field(default_factory=list)
 
 
+def _catalog_entry(catalog_path: Path, lesson_id: str) -> dict[str, Any] | None:
+    if not catalog_path.is_file():
+        return None
+    catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
+    for entry in catalog.get("lessons", []):
+        if entry.get("id") == lesson_id:
+            return entry
+    return None
+
+
+def _matches_catalog_entry(package: Path, entry: dict[str, Any] | None) -> bool:
+    """Compare every artifact digest in ``package`` with ``entry`` from the current catalog.
+
+    The clip set is covered implicitly: each clip's filename and sha256 are recorded
+    inside items.json (words/sentences/qa ``clip`` fields), so an items.json digest
+    match guarantees the referenced clip set matches too.
+    """
+    if entry is None:
+        return False
+    tracks = entry.get("tracks", {})
+    files = entry.get("files", {})
+    checks: list[tuple[Path, dict[str, Any] | None]] = [
+        (package / "lesson.json", files.get("manifest")),
+        (package / "reference.json", files.get("reference")),
+        (package / "items.json", files.get("items")),
+        (package / "guided.mp3", tracks.get("guided")),
+        (package / "timeline_guided.json", (tracks.get("guided") or {}).get("timeline")),
+    ]
+    practice_before = tracks.get("practice")
+    practice_now = (package / "practice.mp3").is_file()
+    if bool(practice_before) != practice_now:
+        return False
+    if practice_before:
+        checks.append((package / "practice.mp3", practice_before))
+        checks.append((package / "timeline_practice.json", practice_before.get("timeline")))
+    for path, old in checks:
+        if old is None or not path.is_file():
+            return False
+        digest = _digest(path)
+        if digest["sha256"] != old.get("sha256") or digest["bytes"] != old.get("bytes"):
+            return False
+    return True
+
+
 def publish_lesson(lesson_path: Path, settings: Settings, out: Path, force: bool = False) -> PublishReport:
+    """Publish a lesson package; the version number is assigned here, not read from the
+    lesson JSON ``version`` field (kept in the schema but ignored for packaging; see
+    docs/app_architecture.md "Versioning rule"). A package identical to the current
+    catalog entry publishes nothing and is reported as unchanged.
+    """
     if not shutil.which("ffmpeg") or not shutil.which("ffprobe"):
         raise PublishError("FFmpeg and ffprobe must be installed and available on PATH")
     lesson = load_lesson(lesson_path)
@@ -405,13 +460,18 @@ def publish_lesson(lesson_path: Path, settings: Settings, out: Path, force: bool
     vocab = load_vocab(lesson_path.parent / f"{lesson.lesson_id}_vocab.json", lesson.lesson_id)
     item_ids = {word.hanzi: word_item_id(word.hanzi, word.pinyin) for word in vocab.words}
 
-    destination = out / "lessons" / lesson.lesson_id / f"v{lesson.version}"
-    if destination.exists() and not force:
-        raise PublishError(f"Package already exists: {destination} (use --force for testing)")
-    destination.parent.mkdir(parents=True, exist_ok=True)
+    catalog_path = out / "catalog.json"
+    previous_entry = _catalog_entry(catalog_path, lesson.lesson_id)
+    current_version = int(previous_entry["version"]) if previous_entry else 0
+    # Embed the current version while building so an unchanged rebuild reproduces the
+    # existing package byte-for-byte; bumped to current + 1 below only if content differs.
+    trial_version = current_version or 1
+
+    lessons_dir = out / "lessons" / lesson.lesson_id
+    lessons_dir.mkdir(parents=True, exist_ok=True)
     warnings: list[str] = []
     failures: list[str] = []
-    with tempfile.TemporaryDirectory(prefix=f".{lesson.lesson_id}-", dir=destination.parent) as temp_name:
+    with tempfile.TemporaryDirectory(prefix=f".{lesson.lesson_id}-", dir=lessons_dir) as temp_name:
         package = Path(temp_name) / "package"
         clips_dir = package / "clips"
         clips_dir.mkdir(parents=True)
@@ -425,7 +485,7 @@ def publish_lesson(lesson_path: Path, settings: Settings, out: Path, force: bool
             "id": lesson.lesson_id,
             "title": lesson.title,
             "level": lesson.level,
-            "version": lesson.version,
+            "version": trial_version,
             "communicative_goals": lesson.communicative_goals,
             "new_patterns": lesson.new_patterns,
         }
@@ -438,11 +498,14 @@ def publish_lesson(lesson_path: Path, settings: Settings, out: Path, force: bool
         _write_json(package / "reference.json", {"tracks": {"guided": guided_lines, "practice": practice_lines}})
         guided_timeline_source = timeline_path_for(guided_source)
         guided_timeline = _load_and_validate_timeline(guided_timeline_source, lesson, "guided", guided_lines)
-        _write_json(package / "timeline_guided.json", _enrich_timeline(guided_timeline, lesson, "guided"))
+        guided_enriched = _enrich_timeline(guided_timeline, lesson, "guided", trial_version)
+        _write_json(package / "timeline_guided.json", guided_enriched)
+        practice_enriched: dict[str, Any] | None = None
         if practice_present:
             practice_timeline_source = timeline_path_for(practice_source)
             practice_timeline = _load_and_validate_timeline(practice_timeline_source, practice, "practice", practice_lines)
-            _write_json(package / "timeline_practice.json", _enrich_timeline(practice_timeline, practice, "practice"))
+            practice_enriched = _enrich_timeline(practice_timeline, practice, "practice", trial_version)
+            _write_json(package / "timeline_practice.json", practice_enriched)
 
         cache_by_id = {
             segment.id: _cache_path(segment, lesson, settings)
@@ -529,10 +592,40 @@ def publish_lesson(lesson_path: Path, settings: Settings, out: Path, force: bool
             qa_items.append(pair)
 
         _write_json(package / "items.json", {
-            "schema_version": 1, "lesson_id": lesson.lesson_id, "lesson_version": lesson.version,
+            "schema_version": 1, "lesson_id": lesson.lesson_id, "lesson_version": trial_version,
             "words": words, "sentences": sentence_items, "qa": qa_items,
         })
 
+        if not force and _matches_catalog_entry(package, previous_entry):
+            existing = lessons_dir / f"v{current_version}"
+            files = [
+                (path.relative_to(existing).as_posix(), path.stat().st_size)
+                for path in sorted(existing.rglob("*")) if path.is_file()
+            ]
+            return PublishReport(
+                existing, files, sum(size for _, size in files), words_with, words_without,
+                sentences_without, qa_without, practice_present, current_version, False, warnings,
+            )
+
+        final_version = current_version + 1 if current_version else 1
+        if final_version != trial_version:
+            # Only these files embed the package version; patch them in place rather
+            # than re-deriving the whole package.
+            metadata["version"] = final_version
+            _write_json(package / "lesson.json", metadata)
+            _write_json(package / "items.json", {
+                "schema_version": 1, "lesson_id": lesson.lesson_id, "lesson_version": final_version,
+                "words": words, "sentences": sentence_items, "qa": qa_items,
+            })
+            guided_enriched["lesson_version"] = final_version
+            _write_json(package / "timeline_guided.json", guided_enriched)
+            if practice_enriched is not None:
+                practice_enriched["lesson_version"] = final_version
+                _write_json(package / "timeline_practice.json", practice_enriched)
+
+        destination = lessons_dir / f"v{final_version}"
+        if destination.exists() and not force:
+            raise PublishError(f"Package already exists: {destination} (use --force for testing)")
         backup = destination.with_name(destination.name + ".replaced")
         if destination.exists():
             if backup.exists():
@@ -557,16 +650,15 @@ def publish_lesson(lesson_path: Path, settings: Settings, out: Path, force: bool
             destination / "timeline_practice.json", "timeline_practice.json"
         )
     catalog_entry = {
-        "id": lesson.lesson_id, "version": lesson.version,
+        "id": lesson.lesson_id, "version": final_version,
         "order": int(lesson.lesson_id.rsplit("_", 1)[1]), "title": lesson.title, "level": lesson.level,
-        "base_url": f"lessons/{lesson.lesson_id}/v{lesson.version}/", "tracks": tracks,
+        "base_url": f"lessons/{lesson.lesson_id}/v{final_version}/", "tracks": tracks,
         "files": {
             "manifest": _artifact(destination / "lesson.json", "lesson.json"),
             "reference": _artifact(destination / "reference.json", "reference.json"),
             "items": _artifact(destination / "items.json", "items.json"),
         },
     }
-    catalog_path = out / "catalog.json"
     catalog = json.loads(catalog_path.read_text(encoding="utf-8")) if catalog_path.is_file() else {"schema_version": 1, "catalog_version": 1, "lessons": []}
     previous_lessons = catalog.get("lessons", [])
     next_lessons = sorted(
@@ -582,11 +674,16 @@ def publish_lesson(lesson_path: Path, settings: Settings, out: Path, force: bool
     temporary_catalog.replace(catalog_path)
 
     files = [(path.relative_to(destination).as_posix(), path.stat().st_size) for path in sorted(destination.rglob("*")) if path.is_file()]
-    return PublishReport(destination, files, sum(size for _, size in files), words_with, words_without, sentences_without, qa_without, practice_present, warnings)
+    return PublishReport(
+        destination, files, sum(size for _, size in files), words_with, words_without,
+        sentences_without, qa_without, practice_present, final_version, True, warnings,
+    )
 
 
 def render_publish_report(report: PublishReport) -> str:
-    lines = [f"Published {report.package_dir}", "Files:"]
+    if not report.published:
+        return f"unchanged v{report.version}\n"
+    lines = [f"Published {report.package_dir} (v{report.version})", "Files:"]
     lines.extend(f"  {name}: {size} bytes" for name, size in report.files)
     lines.extend([
         f"Total package size: {report.total_bytes} bytes",

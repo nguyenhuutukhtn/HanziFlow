@@ -146,13 +146,9 @@ def command_voices_sync(settings: Settings) -> int:
     return 0
 
 
-def command_upload(out: Path, dry_run: bool) -> int:
+def command_upload(out: Path, dry_run: bool, prune: bool) -> int:
     config = StorageConfig.from_env()
-    report = upload_package(out, config, dry_run=dry_run)
-    if dry_run:
-        print("Dry run only: no files were uploaded.")
-    else:
-        print(f"Uploaded {report.uploaded} file(s); skipped {report.skipped} unchanged file(s).")
+    upload_package(out, config, dry_run=dry_run, prune=prune)
     return 0
 
 
@@ -187,10 +183,11 @@ def build_parser() -> argparse.ArgumentParser:
     publish = sub.add_parser("publish", help="Package an already-generated lesson without calling TTS")
     publish.add_argument("lesson", type=Path)
     publish.add_argument("--out", type=Path, default=Path("publish"))
-    publish.add_argument("--force", action="store_true", help="Replace an existing package version (testing only)")
+    publish.add_argument("--force", action="store_true", help="Bypass the unchanged check and always write a new version (testing only)")
     upload = sub.add_parser("upload", help="Upload published packages to Supabase Storage (service-role key required)")
     upload.add_argument("--out", type=Path, default=Path("publish"))
-    upload.add_argument("--dry-run", action="store_true", help="Show what would be uploaded; make no writes")
+    upload.add_argument("--dry-run", action="store_true", help="List uploads and deletions; make no writes")
+    upload.add_argument("--no-prune", action="store_true", help="Skip deleting superseded versions")
     voices = sub.add_parser("voices", help="Manage the local ElevenLabs voice registry")
     voices_sub = voices.add_subparsers(dest="voices_command", required=True)
     voices_sub.add_parser("sync", help="Fetch and cache available Mandarin/Vietnamese voices (not a paid TTS call)")
@@ -213,7 +210,7 @@ def main(argv: list[str] | None = None) -> int:
             print(render_publish_report(publish_lesson(args.lesson, settings, args.out, args.force)), end="")
             return 0
         if args.command == "upload":
-            return command_upload(args.out, args.dry_run)
+            return command_upload(args.out, args.dry_run, not args.no_prune)
         if args.command == "voices":
             return command_voices_sync(settings)
         return command_review(settings)
