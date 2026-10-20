@@ -9,7 +9,7 @@ Last updated: 2026-10-20 (L1) · branch `app-publish-pipeline` (not merged to `m
 - One task at a time, sequentially. No parallel agents.
 - Agents report with the template in [AGENTS.md](../AGENTS.md) ("Task reports").
 - Bring a task back for human/PM review only for design decisions or when blocked.
-- Scripts first, AI as fallback: see [workflow.md](workflow.md).
+- Scripts first, AI as fallback: see [workflow.md](workflow.md). Find code via [CODEMAP.md](CODEMAP.md) (regenerate with `python3 scripts/codemap.py`); files over 300 lines (⚠ there) get split before they are extended.
 - Every task (code or content) logs its token use in [token_log.md](token_log.md); review the log periodically to cut the most expensive steps.
 
 ## Done
@@ -30,9 +30,9 @@ Last updated: 2026-10-20 (L1) · branch `app-publish-pipeline` (not merged to `m
 
 0. **Now (before G2b, which is paused):** listening features from real use — see app_architecture.md "Chinese-only listening" and "Section replay".
    - **V1 (Python):** auto-versioning in publish + prune superseded versions in upload (app_architecture.md "Versioning rule").
-   - **T1:** justfile + short-by-default CLI output (docs/workflow.md).
+   - **T1:** justfile + short-by-default CLI output (docs/workflow.md); `just check` also reruns `scripts/codemap.py` and lists files over 300 lines.
    - **T2:** compact lesson story source + generic builder + export/import bundles for any AI (docs/workflow.md). Before L2 and before lesson 2.
-   - then **L2 (Android):** Chinese-only mode in PlaybackService + toggle; section list, seek-bar markers, section loop up to 5× with Bỏ lặp / Sang phần sau.
+   - then **L2 (Android):** first split `PlaybackService.kt` (425 lines) into loop/cue-navigation/skip collaborators, then Chinese-only mode in PlaybackService + toggle; section list, seek-bar markers, section loop up to 5× with Bỏ lặp / Sang phần sau.
 
 1. **G2b** — Learn tab card states + lesson detail, lookup sheet actions (copy word/line, select text, send to), Settings tab (incl. MIUI battery/autostart help).
 2. **G2c** — Review tab + test flow + result; pass-rule change in `kmp/shared` TestSession (passed = no first-try mistakes and no reveal); attempts stored in Room.
