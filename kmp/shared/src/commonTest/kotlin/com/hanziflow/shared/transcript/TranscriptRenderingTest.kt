@@ -28,6 +28,16 @@ class TranscriptRenderingTest {
     }
 
     @Test
+    fun bcp47ViLine_isTreatedAsVietnamese() {
+        val published = viLine.copy(language = "vi-VN")
+        val off = TranscriptRendering.decide(published, TranscriptViewMode.HANZI_WITH_PINYIN, showVietnamese = false, modelAnswerRevealed = true)
+        val on = TranscriptRendering.decide(published, TranscriptViewMode.HANZI_WITH_PINYIN, showVietnamese = true, modelAnswerRevealed = true)
+        assertFalse(off.lineVisible)
+        assertTrue(on.lineVisible)
+        assertFalse(on.showTranslation)
+    }
+
+    @Test
     fun viLine_shownWhenToggleOn() {
         val decision = TranscriptRendering.decide(viLine, TranscriptViewMode.HANZI_ONLY, showVietnamese = true, modelAnswerRevealed = true)
         assertTrue(decision.lineVisible)

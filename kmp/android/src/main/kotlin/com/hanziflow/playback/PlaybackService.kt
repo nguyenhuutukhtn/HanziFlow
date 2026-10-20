@@ -20,6 +20,7 @@ import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.SettableFuture
 import com.hanziflow.MainActivity
+import com.hanziflow.R
 import com.hanziflow.data.CourseDatabase
 import com.hanziflow.data.CourseRepository
 import com.hanziflow.data.PlaybackEntity
@@ -231,7 +232,7 @@ class PlaybackService : MediaSessionService() {
         val saved = courseDatabase.dao().playback() ?: return@withContext null
         val file = courseRepository.trackFile(saved.lessonId, saved.track) ?: return@withContext null
         val title = courseDatabase.dao().lesson(saved.lessonId)?.title ?: saved.lessonId
-        Resumption(saved, file, title)
+        Resumption(saved, file, title, getString(trackLabelRes(saved.track)))
     }
 
     private fun schedulePeriodicSave() {
@@ -291,12 +292,14 @@ class PlaybackService : MediaSessionService() {
         val saved: PlaybackEntity,
         val file: File,
         val title: String,
+        val trackLabel: String,
     ) {
         fun mediaItem(): MediaItem = mediaItem(
             lessonId = saved.lessonId,
             track = saved.track,
             uri = file.toURI().toString(),
             title = title,
+            trackLabel = trackLabel,
         )
     }
 
@@ -310,14 +313,24 @@ class PlaybackService : MediaSessionService() {
         const val EXTRA_LOOP_LINE_ID = "loop_line_id"
         private const val LOOP_POLL_MS = 150L
 
-        fun mediaItem(lessonId: String, track: String, uri: String, title: String = lessonId): MediaItem =
+        /** Display names only; persisted ids stay `guided` / `practice`. Used by UI and the lock screen. */
+        fun trackLabelRes(track: String): Int =
+            if (track == "practice") R.string.track_practice else R.string.track_guided
+
+        fun mediaItem(
+            lessonId: String,
+            track: String,
+            uri: String,
+            title: String = lessonId,
+            trackLabel: String = track,
+        ): MediaItem =
             MediaItem.Builder()
                 .setMediaId("$lessonId|$track")
                 .setUri(uri)
                 .setMediaMetadata(
                     MediaMetadata.Builder()
                         .setTitle(title)
-                        .setArtist(if (track == "guided") "Guided" else "Practice")
+                        .setArtist(trackLabel)
                         .build()
                 )
                 .build()

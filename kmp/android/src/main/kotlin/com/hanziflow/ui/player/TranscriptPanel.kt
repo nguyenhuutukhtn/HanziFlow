@@ -7,16 +7,19 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -30,8 +33,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.hanziflow.R
 import com.hanziflow.shared.Items
 import com.hanziflow.shared.ReferenceLine
 import com.hanziflow.shared.TimelineCue
@@ -41,12 +48,17 @@ import com.hanziflow.shared.transcript.TokenRenderDecision
 import com.hanziflow.shared.transcript.TranscriptCues
 import com.hanziflow.shared.transcript.TranscriptRendering
 import com.hanziflow.shared.transcript.TranscriptViewMode
+import com.hanziflow.ui.components.appFilterChipColors
+import com.hanziflow.ui.theme.appColors
+import com.hanziflow.ui.theme.appTextStyles
 
 private const val AUTO_SCROLL_PAUSE_MS = 5_000L
 
 /**
  * One-dataset, several-views karaoke transcript. Pure rendering decisions come from
  * `shared/transcript`; this composable only owns scroll/highlight/gesture plumbing.
+ * [showSwitcher] is false in Now Playing, where the view chips and Vietnamese switch
+ * sit in the screen chrome above the transcript instead.
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -64,6 +76,7 @@ fun TranscriptPanel(
     onViewModeChange: (TranscriptViewMode) -> Unit,
     onVietnameseToggle: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
+    showSwitcher: Boolean = true,
 ) {
     val activeCue = remember(cues, positionMs) { TranscriptCues.activeCue(cues, positionMs) }
     val activeLineIds = remember(activeCue) { activeCue?.let(TranscriptCues::lineIdsFor)?.toSet() ?: emptySet() }
@@ -82,7 +95,14 @@ fun TranscriptPanel(
     }
 
     Column(modifier) {
-        ViewSwitcher(viewMode, showVietnamese, onViewModeChange, onVietnameseToggle)
+        if (showSwitcher) {
+            TranscriptViewSwitcher(
+                viewMode = viewMode,
+                showVietnamese = showVietnamese,
+                onViewModeChange = onViewModeChange,
+                onVietnameseToggle = onVietnameseToggle,
+            )
+        }
         LazyColumn(state = listState, modifier = Modifier.fillMaxWidth()) {
             itemsIndexed(lines, key = { _, line -> line.id }) { _, line ->
                 val revealed = remember(line.id, line.type, positionMs) {
@@ -107,30 +127,37 @@ fun TranscriptPanel(
     }
 }
 
+/** Vietnamese chips + Vietnamese-meaning switch; shared by the panel and Now Playing chrome. */
 @Composable
-private fun ViewSwitcher(
+fun TranscriptViewSwitcher(
     viewMode: TranscriptViewMode,
     showVietnamese: Boolean,
     onViewModeChange: (TranscriptViewMode) -> Unit,
     onVietnameseToggle: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    Column(Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp)) {
+    Column(modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp)) {
         Row(
             modifier = Modifier.horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(6.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             listOf(
-                TranscriptViewMode.HIDDEN to "Hidden",
-                TranscriptViewMode.PINYIN_ONLY to "Pinyin",
-                TranscriptViewMode.HANZI_WITH_PINYIN to "Hanzi+pinyin",
-                TranscriptViewMode.HANZI_ONLY to "Hanzi",
+                TranscriptViewMode.HIDDEN to R.string.view_hidden,
+                TranscriptViewMode.PINYIN_ONLY to R.string.view_pinyin,
+                TranscriptViewMode.HANZI_WITH_PINYIN to R.string.view_hanzi_pinyin,
+                TranscriptViewMode.HANZI_ONLY to R.string.view_hanzi_only,
             ).forEach { (mode, label) ->
-                FilterChip(selected = viewMode == mode, onClick = { onViewModeChange(mode) }, label = { Text(label) })
+                FilterChip(
+                    selected = viewMode == mode,
+                    onClick = { onViewModeChange(mode) },
+                    label = { Text(stringResource(label)) },
+                    colors = appFilterChipColors(),
+                )
             }
         }
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            Text("Vietnamese", style = MaterialTheme.typography.labelMedium)
+            Text(stringResource(R.string.vietnamese_switch), style = MaterialTheme.typography.labelMedium)
             Switch(checked = showVietnamese, onCheckedChange = onVietnameseToggle)
         }
     }
@@ -148,11 +175,18 @@ private fun TranscriptLineRow(
     onLookupToken: (String) -> Unit,
 ) {
     val rowBackground = if (isActive) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface
+    val primaryText = if (isActive) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface
+    val secondaryText = if (isActive) {
+        MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.78f)
+    } else {
+        MaterialTheme.colorScheme.onSurfaceVariant
+    }
+    val meaningColor = if (isActive) primaryText else MaterialTheme.appColors.meaning
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .background(rowBackground)
-            .padding(horizontal = 8.dp, vertical = 6.dp)
+            .padding(horizontal = 12.dp, vertical = 8.dp)
             .let { base ->
                 if (decision.placeholder || !decision.showHanzi) {
                     base.combinedClickable(onClick = onSeek)
@@ -163,24 +197,64 @@ private fun TranscriptLineRow(
     ) {
         Column(Modifier.weight(1f)) {
             when {
-                decision.placeholder -> Text("• • •", color = MaterialTheme.colorScheme.onSurfaceVariant)
-                decision.showPinyinLine -> Text(line.pinyin ?: line.text, style = MaterialTheme.typography.bodyLarge)
-                decision.showHanzi -> TokenRow(decision.tokens, onSeek, onLookupToken)
-                else -> Text(" ", style = MaterialTheme.typography.bodyLarge) // hidden view: no text, keeps row tappable
+                decision.placeholder -> Text(
+                    stringResource(R.string.model_answer_placeholder),
+                    style = MaterialTheme.appTextStyles.vietnamese,
+                    color = secondaryText,
+                )
+                decision.showPinyinLine -> Text(
+                    line.pinyin ?: line.text,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = primaryText,
+                )
+                // Vietnamese reference lines have no tokens: in a Hanzi view they still
+                // need their text, not an empty token row.
+                decision.showHanzi && decision.tokens.isEmpty() -> Text(
+                    line.text,
+                    style = if (line.language.startsWith("vi")) {
+                        MaterialTheme.appTextStyles.vietnamese
+                    } else {
+                        MaterialTheme.typography.bodyLarge
+                    },
+                    color = primaryText,
+                )
+                decision.showHanzi -> TokenRow(
+                    tokens = decision.tokens,
+                    hanziColor = primaryText,
+                    pinyinColor = secondaryText,
+                    onSeek = onSeek,
+                    onLookupToken = onLookupToken,
+                )
+                else -> Box(
+                    Modifier
+                        .fillMaxWidth(0.72f)
+                        .height(18.dp)
+                        .background(
+                            color = if (isActive) primaryText.copy(alpha = 0.28f) else secondaryText.copy(alpha = 0.28f),
+                            shape = RoundedCornerShape(4.dp),
+                        ),
+                )
             }
             if (decision.showTranslation) {
                 Text(
                     line.translation.orEmpty(),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.appTextStyles.vietnamese,
+                    color = meaningColor,
                 )
             }
         }
         if (isActive && !decision.placeholder) {
-            IconButton(onClick = onToggleLoop) {
+            val loopDescription = stringResource(
+                if (isLooped) R.string.loop_line_active else R.string.loop_line,
+            )
+            IconButton(
+                onClick = onToggleLoop,
+                modifier = Modifier.semantics { contentDescription = loopDescription },
+            ) {
                 Text(
                     if (isLooped) "↻1" else "↻",
-                    color = if (isLooped) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = if (isLooped) MaterialTheme.colorScheme.primary else secondaryText,
+                    style = MaterialTheme.typography.titleMedium,
                 )
             }
         }
@@ -189,17 +263,37 @@ private fun TranscriptLineRow(
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class)
 @Composable
-private fun TokenRow(tokens: List<TokenRenderDecision>, onSeek: () -> Unit, onLookupToken: (String) -> Unit) {
+private fun TokenRow(
+    tokens: List<TokenRenderDecision>,
+    hanziColor: Color,
+    pinyinColor: Color,
+    onSeek: () -> Unit,
+    onLookupToken: (String) -> Unit,
+) {
     FlowRow(horizontalArrangement = Arrangement.spacedBy(2.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
         tokens.forEach { decision ->
-            TokenCell(decision.token, decision.showPinyin, onSeek, onLookupToken)
+            TokenCell(
+                token = decision.token,
+                showPinyin = decision.showPinyin,
+                hanziColor = hanziColor,
+                pinyinColor = pinyinColor,
+                onSeek = onSeek,
+                onLookupToken = onLookupToken,
+            )
         }
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun TokenCell(token: Token, showPinyin: Boolean, onSeek: () -> Unit, onLookupToken: (String) -> Unit) {
+private fun TokenCell(
+    token: Token,
+    showPinyin: Boolean,
+    hanziColor: Color,
+    pinyinColor: Color,
+    onSeek: () -> Unit,
+    onLookupToken: (String) -> Unit,
+) {
     Column(
         modifier = Modifier.combinedClickable(
             interactionSource = remember { MutableInteractionSource() },
@@ -210,8 +304,16 @@ private fun TokenCell(token: Token, showPinyin: Boolean, onSeek: () -> Unit, onL
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         if (showPinyin) {
-            Text(token.pinyin.orEmpty(), fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(
+                token.pinyin.orEmpty(),
+                style = MaterialTheme.appTextStyles.pinyin,
+                color = pinyinColor,
+            )
         }
-        Text(token.hanzi, style = MaterialTheme.typography.bodyLarge)
+        Text(
+            token.hanzi,
+            style = MaterialTheme.appTextStyles.hanzi,
+            color = hanziColor,
+        )
     }
 }

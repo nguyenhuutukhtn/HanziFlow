@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Bottom navigation -->
+    <string name="nav_learn">Học</string>
+    <string name="nav_review">Ôn tập</string>
+    <string name="nav_settings">Cài đặt</string>
+
+    <!-- Learn -->
+    <string name="learn_title">Học</string>
+    <string name="learn_empty_title">Chưa có bài học nào.</string>
+    <string name="learn_empty_body">Đồng bộ để tải danh sách bài học mới nhất.</string>
+    <string name="sync_now">Đồng bộ ngay</string>
+    <string name="syncing">Đang đồng bộ...</string>
+    <string name="sync_success">Đã cập nhật danh sách bài học</string>
+    <string name="sync_failure">Không đồng bộ được. Kiểm tra kết nối mạng.</string>
+    <string name="offline_banner">Không có kết nối mạng. Các bài đã tải vẫn nghe được.</string>
+    <string name="action_listen">Nghe</string>
+    <string name="action_download">Tải xuống</string>
+    <string name="action_cancel">Hủy</string>
+    <string name="action_retry">Thử lại</string>
+    <string name="action_update">Cập nhật</string>
+    <string name="action_listen_old">Nghe bản cũ</string>
+    <string name="action_delete">Xóa</string>
+    <string name="badge_passed">Đã qua</string>
+    <string name="badge_update">Có bản mới</string>
+    <string name="catalog_url_label">URL danh mục (nhà phát triển)</string>
+    <string name="level_absolute_beginner">Người mới bắt đầu</string>
+    <string name="download_state_available">Chưa tải</string>
+    <string name="download_state_downloading">Đang tải...</string>
+    <string name="download_state_downloaded">Đã tải xuống</string>
+    <string name="download_state_update">Có bản mới</string>
+    <string name="download_state_failed">Tải lỗi</string>
+    <string name="download_state_cancelled">Đã hủy</string>
+    <string name="version_label">v%1$d</string>
+
+    <!-- Now Playing chrome -->
+    <string name="collapse_now_playing">Thu nhỏ</string>
+    <string name="more_actions">Thêm thao tác</string>
+    <string name="take_test">Kiểm tra bài</string>
+    <string name="view_hidden">Ẩn</string>
+    <string name="view_pinyin">Pinyin</string>
+    <string name="view_hanzi_pinyin">Hán + pinyin</string>
+    <string name="view_hanzi_only">Hán tự</string>
+    <string name="vietnamese_switch">Tiếng Việt</string>
+    <string name="model_answer_placeholder">Đến lượt bạn — nói trước khi nghe</string>
+    <string name="line_seek">Tua đến câu này</string>
+    <string name="track_guided">Học có hướng dẫn</string>
+    <string name="track_practice">Luyện nghe</string>
+    <string name="loop_active">Đang lặp: %1$s</string>
+    <string name="stop_loop">Dừng lặp</string>
+    <string name="loop_line">Lặp lại câu này</string>
+    <string name="loop_line_active">Đang lặp câu này, nhấn để dừng</string>
+    <string name="replay_line">Nghe lại câu</string>
+    <string name="seek_back_10">Lùi 10 giây</string>
+    <string name="seek_forward_10">Tua 10 giây</string>
+    <string name="play">Phát</string>
+    <string name="pause">Tạm dừng</string>
+    <string name="speed_label">Tốc độ</string>
+
+    <!-- Mini-player -->
+    <string name="mini_player_description">Trình phát nhỏ. %1$s, %2$s. Nhấn để mở.</string>
+    <string name="mini_player_replay">Nghe lại câu</string>
+    <string name="playing_state">đang phát</string>
+    <string name="paused_state">đang tạm dừng</string>
+
+    <!-- Review placeholder -->
+    <string name="review_title">Ôn tập</string>
+    <string name="review_empty">Chưa có lượt làm nào</string>
+
+    <!-- Settings placeholder -->
+    <string name="settings_title">Cài đặt</string>
+    <string name="settings_section_display">HIỂN THỊ</string>
+    <string name="settings_default_view_guided">Hiển thị mặc định (Học có hướng dẫn)</string>
+    <string name="settings_default_view_practice">Hiển thị mặc định (Luyện nghe)</string>
+    <string name="settings_show_vietnamese">Hiện tiếng Việt</string>
+    <string name="settings_dark_theme">Giao diện tối</string>
+</resources>

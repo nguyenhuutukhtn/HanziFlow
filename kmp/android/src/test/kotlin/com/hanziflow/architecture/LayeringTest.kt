@@ -65,4 +65,22 @@ class LayeringTest {
             }
             .assertEmpty()
     }
+
+    @Test
+    fun `ui theme stays pure design tokens`() {
+        val forbidden = listOf("com.hanziflow.data", "com.hanziflow.playback", "androidx.media3")
+        scope.files
+            .withPackage("com.hanziflow.ui.theme..")
+            .filter { file -> file.imports.any { import -> forbidden.any { import.name.startsWith(it) } } }
+            .assertEmpty()
+    }
+
+    @Test
+    fun `ui navigation wires state and callbacks without touching playback or data sources`() {
+        val forbidden = listOf("com.hanziflow.playback", "androidx.media3", "androidx.room", "okhttp3")
+        scope.files
+            .withPackage("com.hanziflow.ui.navigation..")
+            .filter { file -> file.imports.any { import -> forbidden.any { import.name.startsWith(it) } } }
+            .assertEmpty()
+    }
 }

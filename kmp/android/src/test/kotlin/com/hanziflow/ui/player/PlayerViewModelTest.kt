@@ -76,6 +76,38 @@ class PlayerViewModelTest {
     }
 
     @Test
+    fun `replay current line seeks to the active cue start`() = runTest {
+        val repository = repositoryWithTranscript("lesson_001")
+        val connection = FakePlayerConnection()
+        val viewModel = PlayerViewModel(repository, FakeSettingsRepository(), connection)
+
+        connection.emit(PlaybackState(connected = true, playing = true, lessonId = "lesson_001", track = "guided", positionMs = 1_500))
+        awaitTranscriptLoaded(viewModel)
+
+        // Current cue is 1000..3000ms; replay is a one-shot seek to its start.
+        viewModel.replayCurrentLine()
+        assertEquals(listOf(1000L), connection.seekToCalls)
+
+        connection.emit(connection.state.value.copy(positionMs = 2_700))
+        viewModel.replayCurrentLine()
+        assertEquals(listOf(1000L, 1000L), connection.seekToCalls)
+    }
+
+    @Test
+    fun `replay current line is a no-op without a timeline`() = runTest {
+        val repository = FakeCourseRepository()
+        val connection = FakePlayerConnection()
+        val viewModel = PlayerViewModel(repository, FakeSettingsRepository(), connection)
+
+        connection.emit(PlaybackState(connected = true, lessonId = "lesson_001", track = "guided", positionMs = 1_500))
+        // Give ensureTranscriptLoaded a moment to publish the (empty) transcript state.
+        Thread.sleep(50)
+
+        viewModel.replayCurrentLine()
+        assertEquals(emptyList<Long>(), connection.seekToCalls)
+    }
+
+    @Test
     fun `loop state is mirrored from the connection, never set locally`() = runTest {
         val repository = repositoryWithTranscript("lesson_001")
         val connection = FakePlayerConnection()

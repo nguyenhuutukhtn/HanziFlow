@@ -38,7 +38,9 @@ object TranscriptRendering {
         showVietnamese: Boolean,
         modelAnswerRevealed: Boolean,
     ): LineRenderDecision {
-        val isVietnameseLine = line.language == "vi"
+        // Published reference lines use BCP-47 tags ("vi-VN"), hand-written fixtures
+        // often use the bare code ("vi"); accept both so the toggle behaves the same.
+        val isVietnameseLine = line.language == "vi" || line.language.startsWith("vi-")
         if (isVietnameseLine && !showVietnamese) {
             return LineRenderDecision(
                 placeholder = false,

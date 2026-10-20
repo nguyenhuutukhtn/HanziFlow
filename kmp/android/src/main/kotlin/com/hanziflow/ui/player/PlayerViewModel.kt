@@ -17,10 +17,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 
 @HiltViewModel
 class PlayerViewModel @Inject constructor(
@@ -86,6 +88,18 @@ class PlayerViewModel @Inject constructor(
         val transcript = _uiState.value.transcript
         val target = TranscriptCues.seekTargetMs(transcript.cues, lineId, _uiState.value.positionMs) ?: return
         seekTo(target)
+    }
+
+    /**
+     * Mini-player "Nghe lại câu": one-shot seek to the start of the line whose cue
+     * contains the current position. No timeline (or a gap between cues) is a no-op,
+     * never a seek to 0, so a paused/not-loaded player can't jump the lesson.
+     */
+    fun replayCurrentLine() {
+        val transcript = _uiState.value.transcript
+        if (transcript.lessonId == null || transcript.lessonId != _uiState.value.lessonId) return
+        val cue = TranscriptCues.activeCue(transcript.cues, _uiState.value.positionMs) ?: return
+        playerConnection.seekTo(cue.startMs)
     }
 
     fun toggleLoopForLine(lineId: String) {
@@ -172,7 +186,15 @@ class PlayerViewModel @Inject constructor(
         if (_uiState.value.lessonId == lessonId && _uiState.value.lessonTitle != null) return
         practiceLookupJob?.cancel()
         practiceLookupJob = viewModelScope.launch {
+            // The playback state can arrive before Room's first lessons emission
+            // (restored session on cold start), and a paused player emits no further
+            // state changes. Wait for the lesson row instead of leaving the id as title.
             val title = lessons.value.firstOrNull { it.id == lessonId }?.title
+                ?: withTimeoutOrNull(2_000) {
+                    lessons.first { list -> list.any { it.id == lessonId } }
+                        .first { it.id == lessonId }
+                        .title
+                }
             val practiceAvailable = courseRepository.catalogLesson(lessonId)?.tracks?.practice != null
             _uiState.update { it.copy(lessonTitle = title, practiceAvailable = practiceAvailable) }
         }

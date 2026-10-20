@@ -5,6 +5,7 @@ import com.hanziflow.data.SettingsRepository
 class FakeSettingsRepository(
     private var baseUrl: String = SettingsRepository.DEFAULT_BASE_URL,
     private var vietnamese: Boolean = true,
+    private var dark: Boolean = SettingsRepository.DEFAULT_DARK_THEME,
 ) : SettingsRepository {
     private val transcriptViews = mutableMapOf<String, String>()
     val setBaseUrlCalls = mutableListOf<String>()
@@ -20,4 +21,7 @@ class FakeSettingsRepository(
 
     override suspend fun vietnameseEnabled(): Boolean = vietnamese
     override suspend fun setVietnameseEnabled(enabled: Boolean) { vietnamese = enabled }
+
+    override suspend fun darkTheme(): Boolean = dark
+    override suspend fun setDarkTheme(enabled: Boolean) { dark = enabled }
 }

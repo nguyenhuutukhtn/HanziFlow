@@ -6,4 +6,5 @@ data class LibraryUiState(
     val lessons: List<LessonEntity> = emptyList(),
     val baseUrl: String = "",
     val message: String? = null,
+    val syncing: Boolean = false,
 )

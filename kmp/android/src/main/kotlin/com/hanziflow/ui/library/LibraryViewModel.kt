@@ -34,14 +34,16 @@ class LibraryViewModel @Inject constructor(
     }
 
     fun sync() = viewModelScope.launch {
-        _uiState.update { it.copy(message = "Syncing catalog…") }
+        _uiState.update { it.copy(syncing = true, message = null) }
         runCatching {
             settingsRepository.setBaseUrl(_uiState.value.baseUrl)
             courseRepository.syncCatalog()
         }.onSuccess {
-            _uiState.update { it.copy(message = "Catalog updated") }
+            _uiState.update { it.copy(syncing = false, message = null) }
         }.onFailure { error ->
-            _uiState.update { it.copy(message = error.message ?: "Catalog sync failed") }
+            // The raw error stays in state for diagnostics; the screen shows the
+            // Vietnamese sync-failure copy, not this string.
+            _uiState.update { it.copy(syncing = false, message = error.message ?: "Catalog sync failed") }
         }
     }
 

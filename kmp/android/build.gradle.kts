@@ -31,6 +31,8 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
     packaging.resources.excludes += "/META-INF/{AL2.0,LGPL2.1}"
+
+    testOptions.unitTests.isIncludeAndroidResources = true
 }
 
 dependencies {
@@ -57,7 +59,14 @@ dependencies {
     implementation(libs.androidx.hilt.work)
     ksp(libs.androidx.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.navigation.compose)
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.konsist)
+    testImplementation(platform(libs.androidx.compose.bom))
+    testImplementation(libs.androidx.compose.ui.test.junit4)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.androidx.test.junit)
+    testImplementation(libs.robolectric)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
 }
