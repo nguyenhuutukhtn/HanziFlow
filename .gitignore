@@ -1,0 +1,15 @@
+.env
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+cache/*
+!cache/.gitkeep
+output/*
+!output/.gitkeep
+data/*.db
+data/*.sqlite*
+data/voices.json
+.claude/

@@ -1,0 +1,303 @@
+{
+  "lesson_id": "lesson_001",
+  "title": "Greetings and Introductions",
+  "level": "absolute_beginner",
+  "target_duration_minutes": 5,
+  "communicative_goals": [
+    "Greet someone you just met",
+    "Ask their name and say yours",
+    "Say you are glad to meet them",
+    "A few days later, ask how they have been and answer",
+    "Say you are heading off, and say goodbye"
+  ],
+  "prerequisites": [],
+  "new_patterns": [
+    "你好",
+    "你叫什么？",
+    "我叫…",
+    "你呢？",
+    "很高兴认识你。",
+    "我也是。",
+    "再见",
+    "早",
+    "最近怎么样？",
+    "挺好的。",
+    "也不错。",
+    "那我先走了。"
+  ],
+  "review_pattern_ids": [],
+  "version": 5,
+  "variant": "practice",
+  "segments": [
+    {
+      "id": "c1_s1_intro",
+      "activity": "Lần 1",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "Anna gặp Lý Minh, bạn cùng lớp.",
+      "pause_after_ms": 600
+    },
+    {
+      "id": "c1_s1",
+      "activity": "Lần 1",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "text": "你好！你好！你叫什么？我叫安娜。你呢？我叫李明。很高兴认识你。我也是。再见！再见！",
+      "pinyin": "nǐ hǎo! nǐ hǎo! nǐ jiào shénme? wǒ jiào Ānnà. nǐ ne? wǒ jiào Lǐ Míng. hěn gāoxìng rènshi nǐ. wǒ yě shì. zàijiàn! zàijiàn!",
+      "translation": "Xin chào. Xin chào. Bạn tên gì? Mình tên Anna. Còn bạn? Mình tên Lý Minh. Rất vui được gặp bạn. Mình cũng vậy. Tạm biệt. Tạm biệt.",
+      "pause_after_ms": 1200,
+      "turns": [
+        {
+          "speaker": "li_ming",
+          "text": "你好！"
+        },
+        {
+          "speaker": "anna",
+          "text": "你好！"
+        },
+        {
+          "speaker": "li_ming",
+          "text": "你叫什么？"
+        },
+        {
+          "speaker": "anna",
+          "text": "我叫安娜。你呢？"
+        },
+        {
+          "speaker": "li_ming",
+          "text": "我叫李明。"
+        },
+        {
+          "speaker": "anna",
+          "text": "很高兴认识你。"
+        },
+        {
+          "speaker": "li_ming",
+          "text": "我也是。"
+        },
+        {
+          "speaker": "anna",
+          "text": "再见！"
+        },
+        {
+          "speaker": "li_ming",
+          "text": "再见！"
+        }
+      ]
+    },
+    {
+      "id": "c1_s2_intro",
+      "activity": "Lần 1",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "Vài ngày sau, Anna và Lý Minh gặp thoáng qua trước giờ học.",
+      "pause_after_ms": 600
+    },
+    {
+      "id": "c1_s2",
+      "activity": "Lần 1",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "text": "早，李明！早，安娜！最近怎么样？挺好的。你呢？也不错。那我先走了。再见！再见！",
+      "pinyin": "zǎo, Lǐ Míng! zǎo, Ānnà! zuìjìn zěnmeyàng? tǐng hǎo de. nǐ ne? yě bú cuò. nà wǒ xiān zǒu le. zàijiàn! zàijiàn!",
+      "translation": "Chào buổi sáng, Lý Minh. Chào buổi sáng, Anna. Dạo này thế nào? Khá ổn. Còn bạn? Cũng không tệ. Mình đi trước đây. Tạm biệt. Tạm biệt.",
+      "pause_after_ms": 1200,
+      "turns": [
+        {
+          "speaker": "anna",
+          "text": "早，李明！"
+        },
+        {
+          "speaker": "li_ming",
+          "text": "早，安娜！最近怎么样？"
+        },
+        {
+          "speaker": "anna",
+          "text": "挺好的。你呢？"
+        },
+        {
+          "speaker": "li_ming",
+          "text": "也不错。"
+        },
+        {
+          "speaker": "anna",
+          "text": "那我先走了。再见！"
+        },
+        {
+          "speaker": "li_ming",
+          "text": "再见！"
+        }
+      ]
+    },
+    {
+      "id": "c2_s1",
+      "activity": "Lần 2",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "text": "你好！你好！你叫什么？我叫安娜。你呢？我叫李明。很高兴认识你。我也是。再见！再见！",
+      "pinyin": "nǐ hǎo! nǐ hǎo! nǐ jiào shénme? wǒ jiào Ānnà. nǐ ne? wǒ jiào Lǐ Míng. hěn gāoxìng rènshi nǐ. wǒ yě shì. zàijiàn! zàijiàn!",
+      "translation": "Xin chào. Xin chào. Bạn tên gì? Mình tên Anna. Còn bạn? Mình tên Lý Minh. Rất vui được gặp bạn. Mình cũng vậy. Tạm biệt. Tạm biệt.",
+      "pause_after_ms": 1200,
+      "turns": [
+        {
+          "speaker": "li_ming",
+          "text": "你好！"
+        },
+        {
+          "speaker": "anna",
+          "text": "你好！"
+        },
+        {
+          "speaker": "li_ming",
+          "text": "你叫什么？"
+        },
+        {
+          "speaker": "anna",
+          "text": "我叫安娜。你呢？"
+        },
+        {
+          "speaker": "li_ming",
+          "text": "我叫李明。"
+        },
+        {
+          "speaker": "anna",
+          "text": "很高兴认识你。"
+        },
+        {
+          "speaker": "li_ming",
+          "text": "我也是。"
+        },
+        {
+          "speaker": "anna",
+          "text": "再见！"
+        },
+        {
+          "speaker": "li_ming",
+          "text": "再见！"
+        }
+      ]
+    },
+    {
+      "id": "c2_s2",
+      "activity": "Lần 2",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "text": "早，李明！早，安娜！最近怎么样？挺好的。你呢？也不错。那我先走了。再见！再见！",
+      "pinyin": "zǎo, Lǐ Míng! zǎo, Ānnà! zuìjìn zěnmeyàng? tǐng hǎo de. nǐ ne? yě bú cuò. nà wǒ xiān zǒu le. zàijiàn! zàijiàn!",
+      "translation": "Chào buổi sáng, Lý Minh. Chào buổi sáng, Anna. Dạo này thế nào? Khá ổn. Còn bạn? Cũng không tệ. Mình đi trước đây. Tạm biệt. Tạm biệt.",
+      "pause_after_ms": 1200,
+      "turns": [
+        {
+          "speaker": "anna",
+          "text": "早，李明！"
+        },
+        {
+          "speaker": "li_ming",
+          "text": "早，安娜！最近怎么样？"
+        },
+        {
+          "speaker": "anna",
+          "text": "挺好的。你呢？"
+        },
+        {
+          "speaker": "li_ming",
+          "text": "也不错。"
+        },
+        {
+          "speaker": "anna",
+          "text": "那我先走了。再见！"
+        },
+        {
+          "speaker": "li_ming",
+          "text": "再见！"
+        }
+      ]
+    },
+    {
+      "id": "c3_s1",
+      "activity": "Lần 3",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "text": "你好！你好！你叫什么？我叫安娜。你呢？我叫李明。很高兴认识你。我也是。再见！再见！",
+      "pinyin": "nǐ hǎo! nǐ hǎo! nǐ jiào shénme? wǒ jiào Ānnà. nǐ ne? wǒ jiào Lǐ Míng. hěn gāoxìng rènshi nǐ. wǒ yě shì. zàijiàn! zàijiàn!",
+      "translation": "Xin chào. Xin chào. Bạn tên gì? Mình tên Anna. Còn bạn? Mình tên Lý Minh. Rất vui được gặp bạn. Mình cũng vậy. Tạm biệt. Tạm biệt.",
+      "pause_after_ms": 1200,
+      "turns": [
+        {
+          "speaker": "li_ming",
+          "text": "你好！"
+        },
+        {
+          "speaker": "anna",
+          "text": "你好！"
+        },
+        {
+          "speaker": "li_ming",
+          "text": "你叫什么？"
+        },
+        {
+          "speaker": "anna",
+          "text": "我叫安娜。你呢？"
+        },
+        {
+          "speaker": "li_ming",
+          "text": "我叫李明。"
+        },
+        {
+          "speaker": "anna",
+          "text": "很高兴认识你。"
+        },
+        {
+          "speaker": "li_ming",
+          "text": "我也是。"
+        },
+        {
+          "speaker": "anna",
+          "text": "再见！"
+        },
+        {
+          "speaker": "li_ming",
+          "text": "再见！"
+        }
+      ]
+    },
+    {
+      "id": "c3_s2",
+      "activity": "Lần 3",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "text": "早，李明！早，安娜！最近怎么样？挺好的。你呢？也不错。那我先走了。再见！再见！",
+      "pinyin": "zǎo, Lǐ Míng! zǎo, Ānnà! zuìjìn zěnmeyàng? tǐng hǎo de. nǐ ne? yě bú cuò. nà wǒ xiān zǒu le. zàijiàn! zàijiàn!",
+      "translation": "Chào buổi sáng, Lý Minh. Chào buổi sáng, Anna. Dạo này thế nào? Khá ổn. Còn bạn? Cũng không tệ. Mình đi trước đây. Tạm biệt. Tạm biệt.",
+      "pause_after_ms": 1200,
+      "turns": [
+        {
+          "speaker": "anna",
+          "text": "早，李明！"
+        },
+        {
+          "speaker": "li_ming",
+          "text": "早，安娜！最近怎么样？"
+        },
+        {
+          "speaker": "anna",
+          "text": "挺好的。你呢？"
+        },
+        {
+          "speaker": "li_ming",
+          "text": "也不错。"
+        },
+        {
+          "speaker": "anna",
+          "text": "那我先走了。再见！"
+        },
+        {
+          "speaker": "li_ming",
+          "text": "再见！"
+        }
+      ]
+    }
+  ]
+}

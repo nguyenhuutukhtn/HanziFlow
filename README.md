@@ -1,0 +1,171 @@
+# HanziFlow
+
+A local-first Python CLI that turns validated lesson JSON into a Mandarin listening-and-speaking course. Lesson content, TTS, FFmpeg assembly, transcripts, caching, and learner-managed review history are separate so later lessons do not require changes to the core code.
+
+The MVP includes a real 12-week curriculum outline and a complete Lesson 1, **Greetings and Introductions**. It does not claim to assess pronunciation or know whether an answer was correct; review ratings are supplied by the learner.
+
+## What the MVP does
+
+- validates lesson content with Pydantic before any paid request;
+- reports cache hits and unique clips that would need TTS;
+- asks for explicit confirmation before uncached paid generation;
+- calls the official ElevenLabs Python SDK and caches by text, language, voice, model, output format, and voice settings;
+- normalizes clips, inserts each configured pause, and creates an offline MP3 with FFmpeg;
+- writes a spoiler-light practice transcript and a full reference transcript;
+- stores generated lessons, learned patterns, learner ratings, mistakes, and due dates in SQLite;
+- tests without an ElevenLabs key and never calls TTS in unit tests.
+
+## Requirements (macOS)
+
+- Python 3.11 or newer
+- FFmpeg and `ffprobe`
+- an ElevenLabs account only when generating real speech
+
+Install system prerequisites with Homebrew if needed:
+
+```bash
+brew install python@3.11 ffmpeg
+python3 --version
+ffmpeg -version
+```
+
+## Install
+
+From the project root:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -e '.[dev]'
+cp .env.example .env
+```
+
+The `.env` file, audio cache, generated output, and SQLite database are ignored by Git.
+
+## Configure ElevenLabs
+
+Open the [ElevenLabs Voice Library](https://elevenlabs.io/app/voice-library), audition voices, and choose IDs available to your account. Select one voice that speaks natural Mainland Standard Mandarin and one clear English voice. Do not guess or copy the example voice IDs from documentation.
+
+Fill in `.env`:
+
+```dotenv
+ELEVENLABS_API_KEY=your_key
+ELEVENLABS_MANDARIN_VOICE_ID=your_mandarin_voice_id
+ELEVENLABS_MANDARIN_VOICE_2_ID=your_second_mandarin_voice_id
+ELEVENLABS_ENGLISH_VOICE_ID=your_english_voice_id
+ELEVENLABS_MODEL_ID=eleven_v4
+```
+
+The implementation follows the current official `text_to_speech.convert` API. It defaults to `eleven_v4`, ElevenLabs' highest-quality model, and sends only the voice settings supported by that model family. Model availability and account pricing can change, so check [the model reference](https://elevenlabs.io/docs/overview/models/) and [text-to-speech API reference](https://elevenlabs.io/docs/api-reference/text-to-speech/convert) before a large run.
+
+## Safe workflow
+
+Activate the environment first:
+
+```bash
+source .venv/bin/activate
+```
+
+Validate Lesson 1 without TTS:
+
+```bash
+python -m mandarin_course.cli validate lessons/lesson_001.json
+```
+
+Create both transcripts without TTS:
+
+```bash
+python -m mandarin_course.cli transcript lessons/lesson_001.json
+```
+
+This writes:
+
+- `output/lesson_001/transcript.md` — practice version; pinyin only, model answers hidden;
+- `output/lesson_001/transcript_full.md` — reference with English glosses and optional Hanzi details.
+
+Always inspect the paid-request plan first:
+
+```bash
+python -m mandarin_course.cli generate lessons/lesson_001.json --dry-run
+```
+
+The plan reports spoken segments, segment-level cache hits, and the number of unique uncached TTS requests. A dry run never constructs the TTS client or calls the API.
+
+Generate only this lesson:
+
+```bash
+python -m mandarin_course.cli generate lessons/lesson_001.json
+```
+
+The CLI asks you to type `yes` before making any uncached paid requests. In a trusted automated workflow, `--yes` supplies that confirmation:
+
+```bash
+python -m mandarin_course.cli generate lessons/lesson_001.json --yes
+```
+
+On success, listen offline at `output/lesson_001/lesson_001.mp3`. The command prints the duration measured by `ffprobe`; it never reports success for an empty or failed output.
+
+## Cache behavior
+
+Each cached clip is content-addressed. Running the same lesson with the same voices and settings reuses it. Changing text, language, model, output format, voice ID, or a TTS voice setting creates a new key. `playback_speed` is applied locally by FFmpeg, so adjusting it rebuilds the lesson without another paid TTS request. Old cache files are safe to leave in place.
+
+Lesson dialogue uses three speaker roles: `anna` maps to the primary Mandarin voice, `li_ming` maps to the second Mandarin voice, and `coach` maps to the English voice. Multi-turn `turns` blocks use Eleven v4 Text to Dialogue; drills remain individual clips so answer pauses stay exact.
+
+Eleven v4 does not expose a Speed setting. To slow a segment without changing pitch, set `"playback_speed": 0.9` in lesson JSON. Keep normal conversations near `1.0`; use roughly `0.88`–`0.95` only for focused imitation. Large slowdowns sound processed and are intentionally rejected by the schema.
+
+To intentionally rebuild every clip, move the contents of `cache/` somewhere safe and run the dry-run again. Do not delete the entire project directory.
+
+## Tests
+
+```bash
+source .venv/bin/activate
+pytest
+```
+
+Tests cover valid and invalid JSON, duplicate IDs, bad pauses, Mandarin learning fields, audio order, real silence assembly through FFmpeg, cache hits/misses, cache invalidation, transcript spoiler handling, TTS failures, SQLite review data, and CLI commands that must not call TTS.
+
+## Review schedule
+
+After successful audio generation, Lesson 1 patterns are registered in `data/progress.db`:
+
+```bash
+python -m mandarin_course.cli review
+```
+
+The initial schedule uses 1, 2, 3, 5, and 7 days, then expands by about 1.7x. The storage layer accepts `again`, `hard`, `good`, and `easy` learner ratings; a future interactive command can expose rating input. `again` also increments the recorded mistake count.
+
+## Lesson data
+
+`lessons/lesson_001.json` is the source of truth. Mandarin is stored in simplified Hanzi for reliable TTS, while pinyin with tone marks and concise English meaning are stored for learner transcripts. Pinyin keeps dictionary tones. Lesson 1 is one first meeting between classmates, then the same two people a few mornings later, heard, imitated, then answered. It does not loop shuffled versions of the same lines.
+
+Each question-answer exercise is explicit: a `prompt` segment has its own answer pause and points to a later `model_answer` in metadata. The builder never invents answers or timing. To add a lesson, copy the schema, give every segment a unique ID, validate it, create transcripts, and dry-run before generation.
+
+## Troubleshooting
+
+- **Missing configuration:** copy `.env.example` to `.env` and fill all three ElevenLabs values. The CLI never prints their contents.
+- **401/403 from ElevenLabs:** verify the key, account permissions, and that each voice ID is available to the account.
+- **429 or rate limit:** stop and retry later. Completed cache files remain reusable; partial files are removed.
+- **Voice has the wrong accent:** audition Mainland Mandarin voices and replace `ELEVENLABS_MANDARIN_VOICE_ID` or `ELEVENLABS_MANDARIN_VOICE_2_ID`; dry-run will correctly show only the resulting cache misses.
+- **`ffmpeg` not found:** run `brew install ffmpeg`, then open a new shell.
+- **Validation error:** the message identifies the invalid field; common causes are missing pinyin/translation on Mandarin, a negative pause, or duplicate segment IDs.
+- **Generated duration differs from target:** TTS voice pacing affects actual length. The measured output duration is authoritative; adjust segment pauses or lesson activities and regenerate only the invalidated clips.
+
+## Project map
+
+```text
+curriculum/beginner.json       12-week progression
+lessons/lesson_001.json        real Lesson 1 content and timing
+src/mandarin_course/config.py  environment configuration
+src/mandarin_course/lesson_schema.py
+src/mandarin_course/tts.py     ElevenLabs adapter and cache
+src/mandarin_course/audio_builder.py
+src/mandarin_course/transcript.py
+src/mandarin_course/storage.py
+src/mandarin_course/review.py
+src/mandarin_course/cli.py
+tests/                         offline unit/integration tests
+```
+
+## Next extension: AI-assisted curriculum authoring
+
+Keep AI authoring outside the audio builder. Add a generator that consumes the curriculum, the validated pattern inventory, previous exposure counts, and due-review items; require it to emit this same lesson schema. Then apply deterministic checks for vocabulary budget, introduced-before-used patterns, pinyin completeness, answer timing, and review coverage. A human should preview and approve the JSON before the existing dry-run/generation pipeline is allowed to spend TTS credits.

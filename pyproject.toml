@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mandarin-audio-course"
+version = "0.1.0"
+description = "Offline-friendly Mandarin listening and speaking course generator"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "elevenlabs>=2.0,<3",
+  "pydantic>=2.7,<3",
+  "python-dotenv>=1.0,<2",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0,<10"]
+
+[project.scripts]
+mandarin-course = "mandarin_course.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
