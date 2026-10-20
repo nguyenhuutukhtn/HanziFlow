@@ -287,7 +287,7 @@ Music-app structure (Spotify / Zing MP3 style), because listening is the main ac
 - **Mini-player** docked above the bottom navigation on every tab whenever something is loaded: title, track, play/pause, progress. Switching tabs never stops playback.
 - **Now Playing**: tapping or swiping up the mini-player opens a full-screen player; the karaoke transcript fills most of it, like synced lyrics in a music app. Compact controls: play/pause, ±10 s, seek bar, speed, guided/practice switch, transcript view, Vietnamese toggle, loop state.
 
-Visual design follows `docs/ui_design.md` (to be written from UI research) once it exists; screens must not be designed ad hoc inside feature tasks.
+Visual design follows [`docs/ui/`](ui/README.md) (start at its README, then read only the files for the screens a task touches); screens must not be designed ad hoc inside feature tasks.
 
 ### Word lookup and copy
 

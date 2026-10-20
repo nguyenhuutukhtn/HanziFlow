@@ -22,7 +22,10 @@ App work (Android first, then web; Kotlin Multiplatform `shared/` logic; Supabas
 for auth, progress sync, and lesson package storage) follows
 [`docs/app_architecture.md`](docs/app_architecture.md). Read it before touching
 `publish`, `kmp/`, `web/`, or `supabase/`. Clients never receive TTS or Supabase
-admin credentials, and `publish` never calls ElevenLabs.
+admin credentials, and `publish` never calls ElevenLabs. For app work, start with
+[`docs/STATUS.md`](docs/STATUS.md) (what's done, what's next, open decisions)
+and, for UI, [`docs/ui/README.md`](docs/ui/README.md) plus only the screen files
+your task touches.
 
 ## Current direction — read this before writing any new lesson
 
@@ -102,3 +105,31 @@ The current method is a **mini-story** format (Effortless English / TPRS-style):
 - Don't pick a grammar point and construct a story around it (see "Current
   direction" above) — this is the single most common way this course accidentally
   reverts to feeling like a textbook.
+
+## Token budget (app and pipeline tasks)
+
+- Don't read large generated or data files unless the task needs them: `publish/`,
+  `cache/`, `output/`, `**/build/`, `kmp/shared/src/commonTest/resources/`, and
+  the full `lessons/*.json` (query them with a short script instead). These are
+  listed in `.cursorignore`.
+- Run Gradle with `-q` and show only the tail of failures.
+- Device checks: prefer text (`adb shell dumpsys media_session`, `uiautomator dump`
+  grepped, logcat filtered) over screenshots; at most 3 screenshots per task,
+  saved under `kmp/build/screenshots/`. Visual regressions belong in local
+  screenshot tests, not repeated device captures.
+- Do the verification yourself (build, tests, lint, architecture tests) before
+  reporting; don't hand unverified work back for review.
+- At the end of a task, update [`docs/STATUS.md`](docs/STATUS.md) (Done / Next /
+  Open decisions) in a few lines.
+
+## Task reports
+
+Report in at most 12 lines, in this shape, and nothing else:
+
+```text
+Result: done | blocked (why) | partial (what's missing)
+Verified: <commands run> → <pass/fail counts>; device: <what, how> or "not run"
+Changed: <files or folders, one line>
+Deviations: <from the prompt/spec, or "none">
+Needs user: <decisions or manual steps, or "none">
+```

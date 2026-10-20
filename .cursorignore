@@ -1,0 +1,14 @@
+# Large or generated files agents should not read by default (saves tokens).
+# Open one explicitly when a task really needs it.
+publish/
+cache/
+output/
+data/
+.venv/
+**/build/
+kmp/.gradle/
+kmp/kotlin-js-store/
+kmp/shared/src/commonTest/resources/
+kmp/fixtures/publish/**/*.mp3
+*.mp3
+*.wav
