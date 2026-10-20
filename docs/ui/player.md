@@ -12,7 +12,7 @@ All wireframes are phone width (~360–412dp), portrait. `[ ]` = tap target,
 ```
 ┌───────────────────────────────────┐
 │ ▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░░░░ │ ← thin progress line, full width
-│  Bài 1 · Guided        [‖ ] [⏭]   │ ← title/track · pause-or-play · next-line? no:
+│  Bài 1 · Học có hướng dẫn        [‖ ] [⏭]   │ ← title/track · pause-or-play · next-line? no:
 │  Người mới bắt đầu                │   next = next lesson only in Now Playing,
 └───────────────────────────────────┘   mini-player keeps 2 controls max
    Học · Ôn tập · Cài đặt
@@ -53,7 +53,7 @@ Vietnamese toggle — same screen, same data, different render.
 │           auto-scroll + highlight)  │
 │                                     │
 │  ───────────────────────────────  │
-│  Guided  │  Luyện tập              │ ← track switch (only if practice exists)
+│  Học có hướng dẫn │ Luyện nghe      │ ← track switch (only if practice exists)
 │  00:42 ▓▓▓▓▓▓▓░░░░░░░░░░░░ 03:10  │ ← seek bar with time labels
 │  0.8× 0.9× 1.0× 1.1×               │ ← speed chips
 │     [⏮10s]    [ ▶ ]    [10s⏭]     │ ← primary transport, center button largest

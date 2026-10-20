@@ -14,9 +14,9 @@ All wireframes are phone width (~360–412dp), portrait. `[ ]` = tap target,
 │  Cài đặt                           │
 │                                     │
 │  HIỂN THỊ                          │
-│  Hiển thị mặc định (Guided)        │
+│  Hiển thị mặc định (Học có hướng dẫn)        │
 │    Hán tự + pinyin            >   │
-│  Hiển thị mặc định (Luyện tập)     │
+│  Hiển thị mặc định (Luyện nghe)     │
 │    Ẩn                          >   │
 │  Hiện tiếng Việt                [●]│
 │  Giao diện tối                  [●]│

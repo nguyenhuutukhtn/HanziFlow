@@ -34,7 +34,7 @@ text to be rewritten ad hoc.
 **Now Playing**
 - View-mode chips: "Ẩn" · "Pinyin" · "Hán + pinyin" · "Hán tự"
 - Vietnamese switch label: "Tiếng Việt"
-- Track switch: "Guided" · "Luyện tập" (kept as-is — these are already established English loan terms for Vietnamese learners of this course; do not translate to avoid inconsistency with the lesson JSON's own `track` naming)
+- Track switch: "Học có hướng dẫn" · "Luyện nghe" (decided 2026-10-20; display names only — internal ids stay `guided` / `practice`)
 - Overflow menu: "Kiểm tra bài" · "Tải lại bài" · "Báo cáo vấn đề"
 - Loop chip: "Đang lặp: {dòng}" (dismiss icon has TalkBack label "Dừng lặp")
 - model_answer placeholder: "Đến lượt bạn — nói trước khi nghe"
@@ -58,7 +58,7 @@ text to be rewritten ad hoc.
 
 **Settings**
 - Section headers: "HIỂN THỊ" · "TẢI XUỐNG" · "TÀI KHOẢN" · "DÀNH CHO NHÀ PHÁT TRIỂN"
-- "Hiển thị mặc định (Guided)" · "Hiển thị mặc định (Luyện tập)"
+- "Hiển thị mặc định (Học có hướng dẫn)" · "Hiển thị mặc định (Luyện nghe)"
 - "Hiện tiếng Việt" · "Giao diện tối" · "Dùng màu theo hình nền máy"
 - "Chỉ tải qua Wi-Fi" · "Dung lượng đã dùng"
 - "Đăng xuất" · "Đăng nhập để lưu tiến độ trên nhiều máy"

@@ -19,10 +19,13 @@ import androidx.media3.session.SessionResult
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.SettableFuture
-import com.hanziflow.HanziFlowApplication
 import com.hanziflow.MainActivity
+import com.hanziflow.data.CourseDatabase
+import com.hanziflow.data.CourseRepository
 import com.hanziflow.data.PlaybackEntity
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -33,7 +36,10 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@AndroidEntryPoint
 class PlaybackService : MediaSessionService() {
+    @Inject lateinit var courseRepository: CourseRepository
+    @Inject lateinit var courseDatabase: CourseDatabase
     private lateinit var player: ExoPlayer
     private lateinit var session: MediaSession
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
@@ -222,10 +228,9 @@ class PlaybackService : MediaSessionService() {
     }
 
     private suspend fun loadResumption(): Resumption? = withContext(Dispatchers.IO) {
-        val app = application as HanziFlowApplication
-        val saved = app.database.dao().playback() ?: return@withContext null
-        val file = app.repository.trackFile(saved.lessonId, saved.track) ?: return@withContext null
-        val title = app.database.dao().lesson(saved.lessonId)?.title ?: saved.lessonId
+        val saved = courseDatabase.dao().playback() ?: return@withContext null
+        val file = courseRepository.trackFile(saved.lessonId, saved.track) ?: return@withContext null
+        val title = courseDatabase.dao().lesson(saved.lessonId)?.title ?: saved.lessonId
         Resumption(saved, file, title)
     }
 
@@ -243,7 +248,7 @@ class PlaybackService : MediaSessionService() {
     private fun save() {
         val snapshot = snapshot() ?: return
         persistenceScope.launch {
-            (application as HanziFlowApplication).database.dao().putPlayback(snapshot)
+            courseDatabase.dao().putPlayback(snapshot)
         }
     }
 
@@ -273,7 +278,7 @@ class PlaybackService : MediaSessionService() {
         } else {
             persistenceScope.launch {
                 try {
-                    (application as HanziFlowApplication).database.dao().putPlayback(finalSnapshot)
+                    courseDatabase.dao().putPlayback(finalSnapshot)
                 } finally {
                     persistenceScope.cancel()
                 }

@@ -1,11 +1,15 @@
 package com.hanziflow
 
 import android.app.Application
-import com.hanziflow.data.CourseDatabase
-import com.hanziflow.data.CourseRepository
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
+import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
-class HanziFlowApplication : Application() {
-    val database by lazy { CourseDatabase.open(this) }
-    val repository by lazy { CourseRepository(this, database) }
+@HiltAndroidApp
+class HanziFlowApplication : Application(), Configuration.Provider {
+    @Inject lateinit var workerFactory: HiltWorkerFactory
+
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder().setWorkerFactory(workerFactory).build()
 }
-

@@ -11,14 +11,14 @@ Content and teacher behavior (what the lesson *says*) follow
 [`lesson_design_principles.md`](lesson_design_principles.md). This doc only decides
 how that content is displayed and touched.
 
-## Pending review changes
+## Review decisions (2026-10-20) — these override the screen files where they conflict
 
-These parts of the spec are under review (see [docs/STATUS.md](../STATUS.md) "Open decisions"). Do not implement them as written until resolved:
-
-- Long-press on a token is specified for both lookup and starting text selection; on Android a long-press inside selectable text always starts selection. Proposed: long-press = lookup; the lookup sheet offers "copy line" and "select text…" (the line in a freely selectable sheet).
-- Mini-player secondary action = loop toggle. Proposed: "replay current line" (one-shot jump to the line start) instead.
-- Review: "no reveal / no fail screen" conflicts with the pass rule in the architecture doc, which is itself awaiting a decision.
-- "Open in Pleco" button: proposed to drop and rely on "Send to…" only.
+- **Long-press a token = lookup** (not text selection). The lookup sheet offers **Copy word**, **Copy line**, **Select text…** (opens the whole line in a sheet with freely selectable text, where the system menu shows installed dictionaries/translators) and **Send to…**.
+- **No "Open in Pleco" button.** Pleco appears under Send to… / the selection menu when installed.
+- **Mini-player secondary action = "Nghe lại câu"** (one-shot jump to the start of the current line). Loop is only toggled in Now Playing, on the active line.
+- **Tests:** pass only if every question is right on the first try (see the pass rule in app_architecture.md). Wrong answers show the correct one and are requeued as a different question; the attempt continues but won't pass. There is a **"Xem đáp án"** action (marks the attempt not passed). The result screen has both states: **pass** and **not passed** (first-try correct / total, [Làm lại], [Nghe lại bài học]).
+- **Accent color: amber** as in tokens.md.
+- **Track display names: "Học có hướng dẫn" / "Luyện nghe"** (ids stay guided/practice).
 
 ## Section map
 
@@ -189,30 +189,6 @@ Settings → change default transcript view / Vietnamese default / Wi-Fi only / 
 9. **Accessibility pass** (§7) — TalkBack labels and reduced-motion fallbacks
    last, once the real components (not placeholders) exist to label.
 
-## Open questions needing the user's taste
+## Open questions
 
-These are deliberately left as decisions, not defaults buried in the tokens above:
-
-- **Accent color**: §5.1 proposes a warm amber primary (evokes a "teacher's
-  highlighter," pairs well with the brown-black dark background) with teal as
-  secondary. This is a placeholder choice, not a brand decision — confirm or
-  replace before implementation locks in `Color.kt`.
-- **Illustration/icon style** for empty states (Learn empty, Review "no
-  attempts") — this spec describes them only as "(illustration/icon)" (§3.1)
-  and intentionally does not prescribe a style (flat icon vs. a small
-  character-based mascot vs. none at all/text-only). No research was done on
-  illustration style since it's a brand-taste call, not a usability one.
-- **App icon / launcher branding** — out of scope for this spec entirely.
-- **"Guided" / "Luyện tập" track naming**: §8 keeps the English loan terms as-is
-  to match the lesson JSON's own vocabulary, but if the user wants fully
-  Vietnamese track names (e.g. "Bài học" / "Luyện nói") that's a one-line string
-  change — flagging it here because it touches both UI copy and potentially
-  the lesson-authoring side's mental model, so it's worth a deliberate choice
-  rather than a silent pick.
-- **Whether "Mở trong Pleco" is worth the Android 11+ package-visibility
-  query** (`<queries>` manifest entry for Pleco's package) versus just always
-  offering the generic system "Send to…" and letting Pleco show up there
-  automatically if installed — research (§ Pleco) found the deep-link scheme
-  is community-documented, not officially stable API, so there's a real
-  reliability-vs-polish tradeoff the user should weigh before committing to a
-  direct Pleco button.
+- Empty-state illustration style and app icon: not decided; use text-only empty states until then.

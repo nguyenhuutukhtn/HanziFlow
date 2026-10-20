@@ -223,7 +223,7 @@ Each published audio track has a timeline, `timeline_<track>.json`, listed in `c
 - Distractors are chosen deliberately, never uniformly at random: same syllable with a different tone (`mǎi`/`mài`), confusable initials and finals (`zh/z`, `sh/s`, `ü/u`), then other taught words of the same kind. Never use a word the learner has not been taught.
 - Answer position is shuffled per question.
 
-**Pass rule:** an attempt passes only when every question has been answered correctly. A wrong answer is requeued at the end of the attempt as a different question of the same type on the same item; the attempt passes when the queue is empty and no answer was revealed. (Default, pending confirmation; the alternative is "any mistake fails the attempt".) A lesson counts as passed when it has at least one passed attempt.
+**Pass rule (decided 2026-10-20):** an attempt passes only if every question is answered correctly on the first try and no answer was revealed. Mistakes don't end the attempt: a wrong answer shows the correct one, and a different question of the same type on the same item is requeued at the end so the learner still practices it, but that attempt is recorded as not passed. The result screen shows first-try correct / total. A lesson counts as passed when it has at least one passed attempt.
 
 ## Android app
 

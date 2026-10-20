@@ -1,14 +1,18 @@
 package com.hanziflow.download
 
 import android.content.Context
+import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.hanziflow.HanziFlowApplication
+import com.hanziflow.data.CourseDao
 import com.hanziflow.data.CourseRepository
+import com.hanziflow.data.SettingsRepository
 import com.hanziflow.shared.CatalogLesson
 import com.hanziflow.shared.Clip
 import com.hanziflow.shared.CourseJson
 import com.hanziflow.shared.Track
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import java.io.File
 import java.io.FileOutputStream
 import java.nio.file.Files
@@ -21,12 +25,14 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
-class LessonDownloadWorker(context: Context, parameters: WorkerParameters) :
-    CoroutineWorker(context, parameters) {
-    private val app = context.applicationContext as HanziFlowApplication
-    private val dao = app.database.dao()
-    private val repository = app.repository
-    private val client = OkHttpClient()
+@HiltWorker
+class LessonDownloadWorker @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted parameters: WorkerParameters,
+    private val dao: CourseDao,
+    private val settingsRepository: SettingsRepository,
+    private val client: OkHttpClient,
+) : CoroutineWorker(context, parameters) {
     private var completed = false
     private var lessonId = ""
 
@@ -37,7 +43,7 @@ class LessonDownloadWorker(context: Context, parameters: WorkerParameters) :
             dao.setDownloadState(lessonId, "DOWNLOADING")
             val entity = dao.lesson(lessonId) ?: error("Lesson is not in the catalog")
             val lesson = CourseJson.codec.decodeFromString(CatalogLesson.serializer(), entity.catalogJson)
-            val rootUrl = CourseRepository.resolveUrl(repository.baseUrl(), lesson.baseUrl)
+            val rootUrl = CourseRepository.resolveUrl(settingsRepository.baseUrl(), lesson.baseUrl)
             stage.deleteRecursively()
             stage.mkdirs()
 

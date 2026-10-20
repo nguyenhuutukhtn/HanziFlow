@@ -1,4 +1,4 @@
-package com.hanziflow.player
+package com.hanziflow.ui.player
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

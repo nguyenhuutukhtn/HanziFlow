@@ -1,0 +1,131 @@
+package com.hanziflow.data
+
+import android.content.Context
+import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
+import com.hanziflow.download.LessonDownloadWorker
+import com.hanziflow.shared.CatalogLesson
+import com.hanziflow.shared.CourseJson
+import dagger.hilt.android.qualifiers.ApplicationContext
+import java.io.File
+import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
+
+class CourseRepositoryImpl @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val database: CourseDatabase,
+    private val settingsRepository: SettingsRepository,
+    private val client: OkHttpClient,
+) : CourseRepository {
+    private val dao = database.dao()
+    override val lessons: Flow<List<LessonEntity>> = dao.observeLessons()
+
+    override suspend fun syncCatalog() = withContext(Dispatchers.IO) {
+        val request = Request.Builder().url(CourseRepository.resolveUrl(settingsRepository.baseUrl(), "catalog.json")).build()
+        val json = client.newCall(request).execute().use { response ->
+            check(response.isSuccessful) { "Catalog HTTP ${response.code}" }
+            response.body.string()
+        }
+        val catalog = CourseJson.catalog(json)
+        catalog.lessons.forEach { remote ->
+            val previous = dao.lesson(remote.id)
+            dao.putLesson(
+                LessonEntity(
+                    id = remote.id,
+                    title = remote.title,
+                    level = remote.level,
+                    lessonOrder = remote.order,
+                    remoteVersion = remote.version,
+                    downloadedVersion = previous?.downloadedVersion,
+                    downloadedCatalogJson = previous?.downloadedCatalogJson,
+                    catalogJson = CourseJson.codec.encodeToString(CatalogLesson.serializer(), remote),
+                    downloadState = when {
+                        previous?.downloadState == "DOWNLOADING" -> "DOWNLOADING"
+                        previous?.downloadedVersion == remote.version -> "DOWNLOADED"
+                        previous?.downloadedVersion != null -> "UPDATE_AVAILABLE"
+                        else -> "AVAILABLE"
+                    },
+                    error = if (previous?.downloadState == "DOWNLOADING") previous.error else null,
+                )
+            )
+        }
+    }
+
+    override fun download(id: String) {
+        val request = OneTimeWorkRequestBuilder<LessonDownloadWorker>()
+            .setInputData(workDataOf(LessonDownloadWorker.LESSON_ID to id))
+            .setConstraints(
+                Constraints.Builder()
+                    .setRequiredNetworkType(NetworkType.CONNECTED)
+                    .build()
+            )
+            .addTag(CourseRepository.workName(id))
+            .build()
+        WorkManager.getInstance(context)
+            .enqueueUniqueWork(CourseRepository.workName(id), ExistingWorkPolicy.REPLACE, request)
+    }
+
+    override fun cancel(id: String) {
+        WorkManager.getInstance(context).cancelUniqueWork(CourseRepository.workName(id))
+    }
+
+    override suspend fun delete(id: String) = withContext(Dispatchers.IO) {
+        cancel(id)
+        context.filesDir.resolve("course/packages/$id").deleteRecursively()
+        dao.markDeleted(id)
+    }
+
+    override suspend fun trackFile(lessonId: String, track: String): File? {
+        val entity = dao.lesson(lessonId) ?: return null
+        val version = entity.downloadedVersion ?: return null
+        val lesson = downloadedLesson(entity)
+        val artifact = if (track == "practice") lesson.tracks.practice else lesson.tracks.guided
+        return artifact?.let { packageFile(lessonId, version, it.file) }
+    }
+
+    override suspend fun timelineFile(lessonId: String, track: String): File? {
+        val entity = dao.lesson(lessonId) ?: return null
+        val version = entity.downloadedVersion ?: return null
+        val lesson = downloadedLesson(entity)
+        val artifact = if (track == "practice") lesson.tracks.practice?.timeline else lesson.tracks.guided.timeline
+        return artifact?.let { packageFile(lessonId, version, it.file) }
+    }
+
+    override suspend fun referenceFile(lessonId: String): File? {
+        val entity = dao.lesson(lessonId) ?: return null
+        val version = entity.downloadedVersion ?: return null
+        val lesson = downloadedLesson(entity)
+        return packageFile(lessonId, version, lesson.files.reference.file)
+    }
+
+    override suspend fun itemsFile(lessonId: String): File? {
+        val entity = dao.lesson(lessonId) ?: return null
+        val version = entity.downloadedVersion ?: return null
+        val lesson = downloadedLesson(entity)
+        return packageFile(lessonId, version, lesson.files.items.file)
+    }
+
+    override suspend fun clipFile(lessonId: String, relative: String): File? {
+        val entity = dao.lesson(lessonId) ?: return null
+        val version = entity.downloadedVersion ?: return null
+        return packageFile(lessonId, version, relative)
+    }
+
+    override suspend fun catalogLesson(id: String): CatalogLesson? = dao.lesson(id)?.let {
+        CourseJson.codec.decodeFromString(CatalogLesson.serializer(), it.catalogJson)
+    }
+
+    private fun downloadedLesson(entity: LessonEntity): CatalogLesson =
+        CourseJson.codec.decodeFromString(CatalogLesson.serializer(), entity.downloadedCatalogJson ?: entity.catalogJson)
+
+    private fun packageFile(lessonId: String, version: Int, relative: String): File? =
+        context.filesDir.resolve("course/packages/$lessonId/v$version/$relative").takeIf(File::isFile)
+}

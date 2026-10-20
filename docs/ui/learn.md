@@ -33,7 +33,7 @@ All wireframes are phone width (~360–412dp), portrait. `[ ]` = tap target,
 ┌───────────────────────────────────┐
 │  Học                      [↻ sync] │
 │ ┌─────────────────────────────────┐│
-│ │ ▶ Đang nghe: Bài 1 · Guided     ││   ← continue-listening card,
+│ │ ▶ Đang nghe: Bài 1 · Học có hướng dẫn     ││   ← continue-listening card,
 │ │ ▓▓▓▓▓▓▓▓░░░░░░  12:04 / 24:10   ││     only if a lesson was opened
 │ └─────────────────────────────────┘│     before; tap → Now Playing
 │                                     │
