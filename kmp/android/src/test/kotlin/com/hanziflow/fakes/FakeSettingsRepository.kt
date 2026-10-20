@@ -8,6 +8,7 @@ class FakeSettingsRepository(
     private var dark: Boolean = SettingsRepository.DEFAULT_DARK_THEME,
 ) : SettingsRepository {
     private val transcriptViews = mutableMapOf<String, String>()
+    private val chineseOnly = mutableMapOf<String, Boolean>()
     val setBaseUrlCalls = mutableListOf<String>()
 
     override suspend fun baseUrl(): String = baseUrl
@@ -24,4 +25,11 @@ class FakeSettingsRepository(
 
     override suspend fun darkTheme(): Boolean = dark
     override suspend fun setDarkTheme(enabled: Boolean) { dark = enabled }
+
+    override suspend fun chineseOnlyEnabled(lessonId: String, track: String): Boolean =
+        chineseOnly[SettingsRepository.chineseOnlyKey(lessonId, track)] ?: false
+
+    override suspend fun setChineseOnlyEnabled(lessonId: String, track: String, enabled: Boolean) {
+        chineseOnly[SettingsRepository.chineseOnlyKey(lessonId, track)] = enabled
+    }
 }

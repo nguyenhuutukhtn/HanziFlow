@@ -17,7 +17,11 @@ interface PlayerConnection {
     fun seekTo(positionMs: Long)
     fun setSpeed(speed: Float)
     fun loopSegment(lineId: String, startMs: Long, endMs: Long)
+    fun loopSection(sectionId: String, title: String, startMs: Long, endMs: Long)
+    fun stopSectionLoopAfterPass()
+    fun nextSection()
     fun clearLoop()
+    fun setChineseOnly(enabled: Boolean)
 
     /** Plays a short word/sentence clip (lookup) on a side player, pausing main playback. */
     fun playClip(uri: String)

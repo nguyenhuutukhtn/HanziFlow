@@ -33,7 +33,9 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.material3.Button
 import com.hanziflow.R
+import com.hanziflow.playback.SectionLoopInfo
 import com.hanziflow.ui.theme.Spacing
 
 const val MiniPlayerTestTag = "mini_player"
@@ -55,6 +57,9 @@ fun MiniPlayer(
     onReplayLine: () -> Unit,
     onExpand: () -> Unit,
     modifier: Modifier = Modifier,
+    sectionLoop: SectionLoopInfo? = null,
+    onStopSectionLoopAfterPass: () -> Unit = {},
+    onNextSection: () -> Unit = {},
 ) {
     val progress = if (durationMs > 0) {
         (positionMs.toFloat() / durationMs).coerceIn(0f, 1f)
@@ -152,6 +157,25 @@ fun MiniPlayer(
                         painter = painterResource(if (playing) R.drawable.ic_pause else R.drawable.ic_play),
                         contentDescription = stringResource(if (playing) R.string.pause else R.string.play),
                     )
+                }
+            }
+            if (sectionLoop != null) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(start = Spacing.lg, end = Spacing.sm, bottom = Spacing.xs),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        stringResource(R.string.mini_player_section_loop, sectionLoop.title, sectionLoop.pass),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.weight(1f),
+                    )
+                    TextButton(onClick = onStopSectionLoopAfterPass, enabled = !sectionLoop.stopAfterPass) {
+                        Text(stringResource(R.string.stop_section_loop_after_pass))
+                    }
+                    TextButton(onClick = onNextSection) {
+                        Text(stringResource(R.string.next_section))
+                    }
                 }
             }
         }

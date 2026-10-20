@@ -79,5 +79,10 @@ fun HanziFlowApp(
         onVietnameseToggle = playerViewModel::setTranscriptVietnamese,
         onPlayLookupClip = playerViewModel::playLookupClip,
         onDismissLookup = playerViewModel::dismissLookup,
+        onChineseOnlyToggle = playerViewModel::setChineseOnly,
+        onLoopSection = playerViewModel::loopCurrentSection,
+        onStopSectionLoopAfterPass = playerViewModel::stopSectionLoopAfterPass,
+        onNextSection = playerViewModel::nextSection,
+        onSeekToSection = playerViewModel::seekToSection,
     )
 }

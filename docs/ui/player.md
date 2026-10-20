@@ -23,6 +23,10 @@ All wireframes are phone width (~360–412dp), portrait. `[ ]` = tap target,
   skip — skip-to-next-lesson is rare and belongs in Now Playing; loop-current-line
   is the one action a learner repeats constantly while walking without looking.
   Tapping the title/track area (not the controls) opens Now Playing.
+- **Section loop active:** a second compact row under the title/track row:
+  `↻ <section title> · n/5    [Bỏ lặp] [Sang phần sau]`. The two main controls
+  stay unchanged above it; the row disappears when the loop ends. Decided
+  2026-10-21 (section replay, see app_architecture.md "Section replay").
 - Progress line is tappable-free (no seek here — seeking needs the full
   transcript/seek bar in Now Playing; a thin strip is too easy to mis-tap while
   walking). This resolves part of the gesture conflict in §4.
@@ -44,7 +48,8 @@ Vietnamese toggle — same screen, same data, different render.
 │  ┌──────┬───────────┬──────┐      │ ← view-mode segmented control
 │  │ Ẩn   │Pinyin│Hán+pinyin│Hán │  │   (horizontally scrollable chip row,
 │  └──────┴───────────┴──────┘      │    see 5.4 — shown compact as 4 chips)
-│          Tiếng Việt  [●  ⚪]       │ ← Vietnamese on/off switch, own row
+│  Tiếng Việt [●⚪]  Chỉ nghe tiếng Trung [⚪●] │ ← both switches, same row (5.9)
+│  ▤ <section title> · n/N ▾   ↻ Lặp phần này │ ← section row (5.10), hidden if no sections
 │  ───────────────────────────────  │
 │                                     │
 │          (transcript area,         │
@@ -54,11 +59,50 @@ Vietnamese toggle — same screen, same data, different render.
 │                                     │
 │  ───────────────────────────────  │
 │  Học có hướng dẫn │ Luyện nghe      │ ← track switch (only if practice exists)
-│  00:42 ▓▓▓▓▓▓▓░░░░░░░░░░░░ 03:10  │ ← seek bar with time labels
+│  00:42 ▓▓▓▓▓▓▓░ ╎ ░░░░░░░░ 03:10  │ ← seek bar, ╎ = section-start tick (5.10);
+│                                     │   right label is total duration, or
+│                                     │   `≈ mm:ss` effective remaining when
+│                                     │   Chinese-only is on
 │  0.8× 0.9× 1.0× 1.1×               │ ← speed chips
 │     [⏮10s]    [ ▶ ]    [10s⏭]     │ ← primary transport, center button largest
 └───────────────────────────────────┘
 ```
+
+### 5.9 Chinese-only listening ("Chỉ nghe tiếng Trung")
+
+For a learner who has heard a lesson many times and can follow the Chinese
+directly; decided 2026-10-20 (see app_architecture.md "Chinese-only listening").
+
+- Second switch on the Vietnamese row: `Tiếng Việt [switch]   Chỉ nghe tiếng
+  Trung [switch]`. On: the Vietnamese switch shows off and is disabled
+  (Vietnamese text hidden) — only one of the two can be shown on at a time.
+- Disabled (not hidden) when the track's timeline has no `language` tag on its
+  cues (old package, before this feature) — nothing for it to key off.
+- The seek bar's right-hand time label becomes the *effective* remaining time,
+  prefixed `≈` (e.g. `≈ 02:05`): total time minus the Vietnamese + silence
+  being skipped, not simply total duration.
+
+### 5.10 Section replay
+
+A lesson is divided into sections (timeline `sections`); decided 2026-10-20
+(see app_architecture.md "Section replay").
+
+- **Section row**, directly above the seek bar: `▤ <section title> · n/N ▾` on
+  the left (tap opens a bottom sheet "Các phần" — one row per section, title +
+  duration `mm:ss`, current one highlighted; tapping a row seeks to its start
+  and closes the sheet), `↻ Lặp phần này` text button on the right. Hidden
+  when the timeline has no `sections` (old packages).
+- **Seek-bar markers**: a 2dp×8dp tick at each section start except the
+  first, `onSurfaceVariant`, drawn under the thumb; no labels.
+- **Section loop active**: replaces the line-loop chip (only one loop at a
+  time) — `↻ Lặp phần: <title> · Lần n/5` with two text buttons `Bỏ lặp`
+  (finish this pass, then continue — chip then reads `Lần cuối` until the
+  section ends) and `Sang phần sau` (clear the loop, seek to the next section
+  now; on the last section, seek to its end). Starting a line loop replaces an
+  active section loop and vice versa.
+- **Mini-player**: a second compact row under the title while a section loop
+  is active — `↻ <title> · n/5    [Bỏ lặp] [Sang phần sau]`; disappears when
+  the loop ends. The two main mini-player controls are unchanged.
 
 - Overflow menu (⋮): "Kiểm tra bài" (Take the test), "Tải lại bài" (if a file is
   corrupt), "Báo cáo vấn đề" (optional, later). Keeping test entry in overflow —

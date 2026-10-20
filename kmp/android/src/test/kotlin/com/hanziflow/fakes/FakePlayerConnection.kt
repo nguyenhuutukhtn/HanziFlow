@@ -2,6 +2,7 @@ package com.hanziflow.fakes
 
 import com.hanziflow.playback.PlaybackState
 import com.hanziflow.playback.PlayerConnection
+import com.hanziflow.playback.SectionLoopInfo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -17,7 +18,11 @@ class FakePlayerConnection : PlayerConnection {
     val seekToCalls = mutableListOf<Long>()
     val speedCalls = mutableListOf<Float>()
     val loopSegmentCalls = mutableListOf<Triple<String, Long, Long>>()
+    val loopSectionCalls = mutableListOf<SectionLoopInfo>()
+    var stopSectionLoopAfterPassCalls = 0
+    var nextSectionCalls = 0
     var clearLoopCalls = 0
+    val chineseOnlyCalls = mutableListOf<Boolean>()
     val playClipCalls = mutableListOf<String>()
 
     fun emit(state: PlaybackState) { _state.value = state }
@@ -35,12 +40,35 @@ class FakePlayerConnection : PlayerConnection {
 
     override fun loopSegment(lineId: String, startMs: Long, endMs: Long) {
         loopSegmentCalls += Triple(lineId, startMs, endMs)
-        _state.value = _state.value.copy(loopedLineId = lineId)
+        _state.value = _state.value.copy(loopedLineId = lineId, sectionLoop = null)
+    }
+
+    override fun loopSection(sectionId: String, title: String, startMs: Long, endMs: Long) {
+        val info = SectionLoopInfo(sectionId, title, pass = 1, stopAfterPass = false)
+        loopSectionCalls += info
+        _state.value = _state.value.copy(loopedLineId = null, sectionLoop = info)
+    }
+
+    override fun stopSectionLoopAfterPass() {
+        stopSectionLoopAfterPassCalls++
+        _state.value.sectionLoop?.let { current ->
+            _state.value = _state.value.copy(sectionLoop = current.copy(stopAfterPass = true))
+        }
+    }
+
+    override fun nextSection() {
+        nextSectionCalls++
+        _state.value = _state.value.copy(sectionLoop = null)
     }
 
     override fun clearLoop() {
         clearLoopCalls++
-        _state.value = _state.value.copy(loopedLineId = null)
+        _state.value = _state.value.copy(loopedLineId = null, sectionLoop = null)
+    }
+
+    override fun setChineseOnly(enabled: Boolean) {
+        chineseOnlyCalls += enabled
+        _state.value = _state.value.copy(chineseOnly = enabled)
     }
 
     override fun playClip(uri: String) { playClipCalls += uri }

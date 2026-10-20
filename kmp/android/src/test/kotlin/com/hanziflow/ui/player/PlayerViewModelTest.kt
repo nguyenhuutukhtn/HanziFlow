@@ -4,6 +4,7 @@ import com.hanziflow.fakes.FakeCourseRepository
 import com.hanziflow.fakes.FakePlayerConnection
 import com.hanziflow.fakes.FakeSettingsRepository
 import com.hanziflow.playback.PlaybackState
+import com.hanziflow.playback.SectionLoopInfo
 import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -43,7 +44,10 @@ class PlayerViewModelTest {
         )
         val timeline = tempJson(
             "timeline",
-            """{"schema_version":1,"lesson_id":"$lessonId","lesson_version":1,"track":"$track","duration_ms":5000,"cues":[{"line_id":"r1_food","start_ms":1000,"end_ms":3000}]}""",
+            """{"schema_version":1,"lesson_id":"$lessonId","lesson_version":1,"track":"$track","duration_ms":5000,
+               |"cues":[{"line_id":"r1_food","start_ms":1000,"end_ms":3000}],
+               |"sections":[{"id":"story","title":"Nghe chuyện","start_ms":0,"end_ms":5000}]}
+            """.trimMargin(),
         )
         val items = tempJson(
             "items",
@@ -147,5 +151,54 @@ class PlayerViewModelTest {
 
         assertEquals("Download this lesson first", viewModel.uiState.value.message)
         assertEquals(emptyList<List<String>>(), connection.playCalls)
+    }
+
+    @Test
+    fun `chinese-only toggle forwards to the connection, forces Vietnamese off, and persists per track`() = runTest {
+        val repository = repositoryWithTranscript("lesson_001")
+        val connection = FakePlayerConnection()
+        val settings = FakeSettingsRepository()
+        val viewModel = PlayerViewModel(repository, settings, connection)
+
+        connection.emit(PlaybackState(connected = true, lessonId = "lesson_001", track = "guided", positionMs = 0))
+        awaitTranscriptLoaded(viewModel)
+
+        viewModel.setChineseOnly(true)
+
+        assertEquals(listOf(false, true), connection.chineseOnlyCalls)
+        assertEquals(false, viewModel.uiState.value.transcript.showVietnamese)
+        assertEquals(true, settings.chineseOnlyEnabled("lesson_001", "guided"))
+    }
+
+    @Test
+    fun `section loop commands forward to the connection for the current section`() = runTest {
+        val repository = repositoryWithTranscript("lesson_001")
+        val connection = FakePlayerConnection()
+        val viewModel = PlayerViewModel(repository, FakeSettingsRepository(), connection)
+
+        connection.emit(PlaybackState(connected = true, lessonId = "lesson_001", track = "guided", positionMs = 1_500))
+        awaitTranscriptLoaded(viewModel)
+
+        viewModel.loopCurrentSection()
+        assertEquals(SectionLoopInfo("story", "Nghe chuyện", pass = 1, stopAfterPass = false), connection.loopSectionCalls.single())
+
+        viewModel.stopSectionLoopAfterPass()
+        assertEquals(1, connection.stopSectionLoopAfterPassCalls)
+
+        viewModel.nextSection()
+        assertEquals(1, connection.nextSectionCalls)
+    }
+
+    @Test
+    fun `seeking to a section by id seeks to its start`() = runTest {
+        val repository = repositoryWithTranscript("lesson_001")
+        val connection = FakePlayerConnection()
+        val viewModel = PlayerViewModel(repository, FakeSettingsRepository(), connection)
+
+        connection.emit(PlaybackState(connected = true, lessonId = "lesson_001", track = "guided", positionMs = 1_500))
+        awaitTranscriptLoaded(viewModel)
+
+        viewModel.seekToSection("story")
+        assertEquals(listOf(0L), connection.seekToCalls)
     }
 }

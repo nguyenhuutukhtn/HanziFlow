@@ -39,6 +39,11 @@ text to be rewritten ad hoc.
 - Loop chip: "Đang lặp: {dòng}" (dismiss icon has TalkBack label "Dừng lặp")
 - model_answer placeholder: "Đến lượt bạn — nói trước khi nghe"
 - Reload-needed snackbar: "Không phát được bài này. Hãy tải lại." / action: "Tải lại"
+- Chinese-only switch: "Chỉ nghe tiếng Trung"; effective remaining time: "≈ {mm:ss}"
+- Section row: "{tên phần} · {n}/{N}"; sheet title: "Các phần"; button: "Lặp phần này"
+- Section loop chip: "Lặp phần: {tên phần} · Lần {n}/5" (last pass before stopping: "Lặp phần: {tên phần} · Lần cuối")
+- Section loop buttons: "Bỏ lặp" · "Sang phần sau"
+- Mini-player section-loop row: "{tên phần} · {n}/5"
 
 **Lookup sheet**
 - Button: "Phát âm"

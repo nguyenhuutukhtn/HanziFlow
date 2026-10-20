@@ -1,20 +1,38 @@
 package com.hanziflow.playback
 
-/** The line currently looping: [startMs, endMs) in media time. */
-data class LoopState(val lineId: String, val startMs: Long, val endMs: Long)
+/** The active loop: a looped transcript line, or a looped section (up to 5 passes). */
+sealed interface LoopState {
+    data class Line(val lineId: String, val startMs: Long, val endMs: Long) : LoopState
+
+    data class Section(
+        val sectionId: String,
+        val title: String,
+        val startMs: Long,
+        val endMs: Long,
+        val pass: Int,
+        val stopAfterPass: Boolean,
+    ) : LoopState
+}
 
 /**
- * The single source of truth for the active line loop. [PlaybackService] is the only
- * writer; every controller (including one reconnecting after its UI was recreated)
- * must read [current] instead of remembering its own copy, so a newly attached
- * controller always sees whatever the service is actually doing.
+ * The single source of truth for the active loop (line or section, never both).
+ * [PlaybackService] is the only writer; every controller (including one reconnecting
+ * after its UI was recreated) must read [current] instead of remembering its own copy.
  */
 class LoopPublisher {
     var current: LoopState? = null
         private set
 
-    fun start(lineId: String, startMs: Long, endMs: Long) {
-        current = LoopState(lineId, startMs, endMs)
+    fun startLine(lineId: String, startMs: Long, endMs: Long) {
+        current = LoopState.Line(lineId, startMs, endMs)
+    }
+
+    fun startSection(sectionId: String, title: String, startMs: Long, endMs: Long) {
+        current = LoopState.Section(sectionId, title, startMs, endMs, pass = 1, stopAfterPass = false)
+    }
+
+    fun updateSection(transform: (LoopState.Section) -> LoopState.Section) {
+        (current as? LoopState.Section)?.let { current = transform(it) }
     }
 
     fun clear() {

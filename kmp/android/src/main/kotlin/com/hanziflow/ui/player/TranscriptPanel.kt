@@ -103,6 +103,7 @@ fun TranscriptPanel(
                 onVietnameseToggle = onVietnameseToggle,
             )
         }
+
         LazyColumn(state = listState, modifier = Modifier.fillMaxWidth()) {
             itemsIndexed(lines, key = { _, line -> line.id }) { index, line ->
                 val revealed = remember(line.id, line.type, positionMs) {
@@ -128,7 +129,11 @@ fun TranscriptPanel(
     }
 }
 
-/** Vietnamese chips + Vietnamese-meaning switch; shared by the panel and Now Playing chrome. */
+/**
+ * Vietnamese chips + Vietnamese-meaning switch; shared by the panel and Now Playing
+ * chrome. [vietnameseEnabled] and [trailingSwitch] let Now Playing add the
+ * Chinese-only switch to the same row without this file owning that logic.
+ */
 @Composable
 fun TranscriptViewSwitcher(
     viewMode: TranscriptViewMode,
@@ -136,6 +141,8 @@ fun TranscriptViewSwitcher(
     onViewModeChange: (TranscriptViewMode) -> Unit,
     onVietnameseToggle: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
+    vietnameseEnabled: Boolean = true,
+    trailingSwitch: @Composable () -> Unit = {},
 ) {
     Column(modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp)) {
         Row(
@@ -157,9 +164,12 @@ fun TranscriptViewSwitcher(
                 )
             }
         }
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            Text(stringResource(R.string.vietnamese_switch), style = MaterialTheme.typography.labelMedium)
-            Switch(checked = showVietnamese, onCheckedChange = onVietnameseToggle)
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text(stringResource(R.string.vietnamese_switch), style = MaterialTheme.typography.labelMedium)
+                Switch(checked = showVietnamese, onCheckedChange = onVietnameseToggle, enabled = vietnameseEnabled)
+            }
+            trailingSwitch()
         }
     }
 }

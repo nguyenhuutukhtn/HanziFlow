@@ -14,13 +14,23 @@ object CueNavigation {
     /**
      * Start of the next transcript cue after [positionMs]. Inside a cue this is the
      * following cue; in a gap it is the next cue that starts later. Null when there
-     * is no next cue (or no timeline at all).
+     * is no next cue (or no timeline at all). [skipTarget] (e.g. Chinese-only) can
+     * redirect a candidate that lands inside a skipped range; return null from it to
+     * keep the candidate as-is.
      */
-    fun nextCueStartMs(cues: List<TimelineCue>, positionMs: Long): Long? {
+    fun nextCueStartMs(
+        cues: List<TimelineCue>,
+        positionMs: Long,
+        skipTarget: (Long) -> Long? = { null },
+    ): Long? {
         if (cues.isEmpty()) return null
         val activeIndex = TranscriptCues.activeCueIndex(cues, positionMs)
-        if (activeIndex != null) return cues.getOrNull(activeIndex + 1)?.startMs
-        return cues.firstOrNull { it.startMs > positionMs }?.startMs
+        val candidate = if (activeIndex != null) {
+            cues.getOrNull(activeIndex + 1)?.startMs
+        } else {
+            cues.firstOrNull { it.startMs > positionMs }?.startMs
+        }
+        return candidate?.let { skipTarget(it) ?: it }
     }
 
     /**
@@ -28,18 +38,24 @@ object CueNavigation {
      * [PREVIOUS_REPLAY_WINDOW_MS] of the current cue's start. In a gap this is the
      * last cue that started before [positionMs]. Null only without a timeline.
      */
-    fun previousCueStartMs(cues: List<TimelineCue>, positionMs: Long): Long? {
+    fun previousCueStartMs(
+        cues: List<TimelineCue>,
+        positionMs: Long,
+        skipTarget: (Long) -> Long? = { null },
+    ): Long? {
         if (cues.isEmpty()) return null
         val activeIndex = TranscriptCues.activeCueIndex(cues, positionMs)
-        if (activeIndex != null) {
+        val candidate = if (activeIndex != null) {
             val current = cues[activeIndex]
             val withinReplayWindow = positionMs - current.startMs < PREVIOUS_REPLAY_WINDOW_MS
-            return if (withinReplayWindow) {
+            if (withinReplayWindow) {
                 cues.getOrNull(activeIndex - 1)?.startMs ?: current.startMs
             } else {
                 current.startMs
             }
+        } else {
+            cues.lastOrNull { it.startMs < positionMs }?.startMs ?: cues.first().startMs
         }
-        return cues.lastOrNull { it.startMs < positionMs }?.startMs ?: cues.first().startMs
+        return skipTarget(candidate) ?: candidate
     }
 }

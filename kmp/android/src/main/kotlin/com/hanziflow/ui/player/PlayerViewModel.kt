@@ -7,6 +7,8 @@ import com.hanziflow.data.LessonEntity
 import com.hanziflow.data.SettingsRepository
 import com.hanziflow.playback.PlayerConnection
 import com.hanziflow.shared.CourseJson
+import com.hanziflow.shared.TimelineSection
+import com.hanziflow.shared.transcript.SectionNavigation
 import com.hanziflow.shared.transcript.TranscriptCues
 import com.hanziflow.shared.transcript.TranscriptViewMode
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -51,6 +53,8 @@ class PlayerViewModel @Inject constructor(
                         positionMs = playback.positionMs,
                         durationMs = playback.durationMs,
                         speed = playback.speed,
+                        sectionLoop = playback.sectionLoop,
+                        chineseOnly = playback.chineseOnly,
                         transcript = it.transcript.copy(loopedLineId = playback.loopedLineId),
                     )
                 }
@@ -90,6 +94,12 @@ class PlayerViewModel @Inject constructor(
         seekTo(target)
     }
 
+    /** Section bottom sheet row tap: seek to that section's start and close the sheet (UI-side). */
+    fun seekToSection(sectionId: String) {
+        val target = SectionNavigation.sectionStart(_uiState.value.transcript.sections, sectionId) ?: return
+        seekTo(target)
+    }
+
     /**
      * Mini-player "Nghe lại câu": one-shot seek to the start of the line whose cue
      * contains the current position. No timeline (or a gap between cues) is a no-op,
@@ -116,6 +126,26 @@ class PlayerViewModel @Inject constructor(
     }
 
     fun cancelLoop() = playerConnection.clearLoop()
+
+    /** "Lặp phần này" for the section currently playing. */
+    fun loopCurrentSection() {
+        val section = currentSection() ?: return
+        playerConnection.loopSection(section.id, section.title, section.startMs, section.endMs)
+    }
+
+    fun stopSectionLoopAfterPass() = playerConnection.stopSectionLoopAfterPass()
+    fun nextSection() = playerConnection.nextSection()
+
+    fun currentSection(): TimelineSection? =
+        SectionNavigation.sectionAt(_uiState.value.transcript.sections, _uiState.value.positionMs)
+
+    fun setChineseOnly(enabled: Boolean) {
+        val lessonId = _uiState.value.lessonId ?: return
+        val track = _uiState.value.track
+        playerConnection.setChineseOnly(enabled)
+        if (enabled) setTranscriptVietnamese(false)
+        viewModelScope.launch { settingsRepository.setChineseOnlyEnabled(lessonId, track, enabled) }
+    }
 
     fun setTranscriptViewMode(mode: TranscriptViewMode) {
         _uiState.update { it.copy(transcript = it.transcript.copy(viewMode = mode)) }
@@ -157,22 +187,25 @@ class PlayerViewModel @Inject constructor(
                 val timelineFile = courseRepository.timelineFile(lessonId, track) ?: return@withContext null
                 val reference = CourseJson.reference(referenceFile.readText())
                 val lines = if (track == "practice") reference.tracks.practice.orEmpty() else reference.tracks.guided
-                val cues = CourseJson.timeline(timelineFile.readText()).cues
+                val timeline = CourseJson.timeline(timelineFile.readText())
                 val items = courseRepository.itemsFile(lessonId)?.let { CourseJson.items(it.readText()) }
-                Triple(lines, cues, items)
+                Loaded(lines, timeline.cues, timeline.sections, items)
             } ?: return@launch
             val savedView = settingsRepository.transcriptView(track)
                 ?.let { runCatching { TranscriptViewMode.valueOf(it) }.getOrNull() }
                 ?: TranscriptViewMode.PINYIN_ONLY
-            val vi = settingsRepository.vietnameseEnabled()
+            val chineseOnly = settingsRepository.chineseOnlyEnabled(lessonId, track)
+            val vi = settingsRepository.vietnameseEnabled() && !chineseOnly
+            playerConnection.setChineseOnly(chineseOnly)
             _uiState.update {
                 it.copy(
                     transcript = TranscriptUiState(
                         lessonId = lessonId,
                         track = track,
-                        lines = loaded.first,
-                        cues = loaded.second,
-                        items = loaded.third,
+                        lines = loaded.lines,
+                        cues = loaded.cues,
+                        sections = loaded.sections,
+                        items = loaded.items,
                         viewMode = savedView,
                         showVietnamese = vi,
                         loopedLineId = it.transcript.loopedLineId,
@@ -181,6 +214,13 @@ class PlayerViewModel @Inject constructor(
             }
         }
     }
+
+    private data class Loaded(
+        val lines: List<com.hanziflow.shared.ReferenceLine>,
+        val cues: List<com.hanziflow.shared.TimelineCue>,
+        val sections: List<TimelineSection>,
+        val items: com.hanziflow.shared.Items?,
+    )
 
     private fun ensureLessonMeta(lessonId: String) {
         if (_uiState.value.lessonId == lessonId && _uiState.value.lessonTitle != null) return

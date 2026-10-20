@@ -1,8 +1,10 @@
 package com.hanziflow.ui.player
 
+import com.hanziflow.playback.SectionLoopInfo
 import com.hanziflow.shared.Items
 import com.hanziflow.shared.ReferenceLine
 import com.hanziflow.shared.TimelineCue
+import com.hanziflow.shared.TimelineSection
 import com.hanziflow.shared.WordItem
 import com.hanziflow.shared.transcript.TranscriptViewMode
 
@@ -17,6 +19,8 @@ data class PlayerUiState(
     val durationMs: Long = 0,
     val speed: Float = 1f,
     val message: String? = null,
+    val sectionLoop: SectionLoopInfo? = null,
+    val chineseOnly: Boolean = false,
     val transcript: TranscriptUiState = TranscriptUiState(),
 )
 
@@ -25,6 +29,7 @@ data class TranscriptUiState(
     val track: String = "guided",
     val lines: List<ReferenceLine> = emptyList(),
     val cues: List<TimelineCue> = emptyList(),
+    val sections: List<TimelineSection> = emptyList(),
     val items: Items? = null,
     val viewMode: TranscriptViewMode = TranscriptViewMode.PINYIN_ONLY,
     val showVietnamese: Boolean = true,

@@ -10,4 +10,13 @@ data class PlaybackState(
     val durationMs: Long = 0,
     val speed: Float = 1f,
     val loopedLineId: String? = null,
+    val sectionLoop: SectionLoopInfo? = null,
+    val chineseOnly: Boolean = false,
+)
+
+data class SectionLoopInfo(
+    val sectionId: String,
+    val title: String,
+    val pass: Int,
+    val stopAfterPass: Boolean,
 )

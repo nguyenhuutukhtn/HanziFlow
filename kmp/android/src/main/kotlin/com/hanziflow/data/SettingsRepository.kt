@@ -14,6 +14,10 @@ interface SettingsRepository {
     suspend fun darkTheme(): Boolean
     suspend fun setDarkTheme(enabled: Boolean)
 
+    /** Per lesson+track, default off (manual only; never auto-on for a lesson's first listen). */
+    suspend fun chineseOnlyEnabled(lessonId: String, track: String): Boolean
+    suspend fun setChineseOnlyEnabled(lessonId: String, track: String, enabled: Boolean)
+
     companion object {
         /**
          * Public Supabase Storage root for lesson packages, built from
@@ -23,6 +27,7 @@ interface SettingsRepository {
         val DEFAULT_BASE_URL: String = BuildConfig.CONTENT_BASE_URL
         const val DEFAULT_DARK_THEME = true
         fun transcriptViewKey(track: String) = "transcript_view_$track"
+        fun chineseOnlyKey(lessonId: String, track: String) = "chinese_only_${lessonId}_$track"
     }
 }
 
@@ -56,6 +61,12 @@ class SettingsRepositoryImpl @Inject constructor(private val database: CourseDat
 
     override suspend fun setDarkTheme(enabled: Boolean) =
         dao.putSetting(SettingEntity(DARK_THEME, enabled.toString()))
+
+    override suspend fun chineseOnlyEnabled(lessonId: String, track: String): Boolean =
+        dao.setting(SettingsRepository.chineseOnlyKey(lessonId, track))?.toBooleanStrictOrNull() ?: false
+
+    override suspend fun setChineseOnlyEnabled(lessonId: String, track: String, enabled: Boolean) =
+        dao.putSetting(SettingEntity(SettingsRepository.chineseOnlyKey(lessonId, track), enabled.toString()))
 
     companion object {
         const val BASE_URL = "catalog_base_url"

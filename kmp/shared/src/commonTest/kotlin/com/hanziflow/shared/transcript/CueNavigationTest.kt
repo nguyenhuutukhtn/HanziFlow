@@ -61,4 +61,14 @@ class CueNavigationTest {
     fun previous_withoutTimeline_isNull() {
         assertNull(CueNavigation.previousCueStartMs(emptyList(), 1_000))
     }
+
+    @Test
+    fun next_redirectsOutOfASkippedRange() {
+        assertEquals(6_400L, CueNavigation.nextCueStartMs(cues, 500) { if (it == 2_000L) 6_400L else null })
+    }
+
+    @Test
+    fun previous_redirectsOutOfASkippedRange() {
+        assertEquals(400L, CueNavigation.previousCueStartMs(cues, 2_200) { if (it == 0L) 400L else null })
+    }
 }

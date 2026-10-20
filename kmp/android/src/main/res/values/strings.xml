@@ -57,6 +57,20 @@
     <string name="pause">Tạm dừng</string>
     <string name="speed_label">Tốc độ</string>
 
+    <!-- Chinese-only listening -->
+    <string name="chinese_only_switch">Chỉ nghe tiếng Trung</string>
+    <string name="effective_remaining_time">≈ %1$s</string>
+
+    <!-- Section replay -->
+    <string name="section_row">%1$s · %2$d/%3$d</string>
+    <string name="section_list_title">Các phần</string>
+    <string name="loop_section">Lặp phần này</string>
+    <string name="loop_section_active">Lặp phần: %1$s · Lần %2$d/5</string>
+    <string name="loop_section_active_last_pass">Lặp phần: %1$s · Lần cuối</string>
+    <string name="stop_section_loop_after_pass">Bỏ lặp</string>
+    <string name="next_section">Sang phần sau</string>
+    <string name="mini_player_section_loop">%1$s · %2$d/5</string>
+
     <!-- Mini-player -->
     <string name="mini_player_description">Trình phát nhỏ. %1$s, %2$s. Nhấn để mở.</string>
     <string name="mini_player_replay">Nghe lại câu</string>

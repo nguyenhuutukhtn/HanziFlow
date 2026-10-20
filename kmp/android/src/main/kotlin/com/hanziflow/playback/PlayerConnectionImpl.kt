@@ -66,12 +66,12 @@ class PlayerConnectionImpl @Inject constructor(
     override fun play(lessonId: String, track: String, uri: String, title: String) {
         controller?.apply {
             setMediaItem(
-                PlaybackService.mediaItem(
+                PlaybackContract.mediaItem(
                     lessonId = lessonId,
                     track = track,
                     uri = uri,
                     title = title,
-                    trackLabel = context.getString(PlaybackService.trackLabelRes(track)),
+                    trackLabel = context.getString(PlaybackContract.trackLabelRes(track)),
                 ),
             )
             prepare()
@@ -89,24 +89,34 @@ class PlayerConnectionImpl @Inject constructor(
     override fun setSpeed(speed: Float) { controller?.setPlaybackSpeed(speed) }
 
     override fun loopSegment(lineId: String, startMs: Long, endMs: Long) {
-        controller?.sendCustomCommand(
-            SessionCommand(PlaybackService.COMMAND_LOOP_SEGMENT, Bundle.EMPTY),
+        sendCommand(
+            PlaybackContract.COMMAND_LOOP_SEGMENT,
             bundleOf(
-                PlaybackService.EXTRA_LINE_ID to lineId,
-                PlaybackService.EXTRA_START_MS to startMs,
-                PlaybackService.EXTRA_END_MS to endMs,
+                PlaybackContract.EXTRA_LINE_ID to lineId,
+                PlaybackContract.EXTRA_START_MS to startMs,
+                PlaybackContract.EXTRA_END_MS to endMs,
             ),
         )
-        // No optimistic local update: the service publishes the new loop via session
-        // extras, picked up by onExtrasChanged.
     }
 
-    override fun clearLoop() {
-        controller?.sendCustomCommand(
-            SessionCommand(PlaybackService.COMMAND_CLEAR_LOOP, Bundle.EMPTY),
-            Bundle.EMPTY,
+    override fun loopSection(sectionId: String, title: String, startMs: Long, endMs: Long) {
+        sendCommand(
+            PlaybackContract.COMMAND_LOOP_SECTION,
+            bundleOf(
+                PlaybackContract.EXTRA_LOOP_SECTION_ID to sectionId,
+                PlaybackContract.EXTRA_LOOP_SECTION_TITLE to title,
+                PlaybackContract.EXTRA_START_MS to startMs,
+                PlaybackContract.EXTRA_END_MS to endMs,
+            ),
         )
     }
+
+    override fun stopSectionLoopAfterPass() = sendCommand(PlaybackContract.COMMAND_SECTION_STOP_AFTER_PASS)
+    override fun nextSection() = sendCommand(PlaybackContract.COMMAND_SECTION_NEXT)
+    override fun clearLoop() = sendCommand(PlaybackContract.COMMAND_CLEAR_LOOP)
+
+    override fun setChineseOnly(enabled: Boolean) =
+        sendCommand(PlaybackContract.COMMAND_SET_CHINESE_ONLY, bundleOf(PlaybackContract.EXTRA_CHINESE_ONLY to enabled))
 
     override fun playClip(uri: String) {
         controller?.pause()
@@ -114,6 +124,12 @@ class PlayerConnectionImpl @Inject constructor(
         player.setMediaItem(MediaItem.fromUri(uri))
         player.prepare()
         player.play()
+    }
+
+    // No optimistic local update: the service publishes the new state via session
+    // extras, picked up by onExtrasChanged.
+    private fun sendCommand(action: String, args: Bundle = Bundle.EMPTY) {
+        controller?.sendCustomCommand(SessionCommand(action, Bundle.EMPTY), args)
     }
 
     private fun refresh() {
@@ -130,8 +146,20 @@ class PlayerConnectionImpl @Inject constructor(
         )
     }
 
-    /** Applies the service's published loop state; never set [PlaybackState.loopedLineId] any other way. */
+    /** Applies the service's published loop/Chinese-only state; never set these any other way. */
     private fun applyLoopExtras(extras: Bundle) {
-        _state.value = _state.value.copy(loopedLineId = extras.getString(PlaybackService.EXTRA_LOOP_LINE_ID))
+        val sectionId = extras.getString(PlaybackContract.EXTRA_LOOP_SECTION_ID)
+        _state.value = _state.value.copy(
+            loopedLineId = extras.getString(PlaybackContract.EXTRA_LOOP_LINE_ID),
+            sectionLoop = sectionId?.let {
+                SectionLoopInfo(
+                    sectionId = it,
+                    title = extras.getString(PlaybackContract.EXTRA_LOOP_SECTION_TITLE).orEmpty(),
+                    pass = extras.getInt(PlaybackContract.EXTRA_LOOP_SECTION_PASS, 1),
+                    stopAfterPass = extras.getBoolean(PlaybackContract.EXTRA_LOOP_SECTION_STOP_AFTER_PASS),
+                )
+            },
+            chineseOnly = extras.getBoolean(PlaybackContract.EXTRA_CHINESE_ONLY),
+        )
     }
 }

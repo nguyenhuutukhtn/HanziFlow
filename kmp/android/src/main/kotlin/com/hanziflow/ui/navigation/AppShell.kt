@@ -84,6 +84,11 @@ fun AppShell(
     onPlayLookupClip: () -> Unit,
     onDismissLookup: () -> Unit,
     modifier: Modifier = Modifier,
+    onChineseOnlyToggle: (Boolean) -> Unit = {},
+    onLoopSection: () -> Unit = {},
+    onStopSectionLoopAfterPass: () -> Unit = {},
+    onNextSection: () -> Unit = {},
+    onSeekToSection: (String) -> Unit = {},
 ) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -115,6 +120,9 @@ fun AppShell(
                             onToggle = onToggle,
                             onReplayLine = onReplayLine,
                             onExpand = { navController.navigate(Routes.NOW_PLAYING) },
+                            sectionLoop = playerState.sectionLoop,
+                            onStopSectionLoopAfterPass = onStopSectionLoopAfterPass,
+                            onNextSection = onNextSection,
                         )
                     }
                     NavigationBar {
@@ -183,6 +191,11 @@ fun AppShell(
                     onVietnameseToggle = onVietnameseToggle,
                     onPlayLookupClip = onPlayLookupClip,
                     onDismissLookup = onDismissLookup,
+                    onChineseOnlyToggle = onChineseOnlyToggle,
+                    onLoopSection = onLoopSection,
+                    onStopSectionLoopAfterPass = onStopSectionLoopAfterPass,
+                    onNextSection = onNextSection,
+                    onSeekToSection = onSeekToSection,
                 )
             }
         }

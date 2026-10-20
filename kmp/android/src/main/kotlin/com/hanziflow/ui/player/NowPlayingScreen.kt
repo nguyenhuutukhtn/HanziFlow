@@ -1,6 +1,5 @@
 package com.hanziflow.ui.player
 
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,24 +7,17 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.FilledIconButton
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderDefaults
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -41,18 +33,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hanziflow.R
 import com.hanziflow.shared.ReferenceLine
+import com.hanziflow.shared.transcript.SectionNavigation
 import com.hanziflow.shared.transcript.TranscriptViewMode
-import com.hanziflow.ui.components.appFilterChipColors
-import com.hanziflow.ui.components.trackDisplayName
 import com.hanziflow.ui.theme.HanziFlowTheme
 import com.hanziflow.ui.theme.Spacing
 
 const val NowPlayingTestTag = "now_playing"
 
 /**
- * Full-screen Now Playing route. Stateless; [PlayerViewModel] owns all command logic,
- * including "Nghe lại câu" and loop state. The transcript is the hero: it takes the
- * remaining height above a compact, thumb-reachable transport strip.
+ * Full-screen Now Playing route. Stateless; [PlayerViewModel] owns all command logic.
+ * The transcript is the hero: it takes the remaining height above a compact, thumb-
+ * reachable transport strip. Section row/markers/loop and Chinese-only live here too.
  */
 @Composable
 fun NowPlayingScreen(
@@ -73,7 +64,13 @@ fun NowPlayingScreen(
     onPlayLookupClip: () -> Unit,
     onDismissLookup: () -> Unit,
     modifier: Modifier = Modifier,
+    onChineseOnlyToggle: (Boolean) -> Unit = {},
+    onLoopSection: () -> Unit = {},
+    onStopSectionLoopAfterPass: () -> Unit = {},
+    onNextSection: () -> Unit = {},
+    onSeekToSection: (String) -> Unit = {},
 ) {
+    var sectionSheetOpen by remember { mutableStateOf(false) }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -88,21 +85,45 @@ fun NowPlayingScreen(
             showVietnamese = state.transcript.showVietnamese,
             onViewModeChange = onViewModeChange,
             onVietnameseToggle = onVietnameseToggle,
-        )
-        state.transcript.loopedLineId?.let { loopedLineId ->
-            val loopedText = state.transcript.lines.firstOrNull { it.id == loopedLineId }?.text ?: loopedLineId
-            AssistChip(
-                onClick = onCancelLoop,
-                label = { Text(stringResource(R.string.loop_active, loopedText)) },
-                trailingIcon = {
-                    val stopLoop = stringResource(R.string.stop_loop)
-                    Text(
-                        "×",
-                        modifier = Modifier.semantics { contentDescription = stopLoop },
+            vietnameseEnabled = !state.chineseOnly,
+            trailingSwitch = {
+                // Old timelines have no `language` tag on cues: Chinese-only has nothing to key off, so it's disabled.
+                val chineseOnlySupported = state.transcript.cues.any { it.language != null }
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(stringResource(R.string.chinese_only_switch), style = MaterialTheme.typography.labelMedium)
+                    Switch(
+                        checked = state.chineseOnly,
+                        onCheckedChange = onChineseOnlyToggle,
+                        enabled = chineseOnlySupported,
                     )
-                },
-                modifier = Modifier.padding(horizontal = Spacing.md),
+                }
+            },
+        )
+        SectionRow(
+            sections = state.transcript.sections,
+            positionMs = state.positionMs,
+            onOpenSectionList = { sectionSheetOpen = true },
+            onLoopSection = onLoopSection,
+        )
+        when {
+            state.sectionLoop != null -> SectionLoopChip(
+                sectionLoop = state.sectionLoop,
+                onStopAfterPass = onStopSectionLoopAfterPass,
+                onNextSection = onNextSection,
             )
+            state.transcript.loopedLineId != null -> {
+                val loopedLineId = state.transcript.loopedLineId
+                val loopedText = state.transcript.lines.firstOrNull { it.id == loopedLineId }?.text ?: loopedLineId
+                AssistChip(
+                    onClick = onCancelLoop,
+                    label = { Text(stringResource(R.string.loop_active, loopedText)) },
+                    trailingIcon = {
+                        val stopLoop = stringResource(R.string.stop_loop)
+                        Text("×", modifier = Modifier.semantics { contentDescription = stopLoop })
+                    },
+                    modifier = Modifier.padding(horizontal = Spacing.md),
+                )
+            }
         }
         Box(Modifier.weight(1f).fillMaxWidth()) {
             if (state.transcript.lines.isNotEmpty()) {
@@ -137,6 +158,18 @@ fun NowPlayingScreen(
     }
     state.transcript.lookupWord?.let { word ->
         LookupSheet(word = word, onPlayClip = onPlayLookupClip, onDismiss = onDismissLookup)
+    }
+    if (sectionSheetOpen) {
+        val currentSectionId = SectionNavigation.sectionAt(state.transcript.sections, state.positionMs)?.id
+        SectionListSheet(
+            sections = state.transcript.sections,
+            currentSectionId = currentSectionId,
+            onSelect = { id ->
+                onSeekToSection(id)
+                sectionSheetOpen = false
+            },
+            onDismiss = { sectionSheetOpen = false },
+        )
     }
 }
 
@@ -178,143 +211,6 @@ private fun NowPlayingHeader(title: String, onCollapse: () -> Unit) {
             }
         }
     }
-}
-
-@Composable
-private fun TransportSection(
-    state: PlayerUiState,
-    onSwitchTrack: (String) -> Unit,
-    onSeekTo: (Long) -> Unit,
-    onSeekBack: () -> Unit,
-    onToggle: () -> Unit,
-    onSeekForward: () -> Unit,
-    onSpeed: (Float) -> Unit,
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = Spacing.lg, vertical = Spacing.sm),
-        verticalArrangement = Arrangement.spacedBy(Spacing.xs),
-    ) {
-        if (state.practiceAvailable) {
-            Row(horizontalArrangement = Arrangement.spacedBy(Spacing.sm)) {
-                FilterChip(
-                    selected = state.track == "guided",
-                    onClick = { onSwitchTrack("guided") },
-                    label = { Text(trackDisplayName("guided")) },
-                    colors = appFilterChipColors(),
-                )
-                FilterChip(
-                    selected = state.track == "practice",
-                    onClick = { onSwitchTrack("practice") },
-                    label = { Text(trackDisplayName("practice")) },
-                    colors = appFilterChipColors(),
-                )
-            }
-        } else {
-            Text(
-                trackDisplayName(state.track),
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        }
-
-        SeekBar(state = state, onSeekTo = onSeekTo)
-
-        Row(
-            modifier = Modifier.horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(Spacing.sm),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                stringResource(R.string.speed_label),
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            listOf(0.8f, 0.9f, 1f, 1.1f).forEach { speed ->
-                FilterChip(
-                    selected = state.speed == speed,
-                    onClick = { onSpeed(speed) },
-                    label = { Text("${speed}×") },
-                    colors = appFilterChipColors(),
-                )
-            }
-        }
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            val seekBackDescription = stringResource(R.string.seek_back_10)
-            val seekForwardDescription = stringResource(R.string.seek_forward_10)
-            OutlinedButton(
-                onClick = onSeekBack,
-                modifier = Modifier.semantics { contentDescription = seekBackDescription },
-            ) {
-                Text("−10s")
-            }
-            FilledIconButton(onClick = onToggle, modifier = Modifier.size(56.dp)) {
-                Icon(
-                    painter = painterResource(if (state.playing) R.drawable.ic_pause else R.drawable.ic_play),
-                    contentDescription = stringResource(if (state.playing) R.string.pause else R.string.play),
-                    modifier = Modifier.size(28.dp),
-                )
-            }
-            OutlinedButton(
-                onClick = onSeekForward,
-                modifier = Modifier.semantics { contentDescription = seekForwardDescription },
-            ) {
-                Text("+10s")
-            }
-        }
-    }
-}
-
-@Composable
-private fun SeekBar(state: PlayerUiState, onSeekTo: (Long) -> Unit) {
-    val max = state.durationMs.coerceAtLeast(1).toFloat()
-    var scrubbing by remember { mutableStateOf(false) }
-    var scrubValue by remember { mutableFloatStateOf(0f) }
-    val sliderValue = if (scrubbing) scrubValue else state.positionMs.toFloat().coerceIn(0f, max)
-    Column {
-        Slider(
-            value = sliderValue,
-            onValueChange = {
-                scrubbing = true
-                scrubValue = it
-            },
-            onValueChangeFinished = {
-                scrubbing = false
-                onSeekTo(scrubValue.toLong())
-            },
-            valueRange = 0f..max,
-            colors = SliderDefaults.colors(
-                thumbColor = MaterialTheme.colorScheme.primary,
-                activeTrackColor = MaterialTheme.colorScheme.primary,
-                inactiveTrackColor = MaterialTheme.colorScheme.outlineVariant,
-            ),
-        )
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(
-                formatTime(if (scrubbing) scrubValue.toLong() else state.positionMs),
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            Text(
-                formatTime(state.durationMs),
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        }
-    }
-}
-
-private fun formatTime(ms: Long): String {
-    val totalSeconds = (ms.coerceAtLeast(0) / 1000).toInt()
-    val minutes = totalSeconds / 60
-    val seconds = totalSeconds % 60
-    return "%d:%02d".format(minutes, seconds)
 }
 
 private fun fakeLine(id: String, text: String, pinyin: String, translation: String) = ReferenceLine(

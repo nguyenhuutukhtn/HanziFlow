@@ -65,7 +65,9 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `kotlin/com/hanziflow/shared/testgen/TestGenModels.kt` [52] — QuestionType, QuestionOption, GeneratedQuestion, GeneratedTest — Mirrors the Supabase `test_attempts` columns that the generator/session own.
 - `kotlin/com/hanziflow/shared/testgen/TestGenerator.kt` [117] — TestGenerator, SelectedQuestion — Deterministic test generator: same (items, targetLessonId, seed, questionCount,
 - `kotlin/com/hanziflow/shared/testgen/TestSession.kt` [110] — TestSession — Processes answer(choiceIndex) / reveal() against a generated test, applying the
-- `kotlin/com/hanziflow/shared/transcript/CueNavigation.kt` [45] — CueNavigation — Headset / transport cue navigation over one track's timeline. Cues are assumed
+- `kotlin/com/hanziflow/shared/transcript/ChineseOnlyPlan.kt` [56] — ChineseOnlyPlan — Skip plan for "Chỉ nghe tiếng Trung": every `vi-VN` cue plus the silence after it,
+- `kotlin/com/hanziflow/shared/transcript/CueNavigation.kt` [61] — CueNavigation — Headset / transport cue navigation over one track's timeline. Cues are assumed
+- `kotlin/com/hanziflow/shared/transcript/SectionNavigation.kt` [43] — SectionNavigation, SectionLoop — Pure lookups over a track's `timeline.sections` (assumed sorted, contiguous, covering the track).
 - `kotlin/com/hanziflow/shared/transcript/TranscriptCues.kt` [63] — TranscriptCues — Pure cue-lookup logic over a track's timeline cues (assumed sorted ascending by
 - `kotlin/com/hanziflow/shared/transcript/TranscriptRendering.kt` [117] — TranscriptViewMode, TokenRenderDecision, LineRenderDecision, TranscriptRendering — One dataset, several views, switched instantly. Vietnamese is an independent toggle.
 
@@ -75,42 +77,52 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `kotlin/com/hanziflow/shared/testgen/GoldenVectorTest.kt` [44] — GoldenVectorTest — Golden vectors: TestGenerator.generate() against the real lesson_001 items.json
 - `kotlin/com/hanziflow/shared/testgen/InvariantsTest.kt` [108] — InvariantsTest — Splits the real lesson_001 item bank into a synthetic "earlier" lesson and a
 - `kotlin/com/hanziflow/shared/testgen/TestSessionTest.kt` [89] — TestSessionTest
-- `kotlin/com/hanziflow/shared/transcript/CueNavigationTest.kt` [64] — CueNavigationTest
+- `kotlin/com/hanziflow/shared/transcript/ChineseOnlyPlanTest.kt` [78] — ChineseOnlyPlanTest
+- `kotlin/com/hanziflow/shared/transcript/CueNavigationTest.kt` [74] — CueNavigationTest
+- `kotlin/com/hanziflow/shared/transcript/SectionNavigationTest.kt` [59] — SectionNavigationTest
 - `kotlin/com/hanziflow/shared/transcript/TranscriptCuesTest.kt` [101] — TranscriptCuesTest
 - `kotlin/com/hanziflow/shared/transcript/TranscriptRenderingTest.kt` [135] — TranscriptRenderingTest
 
 ## Android app (main) (`kmp/android/src/main/`)
 
 - `kotlin/com/hanziflow/HanziFlowApplication.kt` [15] — HanziFlowApplication
-- `kotlin/com/hanziflow/MainActivity.kt` [83] — MainActivity — Thin composition root: wires the activity-scoped screen ViewModels (via Hilt) to
+- `kotlin/com/hanziflow/MainActivity.kt` [88] — MainActivity — Thin composition root: wires the activity-scoped screen ViewModels (via Hilt) to
 - `kotlin/com/hanziflow/data/CourseDatabase.kt` [93] — LessonEntity, SettingEntity, PlaybackEntity, CourseDao
 - `kotlin/com/hanziflow/data/CourseRepository.kt` [28] — CourseRepository — Course catalog, downloads, and the downloaded lesson package file store.
 - `kotlin/com/hanziflow/data/CourseRepositoryImpl.kt` [131] — CourseRepositoryImpl
 - `kotlin/com/hanziflow/data/ProgressRepository.kt` [12] — ProgressRepository, ProgressRepositoryImpl — Placeholder for progress sync (lesson_progress / test_attempts) work (D2).
-- `kotlin/com/hanziflow/data/SettingsRepository.kt` [65] — SettingsRepository, SettingsRepositoryImpl — Simple key/value app settings (catalog base URL, transcript view, Vietnamese toggle, theme).
+- `kotlin/com/hanziflow/data/SettingsRepository.kt` [76] — SettingsRepository, SettingsRepositoryImpl — Simple key/value app settings (catalog base URL, transcript view, Vietnamese toggle, theme).
 - `kotlin/com/hanziflow/di/AppModule.kt` [28] — AppModule — Room DB / DAO and the shared OkHttp client: the only places this app talks to disk/network directly.
 - `kotlin/com/hanziflow/di/PlaybackModule.kt` [22] — PlaybackModule — [PlayerConnection] wraps the single [androidx.media3.session.MediaController] the UI
 - `kotlin/com/hanziflow/di/RepositoryModule.kt` [29] — RepositoryModule
 - `kotlin/com/hanziflow/download/LessonDownloadWorker.kt` [142] — LessonDownloadWorker
 - `kotlin/com/hanziflow/playback/CueSeekPlayer.kt` [49] — CueSeekPlayer — Makes next/previous available on the session (notification, lock screen, media
-- `kotlin/com/hanziflow/playback/LoopState.kt` [23] — LoopState, LoopPublisher — The line currently looping: [startMs, endMs) in media time.
-- `kotlin/com/hanziflow/playback/PlaybackService.kt` [425] ⚠ — PlaybackService — The service is the single source of truth for the loop: every connected or
-- `kotlin/com/hanziflow/playback/PlaybackState.kt` [13] — PlaybackState — Mirrors the service's [androidx.media3.session.MediaController] state, including loop (session extras).
-- `kotlin/com/hanziflow/playback/PlayerConnection.kt` [24] — PlayerConnection — The only thing on the UI side allowed to touch [androidx.media3.session.MediaController]
-- `kotlin/com/hanziflow/playback/PlayerConnectionImpl.kt` [137] — PlayerConnectionImpl — Applies the service's published loop state; never set [PlaybackState.loopedLineId] any other way.
+- `kotlin/com/hanziflow/playback/CueSkipper.kt` [73] — CueSkipper — Headset / transport cue navigation, section lookups and Chinese-only skipping, all
+- `kotlin/com/hanziflow/playback/LoopController.kt` [57] — LoopController — Owns the single active loop (line or section) and the position-check logic that
+- `kotlin/com/hanziflow/playback/LoopState.kt` [41] — LoopState, LoopPublisher — The active loop: a looped transcript line, or a looped section (up to 5 passes).
+- `kotlin/com/hanziflow/playback/PlaybackContract.kt` [62] — PlaybackContract — Session command/extra keys shared by [PlaybackService] and [PlayerConnectionImpl], and the MediaItem factory both use.
+- `kotlin/com/hanziflow/playback/PlaybackCoordinator.kt` [192] — PlaybackCoordinator — Everything [PlaybackService] does with ExoPlayer that isn't MediaSession wiring:
+- `kotlin/com/hanziflow/playback/PlaybackExtras.kt` [40] — PlaybackExtras — Builds the session extras / custom layout [PlaybackService] publishes; split out to keep it under the line budget.
+- `kotlin/com/hanziflow/playback/PlaybackService.kt` [198] — PlaybackService — MediaSession wiring only: loop/skip/resumption logic lives in [PlaybackCoordinator] & friends.
+- `kotlin/com/hanziflow/playback/PlaybackState.kt` [22] — PlaybackState, SectionLoopInfo — Mirrors the service's [androidx.media3.session.MediaController] state, including loop (session extras).
+- `kotlin/com/hanziflow/playback/PlayerConnection.kt` [28] — PlayerConnection — The only thing on the UI side allowed to touch [androidx.media3.session.MediaController]
+- `kotlin/com/hanziflow/playback/PlayerConnectionImpl.kt` [165] — PlayerConnectionImpl — Applies the service's published loop/Chinese-only state; never set these any other way.
+- `kotlin/com/hanziflow/playback/ResumptionStore.kt` [38] — ResumptionStore — Loads/saves the last played lesson+track+position (local only), so playback survives an app restart.
 - `kotlin/com/hanziflow/ui/app/AppShellViewModel.kt` [36] — AppShellUiState, AppShellViewModel — Dark is the first-run default; the toggle lands with the Settings tab in G2b.
 - `kotlin/com/hanziflow/ui/components/AppChips.kt` [12] — appFilterChipColors — Selected chips use the amber primary container, not M3's default teal secondary.
-- `kotlin/com/hanziflow/ui/components/MiniPlayer.kt` [159] — MiniPlayer — Persistent mini-player, docked above the bottom navigation on every tab.
+- `kotlin/com/hanziflow/ui/components/MiniPlayer.kt` [183] — MiniPlayer — Persistent mini-player, docked above the bottom navigation on every tab.
 - `kotlin/com/hanziflow/ui/components/TrackLabels.kt` [13] — trackDisplayName — Display names only: internal ids stay `guided` / `practice` everywhere in data,
 - `kotlin/com/hanziflow/ui/library/LibraryScreen.kt` [228] — LibraryScreen, SyncControls, EmptyLibrary, LessonCard — Learn tab: the existing library wired into the new shell. Stateless — Room,
 - `kotlin/com/hanziflow/ui/library/LibraryUiState.kt` [10] — LibraryUiState
 - `kotlin/com/hanziflow/ui/library/LibraryViewModel.kt` [53] — LibraryViewModel
-- `kotlin/com/hanziflow/ui/navigation/AppShell.kt` [190] — Routes, Tab — Bottom-nav destinations; Review and Settings are G2b/G2c placeholders in this pass.
+- `kotlin/com/hanziflow/ui/navigation/AppShell.kt` [203] — Routes, Tab — Bottom-nav destinations; Review and Settings are G2b/G2c placeholders in this pass.
 - `kotlin/com/hanziflow/ui/player/LookupSheet.kt` [35] — LookupSheet — Long-press-a-token lookup: Hanzi, pinyin, Vietnamese meaning, and a clip play button.
-- `kotlin/com/hanziflow/ui/player/NowPlayingScreen.kt` [374] ⚠ — NowPlayingScreen, NowPlayingHeader, TransportSection, SeekBar — Full-screen Now Playing route. Stateless; [PlayerViewModel] owns all command logic,
-- `kotlin/com/hanziflow/ui/player/PlayerUiState.kt` [33] — PlayerUiState, TranscriptUiState
-- `kotlin/com/hanziflow/ui/player/PlayerViewModel.kt` [202] — PlayerViewModel — Mini-player "Nghe lại câu": one-shot seek to the start of the line whose cue
-- `kotlin/com/hanziflow/ui/player/TranscriptPanel.kt` [327] ⚠ — TranscriptPanel, TranscriptViewSwitcher, TranscriptLineRow, TokenRow — One-dataset, several-views karaoke transcript. Pure rendering decisions come from
+- `kotlin/com/hanziflow/ui/player/NowPlayingScreen.kt` [270] — NowPlayingScreen, NowPlayingHeader, fakeLine, NowPlayingPreview — Full-screen Now Playing route. Stateless; [PlayerViewModel] owns all command logic.
+- `kotlin/com/hanziflow/ui/player/PlayerUiState.kt` [38] — PlayerUiState, TranscriptUiState
+- `kotlin/com/hanziflow/ui/player/PlayerViewModel.kt` [242] — PlayerViewModel — Section bottom sheet row tap: seek to that section's start and close the sheet (UI-side).
+- `kotlin/com/hanziflow/ui/player/SectionControls.kt` [128] — SectionRow, SectionLoopChip, SectionListSheet — "▤ <section title> · n/N ▾" on the left (opens the section list), "↻ Lặp phần này"
+- `kotlin/com/hanziflow/ui/player/TranscriptPanel.kt` [337] ⚠ — TranscriptPanel, TranscriptViewSwitcher, TranscriptLineRow, TokenRow — One-dataset, several-views karaoke transcript. Pure rendering decisions come from
+- `kotlin/com/hanziflow/ui/player/TransportSection.kt` [205] — TransportSection, SeekBar, formatTime — Track switch, seek bar, speed chips and primary transport controls. Split out of NowPlayingScreen (line budget).
 - `kotlin/com/hanziflow/ui/review/ReviewScreen.kt` [44] — ReviewScreen, ReviewScreenPreview — G2c placeholder: test flow + attempt history land here. Copy is the final Vietnamese copy.
 - `kotlin/com/hanziflow/ui/settings/SettingsScreen.kt` [67] — SettingsScreen, PlaceholderRow, SettingsScreenPreview — G2b placeholder. The rows use the final Vietnamese copy but have no controls yet;
 - `kotlin/com/hanziflow/ui/theme/Color.kt` [80] — AppColors — Project-defined roles Material 3 has no slot for (tokens.md §5.1).
@@ -122,11 +134,13 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `kotlin/com/hanziflow/architecture/LayeringTest.kt` [86] — LayeringTest — Enforces the dependency rules from docs/app_architecture.md "Code architecture (Android)",
 - `kotlin/com/hanziflow/data/CourseRepositoryTest.kt` [18] — CourseRepositoryTest
 - `kotlin/com/hanziflow/fakes/FakeCourseRepository.kt` [42] — FakeCourseRepository — In-memory [CourseRepository] fake: no Room/OkHttp/WorkManager, just recorded calls and canned returns.
-- `kotlin/com/hanziflow/fakes/FakePlayerConnection.kt` [47] — FakePlayerConnection — Lets a ViewModel test drive the service's published state without Media3 or a device.
-- `kotlin/com/hanziflow/fakes/FakeSettingsRepository.kt` [27] — FakeSettingsRepository
-- `kotlin/com/hanziflow/playback/LoopPublisherTest.kt` [40] — LoopPublisherTest
+- `kotlin/com/hanziflow/fakes/FakePlayerConnection.kt` [75] — FakePlayerConnection — Lets a ViewModel test drive the service's published state without Media3 or a device.
+- `kotlin/com/hanziflow/fakes/FakeSettingsRepository.kt` [35] — FakeSettingsRepository
+- `kotlin/com/hanziflow/playback/LoopPublisherTest.kt` [74] — LoopPublisherTest
 - `kotlin/com/hanziflow/ui/PlayerUiTest.kt` [145] — PlayerUiTest
-- `kotlin/com/hanziflow/ui/UiScreenshotTest.kt` [280] — UiScreenshotTest — Fake-state visuals, recorded into kmp/android/build/outputs/roborazzi until the
+- `kotlin/com/hanziflow/ui/ScreenshotFixtures.kt` [223] — ComposeContentTestRule.captureScreen, MiniPlayerFrame, NowPlayingFrame, nowPlayingState — Fake-state fixtures shared by the Roborazzi screenshot tests (kept out of the test files for the line budget).
+- `kotlin/com/hanziflow/ui/SectionReplayScreenshotTest.kt` [44] — SectionReplayScreenshotTest — Section replay / Chinese-only visuals; split out of [UiScreenshotTest] for the line budget.
+- `kotlin/com/hanziflow/ui/UiScreenshotTest.kt` [82] — UiScreenshotTest — Fake-state visuals, recorded into kmp/android/build/outputs/roborazzi until the
 - `kotlin/com/hanziflow/ui/library/LibraryViewModelTest.kt` [77] — LibraryViewModelTest
 - `kotlin/com/hanziflow/ui/navigation/AppShellTest.kt` [91] — AppShellTest
-- `kotlin/com/hanziflow/ui/player/PlayerViewModelTest.kt` [151] — PlayerViewModelTest — Blocks the real test thread (not virtual time) until [lines] load from the fake repository's IO.
+- `kotlin/com/hanziflow/ui/player/PlayerViewModelTest.kt` [204] — PlayerViewModelTest — Blocks the real test thread (not virtual time) until [lines] load from the fake repository's IO.
