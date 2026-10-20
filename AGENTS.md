@@ -13,6 +13,7 @@ Mandarin listening/speaking course for a Vietnamese-speaking learner.
 - [`docs/STATUS.md`](docs/STATUS.md) — what's done, what's next, open decisions.
 - [`docs/CODEMAP.md`](docs/CODEMAP.md) — one line per source file; open only the files you need.
 - [`docs/workflow.md`](docs/workflow.md) — scripts first, AI as fallback.
+- [`docs/tasks/`](docs/tasks/README.md) — one brief per task; if you were given a task ID, read `docs/tasks/<ID>.md` and work from it.
 - By task type, read only:
   - **Lesson content / curriculum / builder:** [`docs/content_rules.md`](docs/content_rules.md).
   - **App or pipeline code:** the matching file in [`docs/architecture/`](docs/app_architecture.md) (index in `docs/app_architecture.md`).
