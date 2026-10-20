@@ -2,6 +2,8 @@
 
 These rules define how a Mandarin lesson should teach through audio. They apply to guided and practice tracks; they are content rules, not UI requirements.
 
+[authoring_checklist.md](authoring_checklist.md) condenses the loop/buildup/Vietnamese-fade/overload guardrails below into a self-contained, AI-facing checklist (used by `export-lesson`'s bundle) — keep it in sync whenever this file changes.
+
 ## Core teaching loop (mini-story pivot)
 
 **Superseded:** the two-character scripted-dialogue loop that used to live in this section is replaced by the mini-story loop below. See `curriculum/roadmap.md`'s "Method" section for why. `lessons/lesson_001.json`, built from `lessons/src/lesson_001.story.md` by `mandarin-course build-lesson`, is the template for later lessons.

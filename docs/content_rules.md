@@ -2,6 +2,8 @@
 
 Read this for any task that writes or edits lesson content, curriculum, or the lesson builder. It summarizes the two sources of truth, which win on any disagreement: [lesson_authoring_guidelines.md](lesson_authoring_guidelines.md) and [../curriculum/roadmap.md](../curriculum/roadmap.md).
 
+[authoring_checklist.md](authoring_checklist.md) is the condensed, AI-facing version of the hard rules below (used by `export-lesson`'s bundle) — keep it in sync whenever this file changes.
+
 ## Current direction — read this before writing any new lesson
 
 The course pivoted away from scripted two-character textbook dialogue (greetings,
@@ -66,6 +68,10 @@ The current method is a **mini-story** format (Effortless English / TPRS-style):
 
 ## Workflow for a new lesson
 
+0. Prefer the bundle loop (docs/workflow.md "Content loop"): `mandarin-course
+   export-lesson <id>` → paste to any AI → `mandarin-course import-lesson <id>
+   <reply>`, which runs steps 1–4 below on the result. Steps 1–6 are what that
+   command does under the hood, or what to run by hand instead.
 1. Write `lessons/src/lesson_XXX.story.md` (format: lesson_001's source and
    `src/mandarin_course/story/blocks.py`), then `mandarin-course build-lesson <story.md>`.
    `lessons/lesson_XXX*.json` are build output — never edit them by hand.

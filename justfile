@@ -17,6 +17,14 @@ app:
 lesson ID:
     bash scripts/lesson.sh {{ID}}
 
+# Write build/bundles/lesson_<ID>.bundle.md: story source + checklist + continuity, for any AI to write/revise.
+export-lesson ID:
+    mandarin-course export-lesson {{ID}}
+
+# Import an AI's reply: build + validate + audit + dry-run count, never paid TTS.
+import-lesson ID FILE:
+    mandarin-course import-lesson {{ID}} {{FILE}}
+
 # Record Roborazzi goldens, only after the user approved the screen (see android-ui-testing skill).
 approve-screens:
     cd kmp && ./gradlew -q :android:recordRoborazziDebug

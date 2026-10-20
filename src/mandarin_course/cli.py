@@ -13,96 +13,17 @@ from pydantic import ValidationError
 from .audio_builder import AudioBuildError, build_audio, timeline_path_for
 from .audit import build_report, load_authoring_lessons, render_report
 from .config import Settings
+from .generate_plan import audio_plan, print_plan
 from .lesson_schema import Lesson, load_lesson
+from .logs import write_log
 from .publish import PublishError, publish_lesson, render_publish_report, render_publish_summary
 from .storage import ProgressStore
 from .story import build_story, render_errors, render_summary, write_story
+from .story.bundle import BundleError, command_export_lesson, command_import_lesson
 from .transcript import write_transcripts
-from .tts import CachedTTS, ElevenLabsTTS, TTSError, cache_key, supports_audio_tags, tag_usage, voice_ids_for
+from .tts import CachedTTS, ElevenLabsTTS, TTSError
 from .upload import StorageConfig, UploadError, upload_package
 from .voice_registry import sync_registry
-
-LOG_DIR = Path("build/logs")
-
-
-def _write_log(name: str, content: str) -> Path:
-    LOG_DIR.mkdir(parents=True, exist_ok=True)
-    path = LOG_DIR / f"{name}.log"
-    path.write_text(content, encoding="utf-8")
-    return path
-
-
-def _audio_plan(lesson: Lesson, settings: Settings) -> dict[str, int]:
-    hits = 0
-    misses = 0
-    unique_hits: set[str] = set()
-    unique_misses: set[str] = set()
-    for segment in lesson.segments:
-        try:
-            voice_ids = voice_ids_for(segment, settings, lesson)
-        except TTSError:
-            misses += 1
-            unique_misses.add(f"missing:{segment.id}")
-            continue
-        key = cache_key(
-            segment,
-            voice_ids if segment.turns else voice_ids[0],
-            settings.model_id,
-            settings.output_format,
-        )
-        path = settings.cache_dir / f"{key}.mp3"
-        if path.is_file() and path.stat().st_size > 0:
-            hits += 1
-            unique_hits.add(key)
-        else:
-            misses += 1
-            unique_misses.add(key)
-    return {
-        "segments": len(lesson.segments),
-        "cached_segments": hits,
-        "new_segments": misses,
-        "unique_cached_clips": len(unique_hits),
-        "unique_new_requests": len(unique_misses),
-    }
-
-
-def _plan_summary(lesson: Lesson, settings: Settings) -> dict:
-    plan = _audio_plan(lesson, settings)
-    languages = {segment.language for segment in lesson.segments}
-    missing = settings.missing_tts_fields(languages)
-    segments_with_tags, tag_counts = tag_usage(lesson)
-    return {
-        "lesson_id": lesson.lesson_id,
-        "title": lesson.title,
-        "model_id": settings.model_id,
-        "output_format": settings.output_format,
-        **plan,
-        "missing_configuration": missing,
-        "audio_tags_supported": supports_audio_tags(settings.model_id),
-        "segments_with_tags": segments_with_tags,
-        "tag_counts": tag_counts,
-    }
-
-
-def _print_plan(lesson: Lesson, settings: Settings, as_json: bool = False) -> list[str]:
-    summary = _plan_summary(lesson, settings)
-    if as_json:
-        print(json.dumps(summary))
-        return summary["missing_configuration"]
-    print(f"Lesson: {summary['lesson_id']} — {summary['title']}")
-    print(f"Model: {summary['model_id']}; format: {summary['output_format']}")
-    print(f"Spoken segments: {summary['segments']}")
-    print(f"Cache hits: {summary['cached_segments']} segment(s) / {summary['unique_cached_clips']} unique clip(s)")
-    print(f"Need TTS: {summary['new_segments']} segment(s) / {summary['unique_new_requests']} unique paid request(s)")
-    if summary["missing_configuration"]:
-        print("Missing configuration: " + ", ".join(summary["missing_configuration"]))
-    else:
-        print("TTS configuration: present (secret values are not displayed)")
-    print(f"Audio tags supported: {'yes' if summary['audio_tags_supported'] else 'no'}")
-    print(f"Segments with tags: {summary['segments_with_tags']}")
-    if summary["tag_counts"]:
-        print("Tags: " + ", ".join(f"{tag}={count}" for tag, count in sorted(summary["tag_counts"].items())))
-    return summary["missing_configuration"]
 
 
 def command_validate(path: Path) -> int:
@@ -128,14 +49,14 @@ def command_transcript(path: Path, settings: Settings) -> int:
 
 def command_generate(path: Path, settings: Settings, dry_run: bool, assume_yes: bool, as_json: bool = False) -> int:
     lesson = load_lesson(path)
-    missing = _print_plan(lesson, settings, as_json=as_json and dry_run)
+    missing = print_plan(lesson, settings, as_json=as_json and dry_run)
     if dry_run:
         if not as_json:
             print("Dry run only: no API request was made.")
         return 0
     if missing:
         raise TTSError("Cannot generate until the missing configuration is resolved")
-    plan = _audio_plan(lesson, settings)
+    plan = audio_plan(lesson, settings)
     if plan["unique_new_requests"] and not assume_yes:
         answer = input(f"Create {plan['unique_new_requests']} new paid TTS clip(s)? Type 'yes' to continue: ")
         if answer.strip().lower() != "yes":
@@ -185,7 +106,7 @@ def command_publish(path: Path, settings: Settings, out: Path, force: bool, as_j
     if not report.published:
         print(render_publish_report(report), end="")
         return 0
-    log_path = _write_log(f"publish-{path.stem}", render_publish_report(report))
+    log_path = write_log(f"publish-{path.stem}", render_publish_report(report))
     print(render_publish_summary(report, log_path), end="")
     return 0
 
@@ -211,7 +132,7 @@ def command_review(settings: Settings, as_json: bool = False) -> int:
     for row in rows[:REVIEW_PRINT_LIMIT]:
         print(f"- {row['pattern_id']}: {row['pinyin']} — {row['translation']} (mistakes: {row['mistakes']})")
     if len(rows) > REVIEW_PRINT_LIMIT:
-        log_path = _write_log(
+        log_path = write_log(
             "review",
             "\n".join(f"{row['pattern_id']}: {row['pinyin']} — {row['translation']} (mistakes: {row['mistakes']})" for row in rows),
         )
@@ -224,7 +145,7 @@ def command_build_lesson(path: Path, out_dir: Path | None, as_json: bool = False
     result = build_story(path, out_dir)
     if result.errors:
         short, full = render_errors(path, result)
-        print(f"{short}\nFull list: {_write_log('build-lesson', full)}", file=sys.stderr)
+        print(f"{short}\nFull list: {write_log('build-lesson', full)}", file=sys.stderr)
         return 1
     write_story(result)
     print(render_summary(result, as_json))
@@ -265,6 +186,14 @@ def build_parser() -> argparse.ArgumentParser:
     voices = sub.add_parser("voices", help="Manage the local ElevenLabs voice registry")
     voices_sub = voices.add_subparsers(dest="voices_command", required=True)
     voices_sub.add_parser("sync", help="Fetch and cache available Mandarin/Vietnamese voices (not a paid TTS call)")
+    export_lesson = sub.add_parser("export-lesson", help="Write a self-contained Markdown bundle for an AI to write/revise a lesson")
+    export_lesson.add_argument("lesson_id", type=str, help="e.g. 001")
+    export_lesson.add_argument("--note", type=str, default=None, help="Appended to the bundle's task header")
+    export_lesson.add_argument("--lessons-dir", type=Path, default=Path("lessons"))
+    import_lesson = sub.add_parser("import-lesson", help="Import an AI's story-source reply: build, validate, audit, dry-run")
+    import_lesson.add_argument("lesson_id", type=str, help="e.g. 001")
+    import_lesson.add_argument("file", type=Path, help="The AI's reply (bundle or bare story source)")
+    import_lesson.add_argument("--lessons-dir", type=Path, default=Path("lessons"))
     return parser
 
 
@@ -288,10 +217,14 @@ def main(argv: list[str] | None = None) -> int:
             return command_upload(args.out, args.dry_run, not args.no_prune)
         if args.command == "voices":
             return command_voices_sync(settings)
+        if args.command == "export-lesson":
+            return command_export_lesson(args.lesson_id, args.lessons_dir, args.note)
+        if args.command == "import-lesson":
+            return command_import_lesson(args.lesson_id, args.file, args.lessons_dir, settings)
         return command_review(settings, args.json)
     except (ValidationError, ValueError) as exc:
         print(f"Lesson validation failed: {exc}", file=sys.stderr)
-    except (TTSError, AudioBuildError, PublishError, UploadError, OSError) as exc:
+    except (TTSError, AudioBuildError, PublishError, UploadError, BundleError, OSError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
     return 1
 

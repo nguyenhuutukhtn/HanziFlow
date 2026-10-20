@@ -9,15 +9,18 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `__init__.py` [4] — Mandarin audio course generator.
 - `audio_builder.py` [158] — FFmpeg-based audio assembly with per-segment pauses.
 - `audit.py` [136] — Read-only authoring audit for cross-lesson pattern continuity.
-- `cli.py` [300] — Command-line interface for validation, generation, transcripts and reviews.
+- `cli.py` [233] — Command-line interface for validation, generation, transcripts and reviews.
 - `config.py` [53] — Environment-backed configuration without exposing secrets.
+- `generate_plan.py` [82] — Cache/cost plan for a lesson's TTS segments: `generate --dry-run` and bundle import.
 - `lesson_schema.py` [104] — Validated, content-driven lesson schema.
+- `logs.py` [14] — Shared helper: write full detail behind a short CLI summary (docs/workflow.md).
 - `publish.py` [714] ⚠ — Build deterministic, versioned app packages from generated local audio.
 - `review.py` [27] — Small, transparent spaced-repetition policy.
 - `storage.py` [60] — SQLite progress store. Ratings are learner supplied; no automatic scoring.
 - `story/__init__.py` [7] — Story source (`lessons/src/*.story.md`) -> guided + practice lesson JSON.
 - `story/assemble.py` [208] — Assemble guided + practice lesson JSON from a parsed story source.
 - `story/blocks.py` [254] — Block types: each turns one `## <type>` section of a story source into segments.
+- `story/bundle.py` [212] — Export/import lesson story-source bundles (docs/workflow.md "Content loop").
 - `story/parser.py` [143] — Parse a lesson story source (`lessons/src/lesson_XXX.story.md`) into blocks.
 - `story/report.py` [46] — Short build-lesson output: ≤ 20 lines, errors with source line numbers.
 - `transcript.py` [69] — Learner-facing Markdown transcripts.
@@ -35,6 +38,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `test_audio_builder.py` [129]
 - `test_audio_tags.py` [193]
 - `test_audit.py` [144]
+- `test_bundle.py` [78]
 - `test_cli.py` [31]
 - `test_lesson_001_story.py` [114]
 - `test_lesson_schema.py` [67]
