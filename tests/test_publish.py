@@ -12,6 +12,7 @@ from mandarin_course.config import Settings
 from mandarin_course.lesson_schema import Lesson, load_lesson
 from mandarin_course.publish import (
     PublishError,
+    _enrich_timeline,
     _reference_lines,
     publish_lesson,
     sentence_item_id,
@@ -191,3 +192,114 @@ def test_publish_accepts_grouped_turn_cues(tmp_path):
     grouped = [cue for cue in timeline["cues"] if cue.get("granularity") == "segment"]
     assert len(grouped) == 2
     assert grouped[0]["line_ids"] == ["exchange_turn_1", "exchange_turn_2"]
+
+
+def _timeline(cues: list[dict], duration_ms: int = 1000) -> dict:
+    return {
+        "schema_version": 1, "lesson_id": "lesson_999", "lesson_version": 1,
+        "track": "guided", "duration_ms": duration_ms, "cues": cues,
+    }
+
+
+def test_enrich_timeline_joins_language_type_and_section_including_turns_and_repetitions(lesson_data):
+    lesson_data["segments"] = [
+        {"id": "a", "activity": "Nghe chuyện", "type": "narration", "language": "zh-CN",
+         "speaker": "coach_zh", "text": "你好。", "pinyin": "nǐ hǎo", "translation": "Xin chào.",
+         "repetitions": 2},
+        {"id": "exchange", "activity": "Nghe chuyện", "type": "dialogue", "language": "zh-CN",
+         "text": "你好。你好！", "pinyin": "nǐ hǎo. nǐ hǎo!", "translation": "Xin chào.",
+         "turns": [
+             {"speaker": "anna", "text": "你好。", "pinyin": "nǐ hǎo.", "translation": "Xin chào."},
+             {"speaker": "li_ming", "text": "你好！", "pinyin": "nǐ hǎo!", "translation": "Chào bạn!"},
+         ]},
+        {"id": "b", "activity": "Hỏi đáp", "type": "prompt", "language": "vi-VN",
+         "speaker": "coach", "text": "Hỏi gì?", "pinyin": None, "translation": None},
+    ]
+    lesson = Lesson.model_validate(lesson_data)
+    timeline = _timeline([
+        {"line_id": "a", "start_ms": 0, "end_ms": 10},
+        {"line_id": "a", "start_ms": 10, "end_ms": 20},
+        {"line_id": "exchange_turn_1", "line_ids": ["exchange_turn_1", "exchange_turn_2"],
+         "granularity": "segment", "start_ms": 20, "end_ms": 30},
+        {"line_id": "b", "start_ms": 30, "end_ms": 40},
+    ])
+
+    enriched = _enrich_timeline(timeline, lesson, "guided")
+
+    assert [(cue["language"], cue["type"], cue["section_id"]) for cue in enriched["cues"]] == [
+        ("zh-CN", "narration", "sec_01"),
+        ("zh-CN", "narration", "sec_01"),
+        ("zh-CN", "dialogue", "sec_01"),
+        ("vi-VN", "prompt", "sec_02"),
+    ]
+    assert enriched["sections"] == [
+        {"id": "sec_01", "title": "Nghe chuyện", "start_ms": 0, "end_ms": 30},
+        {"id": "sec_02", "title": "Hỏi đáp", "start_ms": 30, "end_ms": 1000},
+    ]
+
+
+def test_enrich_timeline_sections_are_contiguous_and_cover_the_track(lesson_data):
+    lesson_data["segments"] = [
+        {"id": "a", "activity": "one", "type": "narration", "language": "zh-CN",
+         "speaker": "coach_zh", "text": "你好。", "pinyin": "nǐ hǎo", "translation": "Xin chào."},
+        {"id": "b", "activity": "two", "type": "narration", "language": "zh-CN",
+         "speaker": "coach_zh", "text": "再见。", "pinyin": "zài jiàn", "translation": "Tạm biệt."},
+        {"id": "c", "activity": "two", "type": "narration", "language": "zh-CN",
+         "speaker": "coach_zh", "text": "谢谢。", "pinyin": "xiè xiè", "translation": "Cảm ơn."},
+        {"id": "d", "activity": "three", "type": "narration", "language": "zh-CN",
+         "speaker": "coach_zh", "text": "没事。", "pinyin": "méi shì", "translation": "Không có gì."},
+    ]
+    lesson = Lesson.model_validate(lesson_data)
+    timeline = _timeline([
+        {"line_id": "a", "start_ms": 0, "end_ms": 10},
+        {"line_id": "b", "start_ms": 10, "end_ms": 20},
+        {"line_id": "c", "start_ms": 20, "end_ms": 30},
+        {"line_id": "d", "start_ms": 30, "end_ms": 40},
+    ], duration_ms=40)
+
+    enriched = _enrich_timeline(timeline, lesson, "guided")
+
+    sections = enriched["sections"]
+    assert [section["id"] for section in sections] == ["sec_01", "sec_02", "sec_03"]
+    assert [section["title"] for section in sections] == ["one", "two", "three"]
+    assert sections[0]["start_ms"] == 0
+    assert sections[-1]["end_ms"] == 40
+    for earlier, later in zip(sections, sections[1:]):
+        assert earlier["end_ms"] == later["start_ms"]
+    cue_section_ids = {cue["section_id"] for cue in enriched["cues"]}
+    assert cue_section_ids == {section["id"] for section in sections}
+
+
+def test_enrich_timeline_fails_when_cue_has_no_matching_segment(lesson):
+    timeline = _timeline([{"line_id": "ghost", "start_ms": 0, "end_ms": 10}])
+    with pytest.raises(PublishError, match="no longer matches"):
+        _enrich_timeline(timeline, lesson, "guided")
+
+
+def test_enrich_timeline_fails_when_segment_order_differs(lesson_data):
+    lesson_data["segments"] = [
+        {"id": "a", "activity": "x", "type": "narration", "language": "zh-CN",
+         "speaker": "coach_zh", "text": "你好。", "pinyin": "nǐ hǎo", "translation": "Xin chào."},
+        {"id": "b", "activity": "x", "type": "narration", "language": "zh-CN",
+         "speaker": "coach_zh", "text": "再见。", "pinyin": "zài jiàn", "translation": "Tạm biệt."},
+    ]
+    lesson = Lesson.model_validate(lesson_data)
+    timeline = _timeline([
+        {"line_id": "b", "start_ms": 0, "end_ms": 10},
+        {"line_id": "a", "start_ms": 10, "end_ms": 20},
+    ])
+    with pytest.raises(PublishError, match="Regenerate the audio"):
+        _enrich_timeline(timeline, lesson, "guided")
+
+
+def test_publish_writes_enriched_sections_and_cue_metadata(tmp_path):
+    lesson_path, settings = _write_fixture(tmp_path, practice_audio=True)
+    report = publish_lesson(lesson_path, settings, tmp_path / "published")
+    timeline = json.loads((report.package_dir / "timeline_guided.json").read_text())
+    assert timeline["sections"] == [
+        {"id": "sec_01", "title": "a", "start_ms": 0, "end_ms": 80},
+    ]
+    for cue in timeline["cues"]:
+        assert cue["section_id"] == "sec_01"
+        assert cue["language"] == "zh-CN"
+        assert cue["type"] in {"pattern", "prompt", "model_answer"}

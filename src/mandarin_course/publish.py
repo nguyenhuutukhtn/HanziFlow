@@ -313,6 +313,61 @@ def _load_and_validate_timeline(
     return timeline
 
 
+def _segment_line_ids(segment: Segment) -> list[str]:
+    if segment.turns:
+        return [f"{segment.id}_turn_{index + 1}" for index in range(len(segment.turns))]
+    return [segment.id]
+
+
+def _enrich_timeline(timeline: dict[str, Any], lesson: Lesson, track: str) -> dict[str, Any]:
+    """Join cues to their segment's language/type/activity and derive top-level sections.
+
+    Fails loudly rather than guessing when the timeline (built from cached audio) no
+    longer matches the current lesson JSON, since that means the audio is stale.
+    """
+    segment_by_line_id: dict[str, Segment] = {}
+    expected_sequence: list[str] = []
+    for segment in lesson.segments:
+        line_ids = _segment_line_ids(segment)
+        for line_id in line_ids:
+            segment_by_line_id[line_id] = segment
+        expected_sequence.extend(line_ids[0] for _ in range(segment.repetitions))
+
+    actual_sequence = [cue.get("line_id") for cue in timeline["cues"]]
+    if actual_sequence != expected_sequence:
+        raise PublishError(
+            f"{track.capitalize()} timeline no longer matches {lesson.lesson_id} v{lesson.version}: "
+            "cue line ids or their order differ from the current lesson segments. "
+            "Regenerate the audio instead of publishing a stale cache."
+        )
+
+    cues: list[dict[str, Any]] = []
+    sections: list[dict[str, Any]] = []
+    current_activity: str | None = None
+    for cue in timeline["cues"]:
+        line_id = cue.get("line_id")
+        segment = segment_by_line_id.get(line_id)
+        if segment is None:
+            raise PublishError(f"{track.capitalize()} timeline cue {line_id!r} has no matching segment")
+        enriched = {**cue, "language": segment.language, "type": segment.type}
+        if segment.activity != current_activity:
+            sections.append({
+                "id": f"sec_{len(sections) + 1:02d}",
+                "title": segment.activity,
+                "start_ms": cue["start_ms"],
+            })
+            current_activity = segment.activity
+        enriched["section_id"] = sections[-1]["id"]
+        cues.append(enriched)
+
+    for index in range(len(sections) - 1):
+        sections[index]["end_ms"] = sections[index + 1]["start_ms"]
+    if sections:
+        sections[-1]["end_ms"] = timeline["duration_ms"]
+
+    return {**timeline, "cues": cues, "sections": sections}
+
+
 @dataclass
 class PublishReport:
     package_dir: Path
@@ -382,12 +437,12 @@ def publish_lesson(lesson_path: Path, settings: Settings, out: Path, force: bool
             raise PublishError(f"Pinyin alignment failed for segment(s): {ids}")
         _write_json(package / "reference.json", {"tracks": {"guided": guided_lines, "practice": practice_lines}})
         guided_timeline_source = timeline_path_for(guided_source)
-        _load_and_validate_timeline(guided_timeline_source, lesson, "guided", guided_lines)
-        shutil.copyfile(guided_timeline_source, package / "timeline_guided.json")
+        guided_timeline = _load_and_validate_timeline(guided_timeline_source, lesson, "guided", guided_lines)
+        _write_json(package / "timeline_guided.json", _enrich_timeline(guided_timeline, lesson, "guided"))
         if practice_present:
             practice_timeline_source = timeline_path_for(practice_source)
-            _load_and_validate_timeline(practice_timeline_source, practice, "practice", practice_lines)
-            shutil.copyfile(practice_timeline_source, package / "timeline_practice.json")
+            practice_timeline = _load_and_validate_timeline(practice_timeline_source, practice, "practice", practice_lines)
+            _write_json(package / "timeline_practice.json", _enrich_timeline(practice_timeline, practice, "practice"))
 
         cache_by_id = {
             segment.id: _cache_path(segment, lesson, settings)

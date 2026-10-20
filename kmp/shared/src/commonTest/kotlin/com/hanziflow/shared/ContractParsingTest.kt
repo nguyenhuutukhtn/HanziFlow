@@ -38,6 +38,21 @@ class ContractParsingTest {
         assertTrue(items.sentences.all { it.activity.isNotBlank() && it.speaker.isNotBlank() })
         assertTrue(items.qa.all { it.activity.isNotBlank() && it.speaker.isNotBlank() })
     }
+
+    @Test
+    fun timelineSectionsCoverTheTrackAndEveryCueHasOne() {
+        val timeline = CourseJson.timeline(fixtureText("timeline_guided.json"))
+        val sections = timeline.sections
+        val sectionIds = sections.mapTo(mutableSetOf()) { it.id }
+
+        assertTrue(sections.isNotEmpty())
+        assertEquals(0L, sections.first().startMs)
+        assertEquals(timeline.durationMs, sections.last().endMs)
+        sections.zipWithNext { earlier, later -> assertEquals(earlier.endMs, later.startMs) }
+        assertTrue(sections.all { it.title.isNotBlank() })
+        assertTrue(timeline.cues.all { cue -> cue.sectionId != null && cue.sectionId in sectionIds })
+        assertTrue(timeline.cues.all { cue -> cue.language != null && cue.type != null })
+    }
 }
 
 fun fixtureText(relativePath: String): String = FIXTURE_JSON.getValue(relativePath)

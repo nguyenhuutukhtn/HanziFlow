@@ -12,4 +12,4 @@ Columns: **Kind** = code / content / review / design · **Tokens** = input / out
 
 | Date | Task | Kind | Agent / model | Tokens | Wall time | Biggest consumer | Fix |
 |---|---|---|---|---|---|---|---|
-| 2026-10-20 | L1 timeline sections | code | Claude Sonnet 5.5 | ? | ? | | |
+| 2026-10-20 | L1 timeline sections | code | Claude Sonnet 5.5 | ? | ? | Reading the full timeline_guided.json (797 cues) once to understand cue/segment ordering before writing the enrich function | Query large JSON with a short script (jq/python) instead of Read; only needed a handful of sample cues |

@@ -150,6 +150,17 @@ data class TimelineCue(
     @SerialName("end_ms") val endMs: Long,
     @SerialName("line_ids") val lineIds: List<String>? = null,
     val granularity: String? = null,
+    val language: String? = null,
+    val type: String? = null,
+    @SerialName("section_id") val sectionId: String? = null,
+)
+
+@Serializable
+data class TimelineSection(
+    val id: String,
+    val title: String,
+    @SerialName("start_ms") val startMs: Long,
+    @SerialName("end_ms") val endMs: Long,
 )
 
 @Serializable
@@ -160,6 +171,7 @@ data class Timeline(
     val track: String,
     @SerialName("duration_ms") val durationMs: Long,
     val cues: List<TimelineCue>,
+    val sections: List<TimelineSection> = emptyList(),
 )
 
 object CourseJson {

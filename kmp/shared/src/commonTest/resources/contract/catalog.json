@@ -1,5 +1,5 @@
 {
-  "catalog_version": 2,
+  "catalog_version": 1,
   "lessons": [
     {
       "base_url": "lessons/lesson_001/v1/",
@@ -7,12 +7,12 @@
         "items": {
           "bytes": 240606,
           "file": "items.json",
-          "sha256": "eeff0edc1b0df4390c58bbeea775b1cd1fb4c0a44219755584d0b50ab448283c"
+          "sha256": "522ad1e38b93bd8e4b051448bca0b60ec708a2878053fc86cc821e512e27b793"
         },
         "manifest": {
           "bytes": 484,
           "file": "lesson.json",
-          "sha256": "7213c8f3b18d4380e9e683762243bff8708386dec6099a3e2e27c9333d45fff5"
+          "sha256": "a0d83231b88ba2cee80b24f3f2a7ffbd244d70d7ac0252c4ccdb656deca9e2ea"
         },
         "reference": {
           "bytes": 683488,
@@ -26,14 +26,14 @@
       "title": "Đồ ăn mang về của đồng nghiệp",
       "tracks": {
         "guided": {
-          "bytes": 20723713,
-          "duration_ms": 2590382,
+          "bytes": 21073963,
+          "duration_ms": 2634182,
           "file": "guided.mp3",
-          "sha256": "a934552e348197752875e498f454687c47fe37e87394b71a6b5613f7dd81a192",
+          "sha256": "cc5996d5a51d7fc2744f5f5e412dc624cb7666c0ba32c42d998511639e5612db",
           "timeline": {
-            "bytes": 76121,
+            "bytes": 144000,
             "file": "timeline_guided.json",
-            "sha256": "e5b690cf42b5f91553dbc8fafc75a2389270fc541654b9a4aa45059df988e63e"
+            "sha256": "8bdf884df5e6fb9f431d9a2c9b9217e0eadd80d1a156026b977490754a97ef71"
           }
         }
       },
