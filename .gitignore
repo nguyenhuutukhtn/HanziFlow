@@ -15,3 +15,4 @@ data/*.sqlite*
 data/voices.json
 .claude/*
 !.claude/skills/
+/build/

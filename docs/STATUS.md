@@ -2,7 +2,7 @@
 
 Read this first in a new session instead of past chat history. Keep it short; update it at the end of every task.
 
-Last updated: 2026-10-21 (V1-fix) · branch `app-publish-pipeline` (not merged to `main`)
+Last updated: 2026-10-21 (T1) · branch `app-publish-pipeline` (not merged to `main`)
 
 ## Working rules
 
@@ -27,18 +27,18 @@ Last updated: 2026-10-21 (V1-fix) · branch `app-publish-pipeline` (not merged t
 - **L1**: `publish` enriches each timeline cue with `language`/`type`/`section_id` (joined from the lesson JSON by line id, turns included) and derives top-level `sections` (one per run of consecutive same-`activity` segments); fails with a "regenerate" message if cue line ids/order no longer match the current lesson segments. `kmp/shared` `TimelineCue`/`Timeline` models gained the matching optional fields (old timelines still parse) + a new `TimelineSection` model; `commonTest/resources/contract/*` refreshed from a real publish and `ContractParsingTest` asserts sections are contiguous, cover the track, and every cue has one. Lesson 1 republished as v3 (guided track rebuilt from cache, 0 paid TTS) and uploaded; public catalog + guided MP3 SHA-256 verified against Supabase; superseded v2 removed from local `publish/` and Storage.
 - **V1**: `publish` now assigns the package version itself instead of reading the lesson JSON `version` field (kept in the schema, ignored for packaging): it builds into a temp dir, compares every artifact digest (tracks, timelines, lesson/reference/items — the clip set is covered by items.json's embedded clip refs) against the current `catalog.json` entry, and either reports `unchanged vN` (nothing written) or writes `vN+1` and keeps the old version locally. `upload` verifies catalog.json plus every newly-uploaded version's files from the public endpoint (GET + sha256), then prunes every remote `lessons/<id>/v*/` prefix and local version dir not referenced by the catalog — skipped entirely if verification fails or `--no-prune` is passed; `--dry-run` lists uploads and prune candidates with no writes/deletes. Default output is now a short counts-only summary (uploaded/skipped/verified/pruned). Real run against Supabase: `publish` reported `unchanged v3`, `upload` pruned nothing (already clean), bucket and local `publish/` confirmed to hold only `lesson_001/v3`.
 - **V1-fix**: `timeline_guided.json`/`timeline_practice.json` now carry `lesson_version` = the assigned package version (`_enrich_timeline` overwrites it, patched again alongside lesson.json/items.json on the vN+1 bump path) instead of leaking the authored lesson JSON `version` field, so every file in a package agrees. The staleness check comparing the input timeline against the lesson JSON is untouched. `--force` help text now says it bypasses the unchanged check. No longer blocks committing V1.
+- **T1**: `justfile` at repo root (`check`, `app`, `lesson <id>`, `approve-screens`), each a thin wrapper around `scripts/check.sh` / `scripts/lesson.sh` so they also run without `just` installed (it isn't, on this machine — not installed globally without asking). `check` runs pytest, `shared:allTests`, `android:testDebugUnitTest` (includes the Konsist/`LayeringTest` architecture check), then `codemap.py` and a file-size audit; one `ok`/`FAIL` line per step, stops at the first failure with its ≤30-line tail and log path, full logs in `build/logs/` (gitignored). Verified: a clean run prints 6 lines; a deliberately failing test shows `FAIL` + tail + log path and stops before the slower Gradle steps; `just lesson 001` end-to-end reached no TTS prompt (0 new requests), `publish` said `unchanged v3`, `upload` said "skipped 120 unchanged file(s)" / "Pruned: 0". CLI: `publish` and `review` now print a short summary by default with full detail in `build/logs/`, `generate --dry-run`/`publish`/`review` gained `--json`. AGENTS.md/workflow.md/android-ui-testing skill now name the `just` recipes. Side effect: regenerating `docs/CODEMAP.md` flags `publish.py` (714) and `upload.py` (406) now over 300 lines — split before extending further (not done here, out of scope).
 
 ## Next (in order)
 
 0. **Now (before G2b, which is paused):** listening features from real use — see app_architecture.md "Chinese-only listening" and "Section replay".
-   - **T1:** justfile + short-by-default CLI output (docs/workflow.md); `just check` also reruns `scripts/codemap.py` and lists files over 300 lines.
    - **T2:** compact lesson story source + generic builder + export/import bundles for any AI (docs/workflow.md). Before L2 and before lesson 2.
    - then **L2 (Android):** first split `PlaybackService.kt` (425 lines) into loop/cue-navigation/skip collaborators, then Chinese-only mode in PlaybackService + toggle; section list, seek-bar markers, section loop up to 5× with Bỏ lặp / Sang phần sau.
 
 1. **G2b** — Learn tab card states + lesson detail, lookup sheet actions (copy word/line, select text, send to), Settings tab (incl. MIUI battery/autostart help).
 2. **G2c** — Review tab + test flow + result; pass-rule change in `kmp/shared` TestSession (passed = no first-try mistakes and no reveal); attempts stored in Room.
 3. **D2** — Android sign-in + progress sync. Starts with a migration fix: lesson_progress merge monotonic in a trigger (status max started<listened<passed, keep earliest passed_at, never downgrade even if the incoming write is newer); drop the update policy on test_attempts (push = insert ignore-duplicates).
-4. Known follow-ups: test question type balancing (C2: cloze dominates); merge multi-character names in tokenizer + vocab (A3: 李明 split into 李/明).
+4. Known follow-ups: test question type balancing (C2: cloze dominates); merge multi-character names in tokenizer + vocab (A3: 李明 split into 李/明). `upload` re-uploads an unchanged catalog.json every run (skip when remote sha256 matches). Split `publish.py` (714) / `upload.py` (406) before extending them again.
 
 ## Open decisions (user)
 

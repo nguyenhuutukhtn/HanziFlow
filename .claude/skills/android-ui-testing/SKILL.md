@@ -35,4 +35,6 @@ Goal: UI changes are verified by tests that cost nothing to re-run. Images are o
 ./gradlew -q :shared:allTests :android:testDebugUnitTest :android:verifyRoborazziDebug :android:lintDebug :android:assembleDebug   # full verify before reporting
 ```
 
+`just check` (from repo root) covers pytest + the shared/android unit and architecture tests + codemap, short output; `just approve-screens` wraps the record command above.
+
 Configure Roborazzi's output so goldens live in `kmp/android/src/test/screenshots/` (committed) and diffs in the build dir (ignored).

@@ -4,7 +4,7 @@ Decided 2026-10-20. Applies to code and content. Goal: spend AI tokens only on c
 
 ## Principles
 
-1. **Repeated steps are commands, not prompts.** From the second time a step is done it becomes a `just` recipe or CLI command (generate, publish, upload, build, install, verify, approve screenshots, export/import lesson bundles). AI is called only when a command fails and the human can't fix it quickly, or for creative/judgment work.
+1. **Repeated steps are commands, not prompts.** From the second time a step is done it becomes a `just` recipe or CLI command (generate, publish, upload, build, install, verify, approve screenshots, export/import lesson bundles). AI is called only when a command fails and the human can't fix it quickly, or for creative/judgment work. `justfile` recipes (`just check`, `just app`, `just lesson <id>`, `just approve-screens`) wrap `scripts/*.sh`, so they also run without `just` installed.
 2. **Output sized as AI input.** Every command prints a short summary by default (result, counts, failures; ≤ 20 lines), writes detail to a log file, and offers `--json`. An AI reads a log only on failure, and only via grep/tail.
 3. **AI edits small sources, never generated files.** Lesson content lives in a compact story source; `lessons/lesson_XXX.json` is a build artifact. Feedback to an AI is a short list (`line_id` + note), not a whole lesson.
 4. **Humans do what is fast for humans:** listening QA, visual approval (screenshots, Roborazzi), vocab/translation edits, one-line text fixes, device checks (Bluetooth, lock screen, MIUI settings), interactive logins, taste decisions, running known commands, committing a green task.
@@ -20,7 +20,7 @@ just export-lesson 001        → one self-contained Markdown bundle:
    ↓ paste/upload to any AI (pick whichever writes best; switch freely)
 just import-lesson 001 <file> → validate rules + build lesson JSON; on failure print
                                  ≤ 20 lines of rule violations to paste back to the same AI
-just lesson 001               → dry-run, generate (asks before paid TTS), publish, upload
+just lesson 001                → dry-run, generate (asks before paid TTS), publish, upload (scripts/lesson.sh)
 listen in the app → "Báo lỗi câu này" → feedback/lesson_001.tsv (line_id, note)
    ↓ next export includes the feedback mapped to story-source lines
 ```

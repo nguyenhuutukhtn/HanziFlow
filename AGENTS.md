@@ -35,8 +35,8 @@ Mandarin listening/speaking course for a Vietnamese-speaking learner.
   `cache/`, `output/`, `**/build/`, `kmp/shared/src/commonTest/resources/`, and
   the full `lessons/*.json` (query them with a short script instead). These are
   listed in `.cursorignore`.
-- Run Gradle with `-q` and show only the tail of failures.
-- UI changes in kmp/android: follow [`.claude/skills/android-ui-testing/SKILL.md`](.claude/skills/android-ui-testing/SKILL.md) (JVM Compose + Roborazzi screenshot tests; look at diffs only on failure).
+- Run Gradle with `-q` and show only the tail of failures. Use `just check` (pytest + kmp shared/android unit + architecture tests + codemap + file-size audit, one line per step) instead of re-deriving the command list; `just app` assembles+installs debug; `just lesson <id>` runs dry-run→generate→publish→upload for one lesson. `just`/`scripts/*.sh` work the same either way — `just` isn't required.
+- UI changes in kmp/android: follow [`.claude/skills/android-ui-testing/SKILL.md`](.claude/skills/android-ui-testing/SKILL.md) (JVM Compose + Roborazzi screenshot tests; look at diffs only on failure). `just approve-screens` records goldens.
 - Device checks: prefer text (`adb shell dumpsys media_session`, `uiautomator dump`
   grepped, logcat filtered) over screenshots; at most 3 screenshots per task,
   saved under `kmp/build/screenshots/`. Visual regressions belong in local

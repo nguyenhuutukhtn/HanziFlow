@@ -9,15 +9,15 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `__init__.py` [4] — Mandarin audio course generator.
 - `audio_builder.py` [158] — FFmpeg-based audio assembly with per-segment pauses.
 - `audit.py` [136] — Read-only authoring audit for cross-lesson pattern continuity.
-- `cli.py` [228] — Command-line interface for validation, generation, transcripts and reviews.
+- `cli.py` [282] — Command-line interface for validation, generation, transcripts and reviews.
 - `config.py` [53] — Environment-backed configuration without exposing secrets.
 - `lesson_schema.py` [104] — Validated, content-driven lesson schema.
-- `publish.py` [685] ⚠ — Build deterministic, versioned app packages from generated local audio.
+- `publish.py` [714] ⚠ — Build deterministic, versioned app packages from generated local audio.
 - `review.py` [27] — Small, transparent spaced-repetition policy.
 - `storage.py` [60] — SQLite progress store. Ratings are learner supplied; no automatic scoring.
 - `transcript.py` [69] — Learner-facing Markdown transcripts.
 - `tts.py` [246] — ElevenLabs TTS adapter and deterministic audio cache.
-- `upload.py` [220] — Upload published lesson packages to the public Supabase Storage bucket.
+- `upload.py` [406] ⚠ — Upload published lesson packages to the public Supabase Storage bucket.
 - `voice_registry.py` [226] — ElevenLabs voice registry: synced once, cached locally, used for deterministic per-lesson voice selection.
 
 ## Python scripts (`scripts/`)
@@ -34,12 +34,12 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `test_cli.py` [31]
 - `test_lesson_001_story.py` [114]
 - `test_lesson_schema.py` [67]
-- `test_publish.py` [305] ⚠
+- `test_publish.py` [367] ⚠
 - `test_review.py` [18]
 - `test_storage.py` [12]
 - `test_transcript.py` [37]
 - `test_tts.py` [130]
-- `test_upload.py` [226] — Upload tests use httpx.MockTransport: no network, no real Supabase project.
+- `test_upload.py` [393] ⚠ — Upload tests use httpx.MockTransport: no network, no real Supabase project.
 
 ## Supabase migrations (`supabase/migrations/`)
 
