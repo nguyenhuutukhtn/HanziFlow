@@ -32,7 +32,8 @@ Last updated: 2026-10-21 (T1) · branch `app-publish-pipeline` (not merged to `m
 ## Next (in order)
 
 0. **Now (before G2b, which is paused):** listening features from real use — see app_architecture.md "Chinese-only listening" and "Section replay".
-   - **T2:** compact lesson story source + generic builder + export/import bundles for any AI (docs/workflow.md). Before L2 and before lesson 2.
+   - **T2a:** compact story source (`lessons/src/*.story.md`) + generic builder `mandarin-course build-lesson`, lesson 1 rebuilt byte-for-byte (docs/tasks/T2a.md).
+   - **T2b:** export/import lesson bundles for any AI + condensed authoring checklist (docs/workflow.md). Before L2 and before lesson 2.
    - then **L2 (Android):** first split `PlaybackService.kt` (425 lines) into loop/cue-navigation/skip collaborators, then Chinese-only mode in PlaybackService + toggle; section list, seek-bar markers, section loop up to 5× with Bỏ lặp / Sang phần sau.
 
 1. **G2b** — Learn tab card states + lesson detail, lookup sheet actions (copy word/line, select text, send to), Settings tab (incl. MIUI battery/autostart help).
