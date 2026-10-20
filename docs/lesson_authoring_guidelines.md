@@ -4,7 +4,7 @@ These rules define how a Mandarin lesson should teach through audio. They apply 
 
 ## Core teaching loop (mini-story pivot)
 
-**Superseded:** the two-character scripted-dialogue loop that used to live in this section is replaced by the mini-story loop below. See `curriculum/roadmap.md`'s "Method" section for why: real listener feedback on the Lesson 1 trial found the scripted-dialogue format too thin to question in many ways, and recall-style retrieval too demanding this early. `lessons/lesson_001_mau.json` and `lesson_001.json`–`lesson_003.json` are kept only as a **pronunciation/TTS trial** — useful for checking voice quality, pacing, and FFmpeg assembly — not as the structural template for new lessons.
+**Superseded:** the two-character scripted-dialogue loop that used to live in this section is replaced by the mini-story loop below. See `curriculum/roadmap.md`'s "Method" section for why. `lessons/lesson_001.json`, built by `scripts/build_lesson_001_story.py`, is the template for later lessons.
 
 **Story first, grammar tracked, not taught.** Write or choose a mini-story because it is a good, concrete, realistic story — not because it contains a target pattern. Only after the story is written, check which grammar patterns appear in it against what the learner has already safely covered, and trim or adjust if the story accidentally uses something too advanced. The order is:
 
@@ -147,11 +147,9 @@ round 3+: Mandarin-led variation, with Vietnamese only when a new pattern causes
 
 Vary the question order and form, but do not randomize so aggressively that the learner loses the story. A long lesson may use several chapters (story/meaning, supported questions, varied questions, chunk practice, point-of-view, replay); duration must come from meaningful variation, not many near-identical Q&A loops.
 
-## Lesson 1 trial shape (pronunciation/TTS reference only)
+## Lesson 1 template
 
-`lessons/lesson_001_mau.json` has five parts: nghe cả cuộc, từng câu, ráp câu, hỏi đáp, and a closing nghe lại. This shape belongs to the superseded scripted-dialogue loop above — keep this file and `lesson_001.json`–`lesson_003.json` only as a reference for voice quality, pacing, FFmpeg assembly, and over-praise cleanup, not as a shape to carry into the mini-story format.
-
-About 26 minutes is acceptable for this trial. Do not make that the default length. New mini-story lessons target the roadmap's 15–25 minutes once narrator format and story length are settled through the prototype step below.
+`lessons/lesson_001.json` is the mini-story template. One narrator, short lines from the people in the story, the meaning mapped once, then three question passes: Vietnamese, guided Chinese, Chinese-only. Copy that shape. Do not bring back the greeting-dialogue trial.
 
 ## Audio tags for delivery
 
@@ -258,8 +256,7 @@ This audit reduces authoring mistakes without changing the lesson schema's runti
 
 ## Scope decisions
 
-- Do not write Level 1 mini-story lessons yet. First write 2–3 text-only prototypes of the **same** mini-story in different narrator formats (one narrator; two characters acting it out; one narrator with short embedded dialogue) and get real-listener reaction before committing a format — narrator choice drives the lesson schema (turns vs. single-speaker segments), TTS voice allocation, and feel, and is expensive to redo.
-- Keep Lessons 1–3 (`lesson_001.json`–`lesson_003.json`, `lesson_001_mau.json`) as the audio/pronunciation QA set only — useful for voice quality, FFmpeg assembly, and praise-frequency checks, not as the structural template for new lessons.
+- Lesson 1 is the template. Do not author lesson 2 until this lesson has been heard and the Vietnamese fade feels right.
 - Choose each mini-story because it is a good, concrete, realistic story first; check it against the grammar budget second. Do not pick a grammar point and construct a story to contain it.
 - Apply buildup and circling only where they improve a specific pattern or fact; avoid making every lesson longer by default.
 - Keep pinyin and Hanzi study optional and separate from the passive listening flow.

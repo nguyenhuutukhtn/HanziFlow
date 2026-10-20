@@ -6,7 +6,7 @@ Draft structure for review. Phrasing, vocabulary choices, and example sentences 
 
 The detailed authoring standard is [`docs/lesson_authoring_guidelines.md`](../docs/lesson_authoring_guidelines.md). Every lesson script and review must follow it.
 
-**Pivot (superseding the original scripted-dialogue design):** real listener feedback on the Lesson 1 trial (`lessons/lesson_001_mau.json`) found the two-character greeting-dialogue format too thin to support varied question drilling, and the retrieval-style Q&A too demanding for an absolute beginner. The course now follows the Effortless English / TPRS **mini-story** method instead:
+**Pivot (superseding the original scripted-dialogue design):** real listener feedback on the greeting-dialogue trial found that format too thin to support varied question drilling, and the retrieval-style Q&A too demanding for an absolute beginner. The course now follows the Effortless English / TPRS **mini-story** method instead:
 
 - **Story first, grammar tracked, not taught.** A mini-story is chosen or written because it is a good, concrete, realistic story — not because it contains a target pattern. Grammar is checked *after* the story is written, as a simplicity/safety constraint on the author, never the reason the story exists. The order is: natural story → pick the words/lines it actually needs → check the grammar it uses is simple enough for where the learner is → design questions and variants around it. Picking a grammar point first and constructing a story to contain it produces the same stilted, textbook-dialogue feel this pivot is meant to fix — see `docs/lesson_authoring_guidelines.md`.
 - A **mini-story** is a short, invented narration — not an authentic article or a scripted two-character dialogue — built around a realistic, adult-life situation (a relationship, an emotion, an everyday event) with enough concrete, checkable detail (who, what, where, how many, what color, in what order) to support heavy question drilling. It is not about animals or objects chosen for simplicity's sake; the situation should feel like something that could happen to a real person.
@@ -85,7 +85,7 @@ Grammar/function points are introduced once, then reused across later weeks and 
 
 ## Level 1 — Foundations (weeks 1–12)
 
-`lessons/lesson_001_mau.json` (the pre-pivot scripted greeting dialogue) and `curriculum/beginner.json` are both superseded by this table and are kept only as a pronunciation/TTS reference, not as the template for new lessons. Week 1 has a draft at `lessons/lesson_001_story.json`: one narrator, plus two short character lines. It is not locked until a listener hears it. Do not author weeks 2–12, and do not replace `lesson_001.json`, until that listen.
+Week 1 is `lessons/lesson_001.json`, built by `scripts/build_lesson_001_story.py`. That file is the template: one narrator, short character lines, meaning mapped once, three question passes. Do not author weeks 2–12 until this lesson has been heard.
 
 Each week centers on one natural, realistic mini-story (placeholder below — needs a native/fluent pass and, per the prototype step, a chosen narrator format). The grammar column is what that story happens to need once written, checked against what earlier weeks covered — it is not why the story was picked.
 

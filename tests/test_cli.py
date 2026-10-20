@@ -18,6 +18,7 @@ def test_validate_does_not_construct_or_call_tts(tmp_path, lesson_data, monkeypa
 def test_dry_run_does_not_construct_or_call_tts(tmp_path, lesson_data, monkeypatch, capsys):
     path = tmp_path / "lesson.json"
     path.write_text(json.dumps(lesson_data, ensure_ascii=False), encoding="utf-8")
+    monkeypatch.setenv("MANDARIN_COURSE_OUTPUT_DIR", str(tmp_path / "output"))
 
     def forbidden(*args, **kwargs):
         raise AssertionError("TTS must not be touched by dry-run")

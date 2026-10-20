@@ -125,20 +125,15 @@ Câu hỏi phải phục vụ mẫu đã học. Không thêm hàng loạt đại
 
 Các bài 1–4 có thể dài khoảng 25–35 phút vì cần nhiều hỗ trợ bằng tiếng Việt. Khi ngôn ngữ giáo viên và mẫu cũ đã quen, guided có thể giảm còn khoảng 15–25 phút. Không đặt thời lượng cứng nếu nội dung đã đạt đủ lần tiếp xúc và phản xạ.
 
-Bài mẫu `lesson_001_mau.json` đang là bản thử, chưa phải flow chuẩn. Bản đó có năm phần: nghe cả cuộc, từng câu, ráp câu, hỏi đáp, và nghe lại cuối. Bốn phần đầu là vòng luyện. Phần cuối là nghe tự nhiên. Khoảng 26 phút chỉ dùng cho bản thử này. Các bài sau vẫn theo roadmap, khoảng 15–20 phút.
+Khuôn là `lessons/lesson_001.json`. Các bài sau chép hình đó, không chép bài chào hỏi cũ.
 
 Flow chuẩn:
 
-1. Giáo viên chào, dựng cảnh và nêu mục tiêu nghe.
-2. Nghe toàn cảnh ở tốc độ tự nhiên.
-3. Dạy sâu từng lượt thoại theo đơn vị ở mục 3.
-4. Hỏi chuỗi câu hiểu nghĩa và lựa chọn dễ.
-5. Nói theo, tách cụm và ráp câu.
-6. Hỏi–đáp có khoảng lặng và đáp án mẫu.
-7. Đóng vai cả cảnh.
-8. Phản xạ nhanh với khoảng lặng ngắn hơn.
-9. Nghe lại toàn cảnh không dịch.
-10. Giáo viên tóm tắt ngắn, khen và nhắc cách ôn.
+1. Dựng cảnh ngắn, rồi nghe chuyện tiếng Trung một mạch.
+2. Neo nghĩa một lần: tiếng Trung, tiếng Việt, tiếng Trung.
+3. Hỏi đáp ba vòng: có tiếng Việt, rồi không dịch từng câu, rồi chỉ tiếng Trung.
+4. Đổi một chi tiết và kể lại, cùng ba vòng đó.
+5. Nghe lại chuyện, không dịch từng câu.
 
 Track practice dài khoảng 3–8 phút, chủ yếu là hội thoại tự nhiên. Chỉ dựng cảnh bằng tiếng Việt ở lượt đầu trong những tuần đầu; các lượt sau và các bài sau chuyển dần sang hoàn toàn tiếng Trung.
 

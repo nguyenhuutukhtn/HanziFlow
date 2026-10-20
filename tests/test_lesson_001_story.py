@@ -6,7 +6,7 @@ def _chinese(lesson):
 
 
 def test_story_draft_stays_inside_the_week_one_budget():
-    lesson = load_lesson("lessons/lesson_001_story.json")
+    lesson = load_lesson("lessons/lesson_001.json")
     assert lesson.lesson_id == "lesson_001"
     assert lesson.variant == "guided"
     assert lesson.level == "absolute_beginner"
@@ -59,29 +59,31 @@ def test_story_draft_stays_inside_the_week_one_budget():
     assert ids["sig_ma_vi"].text == "Từ này ở cuối câu cho biết đây là câu hỏi có hoặc không."
     assert ids["sig_ma_again"].text == ids["sig_ma"].text
     assert ids["sig_ma_ex"].text == "这是外卖吗？"
-    assert ids["sig_who"].text == "“谁的”问：这是谁的？"
-    assert ids["sig_who_vi"].text == "Cụm này hỏi: đây là của ai?"
+    assert ids["sig_who"].text == "听到“谁的”，你说这是谁的。"
+    assert ids["sig_who_vi"].text == "Nghe thấy cụm này, bạn nói đây là của ai."
     assert ids["sig_who_again"].text == ids["sig_who"].text
     assert ids["sig_who_ex"].text == "这是谁的？"
-    assert ids["sig_or"].text == "“还是”，你选这一样，或者那一样。"
-    assert ids["sig_or_vi"].text == "Có từ này, bạn chọn một trong hai."
+    assert ids["sig_or"].text == "听到“还是”，你选这一样，或者那一样。"
+    assert ids["sig_or_vi"].text == "Nghe thấy từ này, bạn chọn một trong hai."
     assert ids["sig_or_again"].text == ids["sig_or"].text
     assert ids["sig_or_ex"].text == "这是李明的还是同事的？"
     assert 40 <= lesson.target_duration_minutes <= 60
     assert ids["r2_food_vi"].text == "Đồ ăn mang về."
     assert ids["r2_name_vi"].text == "Tên."
-    assert ids["r4_who_vi"].text == "Của ai."
-    assert ids["r2_or_vi"].text == "Nghe từ này. Bạn chọn “của đồng nghiệp”, hoặc “của Lý Minh”."
+    assert ids["r2_who_vi"].text == "Của ai."
+    assert ids["r2_or_vi"].text == "Nghe thấy từ này, bạn chọn một trong hai."
     assert ids["sig_ma_ans_vi"].text == "Phải."
     assert "李明猜是安娜的外卖吗？" not in spoken
     assert "外卖是谁的外卖？" not in spoken
-    assert ids["r2e_name"].text.startswith("袋子上有李明的名字还是")
+    assert ids["r1_long_name"].text.startswith("袋子上有李明的名字还是")
     assert ids["r1_food"].text == "这是外卖吗？"
-    assert not any("袋子" in segment.text and segment.id.startswith("r1_") and segment.type == "prompt" for segment in lesson.segments)
-    assert "r3a_food_vi" not in ids
-    assert "r3c_guess_an_vi" in ids
-    assert "r2c_name_ts_vi" in ids
-    assert not any("还是" in segment.text and segment.id.startswith("r1_") for segment in lesson.segments)
+    assert "r1_name_ts_vi" in ids
+    assert "r2c_name_ts_vi" not in ids
+    assert "r3_food_vi" not in ids
+    assert "r3_name_vi" not in ids
+    food_at = next(index for index, segment in enumerate(lesson.segments) if segment.id == "r1_food")
+    long_at = next(index for index, segment in enumerate(lesson.segments) if segment.id == "r1_long_name")
+    assert food_at < long_at
     prompts: dict[str, dict[str, int]] = {}
     for segment in lesson.segments:
         if segment.type != "prompt":
@@ -89,12 +91,14 @@ def test_story_draft_stays_inside_the_week_one_budget():
         prompts.setdefault(segment.activity, {})
         prompts[segment.activity][segment.text] = prompts[segment.activity].get(segment.text, 0) + 1
     assert all(count <= 3 for counts in prompts.values() for count in counts.values())
-    assert [segment.id for segment in lesson.segments if segment.activity == "Nói theo" and segment.language == "vi-VN"] == ["say_lead_vi"]
+    say_vi = [segment.id for segment in lesson.segments if segment.activity == "Nói theo" and segment.language == "vi-VN"]
+    assert say_vi[0] == "say_lead_vi"
+    assert all(segment_id == "say_lead_vi" or segment_id.endswith("_gloss_vi") for segment_id in say_vi)
     assert [segment.id for segment in lesson.segments if segment.activity == "Nghe lại" and segment.language == "vi-VN"] == ["close_cue_vi", "end_today_vi", "end_vi"]
 
 
 def test_story_practice_is_the_same_scene_without_drills():
-    lesson = load_lesson("lessons/lesson_001_story_practice.json")
+    lesson = load_lesson("lessons/lesson_001_practice.json")
     assert lesson.variant == "practice"
     assert not any(segment.type in {"model_answer", "prompt", "pattern"} for segment in lesson.segments)
     guides = [segment for segment in lesson.segments if segment.language == "vi-VN"]

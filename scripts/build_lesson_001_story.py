@@ -1,11 +1,8 @@
-"""Build the Lesson 1 mini-story draft.
+"""Build Lesson 1, the mini-story template for later lessons.
 
 The story is the office takeout: Anna thinks it is Li Ming's, Li Ming thinks
 it is Anna's, it is a colleague's. Present time only. Grammar that survives
 the trim is 是/不是, 还是, and 的 for whose.
-
-Does not replace lessons/lesson_001.json. That file stays the pronunciation
-reference. This draft is lessons/lesson_001_story.json.
 """
 
 from __future__ import annotations
@@ -14,8 +11,8 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-GUIDED = ROOT / "lessons" / "lesson_001_story.json"
-PRACTICE = ROOT / "lessons" / "lesson_001_story_practice.json"
+GUIDED = ROOT / "lessons" / "lesson_001.json"
+PRACTICE = ROOT / "lessons" / "lesson_001_practice.json"
 
 # key, speaker, text, pinyin, gloss, pause_after_ms
 # Three events: the takeout is here; each guess is wrong; the name on the bag is the colleague's.
@@ -296,6 +293,41 @@ def circle(activity: str, prefix: str, rows: list[tuple], with_vietnamese: bool,
     return out
 
 
+def story_shadow(prefix: str, rows: list[tuple]) -> list[dict]:
+    out = []
+    for row in rows:
+        key, speaker, text, pinyin, gloss = row[:5]
+        kind = "narration" if speaker == "coach_zh" else "dialogue"
+        out.append(
+            seg(
+                f"{prefix}_{key}_slow",
+                "Nói theo",
+                kind,
+                "zh-CN",
+                text,
+                speaker=speaker,
+                pinyin=pinyin,
+                translation=gloss,
+                pause_after=600,
+                speed=0.85,
+            )
+        )
+        out.append(
+            seg(
+                f"{prefix}_{key}_nat",
+                "Nói theo",
+                kind,
+                "zh-CN",
+                text,
+                speaker=speaker,
+                pinyin=pinyin,
+                translation=gloss,
+                pause_after=4200,
+            )
+        )
+    return out
+
+
 def buildup_block() -> list[dict]:
     out = pair(
         "Nói theo",
@@ -307,6 +339,7 @@ def buildup_block() -> list[dict]:
     )
     for speaker, key, text, pinyin, gloss, steps in BUILDUP:
         kind = "dialogue" if speaker != "coach_zh" else "narration"
+        out += gloss_line("Nói theo", f"{key}_gloss", speaker, text, pinyin, gloss)
         previous = ""
         for step, chunk, chunk_py, chunk_gloss in steps:
             if previous and previous not in chunk:
@@ -329,6 +362,10 @@ def buildup_block() -> list[dict]:
             raise SystemExit(f"full line does not contain the previous chunk: {previous} -> {text}")
         out.append(seg(f"{key}_slow", "Nói theo", kind, "zh-CN", text, speaker=speaker, pinyin=pinyin, translation=gloss, pause_after=700, speed=0.85))
         out.append(seg(f"{key}_nat", "Nói theo", kind, "zh-CN", text, speaker=speaker, pinyin=pinyin, translation=gloss, pause_after=1000))
+    out += story_shadow("sh", STORY)
+    out += story_shadow("pvsh", POV)
+    out += story_shadow("rtsh", RETOLD)
+    out += story_shadow("ansh", ANNA)
     return out
 
 
@@ -737,6 +774,50 @@ ROUND_EXPAND = [
     row("or_an", "这是安娜的还是同事的？", "zhè shì Ānnà de háishi tóngshì de?", "Của Anna hay của đồng nghiệp?", "同事的。", "tóngshì de.", "Của đồng nghiệp.", 5500),
     row("or_name2", "袋子上有同事的名字还是安娜的名字？", "dàizi shàng yǒu tóngshì de míngzi háishi Ānnà de míngzi?", "Trên túi có tên đồng nghiệp hay tên Anna?", "同事的名字。", "tóngshì de míngzi.", "Tên đồng nghiệp.", 5500),
 ]
+ROUND_ANNA = [
+    yes_no("an", "这是安娜的吗？", "zhè shì Ānnà de ma?", "Đây là của Anna phải không?", True),
+    yes_no("ts", "这是同事的吗？", "zhè shì tóngshì de ma?", "Đây là của đồng nghiệp phải không?", False),
+    yes_no("lm", "这是李明的吗？", "zhè shì Lǐ Míng de ma?", "Đây là của Lý Minh phải không?", False),
+    yes_no("food_an", "外卖是安娜的吗？", "wàimài shì Ānnà de ma?", "Đồ ăn mang về là của Anna phải không?", True),
+    yes_no("food_ts", "外卖是同事的吗？", "wàimài shì tóngshì de ma?", "Đồ ăn mang về là của đồng nghiệp phải không?", False),
+    yes_no("an_food", "这是安娜的外卖吗？", "zhè shì Ānnà de wàimài ma?", "Đây là đồ ăn mang về của Anna phải không?", True),
+    yes_no("ts_food", "这是同事的外卖吗？", "zhè shì tóngshì de wàimài ma?", "Đây là đồ ăn mang về của đồng nghiệp phải không?", False),
+    row("who", "这是谁的？", "zhè shì shuí de?", "Của ai?", "安娜的。", "Ānnà de.", "Của Anna.", 5000),
+    row("food_who", "外卖是谁的？", "wàimài shì shuí de?", "Đồ ăn mang về là của ai?", "安娜的。", "Ānnà de.", "Của Anna.", 5000),
+    row("who_food", "这是谁的外卖？", "zhè shì shuí de wàimài?", "Đây là đồ ăn mang về của ai?", "安娜的。", "Ānnà de.", "Của Anna.", 5200),
+    has_name("has", "袋子上有名字吗？", "dàizi shàng yǒu míngzi ma?", "Trên túi có tên phải không?", True),
+    has_name("name_an", "袋子上有安娜的名字吗？", "dàizi shàng yǒu Ānnà de míngzi ma?", "Trên túi có tên Anna phải không?", True),
+    row("or_name", "袋子上有同事的名字还是安娜的名字？", "dàizi shàng yǒu tóngshì de míngzi háishi Ānnà de míngzi?", "Trên túi có tên đồng nghiệp hay tên Anna?", "安娜的名字。", "Ānnà de míngzi.", "Tên Anna.", 5500),
+    has_name("name_ts", "袋子上有同事的名字吗？", "dàizi shàng yǒu tóngshì de míngzi ma?", "Trên túi có tên đồng nghiệp phải không?", False),
+    has_name("name_lm", "袋子上有李明的名字吗？", "dàizi shàng yǒu Lǐ Míng de míngzi ma?", "Trên túi có tên Lý Minh phải không?", False),
+    row("or_lm", "这是李明的还是安娜的？", "zhè shì Lǐ Míng de háishi Ānnà de?", "Của Lý Minh hay của Anna?", "安娜的。", "Ānnà de.", "Của Anna.", 5500),
+    row("or_ts", "这是同事的还是安娜的？", "zhè shì tóngshì de háishi Ānnà de?", "Của đồng nghiệp hay của Anna?", "安娜的。", "Ānnà de.", "Của Anna.", 5500),
+    row("or_food", "外卖是同事的还是安娜的？", "wàimài shì tóngshì de háishi Ānnà de?", "Đồ ăn mang về là của đồng nghiệp hay của Anna?", "安娜的。", "Ānnà de.", "Của Anna.", 5500),
+]
+ROUND_ANNA_MORE = [
+    row("or_food_lm", "外卖是安娜的还是李明的？", "wàimài shì Ānnà de háishi Lǐ Míng de?", "Đồ ăn mang về là của Anna hay của Lý Minh?", "安娜的。", "Ānnà de.", "Của Anna.", 5500),
+    row("or_food_ts", "外卖是安娜的还是同事的？", "wàimài shì Ānnà de háishi tóngshì de?", "Đồ ăn mang về là của Anna hay của đồng nghiệp?", "安娜的。", "Ānnà de.", "Của Anna.", 5500),
+    row("or_an_lm", "这是安娜的还是李明的？", "zhè shì Ānnà de háishi Lǐ Míng de?", "Của Anna hay của Lý Minh?", "安娜的。", "Ānnà de.", "Của Anna.", 5500),
+    row("or_food_full_lm", "这是安娜的外卖还是李明的外卖？", "zhè shì Ānnà de wàimài háishi Lǐ Míng de wàimài?", "Đồ ăn mang về của Anna hay của Lý Minh?", "安娜的外卖。", "Ānnà de wàimài.", "Đồ ăn mang về của Anna.", 5500),
+    row("or_food_full_ts", "这是安娜的外卖还是同事的外卖？", "zhè shì Ānnà de wàimài háishi tóngshì de wàimài?", "Đồ ăn mang về của Anna hay của đồng nghiệp?", "安娜的外卖。", "Ānnà de wàimài.", "Đồ ăn mang về của Anna.", 5500),
+    row("who_name", "袋子上的名字是谁的？", "dàizi shàng de míngzi shì shuí de?", "Tên trên túi là của ai?", "安娜的。", "Ānnà de.", "Của Anna.", 5200),
+    row("who_bag", "袋子上有谁的名字？", "dàizi shàng yǒu shuí de míngzi?", "Trên túi có tên ai?", "安娜的。", "Ānnà de.", "Của Anna.", 5200),
+    row("or_name_lm", "袋子上有安娜的名字还是李明的名字？", "dàizi shàng yǒu Ānnà de míngzi háishi Lǐ Míng de míngzi?", "Trên túi có tên Anna hay tên Lý Minh?", "安娜的名字。", "Ānnà de míngzi.", "Tên Anna.", 5500),
+    row("or_name_ts", "袋子上有安娜的名字还是同事的名字？", "dàizi shàng yǒu Ānnà de míngzi háishi tóngshì de míngzi?", "Trên túi có tên Anna hay tên đồng nghiệp?", "安娜的名字。", "Ānnà de míngzi.", "Tên Anna.", 5500),
+    yes_no("name_an", "这是安娜的名字吗？", "zhè shì Ānnà de míngzi ma?", "Đây là tên Anna phải không?", True),
+    yes_no("name_lm", "这是李明的名字吗？", "zhè shì Lǐ Míng de míngzi ma?", "Đây là tên Lý Minh phải không?", False),
+    yes_no("name_ts", "这是同事的名字吗？", "zhè shì tóngshì de míngzi ma?", "Đây là tên đồng nghiệp phải không?", False),
+]
+QA_CORE = [
+    yes_no("food", "这是外卖吗？", "zhè shì wàimài ma?", "Đây là đồ ăn mang về phải không?", True, praise="Đúng rồi."),
+    yes_no("lm", "这是李明的吗？", "zhè shì Lǐ Míng de ma?", "Đây là của Lý Minh phải không?", False),
+    row("who", "这是谁的？", "zhè shì shuí de?", "Của ai?", "同事的。", "tóngshì de.", "Của đồng nghiệp.", 5000),
+    has_name("has", "袋子上有名字吗？", "dàizi shàng yǒu míngzi ma?", "Trên túi có tên phải không?", True),
+    row("name_ts", "袋子上有同事的名字吗？", "dàizi shàng yǒu tóngshì de míngzi ma?", "Trên túi có tên đồng nghiệp phải không?", "有。", "yǒu.", "Có.", 5000, "Tốt."),
+]
+QA_LONG = [
+    row("name", "袋子上有李明的名字还是同事的名字？", "dàizi shàng yǒu Lǐ Míng de míngzi háishi tóngshì de míngzi?", "Trên túi có tên Lý Minh hay tên đồng nghiệp?", "同事的名字。", "tóngshì de míngzi.", "Tên đồng nghiệp.", 5500),
+]
 ROUND_RETELL = [
     yes_no("food", "这是外卖吗？", "zhè shì wàimài ma?", "Đây là đồ ăn mang về phải không?", True),
     row("who", "这是谁的？", "zhè shì shuí de?", "Của ai?", "同事的。", "tóngshì de.", "Của đồng nghiệp.", 5000),
@@ -766,9 +847,9 @@ def guided_segments() -> list[dict]:
     segments += pair(
         "Nghe chuyện",
         "scene_bag",
-        "桌上有一袋外卖。安娜和李明看袋子。",
-        "zhuō shàng yǒu yí dài wàimài. Ānnà hé Lǐ Míng kàn dàizi.",
-        "Trên bàn có một túi đồ ăn mang về. Anna và Lý Minh nhìn túi.",
+        "桌上有一袋外卖。这不是安娜的桌子。这不是李明的桌子。安娜和李明看袋子。",
+        "zhuō shàng yǒu yí dài wàimài. zhè bú shì Ānnà de zhuōzi. zhè bú shì Lǐ Míng de zhuōzi. Ānnà hé Lǐ Míng kàn dàizi.",
+        "Trên bàn có một túi đồ ăn mang về. Đây không phải bàn của Anna. Đây không phải bàn của Lý Minh. Anna và Lý Minh nhìn túi.",
         700,
     )
     segments += pair(
@@ -798,22 +879,6 @@ def guided_segments() -> list[dict]:
     )
     for key, text, pinyin, gloss in WORDS:
         segments += gloss_line("Giải nghĩa", f"w_{key}", "coach_zh", text, pinyin, gloss)
-    segments += pair(
-        "Giải nghĩa",
-        "frame_words",
-        "有。没有。袋子。看。不知道。",
-        "yǒu. méi yǒu. dàizi. kàn. bù zhīdào.",
-        "Có. Không có. Túi. Nhìn. Không biết.",
-        500,
-    )
-    segments += pair(
-        "Giải nghĩa",
-        "frame_lead",
-        "还有“吗”、“谁的”、“还是”。我们先听。",
-        "hái yǒu “ma”, “shuí de”, “háishi”. wǒmen xiān tīng.",
-        "Còn câu hỏi có hoặc không, của ai, và chọn một trong hai. Mình nghe trước.",
-        700,
-    )
     segments += pair(
         "Giải nghĩa",
         "map_lead",
@@ -851,9 +916,9 @@ def guided_segments() -> list[dict]:
     segments += teach(
         "Hỏi đáp",
         "sig_who",
-        "“谁的”问：这是谁的？",
-        "“shuí de” wèn: zhè shì shuí de?",
-        "Cụm này hỏi: đây là của ai?",
+        "听到“谁的”，你说这是谁的。",
+        "tīng dào “shuí de”, nǐ shuō zhè shì shuí de.",
+        "Nghe thấy cụm này, bạn nói đây là của ai.",
         "这是谁的？",
         "zhè shì shuí de?",
         "Của ai?",
@@ -864,9 +929,9 @@ def guided_segments() -> list[dict]:
     segments += teach(
         "Hỏi đáp",
         "sig_or",
-        "“还是”，你选这一样，或者那一样。",
-        "“háishi”, nǐ xuǎn zhè yí yàng, huòzhě nà yí yàng.",
-        "Có từ này, bạn chọn một trong hai.",
+        "听到“还是”，你选这一样，或者那一样。",
+        "tīng dào “háishi”, nǐ xuǎn zhè yí yàng, huòzhě nà yí yàng.",
+        "Nghe thấy từ này, bạn chọn một trong hai.",
         "这是李明的还是同事的？",
         "zhè shì Lǐ Míng de háishi tóngshì de?",
         "Của Lý Minh hay của đồng nghiệp?",
@@ -890,49 +955,48 @@ def guided_segments() -> list[dict]:
         "Bạn chỉ cần trả lời có hoặc không.",
         500,
     )
-    segments += circle("Hỏi đáp", "r1", ROUND_SHORT, True, True, True)
+    segments += circle("Hỏi đáp", "r1", QA_CORE, True, True, True)
+    segments += pair("Hỏi đáp", "r1_name", "名字。", "míngzi.", "Tên.", 300)
     segments += pair(
         "Hỏi đáp",
-        "r2_go",
-        "我们再听短句。",
-        "wǒmen zài tīng duǎn jù.",
-        "Mình nghe lại câu ngắn nhé.",
-        400,
-    )
-    segments += pair("Hỏi đáp", "r2_food", "外卖。", "wàimài.", "Đồ ăn mang về.", 300)
-    segments += circle("Hỏi đáp", "r2a", ROUND_FAMILIAR[:4], True, False, True)
-    segments += pair("Hỏi đáp", "r2_who", "谁的。", "shuí de.", "Của ai.", 300)
-    segments += circle("Hỏi đáp", "r2b", ROUND_FAMILIAR[4:], True, False, True)
-    segments += circle("Hỏi đáp", "r2b2", [ROUND_SHORT[2], ROUND_SHORT[8]], True, False, True)
-    segments += pair(
-        "Hỏi đáp",
-        "r2_long",
-        "这一轮还有越南语。",
-        "zhè yì lún hái yǒu Yuènányǔ.",
-        "Vòng này mình vẫn có tiếng Việt nhé.",
-        400,
-    )
-    segments += pair("Hỏi đáp", "r2_name", "名字。", "míngzi.", "Tên.", 300)
-    segments += circle("Hỏi đáp", "r2c", ROUND_BAG[:2], True, False, True)
-    segments += pair(
-        "Hỏi đáp",
-        "r2_chunk",
+        "r1_chunk",
         "同事的名字。李明的名字还是同事的名字。",
         "tóngshì de míngzi. Lǐ Míng de míngzi háishi tóngshì de míngzi.",
         "Tên đồng nghiệp. Tên Lý Minh hay tên đồng nghiệp.",
         400,
     )
-    segments += circle("Hỏi đáp", "r2e", ROUND_BAG_OR, True, False, True)
-    segments += circle("Hỏi đáp", "r2c3", ROUND_BAG[2:], True, False, True)
+    segments += circle("Hỏi đáp", "r1_long", QA_LONG, True, False, True)
+    segments += pair(
+        "Hỏi đáp",
+        "again_cue",
+        "听不懂，再听一次。",
+        "tīng bù dǒng, zài tīng yí cì.",
+        "Nghe chưa hiểu thì nghe lại một lần.",
+        500,
+    )
+    segments += pair(
+        "Hỏi đáp",
+        "r2_go",
+        "我们再听。你答。",
+        "wǒmen zài tīng. nǐ dá.",
+        "Mình nghe lại. Bạn trả lời.",
+        400,
+    )
+    segments += pair("Hỏi đáp", "r2_food", "外卖。", "wàimài.", "Đồ ăn mang về.", 300)
+    segments += circle("Hỏi đáp", "r2a", QA_CORE[:2], False, False)
+    segments += pair("Hỏi đáp", "r2_who", "谁的。", "shuí de.", "Của ai.", 300)
+    segments += circle("Hỏi đáp", "r2b", QA_CORE[2:3], False, False)
+    segments += pair("Hỏi đáp", "r2_name", "名字。", "míngzi.", "Tên.", 300)
+    segments += circle("Hỏi đáp", "r2c", QA_CORE[3:], False, False)
     segments += pair(
         "Hỏi đáp",
         "r2_or",
-        "听“还是”。你选“同事的”，或者“李明的”。",
-        "tīng “háishi”. nǐ xuǎn “tóngshì de”, huòzhě “Lǐ Míng de”.",
-        "Nghe từ này. Bạn chọn “của đồng nghiệp”, hoặc “của Lý Minh”.",
+        "听到“还是”，你选这一样，或者那一样。",
+        "tīng dào “háishi”, nǐ xuǎn zhè yí yàng, huòzhě nà yí yàng.",
+        "Nghe thấy từ này, bạn chọn một trong hai.",
         400,
     )
-    segments += circle("Hỏi đáp", "r2f", ROUND_OR_SHORT, True, False, True)
+    segments += circle("Hỏi đáp", "r2_long", QA_LONG, False, False)
     segments += pair(
         "Hỏi đáp",
         "s_mid_lead",
@@ -945,26 +1009,12 @@ def guided_segments() -> list[dict]:
     segments += pair(
         "Hỏi đáp",
         "r3_lead",
-        "短句听中文。这一轮长句还有越南语。",
-        "duǎn jù tīng Zhōngwén. zhè yì lún cháng jù hái yǒu Yuènányǔ.",
-        "Câu ngắn nghe tiếng Trung. Vòng này câu dài vẫn có tiếng Việt nhé.",
+        "这一轮听中文。",
+        "zhè yì lún tīng Zhōngwén.",
+        "Vòng này nghe tiếng Trung.",
         400,
     )
-    segments += circle("Hỏi đáp", "r3a", ROUND_FAMILIAR + [ROUND_SHORT[2], ROUND_SHORT[8]], False, False)
-    segments += pair("Hỏi đáp", "r3_bag", "袋子。名字。", "dàizi. míngzi.", "Túi. Tên.", 300)
-    segments += circle("Hỏi đáp", "r3b", [ROUND_BAG[1], *ROUND_NAME_IS], True, False, True)
-    segments += circle("Hỏi đáp", "r3c", ROUND_NEW, True, False, True)
-    segments += pair("Hỏi đáp", "r4_who", "谁的。", "shuí de.", "Của ai.", 300)
-    segments += circle("Hỏi đáp", "r4w", ROUND_WHO_LATE, True, False, True)
-    segments += pair(
-        "Hỏi đáp",
-        "r4_or",
-        "再听“还是”。你选“同事的”，或者“李明的”。",
-        "zài tīng “háishi”. nǐ xuǎn “tóngshì de”, huòzhě “Lǐ Míng de”.",
-        "Nghe lại từ này. Bạn chọn “của đồng nghiệp”, hoặc “của Lý Minh”.",
-        400,
-    )
-    segments += circle("Hỏi đáp", "r4o", ROUND_OR_LATE, True, False, True)
+    segments += circle("Hỏi đáp", "r3", list(reversed(QA_CORE + QA_LONG)), False, False)
     segments += buildup_block()
     segments += pair(
         "Đổi một chi tiết",
@@ -984,21 +1034,77 @@ def guided_segments() -> list[dict]:
     )
     segments += story_lines("Đổi một chi tiết", "pov", POV, 1000)
     segments += circle("Đổi một chi tiết", "p1", POV_CIRCLE, True, False, True)
-    segments.append(
-        seg(
-            "pov_again",
-            "Đổi một chi tiết",
-            "narration",
-            "zh-CN",
-            "我们再听一次吧。",
-            speaker="coach_zh",
-            pinyin="wǒmen zài tīng yí cì ba.",
-            translation="Mình nghe lại một lần nữa nhé.",
-            pause_after=400,
-        )
+    segments += pair(
+        "Đổi một chi tiết",
+        "p2_go",
+        "我们再听。你答。",
+        "wǒmen zài tīng. nǐ dá.",
+        "Mình nghe lại. Bạn trả lời.",
+        400,
     )
-    segments += story_lines("Đổi một chi tiết", "pov2", POV, 900)
-    segments += circle("Đổi một chi tiết", "p2", list(reversed(POV_CIRCLE)), False, False)
+    segments += circle("Đổi một chi tiết", "p2", POV_CIRCLE, False, False)
+    segments += pair(
+        "Đổi một chi tiết",
+        "p3_lead",
+        "这一轮听中文。",
+        "zhè yì lún tīng Zhōngwén.",
+        "Vòng này nghe tiếng Trung.",
+        400,
+    )
+    segments += circle("Đổi một chi tiết", "p3", list(reversed(POV_CIRCLE)), False, False)
+    segments += pair(
+        "Túi của Anna",
+        "an_lead",
+        "这次袋子上有安娜的名字。这是安娜的。",
+        "zhè cì dàizi shàng yǒu Ānnà de míngzi. zhè shì Ānnà de.",
+        "Lần này trên túi có tên Anna. Đây là của Anna.",
+        700,
+    )
+    segments += story_lines("Túi của Anna", "an_s", ANNA, 1000)
+    for key, speaker, text, pinyin, gloss, *_rest in ANNA:
+        segments += gloss_line("Túi của Anna", f"an_{key}", speaker, text, pinyin, gloss)
+    segments += pair(
+        "Túi của Anna",
+        "an_vi",
+        "这一轮还有越南语。",
+        "zhè yì lún hái yǒu Yuènányǔ.",
+        "Vòng này mình vẫn có tiếng Việt nhé.",
+        400,
+    )
+    segments += circle("Túi của Anna", "a1", ROUND_ANNA[:10], True, False, True)
+    segments += pair("Túi của Anna", "an_word", "名字。", "míngzi.", "Tên.", 300)
+    segments += circle("Túi của Anna", "a_bag", ROUND_ANNA[10:12], True, False, True)
+    segments += pair(
+        "Túi của Anna",
+        "an_chunk",
+        "安娜的名字。同事的名字还是安娜的名字。",
+        "Ānnà de míngzi. tóngshì de míngzi háishi Ānnà de míngzi.",
+        "Tên Anna. Tên đồng nghiệp hay tên Anna.",
+        400,
+    )
+    segments += circle("Túi của Anna", "a2", ROUND_ANNA[12:], True, False, True)
+    segments += circle("Túi của Anna", "a4", ROUND_ANNA_MORE, True, False, True)
+    segments += pair(
+        "Túi của Anna",
+        "a_go",
+        "我们再听。你答。",
+        "wǒmen zài tīng. nǐ dá.",
+        "Mình nghe lại. Bạn trả lời.",
+        400,
+    )
+    segments += circle("Túi của Anna", "a_mid", ROUND_ANNA, False, False)
+    segments += circle("Túi của Anna", "a_mid2", ROUND_ANNA_MORE, False, False)
+    segments += pair(
+        "Túi của Anna",
+        "a_test_lead",
+        "这一轮听中文。",
+        "zhè yì lún tīng Zhōngwén.",
+        "Vòng này nghe tiếng Trung.",
+        400,
+    )
+    segments += story_lines("Túi của Anna", "an_s2", ANNA, 800)
+    segments += circle("Túi của Anna", "a3", list(reversed(ROUND_ANNA)), False, False)
+    segments += circle("Túi của Anna", "a3b", list(reversed(ROUND_ANNA_MORE)), False, False)
     segments += pair(
         "Kể lại",
         "rt_lead",
@@ -1019,6 +1125,24 @@ def guided_segments() -> list[dict]:
         400,
     )
     segments += circle("Kể lại", "k1", ROUND_RETELL, True, False, True)
+    segments += pair(
+        "Kể lại",
+        "k2_go",
+        "我们再听。你答。",
+        "wǒmen zài tīng. nǐ dá.",
+        "Mình nghe lại. Bạn trả lời.",
+        400,
+    )
+    segments += circle("Kể lại", "k2", ROUND_RETELL, False, False)
+    segments += pair(
+        "Kể lại",
+        "k3_lead",
+        "这一轮听中文。",
+        "zhè yì lún tīng Zhōngwén.",
+        "Vòng này nghe tiếng Trung.",
+        400,
+    )
+    segments += circle("Kể lại", "k3", list(reversed(ROUND_RETELL)), False, False)
     segments += pair(
         "Nghe lại",
         "close_cue",
@@ -1085,6 +1209,22 @@ def guided_segments() -> list[dict]:
         "Ngày mai mình cùng nghe lại chuyện.",
         400,
     )
+    # First occurrence only. Repeats of the same line stay untagged.
+    delivery = {
+        "roles": ["gentle"],
+        "scene_bag": ["warm"],
+        "listen_first": ["reassuring"],
+        "s1_ask_lm": ["curious"],
+        "s1_lm_no": ["surprised"],
+        "s1_name": ["surprised"],
+        "s1_colleague": ["warm"],
+        "r1_lm_ok": ["encouraging"],
+        "end_today": ["reassuring"],
+    }
+    for segment in segments:
+        tags = delivery.get(segment["id"])
+        if tags:
+            segment["tts_tags"] = tags
     return segments
 
 
@@ -1166,8 +1306,8 @@ def main() -> None:
         listening,
         [
             "我们一起听小故事吧。",
-            "你试着回答吧。",
-            "我们再听一次故事吧。",
+            "我们先听短句。",
+            "这一轮还有越南语。",
         ],
     )
     print(f"estimate brisk {brisk / 60:.1f} min; careful {careful / 60:.1f}; likely listening {brisk * 0.84 / 60:.1f}")

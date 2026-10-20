@@ -22,8 +22,10 @@ There is no UI yet; everything is a CLI (`mandarin-course ...`) run against less
 
 The course pivoted away from scripted two-character textbook dialogue (greetings,
 ordering coffee, etc.) after real listener feedback. **Do not write new lessons in
-that old shape.** `lesson_001.json`–`lesson_003.json` and `lesson_001_mau.json` are
-kept only as a pronunciation/TTS/FFmpeg reference — not a template.
+that old shape.** `lessons/lesson_001.json` is the mini-story template. Copy its
+shape: one narrator, short character lines, meaning mapped once, then three Q&A
+passes (Vietnamese, guided Chinese, Chinese-only). The builder is
+`scripts/build_lesson_001_story.py`.
 
 The current method is a **mini-story** format (Effortless English / TPRS-style):
 
@@ -39,10 +41,8 @@ The current method is a **mini-story** format (Effortless English / TPRS-style):
    retelling variable before that marker's own lesson has introduced it** (e.g. no
    past-tense retelling before `了` lands in week 12) — that would teach an untaught
    structure through the back door.
-4. **Narrator count is not decided.** Before writing Level 1 week 1, write 2–3
-   text-only outlines of the *same* story in different narrator formats (one
-   narrator; two characters acting it out; one narrator with short embedded
-   dialogue) and get real-listener reaction first.
+4. **Narrator shape is the Lesson 1 template:** one narrator, plus short lines
+   from the people in the story. Do not reopen a scripted two-person dialogue.
 
 ## Hard rules (schema- and pipeline-level, not just style)
 
@@ -86,11 +86,11 @@ The current method is a **mini-story** format (Effortless English / TPRS-style):
 4. `mandarin-course generate lessons/<file>.json` — confirms paid request count
    before calling ElevenLabs.
 5. Run `pytest` (project root) before considering any change done. Lesson-content
-   tests in `tests/test_lesson_schema.py` assert on real lesson files' actual text.
+   tests in `tests/test_lesson_001_story.py` assert on Lesson 1's actual text.
 
 ## Scope discipline
 
-- Don't rewrite `lesson_001.json`–`lesson_003.json` into the mini-story format — they're the audio/voice QA set. The week-1 draft is `lessons/lesson_001_story.json` (one narrator, two short character lines). It is not locked until a listener hears it.
+- Lesson 1 is the template. Do not author lesson 2 until this lesson has been heard and the fade feels right.
 - Don't add adaptive/automatic familiarity tracking yet — the ledgers above are
   manual by design until the guided/practice player is stable.
 - Don't pick a grammar point and construct a story around it (see "Current

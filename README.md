@@ -2,7 +2,7 @@
 
 A local-first Python CLI that turns validated lesson JSON into a Mandarin listening-and-speaking course. Lesson content, TTS, FFmpeg assembly, transcripts, caching, and learner-managed review history are separate so later lessons do not require changes to the core code.
 
-The MVP includes a real 12-week curriculum outline and a complete Lesson 1, **Greetings and Introductions**. It does not claim to assess pronunciation or know whether an answer was correct; review ratings are supplied by the learner.
+The MVP includes a week-by-week outline and Lesson 1, the takeout mini-story. That lesson is the template for later ones. It does not claim to assess pronunciation or know whether an answer was correct; review ratings are supplied by the learner.
 
 ## What the MVP does
 
@@ -81,7 +81,7 @@ python -m mandarin_course.cli transcript lessons/lesson_001.json
 This writes:
 
 - `output/lesson_001/transcript.md` — practice version; pinyin only, model answers hidden;
-- `output/lesson_001/transcript_full.md` — reference with English glosses and optional Hanzi details.
+- `output/lesson_001/transcript_full.md` — reference with Vietnamese glosses and optional Hanzi details.
 
 Always inspect the paid-request plan first:
 
@@ -103,13 +103,13 @@ The CLI asks you to type `yes` before making any uncached paid requests. In a tr
 python -m mandarin_course.cli generate lessons/lesson_001.json --yes
 ```
 
-On success, listen offline at `output/lesson_001/lesson_001.mp3`. The command prints the duration measured by `ffprobe`; it never reports success for an empty or failed output.
+On success, listen offline at `output/lesson_001/lesson_001_guided.mp3`. The phone copy is `output/dien_thoai/04_bai1_chuyen.mp3`. The command prints the duration measured by `ffprobe`; it never reports success for an empty or failed output.
 
 ## Cache behavior
 
 Each cached clip is content-addressed. Running the same lesson with the same voices and settings reuses it. Changing text, language, model, output format, voice ID, or a TTS voice setting creates a new key. `playback_speed` is applied locally by FFmpeg, so adjusting it rebuilds the lesson without another paid TTS request. Old cache files are safe to leave in place.
 
-Lesson dialogue uses three speaker roles: `anna` maps to the primary Mandarin voice, `li_ming` maps to the second Mandarin voice, and `coach` maps to the English voice. Multi-turn `turns` blocks use Eleven v4 Text to Dialogue; drills remain individual clips so answer pauses stay exact.
+Lesson 1 uses four speaker roles: `anna` and `li_ming` are Mandarin character voices, `coach_zh` is the Mandarin narrator, and `coach` is the Vietnamese narrator. Drills stay individual clips so answer pauses stay exact.
 
 Eleven v4 does not expose a Speed setting. To slow a segment without changing pitch, set `"playback_speed": 0.9` in lesson JSON. Keep normal conversations near `1.0`; use roughly `0.88`–`0.95` only for focused imitation. Large slowdowns sound processed and are intentionally rejected by the schema.
 
@@ -136,7 +136,7 @@ The initial schedule uses 1, 2, 3, 5, and 7 days, then expands by about 1.7x. Th
 
 ## Lesson data
 
-`lessons/lesson_001.json` is the source of truth. Mandarin is stored in simplified Hanzi for reliable TTS, while pinyin with tone marks and concise English meaning are stored for learner transcripts. Pinyin keeps dictionary tones. Lesson 1 is one first meeting between classmates, then the same two people a few mornings later, heard, imitated, then answered. It does not loop shuffled versions of the same lines.
+`scripts/build_lesson_001_story.py` writes `lessons/lesson_001.json`. That file is the Lesson 1 template: Anna and Lý Minh each think the takeout is the other's, and it belongs to a colleague. Mandarin is stored in simplified Hanzi for TTS, with pinyin and a Vietnamese gloss for transcripts.
 
 Each question-answer exercise is explicit: a `prompt` segment has its own answer pause and points to a later `model_answer` in metadata. The builder never invents answers or timing. To add a lesson, copy the schema, give every segment a unique ID, validate it, create transcripts, and dry-run before generation.
 
@@ -153,8 +153,8 @@ Each question-answer exercise is explicit: a `prompt` segment has its own answer
 ## Project map
 
 ```text
-curriculum/beginner.json       12-week progression
-lessons/lesson_001.json        real Lesson 1 content and timing
+curriculum/roadmap.md          week-by-week sequence
+lessons/lesson_001.json        Lesson 1 mini-story template
 src/mandarin_course/config.py  environment configuration
 src/mandarin_course/lesson_schema.py
 src/mandarin_course/tts.py     ElevenLabs adapter and cache

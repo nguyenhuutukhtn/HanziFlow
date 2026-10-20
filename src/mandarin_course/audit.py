@@ -44,8 +44,7 @@ def load_authoring_lessons(lessons_dir: Path) -> list[Lesson]:
 
     Only files named exactly after their own lesson_id (e.g. `lesson_001.json`)
     are canonical. Practice-variant files declare the same lesson_id and the
-    same authoring ledger as their guided counterpart, and draft files (e.g.
-    `lesson_001_mau.json`) are not the authored ledger, so both are skipped.
+    same authoring ledger as their guided counterpart, so practice files are skipped.
     """
     by_id: dict[str, Lesson] = {}
     for path in sorted(lessons_dir.glob("lesson_*.json")):
