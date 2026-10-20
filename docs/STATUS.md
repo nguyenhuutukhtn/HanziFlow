@@ -9,6 +9,7 @@ Last updated: 2026-10-20 · branch `app-publish-pipeline` (not merged to `main`)
 - One task at a time, sequentially. No parallel agents.
 - Agents report with the template in [AGENTS.md](../AGENTS.md) ("Task reports").
 - Bring a task back for human/PM review only for design decisions or when blocked.
+- Every task (code or content) logs its token use in [token_log.md](token_log.md); review the log periodically to cut the most expensive steps.
 
 ## Done
 
@@ -27,6 +28,7 @@ Last updated: 2026-10-20 · branch `app-publish-pipeline` (not merged to `main`)
 
 0. **Now (before G2b, which is paused):** listening features from real use — see app_architecture.md "Chinese-only listening" and "Section replay".
    - **L1 (Python):** timeline cues get language/type/section_id; timeline gets `sections`; republish + upload lesson_001.
+   - **V1 (Python):** auto-versioning in publish + prune superseded versions in upload (app_architecture.md "Versioning rule").
    - **L2 (Android):** Chinese-only mode in PlaybackService + toggle; section list, seek-bar markers, section loop up to 5× with Bỏ lặp / Sang phần sau.
 
 1. **G2b** — Learn tab card states + lesson detail, lookup sheet actions (copy word/line, select text, send to), Settings tab (incl. MIUI battery/autostart help).

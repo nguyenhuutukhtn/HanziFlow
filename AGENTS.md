@@ -130,7 +130,9 @@ Confirm the old public object is absent and the new version still returns succes
 - Do the verification yourself (build, tests, lint, architecture tests) before
   reporting; don't hand unverified work back for review.
 - At the end of a task, update [`docs/STATUS.md`](docs/STATUS.md) (Done / Next /
-  Open decisions) in a few lines.
+  Open decisions) in a few lines, and add a row to [`docs/token_log.md`](docs/token_log.md).
+- Tasks run strictly one at a time (code and content alike), so each token-log row
+  measures one task.
 
 ## Task reports
 
@@ -142,4 +144,5 @@ Verified: <commands run> → <pass/fail counts>; device: <what, how> or "not run
 Changed: <files or folders, one line>
 Deviations: <from the prompt/spec, or "none">
 Needs user: <decisions or manual steps, or "none">
+Tokens: <input/output or total if your tool shows it, else "?">; biggest consumer: <what used most>
 ```

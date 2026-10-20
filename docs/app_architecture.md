@@ -77,6 +77,13 @@ publish/
 
 Use versioned paths. Never overwrite a published version in place; CDN and devices may have cached it. Upload versioned files with a one-year `cacheControl`; upload `catalog.json` with no-cache. For this personal deployment, a replacement release ends with cleanup: only after the new package and catalog have been verified from the public endpoint, delete the superseded version from both local `publish/` and Supabase Storage. Delete only the exact old version prefix; never remove the fallback before verification succeeds.
 
+Versioning rule (decided 2026-10-20, replaces manual version bumps):
+
+- Only the latest version of a lesson is kept, on the server and locally. Older versions have no value once superseded; they exist only as the fallback until the new one is verified.
+- Versioned paths stay (`lessons/<id>/v<N>/`, never overwritten) purely for cache and download safety, not for history.
+- `publish` assigns the package version itself: it compares the new package's artifact digests with the current `catalog.json` entry; if anything differs, version = previous + 1; if identical, it keeps the current version and writes nothing new. The lesson JSON `version` field is not used for packaging, so publishing never edits lesson files.
+- `upload` uploads the new version, then `catalog.json`, verifies both from the public endpoint, then deletes every version of that lesson no longer referenced by the catalog (Storage and local `publish/`). A phone that was mid-download of the old version fails that download, re-syncs the catalog and fetches the new one.
+
 `mandarin-course publish lessons/<lesson_id>.json` reads only local lesson files,
 generated tracks, the voice registry/cast, and `cache/<cache_key>.mp3`. It never calls
 ElevenLabs or any other network API. The guided track is required. The authored
