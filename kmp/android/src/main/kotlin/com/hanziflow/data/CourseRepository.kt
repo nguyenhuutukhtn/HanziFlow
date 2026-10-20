@@ -86,21 +86,60 @@ class CourseRepository(
     suspend fun trackFile(lessonId: String, track: String): File? {
         val entity = dao.lesson(lessonId) ?: return null
         val version = entity.downloadedVersion ?: return null
-        val lesson = CourseJson.codec.decodeFromString(
-            CatalogLesson.serializer(),
-            entity.downloadedCatalogJson ?: entity.catalogJson,
-        )
+        val lesson = downloadedLesson(entity)
         val artifact = if (track == "practice") lesson.tracks.practice else lesson.tracks.guided
-        return artifact?.let { context.filesDir.resolve("course/packages/$lessonId/v$version/${it.file}") }
-            ?.takeIf(File::isFile)
+        return artifact?.let { packageFile(lessonId, version, it.file) }
+    }
+
+    suspend fun timelineFile(lessonId: String, track: String): File? {
+        val entity = dao.lesson(lessonId) ?: return null
+        val version = entity.downloadedVersion ?: return null
+        val lesson = downloadedLesson(entity)
+        val artifact = if (track == "practice") lesson.tracks.practice?.timeline else lesson.tracks.guided.timeline
+        return artifact?.let { packageFile(lessonId, version, it.file) }
+    }
+
+    suspend fun referenceFile(lessonId: String): File? {
+        val entity = dao.lesson(lessonId) ?: return null
+        val version = entity.downloadedVersion ?: return null
+        val lesson = downloadedLesson(entity)
+        return packageFile(lessonId, version, lesson.files.reference.file)
+    }
+
+    suspend fun itemsFile(lessonId: String): File? {
+        val entity = dao.lesson(lessonId) ?: return null
+        val version = entity.downloadedVersion ?: return null
+        val lesson = downloadedLesson(entity)
+        return packageFile(lessonId, version, lesson.files.items.file)
+    }
+
+    private fun downloadedLesson(entity: LessonEntity): CatalogLesson =
+        CourseJson.codec.decodeFromString(CatalogLesson.serializer(), entity.downloadedCatalogJson ?: entity.catalogJson)
+
+    private fun packageFile(lessonId: String, version: Int, relative: String): File? =
+        context.filesDir.resolve("course/packages/$lessonId/v$version/$relative").takeIf(File::isFile)
+
+    suspend fun clipFile(lessonId: String, relative: String): File? {
+        val entity = dao.lesson(lessonId) ?: return null
+        val version = entity.downloadedVersion ?: return null
+        return packageFile(lessonId, version, relative)
     }
 
     suspend fun catalogLesson(id: String): CatalogLesson? = dao.lesson(id)?.let {
         CourseJson.codec.decodeFromString(CatalogLesson.serializer(), it.catalogJson)
     }
 
+    suspend fun transcriptView(track: String): String? = dao.setting(transcriptViewKey(track))
+    suspend fun setTranscriptView(track: String, mode: String) =
+        dao.putSetting(SettingEntity(transcriptViewKey(track), mode))
+
+    suspend fun vietnameseEnabled(): Boolean = dao.setting(VI_ENABLED)?.toBooleanStrictOrNull() ?: true
+    suspend fun setVietnameseEnabled(enabled: Boolean) = dao.putSetting(SettingEntity(VI_ENABLED, enabled.toString()))
+
     companion object {
         const val BASE_URL = "catalog_base_url"
+        const val VI_ENABLED = "transcript_vi_enabled"
+        fun transcriptViewKey(track: String) = "transcript_view_$track"
         fun workName(id: String) = "lesson-download-$id"
         fun resolveUrl(base: String, relative: String): String =
             java.net.URI(base.trimEnd('/') + "/").resolve(relative).toString()

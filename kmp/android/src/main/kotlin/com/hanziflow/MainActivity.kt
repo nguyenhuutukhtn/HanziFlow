@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -39,21 +40,36 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaController
+import androidx.media3.session.SessionCommand
 import androidx.media3.session.SessionToken
 import com.google.common.util.concurrent.ListenableFuture
 import com.hanziflow.data.LessonEntity
 import com.hanziflow.playback.PlaybackService
+import com.hanziflow.player.LookupSheet
+import com.hanziflow.player.TranscriptPanel
+import com.hanziflow.shared.CourseJson
+import com.hanziflow.shared.Items
+import com.hanziflow.shared.ReferenceLine
+import com.hanziflow.shared.TimelineCue
+import com.hanziflow.shared.WordItem
+import com.hanziflow.shared.transcript.TranscriptCues
+import com.hanziflow.shared.transcript.TranscriptViewMode
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
     private val notifications = registerForActivityResult(ActivityResultContracts.RequestPermission()) {}
@@ -77,6 +93,18 @@ data class PlayerUi(
     val speed: Float = 1f,
 )
 
+data class TranscriptState(
+    val lessonId: String? = null,
+    val track: String = "guided",
+    val lines: List<ReferenceLine> = emptyList(),
+    val cues: List<TimelineCue> = emptyList(),
+    val items: Items? = null,
+    val viewMode: TranscriptViewMode = TranscriptViewMode.PINYIN_ONLY,
+    val showVietnamese: Boolean = true,
+    val loopedLineId: String? = null,
+    val lookupWord: WordItem? = null,
+)
+
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val app = application as HanziFlowApplication
     private val repository = app.repository
@@ -87,9 +115,13 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         private set
     var playerUi by mutableStateOf(PlayerUi())
         private set
+    var transcript by mutableStateOf(TranscriptState())
+        private set
 
     private val controllerFuture: ListenableFuture<MediaController>
     private var controller: MediaController? = null
+    private var transcriptLoadJob: Job? = null
+    private var clipPlayer: ExoPlayer? = null
 
     init {
         viewModelScope.launch { baseUrl = repository.baseUrl() }
@@ -141,9 +173,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun toggle() { controller?.let { if (it.isPlaying) it.pause() else it.play() } }
-    fun seekBack() { controller?.seekBack() }
-    fun seekForward() { controller?.seekForward() }
-    fun seekTo(position: Long) { controller?.seekTo(position) }
+    fun seekBack() { clearLoopState(); controller?.seekBack() }
+    fun seekForward() { clearLoopState(); controller?.seekForward() }
+    fun seekTo(position: Long) { clearLoopState(); controller?.seekTo(position) }
     fun speed(value: Float) { controller?.setPlaybackSpeed(value) }
 
     fun switchTrack(track: String) = viewModelScope.launch {
@@ -164,10 +196,110 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             durationMs = current.duration.coerceAtLeast(0),
             speed = current.playbackParameters.speed,
         )
+        val id = playerUi.lessonId
+        if (id != null) ensureTranscriptLoaded(id, playerUi.track)
+    }
+
+    fun ensureTranscriptLoaded(lessonId: String, track: String) {
+        if (transcript.lessonId == lessonId && transcript.track == track) return
+        transcriptLoadJob?.cancel()
+        transcript = TranscriptState(lessonId = lessonId, track = track)
+        transcriptLoadJob = viewModelScope.launch {
+            val loaded = withContext(Dispatchers.IO) {
+                val referenceFile = repository.referenceFile(lessonId) ?: return@withContext null
+                val timelineFile = repository.timelineFile(lessonId, track) ?: return@withContext null
+                val reference = CourseJson.reference(referenceFile.readText())
+                val lines = if (track == "practice") reference.tracks.practice.orEmpty() else reference.tracks.guided
+                val cues = CourseJson.timeline(timelineFile.readText()).cues
+                val items = repository.itemsFile(lessonId)?.let { CourseJson.items(it.readText()) }
+                Triple(lines, cues, items)
+            } ?: return@launch
+            val savedView = repository.transcriptView(track)
+                ?.let { runCatching { TranscriptViewMode.valueOf(it) }.getOrNull() }
+                ?: TranscriptViewMode.PINYIN_ONLY
+            val vi = repository.vietnameseEnabled()
+            transcript = TranscriptState(
+                lessonId = lessonId,
+                track = track,
+                lines = loaded.first,
+                cues = loaded.second,
+                items = loaded.third,
+                viewMode = savedView,
+                showVietnamese = vi,
+            )
+        }
+    }
+
+    fun setTranscriptViewMode(mode: TranscriptViewMode) {
+        transcript = transcript.copy(viewMode = mode)
+        viewModelScope.launch { repository.setTranscriptView(transcript.track, mode.name) }
+    }
+
+    fun setTranscriptVietnamese(enabled: Boolean) {
+        transcript = transcript.copy(showVietnamese = enabled)
+        viewModelScope.launch { repository.setVietnameseEnabled(enabled) }
+    }
+
+    fun seekToLine(lineId: String) {
+        val target = TranscriptCues.seekTargetMs(transcript.cues, lineId, playerUi.positionMs) ?: return
+        seekTo(target)
+    }
+
+    fun toggleLoopForLine(lineId: String) {
+        if (transcript.loopedLineId == lineId) {
+            sendClearLoop()
+            transcript = transcript.copy(loopedLineId = null)
+            return
+        }
+        val cue = TranscriptCues.activeCue(transcript.cues, playerUi.positionMs)
+            ?.takeIf { lineId in TranscriptCues.lineIdsFor(it) }
+            ?: TranscriptCues.firstCueForLine(transcript.cues, lineId)
+            ?: return
+        controller?.sendCustomCommand(
+            SessionCommand(PlaybackService.COMMAND_LOOP_SEGMENT, Bundle.EMPTY),
+            bundleOf(PlaybackService.EXTRA_START_MS to cue.startMs, PlaybackService.EXTRA_END_MS to cue.endMs),
+        )
+        transcript = transcript.copy(loopedLineId = lineId)
+    }
+
+    private fun clearLoopState() {
+        if (transcript.loopedLineId == null) return
+        transcript = transcript.copy(loopedLineId = null)
+    }
+
+    private fun sendClearLoop() {
+        controller?.sendCustomCommand(
+            SessionCommand(PlaybackService.COMMAND_CLEAR_LOOP, Bundle.EMPTY),
+            Bundle.EMPTY,
+        )
+    }
+
+    fun lookupToken(itemId: String) {
+        val word = transcript.items?.words?.firstOrNull { it.id == itemId } ?: return
+        transcript = transcript.copy(lookupWord = word)
+    }
+
+    fun dismissLookup() {
+        transcript = transcript.copy(lookupWord = null)
+    }
+
+    fun playLookupClip() = viewModelScope.launch {
+        val lessonId = transcript.lessonId ?: return@launch
+        val clip = transcript.lookupWord?.clip ?: return@launch
+        val file = withContext(Dispatchers.IO) { repository.clipFile(lessonId, clip.file) } ?: run {
+            message = "Clip not downloaded"
+            return@launch
+        }
+        controller?.pause()
+        val player = clipPlayer ?: ExoPlayer.Builder(getApplication()).build().also { clipPlayer = it }
+        player.setMediaItem(MediaItem.fromUri(file.toURI().toString()))
+        player.prepare()
+        player.play()
     }
 
     override fun onCleared() {
         MediaController.releaseFuture(controllerFuture)
+        clipPlayer?.release()
         super.onCleared()
     }
 }
@@ -266,6 +398,27 @@ private fun PlayerCard(vm: MainViewModel) {
                     )
                 }
             }
+            val transcript = vm.transcript
+            if (transcript.lessonId == state.lessonId && transcript.lines.isNotEmpty()) {
+                TranscriptPanel(
+                    lines = transcript.lines,
+                    cues = transcript.cues,
+                    items = transcript.items,
+                    positionMs = state.positionMs,
+                    viewMode = transcript.viewMode,
+                    showVietnamese = transcript.showVietnamese,
+                    loopedLineId = transcript.loopedLineId,
+                    onSeek = vm::seekToLine,
+                    onToggleLoop = vm::toggleLoopForLine,
+                    onLookup = vm::lookupToken,
+                    onViewModeChange = vm::setTranscriptViewMode,
+                    onVietnameseToggle = vm::setTranscriptVietnamese,
+                    modifier = Modifier.fillMaxWidth().heightIn(max = 420.dp),
+                )
+            }
         }
+    }
+    vm.transcript.lookupWord?.let { word ->
+        LookupSheet(word = word, onPlayClip = vm::playLookupClip, onDismiss = vm::dismissLookup)
     }
 }
