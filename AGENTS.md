@@ -18,6 +18,12 @@ Audio is generated from JSON lesson files (`lessons/*.json`, validated by
 `src/mandarin_course/lesson_schema.py`) via ElevenLabs TTS, assembled with FFmpeg.
 There is no UI yet; everything is a CLI (`mandarin-course ...`) run against lesson JSON.
 
+App work (Android first, then web; Kotlin Multiplatform `shared/` logic; Supabase
+for auth, progress sync, and lesson package storage) follows
+[`docs/app_architecture.md`](docs/app_architecture.md). Read it before touching
+`publish`, `kmp/`, `web/`, or `supabase/`. Clients never receive TTS or Supabase
+admin credentials, and `publish` never calls ElevenLabs.
+
 ## Current direction — read this before writing any new lesson
 
 The course pivoted away from scripted two-character textbook dialogue (greetings,

@@ -182,7 +182,7 @@ Voice variation is a learning goal, not random decoration. The learner should gr
 - Add mixed-voice review scenes after several lessons: familiar patterns spoken by a new pair of clear voices.
 - Keep the Vietnamese coach voice stable for now so voice diversity does not compete with the meaning explanation.
 
-Voice selection must use a curated, account-available pool. Fetching a voice list is an authoring-pipeline operation; the Android app receives finalized audio and never receives an ElevenLabs key.
+Voice selection must use a curated, account-available pool. Fetching a voice list is an authoring-pipeline operation; the Android and web apps receive finalized audio and never receive an ElevenLabs key.
 
 ### Voice registry (implemented)
 

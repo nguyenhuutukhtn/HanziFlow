@@ -28,6 +28,8 @@ class DialogueTurn(BaseModel):
     model_config = ConfigDict(extra="forbid")
     speaker: Speaker
     text: str = Field(min_length=1)
+    pinyin: str | None = None
+    translation: str | None = None
     tts_tags: list[str] = Field(default_factory=list)
 
 

@@ -3,15 +3,17 @@
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
 from pydantic import ValidationError
 
-from .audio_builder import AudioBuildError, build_audio
+from .audio_builder import AudioBuildError, build_audio, timeline_path_for
 from .audit import build_report, load_authoring_lessons, render_report
 from .config import Settings
 from .lesson_schema import Lesson, load_lesson
+from .publish import PublishError, publish_lesson, render_publish_report
 from .storage import ProgressStore
 from .transcript import write_transcripts
 from .tts import CachedTTS, ElevenLabsTTS, TTSError, cache_key, supports_audio_tags, tag_usage, voice_ids_for
@@ -116,6 +118,9 @@ def command_generate(path: Path, settings: Settings, dry_run: bool, assume_yes: 
     store = ProgressStore(settings.db_path)
     store.register_lesson(lesson, generated=True)
     print(f"Created {audio_path} ({duration / 60:.2f} minutes)")
+    timeline = json.loads(timeline_path_for(audio_path).read_text(encoding="utf-8"))
+    drift_ms = abs(duration * 1000 - timeline["duration_ms"])
+    print(f"Timeline: {timeline_path_for(audio_path)} ({len(timeline['cues'])} cues; drift {drift_ms:.1f} ms)")
     return 0
 
 
@@ -168,6 +173,10 @@ def build_parser() -> argparse.ArgumentParser:
     audit = sub.add_parser("audit", help="Report cross-lesson pattern continuity for lesson authoring")
     audit.add_argument("lessons_dir", type=Path, nargs="?", default=Path("lessons"))
     audit.add_argument("--up-to", type=str, default=None, help="Only include lessons up to and including this lesson_id")
+    publish = sub.add_parser("publish", help="Package an already-generated lesson without calling TTS")
+    publish.add_argument("lesson", type=Path)
+    publish.add_argument("--out", type=Path, default=Path("publish"))
+    publish.add_argument("--force", action="store_true", help="Replace an existing package version (testing only)")
     voices = sub.add_parser("voices", help="Manage the local ElevenLabs voice registry")
     voices_sub = voices.add_subparsers(dest="voices_command", required=True)
     voices_sub.add_parser("sync", help="Fetch and cache available Mandarin/Vietnamese voices (not a paid TTS call)")
@@ -186,12 +195,15 @@ def main(argv: list[str] | None = None) -> int:
             return command_generate(args.lesson, settings, args.dry_run, args.yes)
         if args.command == "audit":
             return command_audit(args.lessons_dir, args.up_to)
+        if args.command == "publish":
+            print(render_publish_report(publish_lesson(args.lesson, settings, args.out, args.force)), end="")
+            return 0
         if args.command == "voices":
             return command_voices_sync(settings)
         return command_review(settings)
     except (ValidationError, ValueError) as exc:
         print(f"Lesson validation failed: {exc}", file=sys.stderr)
-    except (TTSError, AudioBuildError, OSError) as exc:
+    except (TTSError, AudioBuildError, PublishError, OSError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
     return 1
 

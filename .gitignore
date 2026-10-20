@@ -9,6 +9,7 @@ cache/*
 !cache/.gitkeep
 output/*
 !output/.gitkeep
+publish/
 data/*.db
 data/*.sqlite*
 data/voices.json

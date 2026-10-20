@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import math
 import shutil
 import struct
@@ -8,8 +9,9 @@ from pathlib import Path
 
 import pytest
 
-from mandarin_course.audio_builder import build_audio, build_timeline
+from mandarin_course.audio_builder import AudioBuildError, build_audio, build_timeline, validate_timeline_drift
 from mandarin_course.config import Settings
+from mandarin_course.lesson_schema import Lesson
 from mandarin_course.tts import CachedTTS
 
 
@@ -68,3 +70,60 @@ def test_playback_speed_slows_audio_locally_without_new_tts(tmp_path, lesson, vo
     slower_duration = build_audio(slower, cached, tmp_path / "slower.mp3")
     assert slower_duration > normal_duration * 1.2
     assert provider.calls == 1
+
+
+@pytest.mark.skipif(not shutil.which("ffmpeg"), reason="FFmpeg not installed")
+def test_timeline_cue_math_uses_measured_speech_and_exact_pauses(tmp_path, lesson, voices_registry):
+    provider = WaveTTS()
+    segment = lesson.segments[0].model_copy(update={
+        "repetitions": 2,
+        "pause_before_ms": 100,
+        "pause_after_ms": 200,
+        "playback_speed": 0.75,
+    })
+    repeated = lesson.model_copy(update={"variant": "guided", "segments": [segment]})
+    destination = tmp_path / "repeated.mp3"
+    build_audio(repeated, CachedTTS(provider, settings(tmp_path, voices_registry)), destination)
+    timeline = json.loads((tmp_path / "repeated.timeline.json").read_text())
+    first, second = timeline["cues"]
+    assert first["line_id"] == second["line_id"] == "hello"
+    assert first["start_ms"] == 100
+    assert second["start_ms"] - first["end_ms"] == 200
+    assert timeline["duration_ms"] - second["end_ms"] == 200
+    assert first["end_ms"] - first["start_ms"] > 120  # 100 ms source slowed by atempo=0.75
+
+
+@pytest.mark.skipif(not shutil.which("ffmpeg"), reason="FFmpeg not installed")
+def test_turns_segment_builds_grouped_cue_for_each_repetition(tmp_path, lesson_data, voices_registry):
+    lesson_data["variant"] = "guided"
+    lesson_data["segments"] = [{
+        "id": "exchange", "activity": "a", "type": "dialogue", "language": "zh-CN",
+        "text": "你好。你好！", "pinyin": "nǐ hǎo. nǐ hǎo!", "translation": "Xin chào.",
+        "repetitions": 2, "pause_before_ms": 100, "pause_after_ms": 200,
+        "playback_speed": 0.75,
+        "turns": [
+            {"speaker": "anna", "text": "你好。", "pinyin": "nǐ hǎo.", "translation": "Xin chào."},
+            {"speaker": "li_ming", "text": "你好！", "pinyin": "nǐ hǎo!", "translation": "Chào bạn!"},
+        ],
+    }]
+    dialogue = Lesson.model_validate(lesson_data)
+    destination = tmp_path / "dialogue.mp3"
+    build_audio(dialogue, CachedTTS(WaveTTS(), settings(tmp_path, voices_registry)), destination)
+    timeline = json.loads((tmp_path / "dialogue.timeline.json").read_text())
+    assert len(timeline["cues"]) == 2
+    first, second = timeline["cues"]
+    expected = {
+        "line_id": "exchange_turn_1",
+        "line_ids": ["exchange_turn_1", "exchange_turn_2"],
+        "granularity": "segment",
+    }
+    assert {key: first[key] for key in expected} == expected
+    assert {key: second[key] for key in expected} == expected
+    assert first["start_ms"] == 100
+    assert second["start_ms"] - first["end_ms"] == 200
+    assert timeline["duration_ms"] - second["end_ms"] == 200
+
+
+def test_timeline_drift_over_limit_fails():
+    with pytest.raises(AudioBuildError, match="drift is 151.0 ms"):
+        validate_timeline_drift(1_151, 1_000)

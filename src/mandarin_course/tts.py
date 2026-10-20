@@ -151,12 +151,16 @@ def cache_key(
         payload["voice_id"] = voice_id
     else:
         payload["voice_ids"] = voice_id
-        # exclude_defaults drops an empty tts_tags list, so a turn with no tag
-        # dumps to exactly the {speaker, text} shape used before this feature
-        # existed, preserving the cache key for every pre-existing turn.
-        payload["turns"] = [
-            turn.model_dump(mode="json", exclude_defaults=True) for turn in segment.turns
-        ]
+        # Keep the historical {speaker, text} shape when no tag is present,
+        # preserving the cache key for every pre-existing turn.
+        payload["turns"] = []
+        for turn in segment.turns:
+            # Pinyin and translation are publish/reference metadata, not TTS
+            # inputs, so they must not invalidate an existing spoken-audio cache.
+            value = {"speaker": turn.speaker, "text": turn.text}
+            if turn.tts_tags:
+                value["tts_tags"] = turn.tts_tags
+            payload["turns"].append(value)
     canonical = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
