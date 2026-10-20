@@ -13,4 +13,5 @@ publish/
 data/*.db
 data/*.sqlite*
 data/voices.json
-.claude/
+.claude/*
+!.claude/skills/

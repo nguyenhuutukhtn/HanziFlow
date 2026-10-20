@@ -113,6 +113,7 @@ The current method is a **mini-story** format (Effortless English / TPRS-style):
   the full `lessons/*.json` (query them with a short script instead). These are
   listed in `.cursorignore`.
 - Run Gradle with `-q` and show only the tail of failures.
+- UI changes in kmp/android: follow [`.claude/skills/android-ui-testing/SKILL.md`](.claude/skills/android-ui-testing/SKILL.md) (JVM Compose + Roborazzi screenshot tests; look at diffs only on failure).
 - Device checks: prefer text (`adb shell dumpsys media_session`, `uiautomator dump`
   grepped, logcat filtered) over screenshots; at most 3 screenshots per task,
   saved under `kmp/build/screenshots/`. Visual regressions belong in local
