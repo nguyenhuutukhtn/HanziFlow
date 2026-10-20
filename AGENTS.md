@@ -117,6 +117,10 @@ Confirm the old public object is absent and the new version still returns succes
 
 ## Token budget (app and pipeline tasks)
 
+- Read [`docs/workflow.md`](docs/workflow.md): repeated steps are commands, AI is the
+  fallback; command output is short by default; AI edits small sources, never
+  generated files; humans do listening QA, visual approval and quick edits.
+
 - Don't read large generated or data files unless the task needs them: `publish/`,
   `cache/`, `output/`, `**/build/`, `kmp/shared/src/commonTest/resources/`, and
   the full `lessons/*.json` (query them with a short script instead). These are
