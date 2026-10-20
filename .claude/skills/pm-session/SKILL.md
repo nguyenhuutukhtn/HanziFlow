@@ -53,4 +53,4 @@ Phiên PM. Dùng skill pm-session.
 Việc đầu tiên: <review report X | viết brief Y | bàn tính năng Z>.
 ```
 
-Don't reset in the middle of a review or while waiting on a user decision that isn't written down.
+Only suggest a reset when nothing is pending in this session: no review in progress and no open question to the user. If the reply would both ask the user something and suggest a reset, ask first; suggest the reset in the reply after the answer is handled (or after it is written into STATUS "Open decisions").
