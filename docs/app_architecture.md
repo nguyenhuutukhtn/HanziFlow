@@ -251,6 +251,18 @@ Stack:
 - Speed 0.8×–1.1× locally.
 - Restore last lesson and position (local only).
 
+### Headset and Bluetooth controls
+
+Handled in `PlaybackService`, so they work with the screen off and the UI closed:
+
+- Single press: play/pause (Media3 default). Pressing play after the app was killed resumes the saved lesson, track and position (media-button resumption).
+- Next (double press on most earbuds): seek to the start of the next transcript cue.
+- Previous (triple press on most earbuds): seek to the start of the current cue ("Nghe lại câu"); if already within the first 1.5 s of the cue, go to the previous cue.
+- Without a timeline, next/previous fall back to ±10 s.
+- Disconnecting headphones pauses playback (audio-becoming-noisy).
+
+Device note: on Xiaomi/MIUI (and similar aggressive battery managers) the app must be set to battery "No restrictions" and autostart allowed, otherwise the system kills it and headset buttons stop working. Settings should link to this explanation (G2b).
+
 ### Karaoke transcript
 
 The player shows the transcript in sync with the audio: the current line is highlighted and auto-scrolls; tapping a line seeks to it; a single line can be looped for shadowing. Sentence level in the MVP, word level later (see Timeline contract).
