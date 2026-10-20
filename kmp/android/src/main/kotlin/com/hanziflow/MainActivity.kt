@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.FilterChip
@@ -126,13 +127,22 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     init {
         viewModelScope.launch { baseUrl = repository.baseUrl() }
         val token = SessionToken(application, ComponentName(application, PlaybackService::class.java))
-        controllerFuture = MediaController.Builder(application, token).buildAsync()
+        controllerFuture = MediaController.Builder(application, token)
+            .setListener(object : MediaController.Listener {
+                override fun onExtrasChanged(controller: MediaController, extras: Bundle) {
+                    applyLoopExtras(extras)
+                }
+            })
+            .buildAsync()
         controllerFuture.addListener({
             runCatching { controllerFuture.get() }.onSuccess { connected ->
                 controller = connected
                 connected.addListener(object : Player.Listener {
                     override fun onEvents(player: Player, events: Player.Events) = refreshPlayer()
                 })
+                // The service is the single source of truth for the loop: read whatever
+                // it is already doing rather than assuming "no loop" for a fresh ViewModel.
+                applyLoopExtras(connected.sessionExtras)
                 refreshPlayer()
             }.onFailure { message = it.message }
         }, ContextCompat.getMainExecutor(application))
@@ -173,9 +183,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun toggle() { controller?.let { if (it.isPlaying) it.pause() else it.play() } }
-    fun seekBack() { clearLoopState(); controller?.seekBack() }
-    fun seekForward() { clearLoopState(); controller?.seekForward() }
-    fun seekTo(position: Long) { clearLoopState(); controller?.seekTo(position) }
+    fun seekBack() { controller?.seekBack() }
+    fun seekForward() { controller?.seekForward() }
+    fun seekTo(position: Long) { controller?.seekTo(position) }
     fun speed(value: Float) { controller?.setPlaybackSpeed(value) }
 
     fun switchTrack(track: String) = viewModelScope.launch {
@@ -247,8 +257,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun toggleLoopForLine(lineId: String) {
         if (transcript.loopedLineId == lineId) {
-            sendClearLoop()
-            transcript = transcript.copy(loopedLineId = null)
+            cancelLoop()
             return
         }
         val cue = TranscriptCues.activeCue(transcript.cues, playerUi.positionMs)
@@ -257,21 +266,26 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             ?: return
         controller?.sendCustomCommand(
             SessionCommand(PlaybackService.COMMAND_LOOP_SEGMENT, Bundle.EMPTY),
-            bundleOf(PlaybackService.EXTRA_START_MS to cue.startMs, PlaybackService.EXTRA_END_MS to cue.endMs),
+            bundleOf(
+                PlaybackService.EXTRA_LINE_ID to lineId,
+                PlaybackService.EXTRA_START_MS to cue.startMs,
+                PlaybackService.EXTRA_END_MS to cue.endMs,
+            ),
         )
-        transcript = transcript.copy(loopedLineId = lineId)
+        // No optimistic local update: the service is the single source of truth and
+        // will publish the new loop via session extras, picked up by onExtrasChanged.
     }
 
-    private fun clearLoopState() {
-        if (transcript.loopedLineId == null) return
-        transcript = transcript.copy(loopedLineId = null)
-    }
-
-    private fun sendClearLoop() {
+    fun cancelLoop() {
         controller?.sendCustomCommand(
             SessionCommand(PlaybackService.COMMAND_CLEAR_LOOP, Bundle.EMPTY),
             Bundle.EMPTY,
         )
+    }
+
+    /** Applies the service's published loop state; never set [TranscriptState.loopedLineId] any other way. */
+    private fun applyLoopExtras(extras: Bundle) {
+        transcript = transcript.copy(loopedLineId = extras.getString(PlaybackService.EXTRA_LOOP_LINE_ID))
     }
 
     fun lookupToken(itemId: String) {
@@ -399,6 +413,14 @@ private fun PlayerCard(vm: MainViewModel) {
                 }
             }
             val transcript = vm.transcript
+            transcript.loopedLineId?.let { loopedLineId ->
+                val loopedText = transcript.lines.firstOrNull { it.id == loopedLineId }?.text ?: loopedLineId
+                AssistChip(
+                    onClick = vm::cancelLoop,
+                    label = { Text("Looping: $loopedText") },
+                    trailingIcon = { Text("×", style = MaterialTheme.typography.titleMedium) },
+                )
+            }
             if (transcript.lessonId == state.lessonId && transcript.lines.isNotEmpty()) {
                 TranscriptPanel(
                     lines = transcript.lines,

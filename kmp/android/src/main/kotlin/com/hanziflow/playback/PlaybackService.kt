@@ -10,9 +10,11 @@ import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.session.CommandButton
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import androidx.media3.session.SessionCommand
+import androidx.media3.session.SessionError
 import androidx.media3.session.SessionResult
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
@@ -76,6 +78,10 @@ class PlaybackService : MediaSessionService() {
                 if (events.contains(Player.EVENT_MEDIA_ITEM_TRANSITION)) clearLoop()
             }
 
+            override fun onPlaybackStateChanged(playbackState: Int) {
+                if (playbackState == Player.STATE_IDLE) clearLoop()
+            }
+
             override fun onPositionDiscontinuity(
                 oldPosition: Player.PositionInfo,
                 newPosition: Player.PositionInfo,
@@ -94,29 +100,57 @@ class PlaybackService : MediaSessionService() {
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession = session
 
-    private var loopRange: LongRange? = null
+    private val loopPublisher = LoopPublisher()
     private var loopJob: Job? = null
     private var ignoreNextSeekDiscontinuity = false
 
-    private fun setLoop(startMs: Long, endMs: Long) {
-        loopRange = startMs until endMs
+    private fun setLoop(lineId: String, startMs: Long, endMs: Long) {
+        loopPublisher.start(lineId, startMs, endMs)
         loopJob?.cancel()
         loopJob = scope.launch {
             while (isActive) {
                 delay(LOOP_POLL_MS)
-                val range = loopRange ?: break
-                if (player.currentPosition >= range.last + 1) {
+                val loop = loopPublisher.current ?: break
+                if (player.currentPosition >= loop.endMs) {
                     ignoreNextSeekDiscontinuity = true
-                    player.seekTo(range.first)
+                    player.seekTo(loop.startMs)
                 }
             }
         }
+        publishLoopState()
     }
 
     private fun clearLoop() {
-        loopRange = null
+        if (loopPublisher.current == null) return
+        loopPublisher.clear()
         loopJob?.cancel()
         loopJob = null
+        publishLoopState()
+    }
+
+    /**
+     * The service is the single source of truth for the loop: every connected or
+     * reconnecting controller reads it from here (session extras + a notification
+     * action), never from its own memory, so a recreated UI can't lose track of an
+     * active loop.
+     */
+    private fun publishLoopState() {
+        val loop = loopPublisher.current
+        val extras = Bundle()
+        if (loop != null) {
+            extras.putString(EXTRA_LOOP_LINE_ID, loop.lineId)
+            extras.putLong(EXTRA_START_MS, loop.startMs)
+            extras.putLong(EXTRA_END_MS, loop.endMs)
+        }
+        session.setSessionExtras(extras)
+        session.setCustomLayout(
+            if (loop == null) emptyList() else listOf(
+                CommandButton.Builder(CommandButton.ICON_REPEAT_OFF)
+                    .setSessionCommand(SessionCommand(COMMAND_CLEAR_LOOP, Bundle.EMPTY))
+                    .setDisplayName("Stop looping")
+                    .build()
+            )
+        )
     }
 
     private val sessionCallback = object : MediaSession.Callback {
@@ -142,7 +176,12 @@ class PlaybackService : MediaSessionService() {
             args: Bundle,
         ): ListenableFuture<SessionResult> {
             when (customCommand.customAction) {
-                COMMAND_LOOP_SEGMENT -> setLoop(args.getLong(EXTRA_START_MS), args.getLong(EXTRA_END_MS))
+                COMMAND_LOOP_SEGMENT -> {
+                    val lineId = args.getString(EXTRA_LINE_ID) ?: return Futures.immediateFuture(
+                        SessionResult(SessionError.ERROR_BAD_VALUE)
+                    )
+                    setLoop(lineId, args.getLong(EXTRA_START_MS), args.getLong(EXTRA_END_MS))
+                }
                 COMMAND_CLEAR_LOOP -> clearLoop()
             }
             return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
@@ -259,8 +298,11 @@ class PlaybackService : MediaSessionService() {
     companion object {
         const val COMMAND_LOOP_SEGMENT = "com.hanziflow.LOOP_SEGMENT"
         const val COMMAND_CLEAR_LOOP = "com.hanziflow.CLEAR_LOOP"
+        const val EXTRA_LINE_ID = "line_id"
         const val EXTRA_START_MS = "start_ms"
         const val EXTRA_END_MS = "end_ms"
+        /** Session-extras key: the looped line, as published by [publishLoopState]. Absent when no loop is active. */
+        const val EXTRA_LOOP_LINE_ID = "loop_line_id"
         private const val LOOP_POLL_MS = 150L
 
         fun mediaItem(lessonId: String, track: String, uri: String, title: String = lessonId): MediaItem =

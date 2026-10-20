@@ -276,13 +276,25 @@ Room is the source of truth; the app is fully usable offline once signed in.
 - Local writes go into an outbox. Sync runs on startup, on network regain (WorkManager constraint), and after each test: push the outbox, then pull rows with `updated_at` greater than the last pull cursor.
 - Sign-in is email + password (or email OTP). No OAuth redirect flows in the MVP.
 
-### MVP screens
+### Navigation and MVP screens
 
-1. Library: available, downloaded, in-progress, and passed lessons
-2. Player: guided/practice switch, progress, speed, skip, karaoke transcript with view switcher, tap-to-seek, loop line
-3. Reference: tappable tokens with pinyin, Hanzi, Vietnamese meaning, item audio
-4. Test: generated questions, requeue on mistakes, result
-5. Downloads and Settings: storage usage, Wi-Fi only, default transcript view (per track), account, last sync time
+Music-app structure (Spotify / Zing MP3 style), because listening is the main activity and must never be interrupted by moving around the app:
+
+- **Bottom navigation, three tabs:**
+  1. **Learn**: lesson library (available, downloading, downloaded, update available, passed), continue-listening card on top, download/cancel/delete/retry.
+  2. **Review**: lesson tests (generated questions, requeue on mistakes, result) and attempt history.
+  3. **Settings**: default transcript view per track, Vietnamese default, Wi-Fi-only downloads, storage used, account, last sync time; catalog URL in debug builds only.
+- **Mini-player** docked above the bottom navigation on every tab whenever something is loaded: title, track, play/pause, progress. Switching tabs never stops playback.
+- **Now Playing**: tapping or swiping up the mini-player opens a full-screen player; the karaoke transcript fills most of it, like synced lyrics in a music app. Compact controls: play/pause, ±10 s, seek bar, speed, guided/practice switch, transcript view, Vietnamese toggle, loop state.
+
+Visual design follows `docs/ui_design.md` (to be written from UI research) once it exists; screens must not be designed ad hoc inside feature tasks.
+
+### Word lookup and copy
+
+- Tap a word (token with `item_id`) → in-app lookup sheet: Hanzi, pinyin, Vietnamese meaning, play the word clip when available.
+- The lookup sheet also offers: **Copy**, **Open in Pleco** (Pleco's URL scheme, only if installed), and **Send to…** (Android `ACTION_PROCESS_TEXT` / share, so any installed dictionary or translator can receive it).
+- Chinese text in the transcript is selectable (select a word or a whole line) so the learner can copy any span, not only lesson items; the system selection menu then shows installed dictionary/translator apps.
+- Gestures must not conflict: line seek, word lookup, and text selection each need a distinct, discoverable interaction; the UI design decides which.
 
 ### MVP acceptance criteria
 
@@ -296,6 +308,33 @@ Room is the source of truth; the app is fully usable offline once signed in.
 - Two attempts at the same lesson test produce different questions.
 - A test passed offline shows as passed on another device after both sync.
 - No ElevenLabs key, Supabase service-role key, or other admin credential ships in the APK.
+
+## Code architecture (Android)
+
+Goal: the UI can be redesigned or rewritten without touching business logic, and the logic is testable without a device. Follows Google's recommended app architecture (UI → optional domain → data), with unidirectional data flow. No extra ceremony beyond that.
+
+```text
+ui/<feature>/        Composables (stateless: state in, events out) + one ViewModel per screen
+                     ViewModel exposes StateFlow<UiState>, takes events (onEvent / functions)
+domain/              use cases only where logic spans several repositories or the player
+                     (StartTestAttempt, FinishTestAttempt, SyncProgress, ResolveContinueListening)
+data/                repositories (interfaces + implementations): Course, Progress, Settings, Auth
+                     data sources: Room, OkHttp downloads, file store, Supabase
+playback/            PlaybackService (owns ExoPlayer, loop, resumption) +
+                     PlayerConnection: wraps MediaController, exposes StateFlow<PlaybackState>
+                     and commands; the only place UI-side code talks to Media3
+kmp/shared/          pure platform-independent rules (contract models, test generator,
+                     pass rule, transcript decisions); also used by the web app
+```
+
+Rules:
+
+- Dependency direction is one-way: `ui → domain → data`, `ui → playback (PlayerConnection)`, everything may use `shared`. `data` and `playback` never import `ui`. Composables never touch repositories, Room, OkHttp, or `MediaController` directly.
+- Composables are stateless and previewable; screen state is one immutable `UiState` per screen. Navigation and one-off effects (snackbar, open URL) go through the ViewModel as events.
+- Logic that the web app will also need goes into `kmp/shared`, not into Android ViewModels.
+- The service is the source of truth for playback state (position, track, loop); ViewModels only mirror it via `PlayerConnection`.
+- Dependency injection: Hilt.
+- Single `:android` module with these packages for now; split into Gradle modules only when build time or ownership requires it. Package boundaries are enforced by architecture tests (Konsist) so AI-written code can't quietly break the layering.
 
 ## Web app (after Android)
 
