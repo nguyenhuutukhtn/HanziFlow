@@ -18,14 +18,13 @@ Last updated: 2026-10-20 · branch `app-publish-pipeline` (not merged to `main`)
 - `kmp/android`: prototype single screen — catalog sync, verified downloads, Media3 background playback (audio focus, noisy, wake lock, media-button resumption), karaoke transcript (4 views + Vietnamese, tap-to-seek, service-owned line loop with chip), long-press lookup.
 - **G1**: Android refactored into `ui/library`, `ui/player` (stateless screens + per-screen `@HiltViewModel` + `@Preview`s), `data` (`CourseRepository`/`SettingsRepository`/empty `ProgressRepository` interfaces + impls), `playback/PlayerConnection` (sole MediaController wrapper) + Hilt DI (`HiltWorker` download worker, Konsist layering tests). No visual/behavioral change; verified on device (sync, download, play, tap-to-seek, loop set/clear, lookup, lock-screen controls).
 - Docs: [app_architecture.md](app_architecture.md) (incl. code architecture), [ui/](ui/README.md) design spec.
-- Supabase project created; keys in `.env` (git-ignored).
+- **D1**: Supabase migrations applied (progress tables + RLS + `updated_at` triggers, public `course` bucket with client read-only); `mandarin-course upload` mirrors `publish/` (immutable versions, catalog last) — 121 files uploaded, anonymous SHA-256 and anon-key RLS probes verified.
 
 ## Next (in order)
 
-1. **D1** — Supabase migrations + RLS + `course` bucket; `mandarin-course upload`.
-2. **G2** — rebuild UI per `docs/ui/` (bottom nav, mini-player, Now Playing, Learn, Review/test flow, Settings, lookup copy/share). Includes the pass-rule change in `kmp/shared` TestSession: passed = no first-try mistakes and no reveal.
-3. **D2** — Android sign-in + progress sync.
-4. Known follow-ups: test question type balancing (C2: cloze dominates); merge multi-character names in tokenizer + vocab (A3: 李明 split into 李/明).
+1. **G2** — rebuild UI per `docs/ui/` (bottom nav, mini-player, Now Playing, Learn, Review/test flow, Settings, lookup copy/share). Includes the pass-rule change in `kmp/shared` TestSession: passed = no first-try mistakes and no reveal.
+2. **D2** — Android sign-in + progress sync.
+3. Known follow-ups: test question type balancing (C2: cloze dominates); merge multi-character names in tokenizer + vocab (A3: 李明 split into 李/明).
 
 ## Open decisions (user)
 

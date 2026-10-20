@@ -17,6 +17,7 @@ from .publish import PublishError, publish_lesson, render_publish_report
 from .storage import ProgressStore
 from .transcript import write_transcripts
 from .tts import CachedTTS, ElevenLabsTTS, TTSError, cache_key, supports_audio_tags, tag_usage, voice_ids_for
+from .upload import StorageConfig, UploadError, upload_package
 from .voice_registry import sync_registry
 
 
@@ -145,6 +146,16 @@ def command_voices_sync(settings: Settings) -> int:
     return 0
 
 
+def command_upload(out: Path, dry_run: bool) -> int:
+    config = StorageConfig.from_env()
+    report = upload_package(out, config, dry_run=dry_run)
+    if dry_run:
+        print("Dry run only: no files were uploaded.")
+    else:
+        print(f"Uploaded {report.uploaded} file(s); skipped {report.skipped} unchanged file(s).")
+    return 0
+
+
 def command_review(settings: Settings) -> int:
     rows = ProgressStore(settings.db_path).due()
     if not rows:
@@ -177,6 +188,9 @@ def build_parser() -> argparse.ArgumentParser:
     publish.add_argument("lesson", type=Path)
     publish.add_argument("--out", type=Path, default=Path("publish"))
     publish.add_argument("--force", action="store_true", help="Replace an existing package version (testing only)")
+    upload = sub.add_parser("upload", help="Upload published packages to Supabase Storage (service-role key required)")
+    upload.add_argument("--out", type=Path, default=Path("publish"))
+    upload.add_argument("--dry-run", action="store_true", help="Show what would be uploaded; make no writes")
     voices = sub.add_parser("voices", help="Manage the local ElevenLabs voice registry")
     voices_sub = voices.add_subparsers(dest="voices_command", required=True)
     voices_sub.add_parser("sync", help="Fetch and cache available Mandarin/Vietnamese voices (not a paid TTS call)")
@@ -198,12 +212,14 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "publish":
             print(render_publish_report(publish_lesson(args.lesson, settings, args.out, args.force)), end="")
             return 0
+        if args.command == "upload":
+            return command_upload(args.out, args.dry_run)
         if args.command == "voices":
             return command_voices_sync(settings)
         return command_review(settings)
     except (ValidationError, ValueError) as exc:
         print(f"Lesson validation failed: {exc}", file=sys.stderr)
-    except (TTSError, AudioBuildError, PublishError, OSError) as exc:
+    except (TTSError, AudioBuildError, PublishError, UploadError, OSError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
     return 1
 

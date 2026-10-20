@@ -105,6 +105,38 @@ python -m mandarin_course.cli generate lessons/lesson_001.json --yes
 
 On success, listen offline at `output/lesson_001/lesson_001_guided.mp3`. The phone copy is `output/dien_thoai/04_bai1_chuyen.mp3`. The command prints the duration measured by `ffprobe`; it never reports success for an empty or failed output.
 
+## Supabase setup
+
+Progress rows and published lesson packages live in one Supabase project. Migrations are in `supabase/migrations/`; the public `course` bucket is writable only with the service-role key.
+
+Fill `.env` (git-ignored, never commit these values):
+
+```dotenv
+SUPABASE_URL=
+SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+```
+
+Link the project and apply migrations from your own terminal; the CLI prompts for the database password and this repo never stores it:
+
+```bash
+source .venv/bin/activate
+supabase login
+set -a && source .env && set +a
+supabase link --project-ref "$(printf '%s' "${SUPABASE_URL}" | sed -E 's#https://([^.]+)\..*#\1#')"
+supabase db push
+```
+
+Package, then mirror `publish/` into Storage (the catalog goes last; versioned files are never overwritten):
+
+```bash
+mandarin-course publish lessons/lesson_001.json
+mandarin-course upload --dry-run
+mandarin-course upload
+```
+
+Clients read `<SUPABASE_URL>/storage/v1/object/public/course/catalog.json` and use `SUPABASE_ANON_KEY` only; the service-role key stays on this machine.
+
 ## Cache behavior
 
 Each cached clip is content-addressed. Running the same lesson with the same voices and settings reuses it. Changing text, language, model, output format, voice ID, or a TTS voice setting creates a new key. `playback_speed` is applied locally by FFmpeg, so adjusting it rebuilds the lesson without another paid TTS request. Old cache files are safe to leave in place.
