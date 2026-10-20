@@ -24,10 +24,13 @@ An agent that just finished a task still holds the files, tests and fixtures it 
 
 **Continue the old window** when all of these hold:
 - the work touches mostly the same files/area the agent just worked in (a `-fix` for its own task almost always does);
-- that agent's context is still small (roughly under ~80k; ask the user if unsure, their tool shows it);
+- most of that agent's context is still useful for the new work (files, tests, decisions it will need again), not dead weight (long logs, old diffs, failed attempts);
+- that context is under a soft ceiling of ~150–200k (quality, not window size: long stale context makes agents mix up old and new decisions); ask the user if unsure, their tool shows it;
 - the same agent/model is a fit for the work.
 
-**Start a fresh agent** when the work is in a different area, the old window is large or was compacted, a cheaper/different agent fits better, or the old agent went wrong in a way its context would keep repeating.
+Why the ratio matters, not the size: every tool call re-sends the whole context (cached at ~10% of input price), and a task makes 30–80 calls. A fresh agent re-reads what it needs, and that also stays in context, so the real extra cost of continuing is only the *unused* part of the old context × calls. Mostly-useful 150k → continue; mostly-dead 40k → fresh.
+
+**Start a fresh agent** when the work is in a different area, most of the old context is dead weight, the old window was compacted, a cheaper/different agent fits better, or the old agent went wrong in a way its context would keep repeating.
 
 Prompts:
 - Fresh: `Read AGENTS.md and docs/tasks/<ID>.md, do the task.`
