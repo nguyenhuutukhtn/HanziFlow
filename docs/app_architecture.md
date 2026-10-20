@@ -13,6 +13,7 @@ The architecture is split by topic so a task reads only what it needs. Older ref
 | Test generation, Pass rule | [architecture/testgen.md](architecture/testgen.md) |
 | Android app: Download behavior, Playback, Headset and Bluetooth controls, Karaoke transcript, Chinese-only listening, Section replay, Progress sync, Navigation and MVP screens, Word lookup and copy, MVP acceptance criteria | [architecture/android.md](architecture/android.md) |
 | Code architecture (Android) | [architecture/android_code.md](architecture/android_code.md) |
+| Character learning (planned: decisions, draft design, data research) | [architecture/characters.md](architecture/characters.md) |
 | Supabase (tables, RLS, Storage, free tier) | [architecture/supabase.md](architecture/supabase.md) |
 
 UI design: [ui/README.md](ui/README.md). Process: [workflow.md](workflow.md). Current state: [STATUS.md](STATUS.md).

@@ -11,7 +11,7 @@ Mandarin listening/speaking course for a Vietnamese-speaking learner.
 ## Start here
 
 - [`docs/STATUS.md`](docs/STATUS.md) — what's done, what's next, open decisions.
-- [`docs/CODEMAP.md`](docs/CODEMAP.md) — one line per source file; open only the files you need.
+- [`docs/CODEMAP.md`](docs/CODEMAP.md) — one line per source file; `grep` it for your area instead of reading all of it.
 - [`docs/workflow.md`](docs/workflow.md) — scripts first, AI as fallback.
 - [`docs/tasks/`](docs/tasks/README.md) — one brief per task; if you were given a task ID, read `docs/tasks/<ID>.md` and work from it.
 - By task type, read only:
@@ -41,8 +41,15 @@ Mandarin listening/speaking course for a Vietnamese-speaking learner.
   grepped, logcat filtered) over screenshots; at most 3 screenshots per task,
   saved under `kmp/build/screenshots/`. Visual regressions belong in local
   screenshot tests, not repeated device captures.
-- Do the verification yourself (build, tests, lint, architecture tests) before
-  reporting; don't hand unverified work back for review.
+- Do the automated verification yourself (`scripts/check.sh`: build, tests,
+  architecture tests) before reporting; it is cheap and never skipped.
+- Device / manual checks follow the brief's `Device check:` line:
+  `user` (default) — don't run them; end the report with a numbered checklist of
+  ≤ 8 steps the user does on the phone (what to tap, what to hear/see, which
+  `just`/`adb` command to paste if needed). `agent` — run only the scripted checks
+  the brief names (e.g. one filtered logcat run), no exploratory tapping or
+  coordinate hunting; if a check needs more than that, stop and hand it to the user.
+  Missing line = `user`.
 - At the end of a task, update [`docs/STATUS.md`](docs/STATUS.md) (Done / Next /
   Open decisions) in a few lines, and add a row to [`docs/token_log.md`](docs/token_log.md).
 - Tasks run strictly one at a time (code and content alike), so each token-log row
@@ -58,5 +65,5 @@ Verified: <commands run> → <pass/fail counts>; device: <what, how> or "not run
 Changed: <files or folders, one line>
 Deviations: <from the prompt/spec, or "none">
 Needs user: <decisions or manual steps, or "none">
-Tokens: <input/output or total if your tool shows it, else "?">; biggest consumer: <what used most>
+Biggest consumer: <what used most tokens/time, and the process fix that would avoid it>
 ```

@@ -76,6 +76,8 @@ The only file a client checks to discover new or updated content. Every download
 `base_url` is relative to the bucket's public root, which each client gets from config. Clip files are listed with their size and SHA-256 inside `items.json`.
 Catalog output is deterministic: entries are sorted by the numeric part of the
 lesson ID, and publishing identical inputs does not change `catalog.json`.
+Optional track `guided_zh` (Chinese-only variant of `guided`, same catalog shape with its own `timeline`): built from cached clips, `vi-VN` segments and their pauses removed, ~400 ms gap before the next `zh-CN` segment; its cues keep the guided `line_id`s so players can switch tracks at the same line. Clients must ignore unknown track keys.
+
 Published tracks are mono 44.1 kHz MP3 at 64 kbps. Every published track must have
 a timeline whose cue IDs all exist in that track's reference lines.
 

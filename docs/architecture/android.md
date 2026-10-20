@@ -62,9 +62,10 @@ For a learner who has heard a lesson many times and now understands the Chinese 
 
 - A toggle in Now Playing (and in Settings as a per-track default), stored per lesson + track, always off for a lesson's first listen. Manual only: no automatic switch based on listen counts.
 - When on, `PlaybackService` skips every `vi-VN` cue and the silence that follows it, jumping to the next `zh-CN` cue with a short natural gap (~400 ms) instead of a long pause. All Chinese stays, including model answers whose question was asked in Vietnamese, and the answer gaps between Chinese lines are kept as they are.
-- Implemented in the service from the timeline (works with the screen off and the UI closed), reusing the loop/seek mechanism; no regenerated audio and no extra TTS.
+- **Implemented as a pre-rendered track** (decided 2026-10-21, replaces the L2 runtime skip): the pipeline builds `guided_zh.mp3` + `timeline_guided_zh.json` from cached clips (0 paid TTS) with every `vi-VN` cue and its trailing silence removed and a ~400 ms gap before the next `zh-CN` cue. Turning the toggle on/off switches the player to the other track at the same `line_id` (start of the current line, or of the next Chinese line if the current one is Vietnamese). Loop, sections, tap-to-seek and headset next/previous need no special casing: the track has its own full timeline.
+- Why not a runtime skip: measured on device (L2-fix), "detect position, then seek" lands 0–270 ms late whatever the scheduling (150 ms poll, Media3 `PlayerMessage`, exact-gap delay), and 47 of 183 zh→vi transitions in lesson 1 have no silence to absorb the lead. Clip concatenation (clicks at splices, a window per clip) and a custom `AudioProcessor` (Android-only DSP, nothing iOS/web can share) were rejected. Web `timeupdate` (~250 ms) would be worse.
 - Vietnamese text is hidden in the transcript while it is on. The player shows the effective duration of the remaining audio.
-- Seeking, tap-to-seek, headset next/previous and section replay all respect it (never land inside a skipped Vietnamese cue).
+- Old packages without a `guided_zh` track: toggle disabled.
 
 ### Section replay
 

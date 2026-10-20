@@ -23,7 +23,9 @@ Goal: UI changes are verified by tests that cost nothing to re-run. Images are o
 - Goldens are recorded only after the user has approved the screen visually once. Until then, record into the build dir and don't commit goldens.
 - An intentional visual change re-records the affected goldens and the report says which goldens changed and why. Never re-record to make an unexplained failure pass.
 - On a screenshot failure, open only the diff image(s) in `kmp/android/build/outputs/roborazzi/`, not every screenshot.
-- Device checks: prefer `adb shell dumpsys media_session`, `uiautomator dump` piped through grep, and filtered logcat. At most 3 device screenshots per task, saved to `kmp/build/screenshots/`, and only when the user needs to approve a new look.
+- Device checks run only when the brief says `Device check: agent`; otherwise list ≤ 8 manual steps for the user in the report (AGENTS.md). When run, prefer `adb shell dumpsys media_session`, `uiautomator dump` piped through grep, and filtered logcat. At most 3 device screenshots per task, saved to `kmp/build/screenshots/`, and only when the user needs to approve a new look.
+- Device taps: take bounds from `uiautomator dump` (grep the text/resource-id), never coordinates estimated from a screenshot. Before a device check, make sure the phone has the lesson version the test needs (sync + download), not an older package.
+- Layering: `architecture/LayeringTest.kt` lists the exact import prefixes each package may not use; grep it before splitting files to satisfy it.
 - No on-device UI automation (Espresso/Maestro) for routine changes.
 
 ## Commands (from `kmp/`)

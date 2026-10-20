@@ -7,7 +7,7 @@
 | Topic | Decision |
 |---|---|
 | Users | Personal use first. Commercial release is possible later, so nothing may block it (no hardcoded single user, no secrets in clients). |
-| Platforms | **Android app first** (learn anywhere: commute, street, office). **Web app second**, for computers (replaces separate Windows/macOS/Linux apps). iOS possibly later. |
+| Platforms | **Android app first** (learn anywhere: commute, street, office). **Web app second**, for computers (replaces separate Windows/macOS/Linux apps). **iOS third** (decided 2026-10-21). All three share `kmp/shared` — see android_code.md "Shared core, thin platform shells". |
 | Offline | Android: fully offline after a lesson is downloaded. Web: online only. |
 | Priority | Runtime performance and battery over developer convenience. Code is written by AI agents, so language familiarity is not a factor. |
 | Sync | Progress only: which lesson the learner has reached and which lesson tests passed. Audio and playback position are not synced. |
@@ -35,7 +35,7 @@ Supabase: Auth · Postgres (lesson_progress, test_attempts, RLS) · Storage (pub
 Web hosting: Cloudflare Pages
 ```
 
-Why `shared/` exists: Android must generate tests offline and the web generates tests too. Both write to the same progress tables, so test generation and the pass rule must be one implementation. Sync/merge logic is Android-only and lives in `android/`.
+Why `shared/` exists: Android must generate tests offline and the web generates tests too. Both write to the same progress tables, so test generation and the pass rule must be one implementation. Sync/merge rules live in `shared` too (Android and iOS both sync offline progress).
 
 Pronunciation scoring (later) is independent of this choice: on-device models run through onnxruntime (Android native, web via WASM), or scoring calls a cloud API.
 

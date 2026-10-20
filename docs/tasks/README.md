@@ -8,7 +8,7 @@ Lifecycle: `todo` → `in-progress` → `review` → `done` (set in the brief's 
 
 ```markdown
 # <ID> — <title>
-Status: todo · Suggested agent: <cheapest that fits> · Size: S/M/L
+Status: todo · Suggested agent: <cheapest that fits> · Size: S/M/L · Device check: user | agent (<the scripted check>)
 
 ## Goal
 <1–3 sentences: what changes for the user/pipeline.>
