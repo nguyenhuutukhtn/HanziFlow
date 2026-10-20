@@ -137,6 +137,22 @@ mandarin-course upload
 
 Clients read `<SUPABASE_URL>/storage/v1/object/public/course/catalog.json` and use `SUPABASE_ANON_KEY` only; the service-role key stays on this machine.
 
+## Android app configuration
+
+The Android app reads the public lesson packages from the `course` Storage bucket.
+Add the project URL (no trailing slash) to `kmp/local.properties`, which is
+git-ignored:
+
+```properties
+supabase.url=https://<project-ref>.supabase.co
+```
+
+Gradle turns it into `BuildConfig.CONTENT_BASE_URL` =
+`<supabase.url>/storage/v1/object/public/course/`. Release builds always use it.
+Debug builds use it by default and keep the editable catalog-URL override in the
+app. The app never reads `.env`, and no service-role or other secret key belongs
+in `kmp/`.
+
 ## Cache behavior
 
 Each cached clip is content-addressed. Running the same lesson with the same voices and settings reuses it. Changing text, language, model, output format, voice ID, or a TTS voice setting creates a new key. `playback_speed` is applied locally by FFmpeg, so adjusting it rebuilds the lesson without another paid TTS request. Old cache files are safe to leave in place.

@@ -37,11 +37,12 @@ object TranscriptRendering {
         view: TranscriptViewMode,
         showVietnamese: Boolean,
         modelAnswerRevealed: Boolean,
+        nextLine: ReferenceLine? = null,
     ): LineRenderDecision {
         // Published reference lines use BCP-47 tags ("vi-VN"), hand-written fixtures
         // often use the bare code ("vi"); accept both so the toggle behaves the same.
-        val isVietnameseLine = line.language == "vi" || line.language.startsWith("vi-")
-        if (isVietnameseLine && !showVietnamese) {
+        val viLine = isVietnameseLine(line)
+        if (viLine && !showVietnamese) {
             return LineRenderDecision(
                 placeholder = false,
                 lineVisible = false,
@@ -61,7 +62,15 @@ object TranscriptRendering {
                 showTranslation = false,
             )
         }
-        val showTranslation = showVietnamese && !isVietnameseLine && line.translation != null
+        // A spoken vi-VN line immediately after its zh line already shows this text.
+        // Compare normalized text so punctuation/case/whitespace differences don't
+        // produce two identical Vietnamese rows.
+        val translationRepeatedByNextLine =
+            line.translation != null && nextLineRepeatsTranslation(line.translation, nextLine)
+        val showTranslation = showVietnamese &&
+            !viLine &&
+            line.translation != null &&
+            !translationRepeatedByNextLine
         return when (view) {
             TranscriptViewMode.HIDDEN -> LineRenderDecision(
                 placeholder = false, lineVisible = true, showHanzi = false, showPinyinLine = false,
@@ -83,4 +92,26 @@ object TranscriptRendering {
             )
         }
     }
+
+    private fun isVietnameseLine(line: ReferenceLine): Boolean =
+        line.language == "vi" || line.language.startsWith("vi-")
+
+    private fun nextLineRepeatsTranslation(
+        translation: String,
+        nextLine: ReferenceLine?,
+    ): Boolean {
+        if (nextLine == null || !isVietnameseLine(nextLine)) return false
+        val normalizedTranslation = normalizeForDuplicateCheck(translation)
+        val normalizedNext = normalizeForDuplicateCheck(nextLine.text)
+        return normalizedTranslation.isNotEmpty() && normalizedTranslation == normalizedNext
+    }
+
+    /** Lowercase, drop punctuation, collapse whitespace; no Unicode property regex for JS parity. */
+    private fun normalizeForDuplicateCheck(value: String): String =
+        value.lowercase()
+            .map { if (it.isLetterOrDigit()) it else ' ' }
+            .joinToString("")
+            .split(' ')
+            .filter { it.isNotEmpty() }
+            .joinToString(" ")
 }

@@ -37,6 +37,7 @@ import com.hanziflow.R
 import com.hanziflow.ui.theme.Spacing
 
 const val MiniPlayerTestTag = "mini_player"
+const val MiniPlayerOpenTestTag = "mini_player_open"
 
 /**
  * Persistent mini-player, docked above the bottom navigation on every tab.
@@ -119,6 +120,7 @@ fun MiniPlayer(
                 Row(
                     modifier = Modifier
                         .weight(1f)
+                        .testTag(MiniPlayerOpenTestTag)
                         .clickable(onClick = onExpand)
                         .semantics { contentDescription = description }
                         .padding(vertical = Spacing.sm),

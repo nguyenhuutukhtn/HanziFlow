@@ -1,9 +1,23 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt.android)
+    alias(libs.plugins.roborazzi)
 }
+
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) file.inputStream().use { load(it) }
+}
+val supabaseUrl = localProperties.getProperty("supabase.url")
+    ?.trim()
+    ?.trimEnd('/')
+    ?.takeIf { it.isNotEmpty() }
+    ?: error("Add supabase.url=https://<project-ref>.supabase.co to kmp/local.properties")
+val contentBaseUrl = "$supabaseUrl/storage/v1/object/public/course/"
 
 android {
     namespace = "com.hanziflow"
@@ -16,6 +30,8 @@ android {
         versionCode = 1
         versionName = "0.1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "SUPABASE_URL", "\"$supabaseUrl\"")
+        buildConfigField("String", "CONTENT_BASE_URL", "\"$contentBaseUrl\"")
     }
 
     buildTypes {
@@ -25,7 +41,10 @@ android {
         }
     }
 
-    buildFeatures { compose = true }
+    buildFeatures {
+        compose = true
+        buildConfig = true
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -33,6 +52,12 @@ android {
     packaging.resources.excludes += "/META-INF/{AL2.0,LGPL2.1}"
 
     testOptions.unitTests.isIncludeAndroidResources = true
+}
+
+roborazzi {
+    // Until the user approves the screens, every capture stays in the git-ignored
+    // build directory. Move this to src/test/screenshots when goldens are adopted.
+    outputDir.set(layout.buildDirectory.dir("outputs/roborazzi"))
 }
 
 dependencies {
@@ -68,5 +93,7 @@ dependencies {
     testImplementation(libs.androidx.test.core)
     testImplementation(libs.androidx.test.junit)
     testImplementation(libs.robolectric)
+    testImplementation(libs.roborazzi)
+    testImplementation(libs.roborazzi.compose)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 }

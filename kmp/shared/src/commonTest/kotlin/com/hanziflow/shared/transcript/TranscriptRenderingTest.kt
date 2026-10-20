@@ -52,6 +52,35 @@ class TranscriptRenderingTest {
     }
 
     @Test
+    fun zhLine_translationSuppressedWhenNextViLineSaysTheSame() {
+        val next = viLine.copy(
+            language = "vi-VN",
+            text = "  đây là ĐỒ ĂN mang về  ",
+        )
+        val decision = TranscriptRendering.decide(
+            zhLine,
+            TranscriptViewMode.HANZI_WITH_PINYIN,
+            showVietnamese = true,
+            modelAnswerRevealed = true,
+            nextLine = next,
+        )
+        assertFalse(decision.showTranslation)
+    }
+
+    @Test
+    fun zhLine_translationKeptWhenNextViLineDiffers() {
+        val next = viLine.copy(language = "vi-VN", text = "Đây là câu khác.")
+        val decision = TranscriptRendering.decide(
+            zhLine,
+            TranscriptViewMode.HANZI_WITH_PINYIN,
+            showVietnamese = true,
+            modelAnswerRevealed = true,
+            nextLine = next,
+        )
+        assertTrue(decision.showTranslation)
+    }
+
+    @Test
     fun hiddenView_showsNoHanziOrPinyin() {
         val decision = TranscriptRendering.decide(zhLine, TranscriptViewMode.HIDDEN, showVietnamese = false, modelAnswerRevealed = true)
         assertFalse(decision.showHanzi)

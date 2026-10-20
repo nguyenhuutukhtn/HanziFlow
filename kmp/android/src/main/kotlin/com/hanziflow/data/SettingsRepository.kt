@@ -1,5 +1,6 @@
 package com.hanziflow.data
 
+import com.hanziflow.BuildConfig
 import javax.inject.Inject
 
 /** Simple key/value app settings (catalog base URL, transcript view, Vietnamese toggle, theme). */
@@ -14,7 +15,12 @@ interface SettingsRepository {
     suspend fun setDarkTheme(enabled: Boolean)
 
     companion object {
-        const val DEFAULT_BASE_URL = "http://10.0.2.2:8000/"
+        /**
+         * Public Supabase Storage root for lesson packages, built from
+         * `supabase.url` in kmp/local.properties at build time. Debug builds may
+         * override it in the UI; release builds always use this value.
+         */
+        val DEFAULT_BASE_URL: String = BuildConfig.CONTENT_BASE_URL
         const val DEFAULT_DARK_THEME = true
         fun transcriptViewKey(track: String) = "transcript_view_$track"
     }
@@ -23,7 +29,12 @@ interface SettingsRepository {
 class SettingsRepositoryImpl @Inject constructor(private val database: CourseDatabase) : SettingsRepository {
     private val dao = database.dao()
 
-    override suspend fun baseUrl(): String = dao.setting(BASE_URL) ?: SettingsRepository.DEFAULT_BASE_URL
+    override suspend fun baseUrl(): String =
+        if (BuildConfig.DEBUG) {
+            dao.setting(BASE_URL) ?: SettingsRepository.DEFAULT_BASE_URL
+        } else {
+            SettingsRepository.DEFAULT_BASE_URL
+        }
 
     override suspend fun setBaseUrl(value: String) {
         dao.putSetting(SettingEntity(BASE_URL, value.trim().trimEnd('/') + "/"))

@@ -104,12 +104,13 @@ fun TranscriptPanel(
             )
         }
         LazyColumn(state = listState, modifier = Modifier.fillMaxWidth()) {
-            itemsIndexed(lines, key = { _, line -> line.id }) { _, line ->
+            itemsIndexed(lines, key = { _, line -> line.id }) { index, line ->
                 val revealed = remember(line.id, line.type, positionMs) {
                     TranscriptCues.isModelAnswerRevealed(cues, line.id, positionMs)
                 }
-                val decision = remember(line, viewMode, showVietnamese, revealed) {
-                    TranscriptRendering.decide(line, viewMode, showVietnamese, revealed)
+                val nextLine = lines.getOrNull(index + 1)
+                val decision = remember(line, nextLine, viewMode, showVietnamese, revealed) {
+                    TranscriptRendering.decide(line, viewMode, showVietnamese, revealed, nextLine)
                 }
                 if (decision.lineVisible) {
                     TranscriptLineRow(
@@ -270,7 +271,14 @@ private fun TokenRow(
     onSeek: () -> Unit,
     onLookupToken: (String) -> Unit,
 ) {
-    FlowRow(horizontalArrangement = Arrangement.spacedBy(2.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+    FlowRow(
+        // Bottom alignment keeps punctuation (no pinyin column) on the Hanzi
+        // baseline instead of floating up into the ruby row. 4dp between columns
+        // stops adjacent pinyin strings from touching.
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalArrangement = Arrangement.spacedBy(2.dp),
+        itemVerticalAlignment = Alignment.Bottom,
+    ) {
         tokens.forEach { decision ->
             TokenCell(
                 token = decision.token,

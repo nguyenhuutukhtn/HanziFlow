@@ -3,6 +3,8 @@ package com.hanziflow.playback
 import android.app.PendingIntent
 import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
+import androidx.core.content.IntentCompat
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
@@ -24,6 +26,9 @@ import com.hanziflow.R
 import com.hanziflow.data.CourseDatabase
 import com.hanziflow.data.CourseRepository
 import com.hanziflow.data.PlaybackEntity
+import com.hanziflow.shared.CourseJson
+import com.hanziflow.shared.TimelineCue
+import com.hanziflow.shared.transcript.CueNavigation
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import javax.inject.Inject
@@ -42,10 +47,12 @@ class PlaybackService : MediaSessionService() {
     @Inject lateinit var courseRepository: CourseRepository
     @Inject lateinit var courseDatabase: CourseDatabase
     private lateinit var player: ExoPlayer
+    private lateinit var cuePlayer: CueSeekPlayer
     private lateinit var session: MediaSession
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val persistenceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var saveJob: Job? = null
+    private var cueCache: CueCache? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -68,7 +75,12 @@ class PlaybackService : MediaSessionService() {
             Intent(this, MainActivity::class.java),
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
         )
-        session = MediaSession.Builder(this, player)
+        cuePlayer = CueSeekPlayer(
+            wrapped = player,
+            onNextCue = { skipCue(forward = true) },
+            onPreviousCue = { skipCue(forward = false) },
+        )
+        session = MediaSession.Builder(this, cuePlayer)
             .setCallback(sessionCallback)
             .setSessionActivity(activityIntent)
             .build()
@@ -82,7 +94,10 @@ class PlaybackService : MediaSessionService() {
                     )
                 ) save()
                 if (events.contains(Player.EVENT_IS_PLAYING_CHANGED)) schedulePeriodicSave()
-                if (events.contains(Player.EVENT_MEDIA_ITEM_TRANSITION)) clearLoop()
+                if (events.contains(Player.EVENT_MEDIA_ITEM_TRANSITION)) {
+                    clearLoop()
+                    cueCache = null
+                }
             }
 
             override fun onPlaybackStateChanged(playbackState: Int) {
@@ -172,8 +187,32 @@ class PlaybackService : MediaSessionService() {
                 .build()
             return MediaSession.ConnectionResult.accept(
                 sessionCommands,
-                MediaSession.ConnectionResult.DEFAULT_PLAYER_COMMANDS,
+                session.player.availableCommands,
             )
+        }
+
+        @UnstableApi
+        override fun onMediaButtonEvent(
+            session: MediaSession,
+            controller: MediaSession.ControllerInfo,
+            intent: Intent,
+        ): Boolean {
+            val event = IntentCompat.getParcelableExtra(intent, Intent.EXTRA_KEY_EVENT, KeyEvent::class.java)
+            if (event != null) {
+                when (event.keyCode) {
+                    KeyEvent.KEYCODE_MEDIA_NEXT,
+                    KeyEvent.KEYCODE_MEDIA_PREVIOUS,
+                    -> {
+                        if (event.action == KeyEvent.ACTION_DOWN) {
+                            skipCue(forward = event.keyCode == KeyEvent.KEYCODE_MEDIA_NEXT)
+                        }
+                        // Consume both down and up so the default handler can't move
+                        // to the (nonexistent) next media item as well.
+                        return true
+                    }
+                }
+            }
+            return super.onMediaButtonEvent(session, controller, intent)
         }
 
         override fun onCustomCommand(
@@ -254,15 +293,63 @@ class PlaybackService : MediaSessionService() {
     }
 
     private fun snapshot(): PlaybackEntity? {
-        val parts = player.currentMediaItem?.mediaId?.split('|', limit = 2) ?: return null
-        if (parts.size != 2) return null
+        val (lessonId, track) = currentMediaIds() ?: return null
         return PlaybackEntity(
-            lessonId = parts[0],
-            track = parts[1],
+            lessonId = lessonId,
+            track = track,
             positionMs = player.currentPosition.coerceAtLeast(0),
             speed = player.playbackParameters.speed,
         )
     }
+
+    /**
+     * Headset / lock-screen next and previous. The service reads the current track's
+     * timeline itself, so this works with the screen off and the UI process gone.
+     */
+    private fun skipCue(forward: Boolean) {
+        val positionAtPress = player.currentPosition.coerceAtLeast(0)
+        val ids = currentMediaIds()
+        if (ids == null) {
+            skipFixed(forward)
+            return
+        }
+        scope.launch {
+            val cues = cuesFor(ids.first, ids.second)
+            val target = if (forward) {
+                CueNavigation.nextCueStartMs(cues, positionAtPress)
+            } else {
+                CueNavigation.previousCueStartMs(cues, positionAtPress)
+            }
+            if (target != null) player.seekTo(target) else skipFixed(forward)
+        }
+    }
+
+    private fun skipFixed(forward: Boolean) {
+        if (forward) player.seekForward() else player.seekBack()
+    }
+
+    private fun currentMediaIds(): Pair<String, String>? {
+        val parts = player.currentMediaItem?.mediaId?.split('|', limit = 2) ?: return null
+        return if (parts.size == 2) parts[0] to parts[1] else null
+    }
+
+    /** One read per lesson/track; the cache is dropped on a media-item transition. */
+    private suspend fun cuesFor(lessonId: String, track: String): List<TimelineCue> {
+        cueCache?.takeIf { it.lessonId == lessonId && it.track == track }?.let { return it.cues }
+        return withContext(Dispatchers.IO) {
+            val cues = courseRepository.timelineFile(lessonId, track)
+                ?.let { file -> runCatching { CourseJson.timeline(file.readText()).cues }.getOrNull() }
+                .orEmpty()
+            cueCache = CueCache(lessonId, track, cues)
+            cues
+        }
+    }
+
+    private data class CueCache(
+        val lessonId: String,
+        val track: String,
+        val cues: List<TimelineCue>,
+    )
 
     override fun onTaskRemoved(rootIntent: Intent?) {
         save()
