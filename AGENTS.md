@@ -79,6 +79,10 @@ The current method is a **mini-story** format (Effortless English / TPRS-style):
 - **Backward buildup** for a hard line must nest: each step contains the previous
   chunk, then the full line (`什么 → 叫什么 → 你叫什么？`). A chunk that doesn't
   contain the prior step is chunk practice, not buildup — don't mislabel it.
+- **Imitation needs a speaking gap, not a transition pause.** For absolute beginners,
+  start at no less than 1.5s after each buildup chunk, 3s after the slow full line,
+  and 4s after the natural full line; lengthen for longer utterances. Lesson 1 uses
+  1.8/3.0/4.2s. Verify the generated timeline/audio and protect the gaps with a test.
 - **`tts_tags`** (on a `Segment`, or per-turn when using `turns`) are inline
   ElevenLabs delivery tags (`["gentle"]` → `[gentle] text`), sent to TTS only —
   never in `text`/transcript/pinyin/translation. Use sparingly (scene openings,
@@ -96,6 +100,11 @@ The current method is a **mini-story** format (Effortless English / TPRS-style):
    before calling ElevenLabs.
 5. Run `pytest` (project root) before considering any change done. Lesson-content
    tests in `tests/test_lesson_001_story.py` assert on Lesson 1's actual text.
+
+For a replacement already published to Supabase: bump the lesson version, upload
+the new immutable package, verify the public catalog and artifact hash, then delete
+the exact superseded version prefix from both local `publish/` and Supabase Storage.
+Confirm the old public object is absent and the new version still returns successfully.
 
 ## Scope discipline
 

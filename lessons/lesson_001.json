@@ -2,7 +2,7 @@
   "lesson_id": "lesson_001",
   "title": "Đồ ăn mang về của đồng nghiệp",
   "level": "absolute_beginner",
-  "target_duration_minutes": 41,
+  "target_duration_minutes": 42,
   "communicative_goals": [
     "Hear whose takeout it is",
     "Answer 是 and 不是",
@@ -26,7 +26,7 @@
     "这一轮还有越南语。"
   ],
   "coach_phrases_reduced": [],
-  "version": 1,
+  "version": 2,
   "variant": "guided",
   "segments": [
     {
@@ -2429,7 +2429,7 @@
       "language": "zh-CN",
       "speaker": "anna",
       "text": "李明的",
-      "pause_after_ms": 900,
+      "pause_after_ms": 1800,
       "playback_speed": 1.0,
       "pinyin": "Lǐ Míng de",
       "translation": "Của Lý Minh."
@@ -2441,7 +2441,7 @@
       "language": "zh-CN",
       "speaker": "anna",
       "text": "是李明的",
-      "pause_after_ms": 900,
+      "pause_after_ms": 1800,
       "playback_speed": 1.0,
       "pinyin": "shì Lǐ Míng de",
       "translation": "Là của Lý Minh."
@@ -2453,7 +2453,7 @@
       "language": "zh-CN",
       "speaker": "anna",
       "text": "这是李明的吗？",
-      "pause_after_ms": 700,
+      "pause_after_ms": 3000,
       "playback_speed": 0.85,
       "pinyin": "zhè shì Lǐ Míng de ma?",
       "translation": "Đây là của Lý Minh phải không?"
@@ -2465,7 +2465,7 @@
       "language": "zh-CN",
       "speaker": "anna",
       "text": "这是李明的吗？",
-      "pause_after_ms": 1000,
+      "pause_after_ms": 4200,
       "playback_speed": 1.0,
       "pinyin": "zhè shì Lǐ Míng de ma?",
       "translation": "Đây là của Lý Minh phải không?"
@@ -2511,7 +2511,7 @@
       "language": "zh-CN",
       "speaker": "coach_zh",
       "text": "同事的",
-      "pause_after_ms": 900,
+      "pause_after_ms": 1800,
       "playback_speed": 1.0,
       "pinyin": "tóngshì de",
       "translation": "Của đồng nghiệp."
@@ -2523,7 +2523,7 @@
       "language": "zh-CN",
       "speaker": "coach_zh",
       "text": "是同事的",
-      "pause_after_ms": 900,
+      "pause_after_ms": 1800,
       "playback_speed": 1.0,
       "pinyin": "shì tóngshì de",
       "translation": "Là của đồng nghiệp."
@@ -2535,7 +2535,7 @@
       "language": "zh-CN",
       "speaker": "coach_zh",
       "text": "这是同事的。",
-      "pause_after_ms": 700,
+      "pause_after_ms": 3000,
       "playback_speed": 0.85,
       "pinyin": "zhè shì tóngshì de.",
       "translation": "Đây là của đồng nghiệp."
@@ -2547,7 +2547,7 @@
       "language": "zh-CN",
       "speaker": "coach_zh",
       "text": "这是同事的。",
-      "pause_after_ms": 1000,
+      "pause_after_ms": 4200,
       "playback_speed": 1.0,
       "pinyin": "zhè shì tóngshì de.",
       "translation": "Đây là của đồng nghiệp."
@@ -2593,7 +2593,7 @@
       "language": "zh-CN",
       "speaker": "coach_zh",
       "text": "同事的",
-      "pause_after_ms": 900,
+      "pause_after_ms": 1800,
       "playback_speed": 1.0,
       "pinyin": "tóngshì de",
       "translation": "Của đồng nghiệp."
@@ -2605,7 +2605,7 @@
       "language": "zh-CN",
       "speaker": "coach_zh",
       "text": "还是同事的",
-      "pause_after_ms": 900,
+      "pause_after_ms": 1800,
       "playback_speed": 1.0,
       "pinyin": "háishi tóngshì de",
       "translation": "Hay của đồng nghiệp."
@@ -2617,7 +2617,7 @@
       "language": "zh-CN",
       "speaker": "coach_zh",
       "text": "这是安娜的还是同事的？",
-      "pause_after_ms": 700,
+      "pause_after_ms": 3000,
       "playback_speed": 0.85,
       "pinyin": "zhè shì Ānnà de háishi tóngshì de?",
       "translation": "Của Anna hay của đồng nghiệp?"
@@ -2629,7 +2629,7 @@
       "language": "zh-CN",
       "speaker": "coach_zh",
       "text": "这是安娜的还是同事的？",
-      "pause_after_ms": 1000,
+      "pause_after_ms": 4200,
       "playback_speed": 1.0,
       "pinyin": "zhè shì Ānnà de háishi tóngshì de?",
       "translation": "Của Anna hay của đồng nghiệp?"
@@ -2675,7 +2675,7 @@
       "language": "zh-CN",
       "speaker": "coach_zh",
       "text": "同事的",
-      "pause_after_ms": 900,
+      "pause_after_ms": 1800,
       "playback_speed": 1.0,
       "pinyin": "tóngshì de",
       "translation": "Của đồng nghiệp."
@@ -2687,7 +2687,7 @@
       "language": "zh-CN",
       "speaker": "coach_zh",
       "text": "同事的外卖",
-      "pause_after_ms": 900,
+      "pause_after_ms": 1800,
       "playback_speed": 1.0,
       "pinyin": "tóngshì de wàimài",
       "translation": "Đồ ăn mang về của đồng nghiệp."
@@ -2699,7 +2699,7 @@
       "language": "zh-CN",
       "speaker": "coach_zh",
       "text": "这是同事的外卖吗？",
-      "pause_after_ms": 700,
+      "pause_after_ms": 3000,
       "playback_speed": 0.85,
       "pinyin": "zhè shì tóngshì de wàimài ma?",
       "translation": "Đây là đồ ăn mang về của đồng nghiệp phải không?"
@@ -2711,7 +2711,7 @@
       "language": "zh-CN",
       "speaker": "coach_zh",
       "text": "这是同事的外卖吗？",
-      "pause_after_ms": 1000,
+      "pause_after_ms": 4200,
       "playback_speed": 1.0,
       "pinyin": "zhè shì tóngshì de wàimài ma?",
       "translation": "Đây là đồ ăn mang về của đồng nghiệp phải không?"
@@ -2757,7 +2757,7 @@
       "language": "zh-CN",
       "speaker": "coach_zh",
       "text": "谁的",
-      "pause_after_ms": 900,
+      "pause_after_ms": 1800,
       "playback_speed": 1.0,
       "pinyin": "shuí de",
       "translation": "Của ai."
@@ -2769,7 +2769,7 @@
       "language": "zh-CN",
       "speaker": "coach_zh",
       "text": "是谁的",
-      "pause_after_ms": 900,
+      "pause_after_ms": 1800,
       "playback_speed": 1.0,
       "pinyin": "shì shuí de",
       "translation": "Là của ai."
@@ -2781,7 +2781,7 @@
       "language": "zh-CN",
       "speaker": "coach_zh",
       "text": "这是谁的外卖？",
-      "pause_after_ms": 700,
+      "pause_after_ms": 3000,
       "playback_speed": 0.85,
       "pinyin": "zhè shì shuí de wàimài?",
       "translation": "Đây là đồ ăn mang về của ai?"
@@ -2793,7 +2793,7 @@
       "language": "zh-CN",
       "speaker": "coach_zh",
       "text": "这是谁的外卖？",
-      "pause_after_ms": 1000,
+      "pause_after_ms": 4200,
       "playback_speed": 1.0,
       "pinyin": "zhè shì shuí de wàimài?",
       "translation": "Đây là đồ ăn mang về của ai?"
@@ -2839,7 +2839,7 @@
       "language": "zh-CN",
       "speaker": "coach_zh",
       "text": "同事的名字",
-      "pause_after_ms": 900,
+      "pause_after_ms": 1800,
       "playback_speed": 1.0,
       "pinyin": "tóngshì de míngzi",
       "translation": "Tên đồng nghiệp."
@@ -2851,7 +2851,7 @@
       "language": "zh-CN",
       "speaker": "coach_zh",
       "text": "李明的名字还是同事的名字",
-      "pause_after_ms": 900,
+      "pause_after_ms": 1800,
       "playback_speed": 1.0,
       "pinyin": "Lǐ Míng de míngzi háishi tóngshì de míngzi",
       "translation": "Tên Lý Minh hay tên đồng nghiệp."
@@ -2863,7 +2863,7 @@
       "language": "zh-CN",
       "speaker": "coach_zh",
       "text": "袋子上有李明的名字还是同事的名字？",
-      "pause_after_ms": 700,
+      "pause_after_ms": 3000,
       "playback_speed": 0.85,
       "pinyin": "dàizi shàng yǒu Lǐ Míng de míngzi háishi tóngshì de míngzi?",
       "translation": "Trên túi có tên Lý Minh hay tên đồng nghiệp?"
@@ -2875,7 +2875,7 @@
       "language": "zh-CN",
       "speaker": "coach_zh",
       "text": "袋子上有李明的名字还是同事的名字？",
-      "pause_after_ms": 1000,
+      "pause_after_ms": 4200,
       "playback_speed": 1.0,
       "pinyin": "dàizi shàng yǒu Lǐ Míng de míngzi háishi tóngshì de míngzi?",
       "translation": "Trên túi có tên Lý Minh hay tên đồng nghiệp?"

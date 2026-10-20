@@ -50,7 +50,14 @@ def test_story_draft_stays_inside_the_week_one_budget():
     for slow_id in ("b_ask_slow", "b_ts_slow", "b_or_slow"):
         slow = ids[slow_id]
         assert slow.playback_speed == 0.85
+        assert slow.pause_after_ms == 3000
         assert ids[slow_id.removesuffix("_slow") + "_nat"].text == slow.text
+        assert ids[slow_id.removesuffix("_slow") + "_nat"].pause_after_ms == 4200
+    buildup_chunks = [
+        segment for segment in lesson.segments
+        if segment.id.startswith(("b_ask_c", "b_ts_c", "b_or_c"))
+    ]
+    assert buildup_chunks and all(segment.pause_after_ms == 1800 for segment in buildup_chunks)
     assert "李明的" in ids["b_ask_c2"].text
     assert "是李明的" in ids["b_ask_slow"].text
     assert "同事的" in ids["b_ts_c2"].text

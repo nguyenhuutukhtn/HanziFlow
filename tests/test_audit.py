@@ -40,6 +40,7 @@ def test_load_authoring_lessons_skips_practice_and_drafts(tmp_path):
     _write(tmp_path, "lesson_001.json", _base("lesson_001", variant="guided"))
     _write(tmp_path, "lesson_001_practice.json", _base("lesson_001", variant="practice"))
     _write(tmp_path, "lesson_001_mau.json", _base("lesson_001", variant="guided"))
+    (tmp_path / "lesson_001_vocab.json").write_text('{"schema_version": 1}', encoding="utf-8")
 
     lessons = load_authoring_lessons(tmp_path)
     assert [lesson.lesson_id for lesson in lessons] == ["lesson_001"]

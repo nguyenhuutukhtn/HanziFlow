@@ -75,7 +75,7 @@ publish/
             └── clips/<sha256>.mp3
 ```
 
-Use versioned paths. Never overwrite a published version in place; CDN and devices may have cached it. Upload versioned files with a one-year `cacheControl`; upload `catalog.json` with no-cache.
+Use versioned paths. Never overwrite a published version in place; CDN and devices may have cached it. Upload versioned files with a one-year `cacheControl`; upload `catalog.json` with no-cache. For this personal deployment, a replacement release ends with cleanup: only after the new package and catalog have been verified from the public endpoint, delete the superseded version from both local `publish/` and Supabase Storage. Delete only the exact old version prefix; never remove the fallback before verification succeeds.
 
 `mandarin-course publish lessons/<lesson_id>.json` reads only local lesson files,
 generated tracks, the voice registry/cast, and `cache/<cache_key>.mp3`. It never calls

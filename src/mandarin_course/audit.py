@@ -8,6 +8,7 @@ instructional narration (`coach_phrases_introduced` / `coach_phrases_reduced`).
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -48,6 +49,8 @@ def load_authoring_lessons(lessons_dir: Path) -> list[Lesson]:
     """
     by_id: dict[str, Lesson] = {}
     for path in sorted(lessons_dir.glob("lesson_*.json")):
+        if not re.fullmatch(r"lesson_\d+", path.stem):
+            continue
         lesson = load_lesson(path)
         if lesson.variant == "practice" or path.stem != lesson.lesson_id:
             continue

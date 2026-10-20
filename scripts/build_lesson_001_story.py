@@ -355,13 +355,13 @@ def buildup_block() -> list[dict]:
                     speaker=speaker,
                     pinyin=chunk_py,
                     translation=chunk_gloss,
-                    pause_after=900,
+                    pause_after=1800,
                 )
             )
         if previous not in text:
             raise SystemExit(f"full line does not contain the previous chunk: {previous} -> {text}")
-        out.append(seg(f"{key}_slow", "Nói theo", kind, "zh-CN", text, speaker=speaker, pinyin=pinyin, translation=gloss, pause_after=700, speed=0.85))
-        out.append(seg(f"{key}_nat", "Nói theo", kind, "zh-CN", text, speaker=speaker, pinyin=pinyin, translation=gloss, pause_after=1000))
+        out.append(seg(f"{key}_slow", "Nói theo", kind, "zh-CN", text, speaker=speaker, pinyin=pinyin, translation=gloss, pause_after=3000, speed=0.85))
+        out.append(seg(f"{key}_nat", "Nói theo", kind, "zh-CN", text, speaker=speaker, pinyin=pinyin, translation=gloss, pause_after=4200))
     out += story_shadow("sh", STORY)
     out += story_shadow("pvsh", POV)
     out += story_shadow("rtsh", RETOLD)
@@ -1276,7 +1276,7 @@ def lesson(variant: str, segments: list[dict], minutes: int, coach_phrases: list
             "再听一次。",
         ],
         "coach_phrases_reduced": [],
-        "version": 1,
+        "version": 2,
         "variant": variant,
         "segments": segments,
     }

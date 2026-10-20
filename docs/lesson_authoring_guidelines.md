@@ -93,6 +93,8 @@ A five- or six-syllable Mandarin sentence can still be difficult when every part
 
 Play the complete line naturally first. Then play each useful chunk once or twice, add a concise meaning when needed, and rebuild the full line at a slightly slower speed before returning to natural speed. Do not split familiar short lines such as `你好`, `不是`, or `再见`. Chunk buildup is pronunciation and processing support for selected difficult lines, not a character-by-character spelling exercise and not a reason to lengthen every lesson.
 
+Every model that asks the learner to speak must be followed by a real response gap; a short transition pause is not enough. For absolute beginners, use these starting floors and increase them when the spoken line is longer: **1.5 seconds after a chunk, 3 seconds after the rebuilt slow full line, and 4 seconds after the natural full line**. Lesson 1 deliberately uses 1.8 / 3.0 / 4.2 seconds. When a slow model is immediately followed by a natural model and the learner is meant to repeat only after hearing both, the short pause may sit between the two models, but the full response gap must follow the natural model. Verify the generated timeline or audio—not only the JSON—and add a regression assertion for the response gaps when introducing or changing a buildup block.
+
 ### Support fade within the first lesson
 
 Repeated exposure inside one listening session counts as practice, but it must not be treated as proof that an absolute beginner has become familiar with a pattern. For the first lesson, use a gradual within-session fade:
