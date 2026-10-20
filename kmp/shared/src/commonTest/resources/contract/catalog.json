@@ -1,0 +1,44 @@
+{
+  "catalog_version": 2,
+  "lessons": [
+    {
+      "base_url": "lessons/lesson_001/v1/",
+      "files": {
+        "items": {
+          "bytes": 240606,
+          "file": "items.json",
+          "sha256": "eeff0edc1b0df4390c58bbeea775b1cd1fb4c0a44219755584d0b50ab448283c"
+        },
+        "manifest": {
+          "bytes": 484,
+          "file": "lesson.json",
+          "sha256": "7213c8f3b18d4380e9e683762243bff8708386dec6099a3e2e27c9333d45fff5"
+        },
+        "reference": {
+          "bytes": 683488,
+          "file": "reference.json",
+          "sha256": "3d8d591cf8f7ad1bef821dd1c12af2660e992a2ad1bacd7db9c4daeeb1bc2470"
+        }
+      },
+      "id": "lesson_001",
+      "level": "absolute_beginner",
+      "order": 1,
+      "title": "Đồ ăn mang về của đồng nghiệp",
+      "tracks": {
+        "guided": {
+          "bytes": 20723713,
+          "duration_ms": 2590382,
+          "file": "guided.mp3",
+          "sha256": "a934552e348197752875e498f454687c47fe37e87394b71a6b5613f7dd81a192",
+          "timeline": {
+            "bytes": 76121,
+            "file": "timeline_guided.json",
+            "sha256": "e5b690cf42b5f91553dbc8fafc75a2389270fc541654b9a4aa45059df988e63e"
+          }
+        }
+      },
+      "version": 1
+    }
+  ],
+  "schema_version": 1
+}

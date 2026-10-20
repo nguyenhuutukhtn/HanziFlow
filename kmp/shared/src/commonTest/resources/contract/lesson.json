@@ -1,0 +1,21 @@
+{
+  "communicative_goals": [
+    "Hear whose takeout it is",
+    "Answer 是 and 不是",
+    "Choose with 还是",
+    "Answer 这是谁的"
+  ],
+  "id": "lesson_001",
+  "level": "absolute_beginner",
+  "new_patterns": [
+    "这是外卖。",
+    "这是……的吗？",
+    "不是。",
+    "这是同事的。",
+    "这是谁的？",
+    "……还是……？",
+    "袋子上有……的名字。"
+  ],
+  "title": "Đồ ăn mang về của đồng nghiệp",
+  "version": 1
+}
