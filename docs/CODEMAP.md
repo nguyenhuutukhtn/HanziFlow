@@ -9,12 +9,17 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `__init__.py` [4] — Mandarin audio course generator.
 - `audio_builder.py` [158] — FFmpeg-based audio assembly with per-segment pauses.
 - `audit.py` [136] — Read-only authoring audit for cross-lesson pattern continuity.
-- `cli.py` [282] — Command-line interface for validation, generation, transcripts and reviews.
+- `cli.py` [300] — Command-line interface for validation, generation, transcripts and reviews.
 - `config.py` [53] — Environment-backed configuration without exposing secrets.
 - `lesson_schema.py` [104] — Validated, content-driven lesson schema.
 - `publish.py` [714] ⚠ — Build deterministic, versioned app packages from generated local audio.
 - `review.py` [27] — Small, transparent spaced-repetition policy.
 - `storage.py` [60] — SQLite progress store. Ratings are learner supplied; no automatic scoring.
+- `story/__init__.py` [7] — Story source (`lessons/src/*.story.md`) -> guided + practice lesson JSON.
+- `story/assemble.py` [208] — Assemble guided + practice lesson JSON from a parsed story source.
+- `story/blocks.py` [254] — Block types: each turns one `## <type>` section of a story source into segments.
+- `story/parser.py` [143] — Parse a lesson story source (`lessons/src/lesson_XXX.story.md`) into blocks.
+- `story/report.py` [46] — Short build-lesson output: ≤ 20 lines, errors with source line numbers.
 - `transcript.py` [69] — Learner-facing Markdown transcripts.
 - `tts.py` [246] — ElevenLabs TTS adapter and deterministic audio cache.
 - `upload.py` [406] ⚠ — Upload published lesson packages to the public Supabase Storage bucket.
@@ -22,7 +27,6 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 
 ## Python scripts (`scripts/`)
 
-- `build_lesson_001_story.py` [1321] ⚠ — Build Lesson 1, the mini-story template for later lessons.
 - `codemap.py` [100] — Regenerate docs/CODEMAP.md: one line per source file, so agents open only what they need.
 
 ## Python tests (`tests/`)
@@ -37,6 +41,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `test_publish.py` [367] ⚠
 - `test_review.py` [18]
 - `test_storage.py` [12]
+- `test_story_builder.py` [67]
 - `test_transcript.py` [37]
 - `test_tts.py` [130]
 - `test_upload.py` [393] ⚠ — Upload tests use httpx.MockTransport: no network, no real Supabase project.

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# One lesson, start to finish: dry-run count -> ask before paid TTS (generate's own
+# One lesson, start to finish: build from the story source (if any) -> dry-run count -> ask before paid TTS (generate's own
 # existing confirmation; never auto-yes) -> generate -> publish -> upload.
 # Run: ./scripts/lesson.sh 001   (also wired to `just lesson 001`)
 set -euo pipefail
@@ -9,6 +9,11 @@ cd "$ROOT"
 
 ID="${1:?Usage: scripts/lesson.sh <lesson id, e.g. 001>}"
 LESSON="lessons/lesson_${ID}.json"
+STORY="lessons/src/lesson_${ID}.story.md"
+
+if [ -f "$STORY" ]; then
+  mandarin-course build-lesson "$STORY"
+fi
 
 mandarin-course generate "$LESSON" --dry-run
 mandarin-course generate "$LESSON"

@@ -8,8 +8,8 @@ The course pivoted away from scripted two-character textbook dialogue (greetings
 ordering coffee, etc.) after real listener feedback. **Do not write new lessons in
 that old shape.** `lessons/lesson_001.json` is the mini-story template. Copy its
 shape: one narrator, short character lines, meaning mapped once, then three Q&A
-passes (Vietnamese, guided Chinese, Chinese-only). The builder is
-`scripts/build_lesson_001_story.py`.
+passes (Vietnamese, guided Chinese, Chinese-only). Its source is
+`lessons/src/lesson_001.story.md`, built by `mandarin-course build-lesson`.
 
 The current method is a **mini-story** format (Effortless English / TPRS-style):
 
@@ -66,14 +66,17 @@ The current method is a **mini-story** format (Effortless English / TPRS-style):
 
 ## Workflow for a new lesson
 
-1. `mandarin-course validate lessons/<file>.json` — schema check, no API calls.
-2. `mandarin-course generate lessons/<file>.json --dry-run` — shows cache hits vs.
+1. Write `lessons/src/lesson_XXX.story.md` (format: lesson_001's source and
+   `src/mandarin_course/story/blocks.py`), then `mandarin-course build-lesson <story.md>`.
+   `lessons/lesson_XXX*.json` are build output — never edit them by hand.
+2. `mandarin-course validate lessons/<file>.json` — schema check, no API calls.
+3. `mandarin-course generate lessons/<file>.json --dry-run` — shows cache hits vs.
    new paid TTS requests and missing configuration, still no API calls.
-3. `mandarin-course audit lessons` — cross-lesson pattern/coach-phrase continuity
+4. `mandarin-course audit lessons` — cross-lesson pattern/coach-phrase continuity
    check (read-only, no API calls).
-4. `mandarin-course generate lessons/<file>.json` — confirms paid request count
+5. `mandarin-course generate lessons/<file>.json` — confirms paid request count
    before calling ElevenLabs.
-5. Run `pytest` (project root) before considering any change done. Lesson-content
+6. Run `pytest` (project root) before considering any change done. Lesson-content
    tests in `tests/test_lesson_001_story.py` assert on Lesson 1's actual text.
 
 

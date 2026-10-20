@@ -5,8 +5,7 @@
 
 set shell := ["bash", "-euo", "pipefail", "-c"]
 
-# Full local check: pytest, kmp shared + android unit/architecture tests,
-# codemap, file-size audit. Short output; full logs in build/logs/.
+# Full local check (pytest, kmp unit + architecture tests, codemap, file sizes); logs in build/logs/.
 check:
     bash scripts/check.sh
 
@@ -18,7 +17,6 @@ app:
 lesson ID:
     bash scripts/lesson.sh {{ID}}
 
-# Record Roborazzi goldens (only after the user has approved the screen once;
-# see .claude/skills/android-ui-testing/SKILL.md).
+# Record Roborazzi goldens, only after the user approved the screen (see android-ui-testing skill).
 approve-screens:
     cd kmp && ./gradlew -q :android:recordRoborazziDebug

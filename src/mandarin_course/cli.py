@@ -16,6 +16,7 @@ from .config import Settings
 from .lesson_schema import Lesson, load_lesson
 from .publish import PublishError, publish_lesson, render_publish_report, render_publish_summary
 from .storage import ProgressStore
+from .story import build_story, render_errors, render_summary, write_story
 from .transcript import write_transcripts
 from .tts import CachedTTS, ElevenLabsTTS, TTSError, cache_key, supports_audio_tags, tag_usage, voice_ids_for
 from .upload import StorageConfig, UploadError, upload_package
@@ -219,12 +220,27 @@ def command_review(settings: Settings, as_json: bool = False) -> int:
     return 0
 
 
+def command_build_lesson(path: Path, out_dir: Path | None, as_json: bool = False) -> int:
+    result = build_story(path, out_dir)
+    if result.errors:
+        short, full = render_errors(path, result)
+        print(f"{short}\nFull list: {_write_log('build-lesson', full)}", file=sys.stderr)
+        return 1
+    write_story(result)
+    print(render_summary(result, as_json))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="mandarin-course")
     parser.add_argument("--env-file", type=Path, help="Optional dotenv file (default: .env)")
     sub = parser.add_subparsers(dest="command", required=True)
     validate = sub.add_parser("validate", help="Validate a lesson JSON without calling TTS")
     validate.add_argument("lesson", type=Path)
+    build = sub.add_parser("build-lesson", help="Build guided + practice lesson JSON from a story source")
+    build.add_argument("story", type=Path)
+    build.add_argument("--out-dir", type=Path, default=None, help="Default: lessons/ (parent of lessons/src/)")
+    build.add_argument("--json", action="store_true", help="Print the summary as JSON")
     transcript = sub.add_parser("transcript", help="Create practice and full transcripts")
     transcript.add_argument("lesson", type=Path)
     generate = sub.add_parser("generate", help="Plan or generate one lesson")
@@ -258,6 +274,8 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.command == "validate":
             return command_validate(args.lesson)
+        if args.command == "build-lesson":
+            return command_build_lesson(args.story, args.out_dir, args.json)
         if args.command == "transcript":
             return command_transcript(args.lesson, settings)
         if args.command == "generate":

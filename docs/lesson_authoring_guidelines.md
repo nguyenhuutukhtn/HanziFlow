@@ -4,7 +4,7 @@ These rules define how a Mandarin lesson should teach through audio. They apply 
 
 ## Core teaching loop (mini-story pivot)
 
-**Superseded:** the two-character scripted-dialogue loop that used to live in this section is replaced by the mini-story loop below. See `curriculum/roadmap.md`'s "Method" section for why. `lessons/lesson_001.json`, built by `scripts/build_lesson_001_story.py`, is the template for later lessons.
+**Superseded:** the two-character scripted-dialogue loop that used to live in this section is replaced by the mini-story loop below. See `curriculum/roadmap.md`'s "Method" section for why. `lessons/lesson_001.json`, built from `lessons/src/lesson_001.story.md` by `mandarin-course build-lesson`, is the template for later lessons.
 
 **Story first, grammar tracked, not taught.** Write or choose a mini-story because it is a good, concrete, realistic story — not because it contains a target pattern. Only after the story is written, check which grammar patterns appear in it against what the learner has already safely covered, and trim or adjust if the story accidentally uses something too advanced. The order is:
 
