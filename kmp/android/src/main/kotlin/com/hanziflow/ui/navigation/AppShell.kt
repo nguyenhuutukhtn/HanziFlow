@@ -89,6 +89,8 @@ fun AppShell(
     onStopSectionLoopAfterPass: () -> Unit = {},
     onNextSection: () -> Unit = {},
     onSeekToSection: (String) -> Unit = {},
+    onCharacter: (String) -> Unit = {},
+    onDismissCharacter: () -> Unit = {},
 ) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -196,6 +198,8 @@ fun AppShell(
                     onStopSectionLoopAfterPass = onStopSectionLoopAfterPass,
                     onNextSection = onNextSection,
                     onSeekToSection = onSeekToSection,
+                    onCharacter = onCharacter,
+                    onDismissCharacter = onDismissCharacter,
                 )
             }
         }

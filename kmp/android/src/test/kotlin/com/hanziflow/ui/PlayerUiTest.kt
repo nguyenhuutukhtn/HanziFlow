@@ -9,6 +9,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.hanziflow.shared.ReferenceLine
+import com.hanziflow.shared.WordItem
 import com.hanziflow.shared.TimelineCue
 import com.hanziflow.shared.Token
 import com.hanziflow.shared.transcript.TranscriptViewMode
@@ -19,6 +20,10 @@ import com.hanziflow.ui.player.NowPlayingScreen
 import com.hanziflow.ui.player.NowPlayingTestTag
 import com.hanziflow.ui.player.PlayerUiState
 import com.hanziflow.ui.player.TranscriptUiState
+import com.hanziflow.shared.characters.CharacterEntry
+import com.hanziflow.shared.characters.CharacterIndex
+import com.hanziflow.shared.characters.ComponentEntry
+import com.hanziflow.shared.characters.LessonCharacters
 import com.hanziflow.ui.theme.HanziFlowTheme
 import org.junit.Rule
 import org.junit.Test
@@ -141,5 +146,60 @@ class PlayerUiTest {
 
         compose.onNodeWithText("Đến lượt bạn — nói trước khi nghe").assertExists()
         compose.onNodeWithText("这是安娜的外卖。").assertDoesNotExist()
+    }
+
+    @Test
+    fun `lookup chips open a character and then its component`() {
+        val index = CharacterIndex(
+            LessonCharacters(
+                "lesson_001",
+                characters = listOf(
+                    CharacterEntry("我", "wǒ", "ngã", viMeaning = "tôi, mình", decompIds = "⿰扌戈"),
+                    CharacterEntry("们", "men", "môn", viMeaning = "chúng tôi"),
+                ),
+                componentsPrereq = listOf(
+                    ComponentEntry("扌", "component", nameVi = "thủ đứng"),
+                    ComponentEntry("戈", "component", nameVi = "qua"),
+                ),
+            ),
+        )
+        val word = WordItem("w", "我们", "wǒmen", listOf(3, 5), "chúng tôi")
+        val state = PlayerUiState(
+            connected = true,
+            lessonId = "lesson_001",
+            lessonTitle = "Bài thử",
+            characterIndex = index,
+            transcript = TranscriptUiState(lookupWord = word, lookupLineText = "我们走吧。"),
+        )
+        var selected by mutableStateOf<String?>(null)
+        compose.setContent {
+            HanziFlowTheme {
+                NowPlayingScreen(
+                    state = state.copy(transcript = state.transcript.copy(lookupCharacter = selected)),
+                    onCollapse = {}, onSwitchTrack = {}, onSeekTo = {}, onSeekBack = {}, onToggle = {},
+                    onSeekForward = {}, onSpeed = {}, onCancelLoop = {}, onSeekLine = {}, onToggleLoop = {},
+                    onLookup = {}, onViewModeChange = {}, onVietnameseToggle = {}, onPlayLookupClip = {},
+                    onDismissLookup = {}, onCharacter = { selected = it }, onDismissCharacter = { selected = null },
+                )
+            }
+        }
+        compose.onNodeWithText("我").performClick()
+        compose.onNodeWithText("Hán-Việt: ngã").assertExists()
+        compose.onNodeWithText("扌 · thủ đứng · bộ phận").performClick()
+        compose.onNodeWithText("thủ đứng").assertExists()
+    }
+
+    @Test
+    fun `character list action is hidden without character data`() {
+        compose.setContent { HanziFlowTheme {
+            NowPlayingScreen(
+                state = PlayerUiState(connected = true, lessonId = "lesson_001"),
+                onCollapse = {}, onSwitchTrack = {}, onSeekTo = {}, onSeekBack = {}, onToggle = {},
+                onSeekForward = {}, onSpeed = {}, onCancelLoop = {}, onSeekLine = {}, onToggleLoop = {},
+                onLookup = {}, onViewModeChange = {}, onVietnameseToggle = {}, onPlayLookupClip = {},
+                onDismissLookup = {},
+            )
+        } }
+        compose.onNodeWithText("Chữ của bài").assertDoesNotExist()
     }
 }

@@ -80,6 +80,41 @@ class PlayerViewModelTest {
     }
 
     @Test
+    fun `character index stays null when repository has no character file`() = runTest {
+        val repository = FakeCourseRepository().apply {
+            lessonsFlow.value = listOf(
+                com.hanziflow.data.LessonEntity(
+                    id = "lesson_001",
+                    title = "Lesson",
+                    level = "A1",
+                    lessonOrder = 1,
+                    remoteVersion = 1,
+                    catalogJson = "{}",
+                ),
+            )
+        }
+        val connection = FakePlayerConnection()
+        val viewModel = PlayerViewModel(repository, FakeSettingsRepository(), connection)
+        connection.emit(PlaybackState(connected = true, lessonId = "lesson_001"))
+        Thread.sleep(50)
+        assertNull(viewModel.uiState.value.characterIndex)
+    }
+
+    @Test
+    fun `character index loads a fixture and preserves word order`() = runTest {
+        val repository = FakeCourseRepository().apply {
+            charactersFiles = mapOf("lesson_001" to tempJson("characters", """{"lesson_id":"lesson_001","characters":[{"char":"我","pinyin":"wǒ","han_viet":"ngã","vi_meaning":"tôi, mình"},{"char":"们","pinyin":"men","han_viet":"môn","vi_meaning":"chúng tôi"}],"components_prereq":[]}"""))
+        }
+        val connection = FakePlayerConnection()
+        val viewModel = PlayerViewModel(repository, FakeSettingsRepository(), connection)
+        connection.emit(PlaybackState(connected = true, lessonId = "lesson_001"))
+        val deadline = System.currentTimeMillis() + 2_000
+        while (viewModel.uiState.value.characterIndex == null && System.currentTimeMillis() < deadline) Thread.sleep(10)
+        val index = viewModel.uiState.value.characterIndex
+        assertEquals(listOf("我", "们"), index?.charactersOf("我们")?.map { it.char })
+    }
+
+    @Test
     fun `transcript loads and the active line's cue drives seeking`() = runTest {
         val repository = repositoryWithTranscript("lesson_001")
         val connection = FakePlayerConnection()

@@ -2,7 +2,7 @@
 
 Read this first in a new session instead of past chat history. Keep it short; update it at the end of every task.
 
-Last updated: 2026-10-21 (C1-fix2 done) · branch `app-publish-pipeline` (not merged to `main`)
+Last updated: 2026-10-21 (C2 Android tests/previews added; Gradle/pytest verification blocked) · branch `app-publish-pipeline` (not merged to `main`)
 
 ## Working rules
 
@@ -13,6 +13,9 @@ Last updated: 2026-10-21 (C1-fix2 done) · branch `app-publish-pipeline` (not me
 - Every task (code or content) logs its token use in [token_log.md](token_log.md); review the log periodically to cut the most expensive steps.
 
 ## Done
+
+- **C2-fix (partial):** compile blockers and the lookup actions/“Chữ của bài” sheet were addressed; verification remains blocked by Gradle's local socket permission and missing pytest.
+- **C2-test (partial):** added lookup/component-card UI coverage, no-character-data affordance coverage, and ViewModel character-index tests; existing previews remain repository-free. Verification is still blocked before compilation by the Gradle wrapper lock and missing pytest.
 
 - Content: Lesson 1 mini-story (guided track generated; practice track needs 2 paid TTS clips, skipped). Lesson 1 content audit still in progress.
 - Python: `mandarin-course publish` → `publish/` (catalog, lesson, reference with tokens, items + clips, sentence-level timeline, 64 kbps mono). Draft vocab `lessons/lesson_001_vocab.json` awaits learner review.
@@ -37,7 +40,7 @@ Last updated: 2026-10-21 (C1-fix2 done) · branch `app-publish-pipeline` (not me
 - **P2:** `chinese_only` now preserves the longest internal dropped-Vietnamese pause when it is ≥1.5s, with the existing 400ms fallback; focused and full automated checks pass. Real lesson regeneration confirmed 0 paid TTS but was interrupted during slow FFmpeg normalization before v5/upload.
 - **P3:** repeat recall gaps use cached Vietnamese clip duration + pause; `!guided-only` story-row markers drop Vietnamese-dependent coach lines from `guided_zh`. Lesson 001 has four marked rows; acceptance metrics are 46 repeats, min 1200ms, avg 2430ms, 4 flagged drops, 0 remaining vi. Full checks and generate dry-run pass; no full lesson run per brief. PM review fixes: publish staleness check now drops `guided_only` like `chinese_only` (blocked the first v6 publish); `map_lead` also marked; U1 prune ignores non-versioned paths. Lesson 001 v6 published + uploaded (v5 kept). Listening QA of v6 pending.
 - **L4:** MediaSession connections now retain live player seek commands instead of a connect-time snapshot, restoring scrub/±10s/section seeks; `TrackSwitch` maps gaps and missing lines to the nearest forward shared cue, then backward. Added synthetic and real lesson fixture coverage. Full checks and the specified device action-bit check pass. User device check (4 seek bugs) + v6 Chinese-only listening QA: OK (2026-10-21).
-- **R1/C0/C1 (+3 fix rounds):** sources in [research/characters_data.md](research/characters_data.md) (MMAH, Hanzi Writer, hsk30, CC-CEDICT, Unihan; kVietnamese turned out to mix Nôm → hint only). `just fetch-character-data` (pinned, sha256, licenses); `publish` writes `characters.json` (+ catalog digest), fails if a data source or a char's Vietnamese entry is missing. Hán-Việt + vi meaning authored per lesson via `export-/import-characters` → `data/characters_vi.json` (83 for lesson 1, AI-authored, trusted per user). Radicals rebuilt from UCD, names keyed by char (PM rewrote the 214 Kangxi names; the agent list was shifted). Local lesson_001 **v7 not uploaded yet** — user runs `just lesson 001`. Process lesson: coverage checks passed on wrong data → briefs now require concrete expected values + random samples; `task-review` skill for cheap mechanical review.
+- **R1/C0/C1 (+3 fix rounds):** sources in [research/characters_data.md](research/characters_data.md) (MMAH, Hanzi Writer, hsk30, CC-CEDICT, Unihan; kVietnamese turned out to mix Nôm → hint only). `just fetch-character-data` (pinned, sha256, licenses); `publish` writes `characters.json` (+ catalog digest), fails if a data source or a char's Vietnamese entry is missing. Hán-Việt + vi meaning authored per lesson via `export-/import-characters` → `data/characters_vi.json` (83 for lesson 1, AI-authored, trusted per user). Radicals rebuilt from UCD, names keyed by char (PM rewrote the 214 Kangxi names; the agent list was shifted). Lesson_001 **v7 published + uploaded** (user ran `just lesson 001`, confirmed 2026-10-21). Process lesson: coverage checks passed on wrong data → briefs now require concrete expected values + random samples; `task-review` skill for cheap mechanical review.
 - **T6a:** `story/ledger.py` `build_ledger` (last 2 lessons full: premise, grammar note, goals, patterns, vocab table, new chars; older compact; cumulative words/chars/recycle candidates; `lessons/src/bible.md` inlined; ≤ 200 lines) goes into every `export-lesson` "Already taught"; `mandarin-course ledger <id>` / `just ledger <id>` → `build/ledger_<id>.md`. `chars_taught_before` feeds `seen_chars` in publish and `export-/import-characters`. Bible authored from lesson 1 (23 lines). Lesson 001 publish still `unchanged v7`.
 - **T6b:** Added advisory `lesson-metrics --against` and row-scoped `export-rows`/`import-rows`; repeated story refs now require `ref#n`, with transactional imports through build/validate/audit/dry-run.
 
@@ -47,9 +50,10 @@ Last updated: 2026-10-21 (C1-fix2 done) · branch `app-publish-pipeline` (not me
    - **T6b** (`docs/tasks/T6b.md`, continue T6a window): `lesson-metrics --against 001`, `export-rows`/`import-rows`.
    - **Skills done (PM, 2026-10-21):** `.claude/skills/lesson-author` (outline → draft → gates → metrics → chars → row fixes → bible) + `lesson-review` (8-point rubric, findings by `ref`/`ref#n`, independent Hán-Việt check, outside-reviewer list); both linked under `.agents/skills/` for deepcode. **Next: lesson 002** — author = Codex (strong model), reviewer = DeepSeek (different model).
    - Reviews: `task-review` now runs via `deepcode -x` (PM-invoked, reads only the verdict); worked on T6b (caught duplicate row refs).
+   - **Worker control (2026-10-21, user):** PM is back to brief + review only; the **user runs every task in the Codex IDE extension** (interactive = Gradle/network get approved and actually compile; `codex exec` sandbox blocks them, which is why C2 twice reported "blocked by Gradle" without compiling). PM may propose deepcode/Haiku for mechanical Gradle-free work but **waits for the user's OK**, and fixes code itself only under ~10 lines. Callback channel both ways: `scripts/agent_ask.sh <ID> --inbox` / `"<question>"` on the worker side, `just tell|answer|asking <ID>` + `just watch <ID>` / `just stop-agents` on ours. A monitor UI pane was rejected — watching isn't the problem, injecting information mid-run is.
    - **PM process (2026-10-21):** PM launches workers itself (`codex exec`, `deepcode -x`, Haiku subagent); model per task + escalation + quota routing + model-switch rule in `.claude/skills/pm-session`; `just quota` (Codex 5h/week %, DeepSeek balance; Claude = `/usage`, no local source yet).
    - **W1** (next, brief not written): web player with an always-on-top floating window for office use (user, 2026-10-21). React + `kmp/shared` JS; anon public bucket, no sign-in. Catalog → download/stream → karaoke transcript (Hanzi large, pinyin/vi toggles) → "Cửa sổ nổi" via Document Picture-in-Picture (Chrome/Edge, Mac). Interactive inside the window: ±10s, replay line, tap-to-seek, tap a character → compact card from `characters.json`, copy char/line; Media Session API for keyboard/headset media keys.
-   - **C2** (not written yet): character card UI (Android). **Next, before W1 and lesson 002 (user, 2026-10-21)** — PM writes the brief from [architecture/characters.md](architecture/characters.md) and launches the worker itself; user only does the device check.
+   - **C2** (`docs/tasks/C2.md` + `C2-fix.md` done; **`C2-test.md` open**): character card UI (Android) — lookup-sheet character chips, card (Hán-Việt/pinyin/vi/components/lesson words/phonetic family), "Chữ của bài" route, `characters.json` in the shared contract + download. Decided 2026-10-21: no stroke animation (base pack missing), no progress/SRS (G2c), phonetic_family shown max 4 view-only. Feature + shared contract + download + lookup chips + card + "Chữ của bài" sheet landed and `scripts/check.sh` passes (shared test prints 我 ngã, 意 ý, 答 đáp, 示 thị, 里 lý from the real v7 fixture). PM fixed 4 compile errors the sandboxed worker never saw. Remaining: Android UI/ViewModel tests + @Preview = `docs/tasks/C2-test.md` (user runs it); then device check.
    - Exercises: after G2c SRS base.
 
    **Before G2b, which is paused:**
@@ -68,7 +72,7 @@ Last updated: 2026-10-21 (C1-fix2 done) · branch `app-publish-pipeline` (not me
 
 ## Open decisions (user)
 
-- Character learning feature: design finalized 2026-10-21 in [architecture/characters.md](architecture/characters.md). C0/C1 done; C2 brief after W1.
+- Character learning feature: design finalized 2026-10-21 in [architecture/characters.md](architecture/characters.md). C0/C1 done; C2 brief written and running (before W1).
 - W1 on Linux (office uses Firefox, no Document PiP): undecided. Options: Chrome/Chromium on Linux; Firefox video-PiP fallback (render transcript to canvas → video stream; view-only, play/pause only); Tauri shell with always-on-top later.
 - Decided 2026-10-21: no native Mac/Linux apps; desktop = the web app (+ optional Tauri wrapper later).
 - Decided 2026-10-21: iOS = native SwiftUI shell over the `kmp/shared` core as an XCFramework; no Compose Multiplatform. Web UI stays React.

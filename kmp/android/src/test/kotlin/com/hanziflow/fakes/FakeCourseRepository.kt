@@ -21,6 +21,7 @@ class FakeCourseRepository : CourseRepository {
     var timelineFiles: Map<Pair<String, String>, File> = emptyMap()
     var referenceFiles: Map<String, File> = emptyMap()
     var itemsFiles: Map<String, File> = emptyMap()
+    var charactersFiles: Map<String, File> = emptyMap()
     var clipFiles: Map<Pair<String, String>, File> = emptyMap()
     var catalogLessons: Map<String, CatalogLesson> = emptyMap()
 
@@ -37,6 +38,7 @@ class FakeCourseRepository : CourseRepository {
     override suspend fun timelineFile(lessonId: String, track: String): File? = timelineFiles[lessonId to track]
     override suspend fun referenceFile(lessonId: String): File? = referenceFiles[lessonId]
     override suspend fun itemsFile(lessonId: String): File? = itemsFiles[lessonId]
+    override suspend fun charactersFile(lessonId: String): File? = charactersFiles[lessonId]
     override suspend fun clipFile(lessonId: String, relative: String): File? = clipFiles[lessonId to relative]
     override suspend fun catalogLesson(id: String): CatalogLesson? = catalogLessons[id]
 }

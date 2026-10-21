@@ -4,6 +4,7 @@ package com.hanziflow.shared
 
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
+import com.hanziflow.shared.characters.LessonCharacters
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
@@ -37,7 +38,7 @@ data class Tracks(
 }
 
 @Serializable
-data class PackageFiles(val manifest: Clip, val reference: Clip, val items: Clip)
+data class PackageFiles(val manifest: Clip, val reference: Clip, val items: Clip, val characters: Clip? = null)
 
 @Serializable
 data class CatalogLesson(
@@ -193,6 +194,7 @@ object CourseJson {
     fun reference(value: String): Reference = codec.decodeFromString(value)
     fun items(value: String): Items = codec.decodeFromString(value)
     fun timeline(value: String): Timeline = codec.decodeFromString(value)
+    fun characters(value: String): LessonCharacters = codec.decodeFromString(value)
 }
 
 @JsExport

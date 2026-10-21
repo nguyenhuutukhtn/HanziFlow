@@ -14,6 +14,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,6 +38,10 @@ import com.hanziflow.shared.transcript.SectionNavigation
 import com.hanziflow.shared.transcript.TranscriptViewMode
 import com.hanziflow.ui.theme.HanziFlowTheme
 import com.hanziflow.ui.theme.Spacing
+import androidx.compose.material3.ExperimentalMaterial3Api
+import com.hanziflow.ui.characters.CharacterCard
+import com.hanziflow.ui.characters.CharacterListSheet
+import com.hanziflow.shared.characters.CharacterEntry
 
 const val NowPlayingTestTag = "now_playing"
 
@@ -45,6 +50,7 @@ const val NowPlayingTestTag = "now_playing"
  * The transcript is the hero: it takes the remaining height above a compact, thumb-
  * reachable transport strip. Section row/markers/loop and Chinese-only live here too.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NowPlayingScreen(
     state: PlayerUiState,
@@ -69,8 +75,11 @@ fun NowPlayingScreen(
     onStopSectionLoopAfterPass: () -> Unit = {},
     onNextSection: () -> Unit = {},
     onSeekToSection: (String) -> Unit = {},
+    onCharacter: (String) -> Unit = {},
+    onDismissCharacter: () -> Unit = {},
 ) {
     var sectionSheetOpen by remember { mutableStateOf(false) }
+    var characterListOpen by remember { mutableStateOf(false) }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -79,6 +88,8 @@ fun NowPlayingScreen(
         NowPlayingHeader(
             title = state.lessonTitle ?: state.lessonId.orEmpty(),
             onCollapse = onCollapse,
+            showCharacters = state.characterIndex != null,
+            onOpenCharacters = { characterListOpen = true },
         )
         TranscriptViewSwitcher(
             viewMode = state.transcript.viewMode,
@@ -156,7 +167,25 @@ fun NowPlayingScreen(
         )
     }
     state.transcript.lookupWord?.let { word ->
-        LookupSheet(word = word, onPlayClip = onPlayLookupClip, onDismiss = onDismissLookup)
+        LookupSheet(word = word, lineText = state.transcript.lookupLineText, onPlayClip = onPlayLookupClip, onDismiss = onDismissLookup, characterIndex = state.characterIndex, onCharacter = onCharacter)
+    }
+    state.transcript.lookupCharacter?.let { char ->
+        state.characterIndex?.entry(char)?.let { entry ->
+            ModalBottomSheet(onDismissRequest = onDismissCharacter) { CharacterCard(entry, state.characterIndex, onComponent = onCharacter) }
+        } ?: state.characterIndex?.component(char)?.let { component ->
+            ModalBottomSheet(onDismissRequest = onDismissCharacter) {
+                CharacterCard(
+                    CharacterEntry(component.char, "", "", viMeaning = component.nameVi),
+                    state.characterIndex,
+                    onComponent = onCharacter,
+                )
+            }
+        }
+    }
+    if (characterListOpen) {
+        state.characterIndex?.let { index ->
+            CharacterListSheet(index = index, onCharacter = onCharacter, onDismiss = { characterListOpen = false })
+        }
     }
     if (sectionSheetOpen) {
         val currentSectionId = SectionNavigation.sectionAt(state.transcript.sections, state.positionMs)?.id
@@ -171,9 +200,8 @@ fun NowPlayingScreen(
         )
     }
 }
-
 @Composable
-private fun NowPlayingHeader(title: String, onCollapse: () -> Unit) {
+private fun NowPlayingHeader(title: String, onCollapse: () -> Unit, showCharacters: Boolean, onOpenCharacters: () -> Unit) {
     var menuOpen by remember { mutableStateOf(false) }
     Row(
         modifier = Modifier.fillMaxWidth().padding(horizontal = Spacing.xs, vertical = Spacing.xs),
@@ -200,6 +228,10 @@ private fun NowPlayingHeader(title: String, onCollapse: () -> Unit) {
                 )
             }
             DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
+                if (showCharacters) DropdownMenuItem(
+                    text = { Text("Chữ của bài") },
+                    onClick = { menuOpen = false; onOpenCharacters() },
+                )
                 // Test entry arrives with the test flow (G2c); disabled rather than hidden
                 // so the overflow shape is already final.
                 DropdownMenuItem(
@@ -211,7 +243,6 @@ private fun NowPlayingHeader(title: String, onCollapse: () -> Unit) {
         }
     }
 }
-
 private fun fakeLine(id: String, text: String, pinyin: String, translation: String) = ReferenceLine(
     id = id,
     type = "line",

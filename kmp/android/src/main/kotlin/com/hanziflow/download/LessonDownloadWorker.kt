@@ -61,6 +61,7 @@ class LessonDownloadWorker @AssistedInject constructor(
                 add(lesson.files.manifest)
                 add(lesson.files.reference)
                 add(lesson.files.items)
+                lesson.files.characters?.let(::add)
             }
             initial.forEachIndexed { index, artifact ->
                 download(rootUrl, artifact, stage)

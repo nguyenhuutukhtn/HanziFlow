@@ -84,5 +84,7 @@ fun HanziFlowApp(
         onStopSectionLoopAfterPass = playerViewModel::stopSectionLoopAfterPass,
         onNextSection = playerViewModel::nextSection,
         onSeekToSection = playerViewModel::seekToSection,
+        onCharacter = playerViewModel::lookupCharacter,
+        onDismissCharacter = playerViewModel::dismissCharacter,
     )
 }

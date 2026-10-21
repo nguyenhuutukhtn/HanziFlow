@@ -17,6 +17,7 @@ interface CourseRepository {
     suspend fun timelineFile(lessonId: String, track: String): File?
     suspend fun referenceFile(lessonId: String): File?
     suspend fun itemsFile(lessonId: String): File?
+    suspend fun charactersFile(lessonId: String): File?
     suspend fun clipFile(lessonId: String, relative: String): File?
     suspend fun catalogLesson(id: String): CatalogLesson?
 

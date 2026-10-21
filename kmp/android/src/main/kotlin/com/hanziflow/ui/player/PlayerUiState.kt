@@ -7,6 +7,7 @@ import com.hanziflow.shared.TimelineCue
 import com.hanziflow.shared.TimelineSection
 import com.hanziflow.shared.WordItem
 import com.hanziflow.shared.transcript.TranscriptViewMode
+import com.hanziflow.shared.characters.CharacterIndex
 
 data class PlayerUiState(
     val connected: Boolean = false,
@@ -23,6 +24,7 @@ data class PlayerUiState(
     val sectionLoop: SectionLoopInfo? = null,
     val chineseOnly: Boolean = false,
     val transcript: TranscriptUiState = TranscriptUiState(),
+    val characterIndex: CharacterIndex? = null,
 )
 
 data class TranscriptUiState(
@@ -36,4 +38,6 @@ data class TranscriptUiState(
     val showVietnamese: Boolean = true,
     val loopedLineId: String? = null,
     val lookupWord: WordItem? = null,
+    val lookupCharacter: String? = null,
+    val lookupLineText: String? = null,
 )

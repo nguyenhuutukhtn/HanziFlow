@@ -39,8 +39,10 @@ class CourseRepositoryImpl @Inject constructor(
             val previous = dao.lesson(remote.id)
             // Same version but a different track set (package downloaded by an older app
             // build that didn't know a track) needs a re-download, not "DOWNLOADED".
-            val downloadedTracks = previous?.downloadedCatalogJson
-                ?.let { CourseJson.codec.decodeFromString(CatalogLesson.serializer(), it).tracks }
+            val downloadedCatalog = previous?.downloadedCatalogJson
+                ?.let { CourseJson.codec.decodeFromString(CatalogLesson.serializer(), it) }
+            val downloadedTracks = downloadedCatalog?.tracks
+            val downloadedFiles = downloadedCatalog?.files
             dao.putLesson(
                 LessonEntity(
                     id = remote.id,
@@ -53,7 +55,7 @@ class CourseRepositoryImpl @Inject constructor(
                     catalogJson = CourseJson.codec.encodeToString(CatalogLesson.serializer(), remote),
                     downloadState = when {
                         previous?.downloadState == "DOWNLOADING" -> "DOWNLOADING"
-                        previous?.downloadedVersion == remote.version && downloadedTracks == remote.tracks -> "DOWNLOADED"
+                        previous?.downloadedVersion == remote.version && downloadedTracks == remote.tracks && downloadedFiles == remote.files -> "DOWNLOADED"
                         previous?.downloadedVersion != null -> "UPDATE_AVAILABLE"
                         else -> "AVAILABLE"
                     },
@@ -115,6 +117,13 @@ class CourseRepositoryImpl @Inject constructor(
         val version = entity.downloadedVersion ?: return null
         val lesson = downloadedLesson(entity)
         return packageFile(lessonId, version, lesson.files.items.file)
+    }
+
+    override suspend fun charactersFile(lessonId: String): File? {
+        val entity = dao.lesson(lessonId) ?: return null
+        val version = entity.downloadedVersion ?: return null
+        val file = downloadedLesson(entity).files.characters ?: return null
+        return packageFile(lessonId, version, file.file)
     }
 
     override suspend fun clipFile(lessonId: String, relative: String): File? {

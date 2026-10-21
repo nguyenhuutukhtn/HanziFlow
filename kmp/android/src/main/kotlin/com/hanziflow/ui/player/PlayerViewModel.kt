@@ -11,6 +11,7 @@ import com.hanziflow.shared.TimelineSection
 import com.hanziflow.shared.transcript.SectionNavigation
 import com.hanziflow.shared.transcript.TranscriptCues
 import com.hanziflow.shared.transcript.TranscriptViewMode
+import com.hanziflow.shared.characters.CharacterIndex
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -71,6 +72,7 @@ class PlayerViewModel @Inject constructor(
                 if (id != null) {
                     ensureTranscriptLoaded(id, playback.track)
                     ensureLessonMeta(id)
+                    ensureCharactersLoaded(id)
                 }
             }
         }
@@ -168,11 +170,23 @@ class PlayerViewModel @Inject constructor(
 
     fun lookupToken(itemId: String) {
         val word = _uiState.value.transcript.items?.words?.firstOrNull { it.id == itemId } ?: return
-        _uiState.update { it.copy(transcript = it.transcript.copy(lookupWord = word)) }
+        val line = _uiState.value.transcript.lines.firstOrNull { it.text.contains(word.hanzi) }
+        _uiState.update { it.copy(transcript = it.transcript.copy(lookupWord = word, lookupLineText = line?.text)) }
+    }
+
+    fun lookupCharacter(char: String) = _uiState.update { it.copy(transcript = it.transcript.copy(lookupCharacter = char)) }
+    fun dismissCharacter() = _uiState.update { it.copy(transcript = it.transcript.copy(lookupCharacter = null)) }
+
+    private fun ensureCharactersLoaded(lessonId: String) {
+        if (_uiState.value.lessonId == lessonId && _uiState.value.characterIndex != null) return
+        viewModelScope.launch(Dispatchers.IO) {
+            val index = courseRepository.charactersFile(lessonId)?.let { CharacterIndex(CourseJson.characters(it.readText())) }
+            _uiState.update { if (it.lessonId == lessonId) it.copy(characterIndex = index) else it }
+        }
     }
 
     fun dismissLookup() {
-        _uiState.update { it.copy(transcript = it.transcript.copy(lookupWord = null)) }
+        _uiState.update { it.copy(transcript = it.transcript.copy(lookupWord = null, lookupLineText = null)) }
     }
 
     fun playLookupClip() = viewModelScope.launch {
