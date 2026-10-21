@@ -29,12 +29,12 @@ Vietnamese-speaking adult who types Chinese (pinyin IME) and rarely hand-writes.
 
 | Need | Source | License |
 |------|--------|---------|
-| Hán-Việt readings | Unihan kVietnamese + kTraditionalVariant fallback | Unicode License |
+| Hán-Việt readings | Authored per lesson (AI + user review) in `data/characters_vi.json`; Unihan kVietnamese is a hint only (mixes Nôm readings: 們=món) — decided 2026-10-21 | — |
 | Decomposition + semantic/phonetic roles | Make Me a Hanzi `dictionary.txt` | LGPL 3.0 (data only) |
 | Stroke-order paths | Hanzi Writer data | Arphic Public License |
 | HSK level | ivankra/hsk30 | MIT |
 | English meanings | CC-CEDICT | CC BY-SA 4.0 |
-| Vietnamese meanings | Author (AI gen + human review) — `vi_meaning: null` in C1 | — |
+| Vietnamese meanings | Authored per lesson (AI + user review) in `data/characters_vi.json`; publish requires a non-empty value | — |
 | Component names in Vietnamese (bộ thủ) | Author ~250 entries — `data/radicals_vi.json` | — |
 
 See `docs/research/characters_data.md` for full license analysis + sample records.
@@ -42,7 +42,7 @@ See `docs/research/characters_data.md` for full license analysis + sample record
 ## Packaging decisions (decided 2026-10-21)
 
 - **Stroke data ships separately** as a one-time-download base package (not per-lesson). Lesson `characters.json` carries a `stroke_available: bool` flag only; the renderer fetches from the base pack.
-- **Vietnamese meanings start null** in `characters.json`. Authored later via story source or a review pass.
+- **Hán-Việt + Vietnamese meaning are authored per lesson** (changed 2026-10-21, replaces "vi_meaning starts null"): `export-characters <id>` → any AI → user review → `import-characters` into `data/characters_vi.json`; `publish` fails if a lesson char is missing.
 - **Bộ thủ names** authored before C1 (task C0): ~250 radicals + simplified-only components, AI-generated, human-reviewed, saved to `data/radicals_vi.json`.
 
 ## characters.json schema (per lesson package)
@@ -60,7 +60,7 @@ See `docs/research/characters_data.md` for full license analysis + sample record
       "semantic": "女",
       "phonetic": "马",
       "en_meaning": "mother, mama",
-      "vi_meaning": null,
+      "vi_meaning": "mẹ",
       "phonetic_family": ["妈", "吗", "码", "骂"],
       "stroke_available": true,
       "lesson_words": ["妈妈"]

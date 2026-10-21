@@ -9,6 +9,7 @@ from pathlib import Path
 import pytest
 
 from mandarin_course.config import Settings
+from mandarin_course import publish_core
 from mandarin_course.lesson_schema import Lesson, load_lesson
 from mandarin_course.publish import (
     PublishError,
@@ -22,6 +23,26 @@ from mandarin_course.publish import (
 )
 from mandarin_course.tts import cache_key, voice_ids_for
 from mandarin_course.voice_registry import VoiceProfile
+
+
+class _TestCharacterLoaders:
+    def missing_sources(self):
+        return []
+
+    def as_dict(self):
+        class Authored(dict):
+            def get(self, key, default=None):
+                return super().get(key, {"han_viet": "test", "vi_meaning": "test"})
+
+        return {
+            "mmah": {}, "unihan": {}, "hsk30": {}, "cedict": {}, "stroke": set(), "radicals": {},
+            "characters_vi": Authored(),
+        }
+
+
+@pytest.fixture(autouse=True)
+def _test_character_data(monkeypatch):
+    monkeypatch.setattr(publish_core, "CharacterLoaders", _TestCharacterLoaders)
 
 
 def test_tokenizer_aligns_words_names_and_punctuation():
@@ -226,6 +247,37 @@ def test_publish_omits_missing_practice_and_warns(tmp_path):
     assert report.practice_present is False
     assert "practice" not in catalog["lessons"][0]["tracks"]
     assert any("Practice track omitted" in warning for warning in report.warnings)
+
+
+def test_publish_fails_before_writing_when_character_data_is_missing(tmp_path, monkeypatch):
+    lesson_path, settings = _write_fixture(tmp_path)
+
+    class MissingCharacterLoaders:
+        def missing_sources(self):
+            return ["data/mmah/dictionary.txt"]
+
+        def as_dict(self):
+            raise AssertionError("missing data must fail before loading")
+
+    monkeypatch.setattr(publish_core, "CharacterLoaders", MissingCharacterLoaders)
+    with pytest.raises(PublishError, match=r"Character data missing: data/mmah/dictionary.txt; run: just fetch-character-data"):
+        publish_lesson(lesson_path, settings, tmp_path / "published")
+    assert not (tmp_path / "published").exists()
+
+
+def test_publish_fails_before_writing_when_authored_character_is_missing(tmp_path, monkeypatch):
+    lesson_path, settings = _write_fixture(tmp_path)
+
+    class MissingAuthoredLoaders(_TestCharacterLoaders):
+        def as_dict(self):
+            values = super().as_dict()
+            values["characters_vi"] = {}
+            return values
+
+    monkeypatch.setattr(publish_core, "CharacterLoaders", MissingAuthoredLoaders)
+    with pytest.raises(PublishError, match=r"5 characters lack Vietnamese data: run just export-characters 001"):
+        publish_lesson(lesson_path, settings, tmp_path / "published")
+    assert not (tmp_path / "published").exists()
 
 
 def test_publish_fails_when_track_timeline_is_missing(tmp_path):

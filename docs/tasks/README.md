@@ -23,7 +23,7 @@ Status: todo · Suggested agent: <cheapest that fits> · Size: S/M/L · Device c
 - <observable checks>
 
 ## Verify
-<exact commands>
+<exact commands; the agent runs them and pastes the output (≤ 15 lines) into the report>
 
 ## Out of scope
 <what not to touch>
@@ -31,8 +31,15 @@ Status: todo · Suggested agent: <cheapest that fits> · Size: S/M/L · Device c
 
 Then: update STATUS.md + a token_log.md row, report with the AGENTS.md template, do not commit.
 
+## Writing Acceptance + Verify
+
+- Check **content, not only counts**: name concrete expected values (`听 = tīng, hsk 1`, `走 = tẩu`), not just "≥ 95% non-empty". Coverage passed on data that was wrong (C1-fix: 听 = "smile").
+- Verify is a script that prints those values and exits non-zero on mismatch, so the PM re-runs it instead of reading code.
+- Data tasks: sample at least 5 specific records spread across the dataset, not only the first entries.
+
 ## Agent choice (cheapest that fits)
 
 - Mechanical Python/test/docs edits with a precise brief → DeepSeek or Codex.
 - Multi-file Kotlin/Compose, device checks → Cursor or Claude.
 - Judgment (spec, review, curriculum) → PM session.
+- Mechanical review of a finished task → a cheap agent, ideally a different model than the author: `Use the task-review skill (.claude/skills/task-review/SKILL.md) for task <ID>.` Paste its verdict to the PM.

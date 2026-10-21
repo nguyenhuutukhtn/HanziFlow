@@ -9,6 +9,10 @@ set shell := ["bash", "-euo", "pipefail", "-c"]
 check:
     bash scripts/check.sh
 
+# Fetch pinned offline character dictionaries and licenses.
+fetch-character-data:
+    bash scripts/fetch_character_data.sh
+
 # Assemble and install the debug app on the connected device.
 app:
     cd kmp && ./gradlew -q :android:assembleDebug :android:installDebug
@@ -24,6 +28,12 @@ export-lesson ID:
 # Import an AI's reply: build + validate + audit + dry-run count, never paid TTS.
 import-lesson ID FILE:
     mandarin-course import-lesson {{ID}} {{FILE}}
+
+export-characters ID:
+    mandarin-course export-characters {{ID}}
+
+import-characters ID FILE:
+    mandarin-course import-characters {{ID}} {{FILE}}
 
 # Record Roborazzi goldens, only after the user approved the screen (see android-ui-testing skill).
 approve-screens:

@@ -12,6 +12,7 @@ from pydantic import ValidationError
 
 from .audio_builder import AudioBuildError, build_audio, chinese_only, probe_duration, timeline_path_for
 from .audit import build_report, load_authoring_lessons, render_report
+from .characters.bundle import command_export_characters, command_import_characters
 from .config import Settings
 from .generate_plan import audio_plan, print_plan
 from .lesson_schema import Lesson, load_lesson
@@ -213,6 +214,13 @@ def build_parser() -> argparse.ArgumentParser:
     import_lesson.add_argument("lesson_id", type=str, help="e.g. 001")
     import_lesson.add_argument("file", type=Path, help="The AI's reply (bundle or bare story source)")
     import_lesson.add_argument("--lessons-dir", type=Path, default=Path("lessons"))
+    export_characters = sub.add_parser("export-characters", help="Write a Markdown bundle for authored character data")
+    export_characters.add_argument("lesson_id", type=str, help="e.g. 001")
+    export_characters.add_argument("--lessons-dir", type=Path, default=Path("lessons"))
+    import_characters = sub.add_parser("import-characters", help="Import an authored character-data JSON reply")
+    import_characters.add_argument("lesson_id", type=str, help="e.g. 001")
+    import_characters.add_argument("file", type=Path, help="The AI's fenced JSON reply")
+    import_characters.add_argument("--lessons-dir", type=Path, default=Path("lessons"))
     return parser
 
 
@@ -240,6 +248,10 @@ def main(argv: list[str] | None = None) -> int:
             return command_export_lesson(args.lesson_id, args.lessons_dir, args.note)
         if args.command == "import-lesson":
             return command_import_lesson(args.lesson_id, args.file, args.lessons_dir, settings)
+        if args.command == "export-characters":
+            return command_export_characters(args.lesson_id, args.lessons_dir)
+        if args.command == "import-characters":
+            return command_import_characters(args.lesson_id, args.file, args.lessons_dir)
         return command_review(settings, args.json)
     except (ValidationError, ValueError) as exc:
         print(f"Lesson validation failed: {exc}", file=sys.stderr)

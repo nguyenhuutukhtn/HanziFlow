@@ -1,0 +1,2280 @@
+{
+  "characters": [
+    {
+      "char": "我",
+      "decomp_ids": "⿰扌戈",
+      "en_meaning": "I; me; my",
+      "han_viet": "ngã",
+      "hsk_level": 1,
+      "lesson_words": [
+        "我们",
+        "我"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "wǒ",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "tôi, mình"
+    },
+    {
+      "char": "们",
+      "decomp_ids": "⿰亻门",
+      "en_meaning": "plural marker for pronouns, and nouns referring to individuals",
+      "han_viet": "môn",
+      "hsk_level": 1,
+      "lesson_words": [
+        "我们",
+        "他们"
+      ],
+      "phonetic": "门",
+      "phonetic_family": [
+        "们",
+        "扪",
+        "蔺",
+        "訚",
+        "钔",
+        "问",
+        "闰",
+        "闵",
+        "闷",
+        "闻",
+        "闽"
+      ],
+      "pinyin": "men",
+      "semantic": "亻",
+      "stroke_available": true,
+      "vi_meaning": "số nhiều"
+    },
+    {
+      "char": "一",
+      "decomp_ids": "？",
+      "en_meaning": "one; single; a; as soon as; entire; whole; all; throughout; \"one\" radical in Chinese characters; also pr.  for greater clarity when spelling out numbers digit by digit",
+      "han_viet": "nhất",
+      "hsk_level": 1,
+      "lesson_words": [
+        "一起",
+        "一"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "yī",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "một"
+    },
+    {
+      "char": "起",
+      "decomp_ids": "⿺走己",
+      "en_meaning": "to rise; to raise; to get up; to set out; to start; to appear; to launch; to initiate; to draft; to establish; to get; verb suffix, to start; starting from; classifier for occurrences or unpredictable events: case, instance; classifier for groups: batch, group",
+      "han_viet": "khởi",
+      "hsk_level": 1,
+      "lesson_words": [
+        "一起"
+      ],
+      "phonetic": "己",
+      "phonetic_family": [
+        "圮",
+        "屺",
+        "岂",
+        "巹",
+        "忌",
+        "杞",
+        "紀",
+        "纪",
+        "芑",
+        "起",
+        "配"
+      ],
+      "pinyin": "qǐ",
+      "semantic": "走",
+      "stroke_available": true,
+      "vi_meaning": "cùng"
+    },
+    {
+      "char": "听",
+      "decomp_ids": "⿰口斤",
+      "en_meaning": "to listen to; to hear; to heed; to obey; a can; classifier for canned beverages; to let be; to allow; to administer; to deal with",
+      "han_viet": "thính",
+      "hsk_level": 1,
+      "lesson_words": [
+        "听"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "tīng",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "nghe"
+    },
+    {
+      "char": "小",
+      "decomp_ids": "⿻亅八",
+      "en_meaning": "small; tiny; few; young",
+      "han_viet": "tiểu",
+      "hsk_level": 1,
+      "lesson_words": [
+        "小"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "xiǎo",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "nhỏ"
+    },
+    {
+      "char": "故",
+      "decomp_ids": "⿰古攵",
+      "en_meaning": "happening; instance; reason; cause; intentional; former; old; friend; therefore; hence; to die, dead",
+      "han_viet": "cố",
+      "hsk_level": 2,
+      "lesson_words": [
+        "故事"
+      ],
+      "phonetic": "古",
+      "phonetic_family": [
+        "估",
+        "咕",
+        "嘏",
+        "固",
+        "居",
+        "岵",
+        "怙",
+        "故",
+        "沽",
+        "牯",
+        "祜",
+        "罟",
+        "胡",
+        "苦",
+        "蛄",
+        "诂",
+        "軲",
+        "轱",
+        "辜",
+        "酤",
+        "鈷",
+        "钴",
+        "骷",
+        "鴣",
+        "鸪"
+      ],
+      "pinyin": "gù",
+      "semantic": "攵",
+      "stroke_available": true,
+      "vi_meaning": "chuyện"
+    },
+    {
+      "char": "事",
+      "decomp_ids": "⿻⿳一口彐亅",
+      "en_meaning": "matter; thing; item; work; affair; CL:件,樁|桩,回",
+      "han_viet": "sự",
+      "hsk_level": 1,
+      "lesson_words": [
+        "故事",
+        "同事"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "shì",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "việc, chuyện"
+    },
+    {
+      "char": "吧",
+      "decomp_ids": "⿰口巴",
+      "en_meaning": "bar; to puff; bang; abbr. for 貼吧|贴吧",
+      "han_viet": "ba",
+      "hsk_level": 1,
+      "lesson_words": [
+        "吧"
+      ],
+      "phonetic": "巴",
+      "phonetic_family": [
+        "䰾",
+        "吧",
+        "岜",
+        "把",
+        "杷",
+        "爬",
+        "爸",
+        "琶",
+        "疤",
+        "皅",
+        "笆",
+        "粑",
+        "耙",
+        "肥",
+        "芭",
+        "鈀",
+        "钯",
+        "靶",
+        "鲃"
+      ],
+      "pinyin": "bā",
+      "semantic": "口",
+      "stroke_available": true,
+      "vi_meaning": "nhé"
+    },
+    {
+      "char": "先",
+      "decomp_ids": "⿱⿰？土儿",
+      "en_meaning": "beforehand; first; earlier; at first; originally; for the time being; for now; my late",
+      "han_viet": "tiên",
+      "hsk_level": 1,
+      "lesson_words": [
+        "先"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "xiān",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "trước"
+    },
+    {
+      "char": "用",
+      "decomp_ids": "⿵冂？",
+      "en_meaning": "to use; to make use of; to employ; with; using; to need; to have to; usefulness; utility; expense; outlay; to eat; to drink; hence; therefore",
+      "han_viet": "dụng",
+      "hsk_level": 1,
+      "lesson_words": [
+        "用"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "yòng",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "dùng"
+    },
+    {
+      "char": "中",
+      "decomp_ids": "⿻口丨",
+      "en_meaning": "within; among; in; middle; center; while ; during; OK; all right",
+      "han_viet": "trung",
+      "hsk_level": 1,
+      "lesson_words": [
+        "中文"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "zhōng",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "Trung Quốc"
+    },
+    {
+      "char": "文",
+      "decomp_ids": "⿱亠乂",
+      "en_meaning": "language; culture; writing; formal; literary; gentle; classifier for coins; Kangxi radical",
+      "han_viet": "văn",
+      "hsk_level": 1,
+      "lesson_words": [
+        "中文"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "wén",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "tiếng, văn"
+    },
+    {
+      "char": "讲",
+      "decomp_ids": "⿰讠井",
+      "en_meaning": "to speak; to explain; to negotiate; to emphasize; to be particular about; as far as sth is concerned; speech; lecture",
+      "han_viet": "giảng",
+      "hsk_level": 2,
+      "lesson_words": [
+        "讲"
+      ],
+      "phonetic": "井",
+      "phonetic_family": [
+        "耕",
+        "肼",
+        "讲",
+        "进"
+      ],
+      "pinyin": "jiǎng",
+      "semantic": "讠",
+      "stroke_available": true,
+      "vi_meaning": "nói"
+    },
+    {
+      "char": "再",
+      "decomp_ids": "⿱一冉",
+      "en_meaning": "again; once more; re-; further; beyond this point of time; more; then; no matter how ...  也 or 都 for emphasis); to reappear; to reoccur",
+      "han_viet": "tái",
+      "hsk_level": 1,
+      "lesson_words": [
+        "再"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "zài",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "lại"
+    },
+    {
+      "char": "越",
+      "decomp_ids": "⿺走戉",
+      "en_meaning": "to exceed; to climb over; to surpass; the more... the more",
+      "han_viet": "việt",
+      "hsk_level": 2,
+      "lesson_words": [
+        "越南语"
+      ],
+      "phonetic": "戉",
+      "phonetic_family": [
+        "越",
+        "魆"
+      ],
+      "pinyin": "yuè",
+      "semantic": "走",
+      "stroke_available": true,
+      "vi_meaning": "Việt"
+    },
+    {
+      "char": "南",
+      "decomp_ids": "⿱十⿵冂⿱丷干",
+      "en_meaning": "south",
+      "han_viet": "nam",
+      "hsk_level": 1,
+      "lesson_words": [
+        "越南语"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "nán",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "Nam"
+    },
+    {
+      "char": "语",
+      "decomp_ids": "⿰讠吾",
+      "en_meaning": "dialect; language; speech",
+      "han_viet": "ngữ",
+      "hsk_level": 1,
+      "lesson_words": [
+        "越南语"
+      ],
+      "phonetic": "吾",
+      "phonetic_family": [
+        "俉",
+        "唔",
+        "圄",
+        "寤",
+        "悟",
+        "晤",
+        "梧",
+        "浯",
+        "焐",
+        "牾",
+        "痦",
+        "衙",
+        "語",
+        "语",
+        "鼯",
+        "齬",
+        "龉"
+      ],
+      "pinyin": "yǔ",
+      "semantic": "讠",
+      "stroke_available": true,
+      "vi_meaning": "tiếng"
+    },
+    {
+      "char": "说",
+      "decomp_ids": "⿰讠兑",
+      "en_meaning": "to speak; to talk; to say; to explain; to comment; to scold; to tell off; theory; doctrine",
+      "han_viet": "thuyết",
+      "hsk_level": 1,
+      "lesson_words": [
+        "说"
+      ],
+      "phonetic": "兑",
+      "phonetic_family": [
+        "悦",
+        "脱",
+        "说",
+        "锐"
+      ],
+      "pinyin": "shuō",
+      "semantic": "讠",
+      "stroke_available": true,
+      "vi_meaning": "nói"
+    },
+    {
+      "char": "意",
+      "decomp_ids": "⿱音心",
+      "en_meaning": "idea; thought; meaning; sense; intention; feeling; inclination; state of mind; Italy",
+      "han_viet": "ý",
+      "hsk_level": 2,
+      "lesson_words": [
+        "意思"
+      ],
+      "phonetic": "音",
+      "phonetic_family": [
+        "喑",
+        "意",
+        "戠",
+        "揞",
+        "暗",
+        "歆",
+        "窨",
+        "諳",
+        "谙",
+        "黯"
+      ],
+      "pinyin": "yì",
+      "semantic": "心",
+      "stroke_available": true,
+      "vi_meaning": "ý nghĩa"
+    },
+    {
+      "char": "思",
+      "decomp_ids": "⿱田心",
+      "en_meaning": "to think; to consider",
+      "han_viet": "tư",
+      "hsk_level": 2,
+      "lesson_words": [
+        "意思"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "sī",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "nghĩ"
+    },
+    {
+      "char": "桌",
+      "decomp_ids": "⿱卓木",
+      "en_meaning": "table; desk; classifier for tables of guests at a banquet etc",
+      "han_viet": "trác",
+      "hsk_level": 1,
+      "lesson_words": [
+        "桌",
+        "桌子"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "zhuō",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "bàn"
+    },
+    {
+      "char": "上",
+      "decomp_ids": "⿱⺊一",
+      "en_meaning": "used in 上聲|上声",
+      "han_viet": "thượng",
+      "hsk_level": 1,
+      "lesson_words": [
+        "上"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "shǎng",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "trên"
+    },
+    {
+      "char": "有",
+      "decomp_ids": "⿸？月",
+      "en_meaning": "to have; there is; having; with; -ful; -ed; -al",
+      "han_viet": "hữu",
+      "hsk_level": 1,
+      "lesson_words": [
+        "有",
+        "没有"
+      ],
+      "phonetic": "月",
+      "phonetic_family": [
+        "刖",
+        "塍",
+        "有",
+        "朔",
+        "炙",
+        "钥"
+      ],
+      "pinyin": "yǒu",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "có"
+    },
+    {
+      "char": "袋",
+      "decomp_ids": "⿱代衣",
+      "en_meaning": "pouch; bag; sack; pocket",
+      "han_viet": "đại",
+      "hsk_level": 4,
+      "lesson_words": [
+        "袋",
+        "袋子"
+      ],
+      "phonetic": "代",
+      "phonetic_family": [
+        "岱",
+        "玳",
+        "袋",
+        "貸",
+        "贷",
+        "黛"
+      ],
+      "pinyin": "dài",
+      "semantic": "衣",
+      "stroke_available": true,
+      "vi_meaning": "túi"
+    },
+    {
+      "char": "外",
+      "decomp_ids": "⿰夕卜",
+      "en_meaning": "outside; in addition; foreign; external",
+      "han_viet": "ngoại",
+      "hsk_level": 1,
+      "lesson_words": [
+        "外卖"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "wài",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "ngoài"
+    },
+    {
+      "char": "卖",
+      "decomp_ids": "⿱十买",
+      "en_meaning": "to sell; to betray; to spare no effort; to show off or flaunt",
+      "han_viet": "mại",
+      "hsk_level": 2,
+      "lesson_words": [
+        "外卖"
+      ],
+      "phonetic": "买",
+      "phonetic_family": [
+        "卖",
+        "荬",
+        "賣"
+      ],
+      "pinyin": "mài",
+      "semantic": "买",
+      "stroke_available": true,
+      "vi_meaning": "bán"
+    },
+    {
+      "char": "这",
+      "decomp_ids": "⿺辶文",
+      "en_meaning": "this; these; this; the; this; these",
+      "han_viet": "giá",
+      "hsk_level": 1,
+      "lesson_words": [
+        "这",
+        "这些",
+        "这里"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "zhè",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "này"
+    },
+    {
+      "char": "不",
+      "decomp_ids": "⿱一？",
+      "en_meaning": "no; not so; not; un-",
+      "han_viet": "bất",
+      "hsk_level": 1,
+      "lesson_words": [
+        "不"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "bù",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "không"
+    },
+    {
+      "char": "是",
+      "decomp_ids": "⿱日疋",
+      "en_meaning": "to be; correct; right; true; very well",
+      "han_viet": "thị",
+      "hsk_level": 1,
+      "lesson_words": [
+        "是",
+        "还是"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "shì",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "là"
+    },
+    {
+      "char": "安",
+      "decomp_ids": "⿱宀女",
+      "en_meaning": "calm; peaceful; to calm; to set at ease; safe; secure; in good health; content; satisfied; to place  in a suitable position; to install; to fix; to fit; to bring; to harbor; ampere",
+      "han_viet": "an",
+      "hsk_level": 2,
+      "lesson_words": [
+        "安娜"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "ān",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "An"
+    },
+    {
+      "char": "娜",
+      "decomp_ids": "⿰女那",
+      "en_meaning": "used esp. in female names such as Anna 安娜 or Diana 黛安娜",
+      "han_viet": "na",
+      "hsk_level": null,
+      "lesson_words": [
+        "安娜"
+      ],
+      "phonetic": "那",
+      "phonetic_family": [
+        "哪",
+        "娜",
+        "挪"
+      ],
+      "pinyin": "nà",
+      "semantic": "女",
+      "stroke_available": true,
+      "vi_meaning": "Na"
+    },
+    {
+      "char": "的",
+      "decomp_ids": "⿰白勺",
+      "en_meaning": "of; ~'s; \" or 新的 \"new one\"); also pr.  or  in poetry and songs",
+      "han_viet": "đích",
+      "hsk_level": 1,
+      "lesson_words": [
+        "的"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "de",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "của"
+    },
+    {
+      "char": "子",
+      "decomp_ids": "⿻了一",
+      "en_meaning": "son; child; seed; egg; small thing; 1st earthly branch:  p.m.– a.m., midnight, 11th solar month , year of the rat; viscount, fourth of five orders of nobility 五等爵位; ancient Chinese compass point: °; subsidiary; subordinate;  sub-",
+      "han_viet": "tử",
+      "hsk_level": 1,
+      "lesson_words": [
+        "桌子",
+        "袋子",
+        "句子"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "zǐ",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "con, hậu tố"
+    },
+    {
+      "char": "李",
+      "decomp_ids": "⿱木子",
+      "en_meaning": "plum",
+      "han_viet": "lý",
+      "hsk_level": 3,
+      "lesson_words": [
+        "李"
+      ],
+      "phonetic": "子",
+      "phonetic_family": [
+        "孜",
+        "李",
+        "耔"
+      ],
+      "pinyin": "lǐ",
+      "semantic": "木",
+      "stroke_available": true,
+      "vi_meaning": "Lý"
+    },
+    {
+      "char": "明",
+      "decomp_ids": "⿰日月",
+      "en_meaning": "bright; opposite: dark 暗; clear; to understand; next; public or open; wise; generic term for a sacrifice to the gods",
+      "han_viet": "minh",
+      "hsk_level": 1,
+      "lesson_words": [
+        "明",
+        "明天"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "míng",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "Minh"
+    },
+    {
+      "char": "和",
+      "decomp_ids": "⿰禾口",
+      "en_meaning": "and; together with; with; sum; to make peace; to draw; to tie; harmonious; Japan; Japanese",
+      "han_viet": "hòa",
+      "hsk_level": 1,
+      "lesson_words": [
+        "和"
+      ],
+      "phonetic": "禾",
+      "phonetic_family": [
+        "和",
+        "嵇",
+        "藒",
+        "麇"
+      ],
+      "pinyin": "hé",
+      "semantic": "口",
+      "stroke_available": true,
+      "vi_meaning": "và"
+    },
+    {
+      "char": "看",
+      "decomp_ids": "⿱手目",
+      "en_meaning": "to look after; to take care of; to watch; to guard",
+      "han_viet": "khán",
+      "hsk_level": 1,
+      "lesson_words": [
+        "看"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "kān",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "nhìn"
+    },
+    {
+      "char": "回",
+      "decomp_ids": "⿴囗口",
+      "en_meaning": "to go back; to return; to turn back; to turn around; to reply; to answer; classifier for literary divisions; classifier for occurrences or times",
+      "han_viet": "hồi",
+      "hsk_level": 1,
+      "lesson_words": [
+        "回答"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "huí",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "trở về"
+    },
+    {
+      "char": "答",
+      "decomp_ids": "⿱⺮合",
+      "en_meaning": "bound form having the same meaning as the free word 答, used in 答應|答应, 答理 etc",
+      "han_viet": "đáp",
+      "hsk_level": 1,
+      "lesson_words": [
+        "回答",
+        "答"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "dā",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "trả lời"
+    },
+    {
+      "char": "谁",
+      "decomp_ids": "⿰讠隹",
+      "en_meaning": "who; also pr.",
+      "han_viet": "thùy",
+      "hsk_level": 1,
+      "lesson_words": [
+        "谁"
+      ],
+      "phonetic": "隹",
+      "phonetic_family": [
+        "倠",
+        "准",
+        "堆",
+        "帷",
+        "推",
+        "擢",
+        "椎",
+        "槜",
+        "淮",
+        "濯",
+        "睢",
+        "碓",
+        "稚",
+        "維",
+        "维",
+        "萑",
+        "誰",
+        "谁",
+        "進",
+        "錐",
+        "锥",
+        "隻",
+        "雖",
+        "雜",
+        "騅",
+        "骓"
+      ],
+      "pinyin": "shéi",
+      "semantic": "讠",
+      "stroke_available": true,
+      "vi_meaning": "ai"
+    },
+    {
+      "char": "也",
+      "decomp_ids": "⿻？乚",
+      "en_meaning": "also; too; as well;  either; even; particle having functions similar to 啊",
+      "han_viet": "dã",
+      "hsk_level": 1,
+      "lesson_words": [
+        "也"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "yě",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "cũng"
+    },
+    {
+      "char": "吗",
+      "decomp_ids": "⿰口马",
+      "en_meaning": "what?",
+      "han_viet": "ma",
+      "hsk_level": 1,
+      "lesson_words": [
+        "吗"
+      ],
+      "phonetic": "马",
+      "phonetic_family": [
+        "吗",
+        "妈",
+        "杩",
+        "犸",
+        "玛",
+        "码",
+        "蚂",
+        "骂"
+      ],
+      "pinyin": "má",
+      "semantic": "口",
+      "stroke_available": true,
+      "vi_meaning": "trợ từ hỏi"
+    },
+    {
+      "char": "同",
+      "decomp_ids": "⿵凡口",
+      "en_meaning": "like; same; similar; together; alike; with",
+      "han_viet": "đồng",
+      "hsk_level": 1,
+      "lesson_words": [
+        "同事"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "tóng",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "cùng"
+    },
+    {
+      "char": "名",
+      "decomp_ids": "⿸夕口",
+      "en_meaning": "name; noun; place; famous; classifier for people",
+      "han_viet": "danh",
+      "hsk_level": 1,
+      "lesson_words": [
+        "名字"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "míng",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "tên"
+    },
+    {
+      "char": "字",
+      "decomp_ids": "⿱宀子",
+      "en_meaning": "letter; symbol; character; word; CL:個|个; courtesy or style name traditionally given to males aged  in dynastic China",
+      "han_viet": "tự",
+      "hsk_level": 1,
+      "lesson_words": [
+        "名字"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "zì",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "chữ"
+    },
+    {
+      "char": "些",
+      "decomp_ids": "⿱此二",
+      "en_meaning": "classifier indicating a small amount or small number greater than : some, a few, several",
+      "han_viet": "ta",
+      "hsk_level": 1,
+      "lesson_words": [
+        "这些"
+      ],
+      "phonetic": "此",
+      "phonetic_family": [
+        "些",
+        "呲",
+        "柴",
+        "疵",
+        "眥",
+        "眦",
+        "砦",
+        "紫",
+        "茈",
+        "觜",
+        "訾",
+        "貲",
+        "赀",
+        "雌",
+        "髭",
+        "齜",
+        "龇"
+      ],
+      "pinyin": "xiē",
+      "semantic": "二",
+      "stroke_available": true,
+      "vi_meaning": "một vài"
+    },
+    {
+      "char": "词",
+      "decomp_ids": "⿰讠司",
+      "en_meaning": "word; statement; speech; lyrics; a form of lyric poetry, flourishing in the Song dynasty 宋朝",
+      "han_viet": "từ",
+      "hsk_level": 2,
+      "lesson_words": [
+        "词"
+      ],
+      "phonetic": "司",
+      "phonetic_family": [
+        "伺",
+        "嗣",
+        "祠",
+        "笥",
+        "詞",
+        "词",
+        "飼",
+        "饲"
+      ],
+      "pinyin": "cí",
+      "semantic": "讠",
+      "stroke_available": true,
+      "vi_meaning": "từ"
+    },
+    {
+      "char": "懂",
+      "decomp_ids": "⿰忄董",
+      "en_meaning": "to understand; to comprehend",
+      "han_viet": "đổng",
+      "hsk_level": 2,
+      "lesson_words": [
+        "懂"
+      ],
+      "phonetic": "董",
+      "phonetic_family": [
+        "懂"
+      ],
+      "pinyin": "dǒng",
+      "semantic": "忄",
+      "stroke_available": true,
+      "vi_meaning": "hiểu"
+    },
+    {
+      "char": "没",
+      "decomp_ids": "⿰氵殳",
+      "en_meaning": "have not; not",
+      "han_viet": "một",
+      "hsk_level": 1,
+      "lesson_words": [
+        "没",
+        "没有"
+      ],
+      "phonetic": "殳",
+      "phonetic_family": [
+        "投",
+        "殁",
+        "没",
+        "股",
+        "觳",
+        "設",
+        "设",
+        "轂"
+      ],
+      "pinyin": "méi",
+      "semantic": "氵",
+      "stroke_available": true,
+      "vi_meaning": "chưa, không có"
+    },
+    {
+      "char": "关",
+      "decomp_ids": "⿱丷天",
+      "en_meaning": "mountain pass; to close; to shut; to turn off; to confine; to lock  up; to shut; to concern; to involve",
+      "han_viet": "quan",
+      "hsk_level": 1,
+      "lesson_words": [
+        "关系"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "guān",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "liên quan"
+    },
+    {
+      "char": "系",
+      "decomp_ids": "⿱丿糸",
+      "en_meaning": "to connect; to relate to; to tie up; to bind; to be",
+      "han_viet": "hệ",
+      "hsk_level": 1,
+      "lesson_words": [
+        "关系"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "xì",
+      "semantic": "糸",
+      "stroke_available": true,
+      "vi_meaning": "hệ"
+    },
+    {
+      "char": "句",
+      "decomp_ids": "⿹勹口",
+      "en_meaning": "sentence; clause; phrase; classifier for phrases or lines of verse",
+      "han_viet": "cú",
+      "hsk_level": 2,
+      "lesson_words": [
+        "句",
+        "句子"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "jù",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "câu"
+    },
+    {
+      "char": "知",
+      "decomp_ids": "⿰矢口",
+      "en_meaning": "to know; to be aware",
+      "han_viet": "tri",
+      "hsk_level": 1,
+      "lesson_words": [
+        "知道"
+      ],
+      "phonetic": "矢",
+      "phonetic_family": [
+        "彘",
+        "疾",
+        "知",
+        "矧",
+        "雉"
+      ],
+      "pinyin": "zhī",
+      "semantic": "口",
+      "stroke_available": true,
+      "vi_meaning": "biết"
+    },
+    {
+      "char": "道",
+      "decomp_ids": "⿺辶首",
+      "en_meaning": "road; path; way; reason; principle; a skill; an art; a specialization; the Way; the Dao; to say; to express; to extend; classifier for long thin things , barriers , questions , commands, courses in a meal, steps in a process; circuit",
+      "han_viet": "đạo",
+      "hsk_level": 1,
+      "lesson_words": [
+        "知道"
+      ],
+      "phonetic": "首",
+      "phonetic_family": [
+        "道"
+      ],
+      "pinyin": "dào",
+      "semantic": "辶",
+      "stroke_available": true,
+      "vi_meaning": "đường"
+    },
+    {
+      "char": "次",
+      "decomp_ids": "⿰冫欠",
+      "en_meaning": "next in sequence; second; the second; secondary; vice-; sub-; infra-; inferior quality; substandard; order; sequence; hypo-; classifier for enumerated events: time",
+      "han_viet": "thứ",
+      "hsk_level": 1,
+      "lesson_words": [
+        "次"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "cì",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "lần"
+    },
+    {
+      "char": "最",
+      "decomp_ids": "⿱日取",
+      "en_meaning": "to the highest degree;  most ...; -est; best or most extreme example",
+      "han_viet": "tối",
+      "hsk_level": 1,
+      "lesson_words": [
+        "最后"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "zuì",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "nhất"
+    },
+    {
+      "char": "后",
+      "decomp_ids": "⿸？口",
+      "en_meaning": "back; behind; rear; afterwards; after; later; post-",
+      "han_viet": "hậu",
+      "hsk_level": 1,
+      "lesson_words": [
+        "最后"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "hòu",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "sau"
+    },
+    {
+      "char": "表",
+      "decomp_ids": "⿱毛衣",
+      "en_meaning": "exterior surface; family relationship via females; to show; a model; a table; a form; a meter",
+      "han_viet": "biểu",
+      "hsk_level": 2,
+      "lesson_words": [
+        "表示"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "biǎo",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "biểu thị"
+    },
+    {
+      "char": "示",
+      "decomp_ids": "⿱二小",
+      "en_meaning": "to show; to reveal",
+      "han_viet": "thị",
+      "hsk_level": 2,
+      "lesson_words": [
+        "表示"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "shì",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "tỏ ra"
+    },
+    {
+      "char": "或",
+      "decomp_ids": "⿹戈⿱口一",
+      "en_meaning": "maybe; perhaps; might; possibly; or",
+      "han_viet": "hoặc",
+      "hsk_level": 2,
+      "lesson_words": [
+        "或者"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "huò",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "hoặc"
+    },
+    {
+      "char": "者",
+      "decomp_ids": "⿸耂日",
+      "en_meaning": "one who  ...; person involved in ...; -er; -ist; this",
+      "han_viet": "giả",
+      "hsk_level": 2,
+      "lesson_words": [
+        "或者"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "zhě",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "người"
+    },
+    {
+      "char": "问",
+      "decomp_ids": "⿵门口",
+      "en_meaning": "to ask; to inquire",
+      "han_viet": "vấn",
+      "hsk_level": 1,
+      "lesson_words": [
+        "问题"
+      ],
+      "phonetic": "门",
+      "phonetic_family": [
+        "们",
+        "扪",
+        "蔺",
+        "訚",
+        "钔",
+        "问",
+        "闰",
+        "闵",
+        "闷",
+        "闻",
+        "闽"
+      ],
+      "pinyin": "wèn",
+      "semantic": "口",
+      "stroke_available": true,
+      "vi_meaning": "hỏi"
+    },
+    {
+      "char": "题",
+      "decomp_ids": "⿺是页",
+      "en_meaning": "topic; problem for discussion; exam question; subject; to inscribe; to mention; CL:個|个,道",
+      "han_viet": "đề",
+      "hsk_level": 2,
+      "lesson_words": [
+        "问题"
+      ],
+      "phonetic": "是",
+      "phonetic_family": [
+        "匙",
+        "堤",
+        "提",
+        "缇",
+        "踶",
+        "醍",
+        "隄",
+        "鞮",
+        "題",
+        "题",
+        "鯷",
+        "鳀"
+      ],
+      "pinyin": "tí",
+      "semantic": "页",
+      "stroke_available": true,
+      "vi_meaning": "câu hỏi"
+    },
+    {
+      "char": "到",
+      "decomp_ids": "⿰至刂",
+      "en_meaning": "to reach; to arrive; to leave for; to go to; to ; until ; up to; considerate; thoughtful; thorough",
+      "han_viet": "đáo",
+      "hsk_level": 1,
+      "lesson_words": [
+        "到"
+      ],
+      "phonetic": "刂",
+      "phonetic_family": [
+        "到",
+        "剳",
+        "劄",
+        "氘"
+      ],
+      "pinyin": "dào",
+      "semantic": "至",
+      "stroke_available": true,
+      "vi_meaning": "đến"
+    },
+    {
+      "char": "你",
+      "decomp_ids": "⿰亻尔",
+      "en_meaning": "you",
+      "han_viet": "nhĩ",
+      "hsk_level": 1,
+      "lesson_words": [
+        "你"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "nǐ",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "bạn"
+    },
+    {
+      "char": "还",
+      "decomp_ids": "⿺辶不",
+      "en_meaning": "still; still in progress; still more; yet; even more; in addition; fairly; passably; as early as; even; also; else",
+      "han_viet": "hoàn",
+      "hsk_level": 1,
+      "lesson_words": [
+        "还是",
+        "还"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "hái",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "vẫn, còn"
+    },
+    {
+      "char": "选",
+      "decomp_ids": "⿺辶先",
+      "en_meaning": "to choose; to pick; to select; to elect",
+      "han_viet": "tuyển",
+      "hsk_level": 2,
+      "lesson_words": [
+        "选"
+      ],
+      "phonetic": "先",
+      "phonetic_family": [
+        "冼",
+        "宪",
+        "洗",
+        "筅",
+        "诜",
+        "跣",
+        "选",
+        "酰",
+        "銑",
+        "铣"
+      ],
+      "pinyin": "xuǎn",
+      "semantic": "辶",
+      "stroke_available": true,
+      "vi_meaning": "chọn"
+    },
+    {
+      "char": "样",
+      "decomp_ids": "⿰木羊",
+      "en_meaning": "manner; pattern; way; appearance; shape; classifier: kind, type",
+      "han_viet": "dạng",
+      "hsk_level": 1,
+      "lesson_words": [
+        "样"
+      ],
+      "phonetic": "羊",
+      "phonetic_family": [
+        "佯",
+        "养",
+        "庠",
+        "徉",
+        "恙",
+        "样",
+        "氧",
+        "洋",
+        "烊",
+        "痒",
+        "祥",
+        "羌",
+        "羕",
+        "羟",
+        "羥",
+        "羰",
+        "翔",
+        "蛘",
+        "詳",
+        "详",
+        "養",
+        "鮮",
+        "鯗",
+        "鲜"
+      ],
+      "pinyin": "yàng",
+      "semantic": "木",
+      "stroke_available": true,
+      "vi_meaning": "dạng, kiểu"
+    },
+    {
+      "char": "那",
+      "decomp_ids": "⿰⿹？？阝",
+      "en_meaning": "that; the; those; that; then",
+      "han_viet": "na",
+      "hsk_level": 1,
+      "lesson_words": [
+        "那"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "nà",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "đó"
+    },
+    {
+      "char": "短",
+      "decomp_ids": "⿰矢豆",
+      "en_meaning": "short; brief; to lack; weak point; fault",
+      "han_viet": "đoản",
+      "hsk_level": 2,
+      "lesson_words": [
+        "短"
+      ],
+      "phonetic": "豆",
+      "phonetic_family": [
+        "厨",
+        "廚",
+        "痘",
+        "登",
+        "短",
+        "豎",
+        "逗",
+        "頭"
+      ],
+      "pinyin": "duǎn",
+      "semantic": "矢",
+      "stroke_available": true,
+      "vi_meaning": "ngắn"
+    },
+    {
+      "char": "对",
+      "decomp_ids": "⿰又寸",
+      "en_meaning": "right; correct; towards; at; for; concerning; regarding; to treat; to face; opposite; facing; matching; to match together; to adjust; to fit; to suit; to answer; to reply; to add; to pour in; to check; to compare; classifier: couple; pair",
+      "han_viet": "đối",
+      "hsk_level": 1,
+      "lesson_words": [
+        "对"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "duì",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "đúng"
+    },
+    {
+      "char": "好",
+      "decomp_ids": "⿰女子",
+      "en_meaning": "good; appropriate; proper; all right!; easy to; good to; so; close; on intimate terms; hello",
+      "han_viet": "hảo",
+      "hsk_level": 1,
+      "lesson_words": [
+        "好"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "hǎo",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "tốt"
+    },
+    {
+      "char": "轮",
+      "decomp_ids": "⿰车仑",
+      "en_meaning": "wheel; disk; ring; steamship; to take turns; to rotate; classifier for big round objects: disk, or recurring events: round, turn",
+      "han_viet": "luân",
+      "hsk_level": 4,
+      "lesson_words": [
+        "轮"
+      ],
+      "phonetic": "仑",
+      "phonetic_family": [
+        "囵",
+        "抡",
+        "沦",
+        "轮"
+      ],
+      "pinyin": "lún",
+      "semantic": "车",
+      "stroke_available": true,
+      "vi_meaning": "lượt"
+    },
+    {
+      "char": "遍",
+      "decomp_ids": "⿺辶扁",
+      "en_meaning": "everywhere; all over; classifier for actions: one time",
+      "han_viet": "biến",
+      "hsk_level": 2,
+      "lesson_words": [
+        "遍"
+      ],
+      "phonetic": "扁",
+      "phonetic_family": [
+        "偏",
+        "煸",
+        "犏",
+        "猵",
+        "碥",
+        "稨",
+        "編",
+        "编",
+        "翩",
+        "蝙",
+        "褊",
+        "谝",
+        "蹁",
+        "遍",
+        "騙",
+        "骗",
+        "鳊"
+      ],
+      "pinyin": "biàn",
+      "semantic": "辶",
+      "stroke_available": true,
+      "vi_meaning": "lượt"
+    },
+    {
+      "char": "跟",
+      "decomp_ids": "⿰足艮",
+      "en_meaning": "heel; to follow closely; to go with; to marry sb; with; compared with; to; towards; and",
+      "han_viet": "cân",
+      "hsk_level": 1,
+      "lesson_words": [
+        "跟"
+      ],
+      "phonetic": "艮",
+      "phonetic_family": [
+        "哏",
+        "垠",
+        "垦",
+        "很",
+        "恨",
+        "恳",
+        "根",
+        "狠",
+        "痕",
+        "眼",
+        "茛",
+        "裉",
+        "跟",
+        "退",
+        "銀",
+        "银",
+        "限",
+        "齦",
+        "龈"
+      ],
+      "pinyin": "gēn",
+      "semantic": "足",
+      "stroke_available": true,
+      "vi_meaning": "với"
+    },
+    {
+      "char": "猜",
+      "decomp_ids": "⿰犭青",
+      "en_meaning": "to guess",
+      "han_viet": "sai",
+      "hsk_level": 5,
+      "lesson_words": [
+        "猜"
+      ],
+      "phonetic": "青",
+      "phonetic_family": [
+        "圊",
+        "情",
+        "晴",
+        "氰",
+        "清",
+        "猜",
+        "睛",
+        "箐",
+        "精",
+        "腈",
+        "菁",
+        "蜻",
+        "請",
+        "请",
+        "靓",
+        "靚",
+        "鯖",
+        "鲭",
+        "鼱"
+      ],
+      "pinyin": "cāi",
+      "semantic": "犭",
+      "stroke_available": true,
+      "vi_meaning": "đoán"
+    },
+    {
+      "char": "他",
+      "decomp_ids": "⿰亻也",
+      "en_meaning": "he; him; his; other; another; some other",
+      "han_viet": "tha",
+      "hsk_level": 1,
+      "lesson_words": [
+        "他们"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "tā",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "anh ấy"
+    },
+    {
+      "char": "别",
+      "decomp_ids": "⿰另刂",
+      "en_meaning": "to leave; to part; to differentiate; to distinguish; to turn away; to turn aside; to avert; other; another; different; don't ...!; to fasten with a pin or clip; to stick in; to insert; category",
+      "han_viet": "biệt",
+      "hsk_level": 1,
+      "lesson_words": [
+        "别"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "bié",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "đừng"
+    },
+    {
+      "char": "话",
+      "decomp_ids": "⿰讠舌",
+      "en_meaning": "dialect; language; spoken words; speech; talk; words; conversation; what sb said; CL:種|种,席,句,口,番",
+      "han_viet": "thoại",
+      "hsk_level": 1,
+      "lesson_words": [
+        "话"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "huà",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "lời nói"
+    },
+    {
+      "char": "今",
+      "decomp_ids": "⿱人？",
+      "en_meaning": "now; the present time; current; contemporary; this",
+      "han_viet": "kim",
+      "hsk_level": 1,
+      "lesson_words": [
+        "今天"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "jīn",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "nay"
+    },
+    {
+      "char": "天",
+      "decomp_ids": "⿱一大",
+      "en_meaning": "day; sky; heaven",
+      "han_viet": "thiên",
+      "hsk_level": 1,
+      "lesson_words": [
+        "今天",
+        "明天"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "tiān",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "ngày"
+    },
+    {
+      "char": "里",
+      "decomp_ids": "⿱田土",
+      "en_meaning": "lining; interior; inside; internal; also written 裏|里",
+      "han_viet": "lý",
+      "hsk_level": 1,
+      "lesson_words": [
+        "这里"
+      ],
+      "phonetic": null,
+      "phonetic_family": [],
+      "pinyin": "lǐ",
+      "semantic": null,
+      "stroke_available": true,
+      "vi_meaning": "trong"
+    }
+  ],
+  "components_prereq": [
+    {
+      "char": "扌",
+      "name_en": "hand (simplified side form)",
+      "name_vi": "thủ đứng",
+      "role": "component"
+    },
+    {
+      "char": "戈",
+      "name_en": "halberd",
+      "name_vi": "qua",
+      "role": "component"
+    },
+    {
+      "char": "亻",
+      "name_en": "person (side form)",
+      "name_vi": "nhân đứng",
+      "role": "semantic"
+    },
+    {
+      "char": "门",
+      "name_en": "",
+      "name_vi": "môn",
+      "role": "phonetic"
+    },
+    {
+      "char": "走",
+      "name_en": "run",
+      "name_vi": "tẩu",
+      "role": "semantic"
+    },
+    {
+      "char": "己",
+      "name_en": "oneself",
+      "name_vi": "kỷ",
+      "role": "phonetic"
+    },
+    {
+      "char": "口",
+      "name_en": "mouth",
+      "name_vi": "khẩu",
+      "role": "component"
+    },
+    {
+      "char": "斤",
+      "name_en": "axe",
+      "name_vi": "cân",
+      "role": "component"
+    },
+    {
+      "char": "亅",
+      "name_en": "hook",
+      "name_vi": "quyết",
+      "role": "component"
+    },
+    {
+      "char": "八",
+      "name_en": "eight",
+      "name_vi": "bát",
+      "role": "component"
+    },
+    {
+      "char": "攵",
+      "name_en": "",
+      "name_vi": "攵",
+      "role": "semantic"
+    },
+    {
+      "char": "古",
+      "name_en": "",
+      "name_vi": "cổ",
+      "role": "phonetic"
+    },
+    {
+      "char": "彐",
+      "name_en": "snout",
+      "name_vi": "kệ",
+      "role": "component"
+    },
+    {
+      "char": "巴",
+      "name_en": "",
+      "name_vi": "ba",
+      "role": "phonetic"
+    },
+    {
+      "char": "儿",
+      "name_en": "legs",
+      "name_vi": "nhi",
+      "role": "component"
+    },
+    {
+      "char": "冂",
+      "name_en": "down box",
+      "name_vi": "quynh",
+      "role": "component"
+    },
+    {
+      "char": "丨",
+      "name_en": "line",
+      "name_vi": "cổn",
+      "role": "component"
+    },
+    {
+      "char": "亠",
+      "name_en": "lid",
+      "name_vi": "đầu",
+      "role": "component"
+    },
+    {
+      "char": "乂",
+      "name_en": "",
+      "name_vi": "nghệ",
+      "role": "component"
+    },
+    {
+      "char": "讠",
+      "name_en": "speech (simplified side form)",
+      "name_vi": "ngôn đứng",
+      "role": "semantic"
+    },
+    {
+      "char": "井",
+      "name_en": "",
+      "name_vi": "tỉnh",
+      "role": "phonetic"
+    },
+    {
+      "char": "冉",
+      "name_en": "",
+      "name_vi": "nhiễm",
+      "role": "component"
+    },
+    {
+      "char": "戉",
+      "name_en": "",
+      "name_vi": "戉",
+      "role": "phonetic"
+    },
+    {
+      "char": "十",
+      "name_en": "ten",
+      "name_vi": "thập",
+      "role": "component"
+    },
+    {
+      "char": "吾",
+      "name_en": "",
+      "name_vi": "ngo",
+      "role": "phonetic"
+    },
+    {
+      "char": "兑",
+      "name_en": "",
+      "name_vi": "đoài",
+      "role": "phonetic"
+    },
+    {
+      "char": "心",
+      "name_en": "heart",
+      "name_vi": "tâm",
+      "role": "semantic"
+    },
+    {
+      "char": "音",
+      "name_en": "sound",
+      "name_vi": "âm",
+      "role": "phonetic"
+    },
+    {
+      "char": "田",
+      "name_en": "field",
+      "name_vi": "điền",
+      "role": "component"
+    },
+    {
+      "char": "卓",
+      "name_en": "",
+      "name_vi": "trác",
+      "role": "component"
+    },
+    {
+      "char": "木",
+      "name_en": "tree",
+      "name_vi": "mộc",
+      "role": "component"
+    },
+    {
+      "char": "⺊",
+      "name_en": "",
+      "name_vi": "⺊",
+      "role": "component"
+    },
+    {
+      "char": "月",
+      "name_en": "moon",
+      "name_vi": "nguyệt",
+      "role": "phonetic"
+    },
+    {
+      "char": "衣",
+      "name_en": "clothes",
+      "name_vi": "y",
+      "role": "semantic"
+    },
+    {
+      "char": "代",
+      "name_en": "",
+      "name_vi": "đại",
+      "role": "phonetic"
+    },
+    {
+      "char": "夕",
+      "name_en": "evening",
+      "name_vi": "tịch",
+      "role": "component"
+    },
+    {
+      "char": "卜",
+      "name_en": "divination",
+      "name_vi": "bốc",
+      "role": "component"
+    },
+    {
+      "char": "买",
+      "name_en": "",
+      "name_vi": "mãi",
+      "role": "semantic"
+    },
+    {
+      "char": "辶",
+      "name_en": "walk (bottom/side form)",
+      "name_vi": "sước",
+      "role": "component"
+    },
+    {
+      "char": "日",
+      "name_en": "sun",
+      "name_vi": "nhật",
+      "role": "component"
+    },
+    {
+      "char": "疋",
+      "name_en": "bolt of cloth",
+      "name_vi": "thất",
+      "role": "component"
+    },
+    {
+      "char": "宀",
+      "name_en": "roof",
+      "name_vi": "miên",
+      "role": "component"
+    },
+    {
+      "char": "女",
+      "name_en": "woman",
+      "name_vi": "nữ",
+      "role": "component"
+    },
+    {
+      "char": "白",
+      "name_en": "white",
+      "name_vi": "bạch",
+      "role": "component"
+    },
+    {
+      "char": "勺",
+      "name_en": "",
+      "name_vi": "chước",
+      "role": "component"
+    },
+    {
+      "char": "了",
+      "name_en": "",
+      "name_vi": "liễu",
+      "role": "component"
+    },
+    {
+      "char": "禾",
+      "name_en": "grain",
+      "name_vi": "hòa",
+      "role": "phonetic"
+    },
+    {
+      "char": "手",
+      "name_en": "hand",
+      "name_vi": "thủ",
+      "role": "component"
+    },
+    {
+      "char": "目",
+      "name_en": "eye",
+      "name_vi": "mục",
+      "role": "component"
+    },
+    {
+      "char": "囗",
+      "name_en": "enclosure",
+      "name_vi": "vi",
+      "role": "component"
+    },
+    {
+      "char": "⺮",
+      "name_en": "bamboo (top form)",
+      "name_vi": "trúc đầu",
+      "role": "component"
+    },
+    {
+      "char": "合",
+      "name_en": "",
+      "name_vi": "hợp",
+      "role": "component"
+    },
+    {
+      "char": "隹",
+      "name_en": "short tailed bird",
+      "name_vi": "chuy",
+      "role": "phonetic"
+    },
+    {
+      "char": "乚",
+      "name_en": "",
+      "name_vi": "乚",
+      "role": "component"
+    },
+    {
+      "char": "马",
+      "name_en": "",
+      "name_vi": "mã",
+      "role": "phonetic"
+    },
+    {
+      "char": "凡",
+      "name_en": "",
+      "name_vi": "phàm",
+      "role": "component"
+    },
+    {
+      "char": "二",
+      "name_en": "two",
+      "name_vi": "nhị",
+      "role": "semantic"
+    },
+    {
+      "char": "此",
+      "name_en": "",
+      "name_vi": "thử",
+      "role": "phonetic"
+    },
+    {
+      "char": "司",
+      "name_en": "",
+      "name_vi": "ti",
+      "role": "phonetic"
+    },
+    {
+      "char": "忄",
+      "name_en": "heart (side form)",
+      "name_vi": "tâm đứng",
+      "role": "semantic"
+    },
+    {
+      "char": "董",
+      "name_en": "",
+      "name_vi": "đổng",
+      "role": "phonetic"
+    },
+    {
+      "char": "氵",
+      "name_en": "water (3-dot)",
+      "name_vi": "ba chấm thủy",
+      "role": "semantic"
+    },
+    {
+      "char": "殳",
+      "name_en": "weapon",
+      "name_vi": "thù",
+      "role": "phonetic"
+    },
+    {
+      "char": "丷",
+      "name_en": "",
+      "name_vi": "丷",
+      "role": "component"
+    },
+    {
+      "char": "糸",
+      "name_en": "silk",
+      "name_vi": "mịch",
+      "role": "semantic"
+    },
+    {
+      "char": "勹",
+      "name_en": "wrap",
+      "name_vi": "bao",
+      "role": "component"
+    },
+    {
+      "char": "矢",
+      "name_en": "arrow",
+      "name_vi": "thỉ",
+      "role": "phonetic"
+    },
+    {
+      "char": "首",
+      "name_en": "head",
+      "name_vi": "thủ",
+      "role": "phonetic"
+    },
+    {
+      "char": "冫",
+      "name_en": "ice",
+      "name_vi": "băng",
+      "role": "component"
+    },
+    {
+      "char": "欠",
+      "name_en": "lack",
+      "name_vi": "khiếm",
+      "role": "component"
+    },
+    {
+      "char": "取",
+      "name_en": "",
+      "name_vi": "thủ",
+      "role": "component"
+    },
+    {
+      "char": "毛",
+      "name_en": "fur",
+      "name_vi": "mao",
+      "role": "component"
+    },
+    {
+      "char": "耂",
+      "name_en": "",
+      "name_vi": "耂",
+      "role": "component"
+    },
+    {
+      "char": "页",
+      "name_en": "",
+      "name_vi": "页",
+      "role": "semantic"
+    },
+    {
+      "char": "至",
+      "name_en": "arrive",
+      "name_vi": "chí",
+      "role": "semantic"
+    },
+    {
+      "char": "刂",
+      "name_en": "knife (right form)",
+      "name_vi": "đao đứng",
+      "role": "phonetic"
+    },
+    {
+      "char": "尔",
+      "name_en": "",
+      "name_vi": "nể",
+      "role": "component"
+    },
+    {
+      "char": "羊",
+      "name_en": "sheep",
+      "name_vi": "dương",
+      "role": "phonetic"
+    },
+    {
+      "char": "阝",
+      "name_en": "mound/city side form",
+      "name_vi": "phụ/ấp",
+      "role": "component"
+    },
+    {
+      "char": "豆",
+      "name_en": "bean",
+      "name_vi": "đậu",
+      "role": "phonetic"
+    },
+    {
+      "char": "又",
+      "name_en": "again",
+      "name_vi": "hựu",
+      "role": "component"
+    },
+    {
+      "char": "寸",
+      "name_en": "inch",
+      "name_vi": "thốn",
+      "role": "component"
+    },
+    {
+      "char": "车",
+      "name_en": "",
+      "name_vi": "xa",
+      "role": "semantic"
+    },
+    {
+      "char": "仑",
+      "name_en": "",
+      "name_vi": "lỏn",
+      "role": "phonetic"
+    },
+    {
+      "char": "扁",
+      "name_en": "",
+      "name_vi": "biển",
+      "role": "phonetic"
+    },
+    {
+      "char": "足",
+      "name_en": "foot",
+      "name_vi": "túc",
+      "role": "semantic"
+    },
+    {
+      "char": "艮",
+      "name_en": "stopping",
+      "name_vi": "cấn",
+      "role": "phonetic"
+    },
+    {
+      "char": "犭",
+      "name_en": "dog (side form)",
+      "name_vi": "khuyển đứng",
+      "role": "semantic"
+    },
+    {
+      "char": "青",
+      "name_en": "gather",
+      "name_vi": "thanh",
+      "role": "phonetic"
+    },
+    {
+      "char": "另",
+      "name_en": "",
+      "name_vi": "lánh",
+      "role": "component"
+    },
+    {
+      "char": "舌",
+      "name_en": "tongue",
+      "name_vi": "thiệt",
+      "role": "component"
+    },
+    {
+      "char": "人",
+      "name_en": "man",
+      "name_vi": "nhân",
+      "role": "component"
+    },
+    {
+      "char": "大",
+      "name_en": "big",
+      "name_vi": "đại",
+      "role": "component"
+    },
+    {
+      "char": "土",
+      "name_en": "earth",
+      "name_vi": "thổ",
+      "role": "component"
+    }
+  ],
+  "lesson_id": "lesson_001"
+}

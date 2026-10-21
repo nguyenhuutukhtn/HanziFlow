@@ -6,6 +6,7 @@ import tempfile
 from pathlib import Path
 
 from .audio_builder import timeline_path_for
+from .characters import CharacterLoaders, resolve_lesson_characters
 from .config import Settings
 from .lesson_schema import load_lesson
 from .publish_support import (
@@ -42,6 +43,16 @@ def publish_lesson(lesson_path: Path, settings: Settings, out: Path, force: bool
     practice_present = bool(practice and practice_source.is_file())
     vocab = load_vocab(lesson_path.parent / f"{lesson.lesson_id}_vocab.json", lesson.lesson_id)
     item_ids = {word.hanzi: word_item_id(word.hanzi, word.pinyin) for word in vocab.words}
+    character_bundle = CharacterLoaders()
+    missing_character_data = character_bundle.missing_sources()
+    if missing_character_data:
+        paths = ", ".join(missing_character_data)
+        raise PublishError(f"Character data missing: {paths}; run: just fetch-character-data")
+    character_loaders = character_bundle.as_dict()
+    characters = resolve_lesson_characters(lesson.model_dump(mode="json"), set(), character_loaders, vocab.words)
+    missing_authored = [entry["char"] for entry in characters["characters"] if not entry.get("han_viet") or not entry.get("vi_meaning")]
+    if missing_authored:
+        raise PublishError(f"{len(missing_authored)} characters lack Vietnamese data: run just export-characters {lesson.lesson_id.rsplit('_', 1)[1]}")
 
     catalog_path = out / "catalog.json"
     previous_entry = _catalog_entry(catalog_path, lesson.lesson_id)
@@ -189,6 +200,10 @@ def publish_lesson(lesson_path: Path, settings: Settings, out: Path, force: bool
             "schema_version": 1, "lesson_id": lesson.lesson_id, "lesson_version": trial_version,
             "words": words, "sentences": sentence_items, "qa": qa_items,
         })
+        _write_json(
+            package / "characters.json",
+            characters,
+        )
 
         if not force and _matches_catalog_entry(package, previous_entry):
             existing = lessons_dir / f"v{current_version}"
@@ -259,6 +274,7 @@ def publish_lesson(lesson_path: Path, settings: Settings, out: Path, force: bool
             "manifest": _artifact(destination / "lesson.json", "lesson.json"),
             "reference": _artifact(destination / "reference.json", "reference.json"),
             "items": _artifact(destination / "items.json", "items.json"),
+            "characters": _artifact(destination / "characters.json", "characters.json"),
         },
     }
     catalog = json.loads(catalog_path.read_text(encoding="utf-8")) if catalog_path.is_file() else {"schema_version": 1, "catalog_version": 1, "lessons": []}

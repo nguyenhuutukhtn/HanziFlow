@@ -2,7 +2,7 @@
 
 Read this first in a new session instead of past chat history. Keep it short; update it at the end of every task.
 
-Last updated: 2026-10-21 (C0 done) · branch `app-publish-pipeline` (not merged to `main`)
+Last updated: 2026-10-21 (C1-fix2 done) · branch `app-publish-pipeline` (not merged to `main`)
 
 ## Working rules
 
@@ -39,13 +39,18 @@ Last updated: 2026-10-21 (C0 done) · branch `app-publish-pipeline` (not merged 
 - **L4:** MediaSession connections now retain live player seek commands instead of a connect-time snapshot, restoring scrub/±10s/section seeks; `TrackSwitch` maps gaps and missing lines to the nearest forward shared cue, then backward. Added synthetic and real lesson fixture coverage. Full checks and the specified device action-bit check pass. User device check (4 seek bugs) + v6 Chinese-only listening QA: OK (2026-10-21).
 - **R1:** Character data sources researched and licensed for commercial use; see [docs/research/characters_data.md](research/characters_data.md). Recommendations: Unihan kVietnamese (Hán-Việt), MMAH dictionary.txt LGPL3 (decomposition+etymology), Hanzi Writer data APL (strokes), ivankra/hsk30 MIT (HSK 3.0), CC-CEDICT CC BY-SA 4.0 (English meanings); Vietnamese meanings + component names → author.
 - **C0:** Added `data/radicals_vi.json` with all 214 Kangxi radicals plus 28 simplified/component forms, including Vietnamese bộ names and required positional names.
+- **C1:** `publish` now resolves offline lesson characters/components into deterministic `characters.json`, includes its digest in the catalog, and ships a contract fixture; 83 lesson 001 characters generated with `vi_meaning: null`.
+- **C1-fix:** Added pinned/idempotent character-data fetching with licenses, hard-failed publish when data is absent, corrected vocab-level `lesson_words`, and regenerated local v7 with real data (not uploaded).
+- **C1-fix2:** Rebuilt radicals from pinned UCD + keyed Vietnamese names; corrected CEDICT tone/readings, HSK minimums, IDS components, and authored per-lesson Hán-Việt/Vietnamese meanings; local v7 refreshed and not uploaded.
+- **C1-fix3:** CEDICT now prefers lowercase common entries over capitalized proper nouns; component prerequisites are ordered, unique, and exclude placeholders/operators; local v7 and contract refreshed, not uploaded.
 
 ## Next (in order)
 
-0. **Now:** character learning, pulled forward by the user (2026-10-21). R1 done. Design finalized in `docs/architecture/characters.md` (2026-10-21). Briefs written:
+0. **Now:** character learning, pulled forward by the user (2026-10-21). R1/C0/C1/C1-fix/C1-fix2 done. Design finalized in `docs/architecture/characters.md` (2026-10-21). Briefs written:
    - **C0** (`docs/tasks/C0.md`): author `data/radicals_vi.json` (~250 bộ thủ Vietnamese names). Fresh Claude Code agent.
-   - **C1** (`docs/tasks/C1.md`): pipeline `characters.json` per lesson package. Fresh Codex/DeepSeek. Needs C0 first.
-   - **C2** (not written yet): character card UI (Android). After C1.
+   - **C1** (`docs/tasks/C1.md`): pipeline `characters.json` per lesson package. Done.
+   - **W1** (next, brief not written): web player with an always-on-top floating window for office use (user, 2026-10-21). React + `kmp/shared` JS; anon public bucket, no sign-in. Catalog → download/stream → karaoke transcript (Hanzi large, pinyin/vi toggles) → "Cửa sổ nổi" via Document Picture-in-Picture (Chrome/Edge, Mac). Interactive inside the window: ±10s, replay line, tap-to-seek, tap a character → compact card from `characters.json`, copy char/line; Media Session API for keyboard/headset media keys.
+   - **C2** (not written yet): character card UI (Android). After W1.
    - Exercises: after G2c SRS base.
 
    **Before G2b, which is paused:**
@@ -64,6 +69,8 @@ Last updated: 2026-10-21 (C0 done) · branch `app-publish-pipeline` (not merged 
 
 ## Open decisions (user)
 
-- Character learning feature: design finalized 2026-10-21 in [architecture/characters.md](architecture/characters.md). C0/C1 briefs written; C2 brief after C1.
+- Character learning feature: design finalized 2026-10-21 in [architecture/characters.md](architecture/characters.md). C0/C1 done; C2 brief after W1.
+- W1 on Linux (office uses Firefox, no Document PiP): undecided. Options: Chrome/Chromium on Linux; Firefox video-PiP fallback (render transcript to canvas → video stream; view-only, play/pause only); Tauri shell with always-on-top later.
+- Decided 2026-10-21: no native Mac/Linux apps; desktop = the web app (+ optional Tauri wrapper later).
 - Decided 2026-10-21: iOS = native SwiftUI shell over the `kmp/shared` core as an XCFramework; no Compose Multiplatform. Web UI stays React.
 - None. Decided 2026-10-20: pass rule = first-try 100%; accent amber; track names "Học có hướng dẫn" / "Luyện nghe"; UI review changes adopted (see docs/ui/README.md "Review decisions").

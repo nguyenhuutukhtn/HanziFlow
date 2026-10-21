@@ -6,6 +6,7 @@ val fixtureFiles = listOf(
     "lesson.json",
     "reference.json",
     "items.json",
+    "characters.json",
     "timeline_guided.json",
     "timeline_guided_zh.json",
 )

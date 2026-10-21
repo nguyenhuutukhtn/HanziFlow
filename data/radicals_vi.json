@@ -59,7 +59,7 @@
     "char": "人",
     "kangxi_index": 9,
     "simplified_only": false,
-    "name_en": "person",
+    "name_en": "man",
     "name_vi": "nhân"
   },
   {
@@ -87,435 +87,435 @@
     "char": "冂",
     "kangxi_index": 13,
     "simplified_only": false,
-    "name_en": "down",
+    "name_en": "down box",
     "name_vi": "quynh"
   },
   {
     "char": "冖",
     "kangxi_index": 14,
     "simplified_only": false,
-    "name_en": "box",
+    "name_en": "cover",
     "name_vi": "mịch"
   },
   {
     "char": "冫",
     "kangxi_index": 15,
     "simplified_only": false,
-    "name_en": "cover",
+    "name_en": "ice",
     "name_vi": "băng"
   },
   {
     "char": "几",
     "kangxi_index": 16,
     "simplified_only": false,
-    "name_en": "ice",
+    "name_en": "table",
     "name_vi": "kỷ"
   },
   {
     "char": "凵",
     "kangxi_index": 17,
     "simplified_only": false,
-    "name_en": "table",
+    "name_en": "open box",
     "name_vi": "khảm"
   },
   {
     "char": "刀",
     "kangxi_index": 18,
     "simplified_only": false,
-    "name_en": "open",
+    "name_en": "knife",
     "name_vi": "đao"
   },
   {
     "char": "力",
     "kangxi_index": 19,
     "simplified_only": false,
-    "name_en": "box",
+    "name_en": "power",
     "name_vi": "lực"
   },
   {
     "char": "勹",
     "kangxi_index": 20,
     "simplified_only": false,
-    "name_en": "knife",
+    "name_en": "wrap",
     "name_vi": "bao"
   },
   {
     "char": "匕",
     "kangxi_index": 21,
     "simplified_only": false,
-    "name_en": "power",
+    "name_en": "spoon",
     "name_vi": "chủy"
   },
   {
     "char": "匚",
     "kangxi_index": 22,
     "simplified_only": false,
-    "name_en": "wrap",
+    "name_en": "right open box",
     "name_vi": "phương"
   },
   {
     "char": "匸",
     "kangxi_index": 23,
     "simplified_only": false,
-    "name_en": "ladle",
+    "name_en": "hiding enclosure",
     "name_vi": "hệ"
   },
   {
     "char": "十",
     "kangxi_index": 24,
     "simplified_only": false,
-    "name_en": "right",
+    "name_en": "ten",
     "name_vi": "thập"
   },
   {
     "char": "卜",
     "kangxi_index": 25,
     "simplified_only": false,
-    "name_en": "open",
+    "name_en": "divination",
     "name_vi": "bốc"
   },
   {
     "char": "卩",
     "kangxi_index": 26,
     "simplified_only": false,
-    "name_en": "box",
+    "name_en": "seal",
     "name_vi": "tiết"
   },
   {
     "char": "厂",
     "kangxi_index": 27,
     "simplified_only": false,
-    "name_en": "hiding",
+    "name_en": "cliff",
     "name_vi": "hán"
   },
   {
     "char": "厶",
     "kangxi_index": 28,
     "simplified_only": false,
-    "name_en": "enclosure",
-    "name_vi": "tư"
+    "name_en": "private",
+    "name_vi": "khư"
   },
   {
     "char": "又",
     "kangxi_index": 29,
     "simplified_only": false,
-    "name_en": "ten",
+    "name_en": "again",
     "name_vi": "hựu"
   },
   {
     "char": "口",
     "kangxi_index": 30,
     "simplified_only": false,
-    "name_en": "divination",
+    "name_en": "mouth",
     "name_vi": "khẩu"
   },
   {
     "char": "囗",
     "kangxi_index": 31,
     "simplified_only": false,
-    "name_en": "seal",
+    "name_en": "enclosure",
     "name_vi": "vi"
   },
   {
     "char": "土",
     "kangxi_index": 32,
     "simplified_only": false,
-    "name_en": "cliff",
+    "name_en": "earth",
     "name_vi": "thổ"
   },
   {
     "char": "士",
     "kangxi_index": 33,
     "simplified_only": false,
-    "name_en": "private",
+    "name_en": "scholar",
     "name_vi": "sĩ"
   },
   {
     "char": "夂",
     "kangxi_index": 34,
     "simplified_only": false,
-    "name_en": "again",
+    "name_en": "go",
     "name_vi": "truy"
   },
   {
     "char": "夊",
     "kangxi_index": 35,
     "simplified_only": false,
-    "name_en": "mouth",
-    "name_vi": "chuy"
+    "name_en": "go slowly",
+    "name_vi": "tuy"
   },
   {
     "char": "夕",
     "kangxi_index": 36,
     "simplified_only": false,
-    "name_en": "enclosure",
+    "name_en": "evening",
     "name_vi": "tịch"
   },
   {
     "char": "大",
     "kangxi_index": 37,
     "simplified_only": false,
-    "name_en": "earth",
+    "name_en": "big",
     "name_vi": "đại"
   },
   {
     "char": "女",
     "kangxi_index": 38,
     "simplified_only": false,
-    "name_en": "scholar",
+    "name_en": "woman",
     "name_vi": "nữ"
   },
   {
     "char": "子",
     "kangxi_index": 39,
     "simplified_only": false,
-    "name_en": "go",
+    "name_en": "child",
     "name_vi": "tử"
   },
   {
     "char": "宀",
     "kangxi_index": 40,
     "simplified_only": false,
-    "name_en": "go",
+    "name_en": "roof",
     "name_vi": "miên"
   },
   {
     "char": "寸",
     "kangxi_index": 41,
     "simplified_only": false,
-    "name_en": "slowly",
+    "name_en": "inch",
     "name_vi": "thốn"
   },
   {
     "char": "小",
     "kangxi_index": 42,
     "simplified_only": false,
-    "name_en": "night",
+    "name_en": "small",
     "name_vi": "tiểu"
   },
   {
     "char": "尢",
     "kangxi_index": 43,
     "simplified_only": false,
-    "name_en": "big",
+    "name_en": "lame",
     "name_vi": "uông"
   },
   {
     "char": "尸",
     "kangxi_index": 44,
     "simplified_only": false,
-    "name_en": "woman",
+    "name_en": "corpse",
     "name_vi": "thi"
   },
   {
     "char": "屮",
     "kangxi_index": 45,
     "simplified_only": false,
-    "name_en": "child",
-    "name_vi": "sài"
+    "name_en": "sprout",
+    "name_vi": "triệt"
   },
   {
     "char": "山",
     "kangxi_index": 46,
     "simplified_only": false,
-    "name_en": "roof",
+    "name_en": "mountain",
     "name_vi": "sơn"
   },
   {
-    "char": "川",
+    "char": "巛",
     "kangxi_index": 47,
     "simplified_only": false,
-    "name_en": "inch",
+    "name_en": "river",
     "name_vi": "xuyên"
   },
   {
     "char": "工",
     "kangxi_index": 48,
     "simplified_only": false,
-    "name_en": "small",
+    "name_en": "work",
     "name_vi": "công"
   },
   {
     "char": "己",
     "kangxi_index": 49,
     "simplified_only": false,
-    "name_en": "lame",
+    "name_en": "oneself",
     "name_vi": "kỷ"
   },
   {
     "char": "巾",
     "kangxi_index": 50,
     "simplified_only": false,
-    "name_en": "corpse",
+    "name_en": "turban",
     "name_vi": "cân"
   },
   {
     "char": "干",
     "kangxi_index": 51,
     "simplified_only": false,
-    "name_en": "sprout",
+    "name_en": "dry",
     "name_vi": "can"
   },
   {
     "char": "幺",
     "kangxi_index": 52,
     "simplified_only": false,
-    "name_en": "mountain",
+    "name_en": "short thread",
     "name_vi": "yêu"
   },
   {
     "char": "广",
     "kangxi_index": 53,
     "simplified_only": false,
-    "name_en": "river",
+    "name_en": "dotted cliff",
     "name_vi": "nghiễm"
   },
   {
     "char": "廴",
     "kangxi_index": 54,
     "simplified_only": false,
-    "name_en": "work",
-    "name_vi": "diên"
+    "name_en": "long stride",
+    "name_vi": "dẫn"
   },
   {
     "char": "廾",
     "kangxi_index": 55,
     "simplified_only": false,
-    "name_en": "oneself",
+    "name_en": "two hands",
     "name_vi": "củng"
   },
   {
     "char": "弋",
     "kangxi_index": 56,
     "simplified_only": false,
-    "name_en": "towel",
+    "name_en": "shoot",
     "name_vi": "dặc"
   },
   {
     "char": "弓",
     "kangxi_index": 57,
     "simplified_only": false,
-    "name_en": "dry",
+    "name_en": "bow",
     "name_vi": "cung"
   },
   {
     "char": "彐",
     "kangxi_index": 58,
     "simplified_only": false,
-    "name_en": "thread",
+    "name_en": "snout",
     "name_vi": "kệ"
   },
   {
     "char": "彡",
     "kangxi_index": 59,
     "simplified_only": false,
-    "name_en": "shelter",
+    "name_en": "bristle",
     "name_vi": "sam"
   },
   {
     "char": "彳",
     "kangxi_index": 60,
     "simplified_only": false,
-    "name_en": "stride",
+    "name_en": "step",
     "name_vi": "xích"
   },
   {
     "char": "心",
     "kangxi_index": 61,
     "simplified_only": false,
-    "name_en": "hands",
+    "name_en": "heart",
     "name_vi": "tâm"
   },
   {
     "char": "戈",
     "kangxi_index": 62,
     "simplified_only": false,
-    "name_en": "joined",
+    "name_en": "halberd",
     "name_vi": "qua"
   },
   {
     "char": "戶",
     "kangxi_index": 63,
     "simplified_only": false,
-    "name_en": "shoot",
-    "name_vi": "kích"
+    "name_en": "door",
+    "name_vi": "hộ"
   },
   {
     "char": "手",
     "kangxi_index": 64,
     "simplified_only": false,
-    "name_en": "bow",
-    "name_vi": "hộ"
+    "name_en": "hand",
+    "name_vi": "thủ"
   },
   {
     "char": "支",
     "kangxi_index": 65,
     "simplified_only": false,
-    "name_en": "bow",
-    "name_vi": "thủ"
+    "name_en": "branch",
+    "name_vi": "chi"
   },
   {
     "char": "攴",
     "kangxi_index": 66,
     "simplified_only": false,
-    "name_en": "snout",
-    "name_vi": "chi"
+    "name_en": "rap",
+    "name_vi": "phộc"
   },
   {
     "char": "文",
     "kangxi_index": 67,
     "simplified_only": false,
-    "name_en": "hair",
-    "name_vi": "phộc"
+    "name_en": "script",
+    "name_vi": "văn"
   },
   {
     "char": "斗",
     "kangxi_index": 68,
     "simplified_only": false,
-    "name_en": "step",
-    "name_vi": "văn"
+    "name_en": "dipper",
+    "name_vi": "đẩu"
   },
   {
     "char": "斤",
     "kangxi_index": 69,
     "simplified_only": false,
-    "name_en": "heart",
-    "name_vi": "đẩu"
+    "name_en": "axe",
+    "name_vi": "cân"
   },
   {
     "char": "方",
     "kangxi_index": 70,
     "simplified_only": false,
-    "name_en": "spear",
-    "name_vi": "cân"
+    "name_en": "square",
+    "name_vi": "phương"
   },
   {
     "char": "无",
     "kangxi_index": 71,
     "simplified_only": false,
-    "name_en": "door",
-    "name_vi": "phương"
+    "name_en": "not",
+    "name_vi": "vô"
   },
   {
     "char": "日",
     "kangxi_index": 72,
     "simplified_only": false,
-    "name_en": "hand",
-    "name_vi": "vô"
+    "name_en": "sun",
+    "name_vi": "nhật"
   },
   {
     "char": "曰",
     "kangxi_index": 73,
     "simplified_only": false,
-    "name_en": "branch",
-    "name_vi": "nhật"
+    "name_en": "say",
+    "name_vi": "viết"
   },
   {
     "char": "月",
     "kangxi_index": 74,
     "simplified_only": false,
-    "name_en": "rap",
-    "name_vi": "viết"
+    "name_en": "moon",
+    "name_vi": "nguyệt"
   },
   {
     "char": "木",
@@ -528,64 +528,64 @@
     "char": "欠",
     "kangxi_index": 76,
     "simplified_only": false,
-    "name_en": "dipper",
-    "name_vi": "mộc"
+    "name_en": "lack",
+    "name_vi": "khiếm"
   },
   {
     "char": "止",
     "kangxi_index": 77,
     "simplified_only": false,
-    "name_en": "axe",
-    "name_vi": "khiếm"
+    "name_en": "stop",
+    "name_vi": "chỉ"
   },
   {
     "char": "歹",
     "kangxi_index": 78,
     "simplified_only": false,
-    "name_en": "square",
-    "name_vi": "chỉ"
+    "name_en": "death",
+    "name_vi": "ngạt"
   },
   {
     "char": "殳",
     "kangxi_index": 79,
     "simplified_only": false,
-    "name_en": "not",
-    "name_vi": "ngạt"
+    "name_en": "weapon",
+    "name_vi": "thù"
   },
   {
     "char": "毋",
     "kangxi_index": 80,
     "simplified_only": false,
-    "name_en": "sun",
-    "name_vi": "thù"
+    "name_en": "do not",
+    "name_vi": "vô"
   },
   {
     "char": "比",
     "kangxi_index": 81,
     "simplified_only": false,
-    "name_en": "say",
-    "name_vi": "mẫu"
+    "name_en": "compare",
+    "name_vi": "tỷ"
   },
   {
     "char": "毛",
     "kangxi_index": 82,
     "simplified_only": false,
-    "name_en": "moon",
-    "name_vi": "tỷ"
+    "name_en": "fur",
+    "name_vi": "mao"
   },
   {
     "char": "氏",
     "kangxi_index": 83,
     "simplified_only": false,
-    "name_en": "tree",
-    "name_vi": "mao"
+    "name_en": "clan",
+    "name_vi": "thị"
   },
   {
     "char": "气",
     "kangxi_index": 84,
     "simplified_only": false,
-    "name_en": "lack",
-    "name_vi": "thị"
+    "name_en": "steam",
+    "name_vi": "khí"
   },
   {
     "char": "水",
@@ -605,897 +605,911 @@
     "char": "爪",
     "kangxi_index": 87,
     "simplified_only": false,
-    "name_en": "weapon",
-    "name_vi": "hỏa"
+    "name_en": "claw",
+    "name_vi": "trảo"
   },
   {
     "char": "父",
     "kangxi_index": 88,
     "simplified_only": false,
-    "name_en": "mother",
-    "name_vi": "trảo"
+    "name_en": "father",
+    "name_vi": "phụ"
   },
   {
     "char": "爻",
     "kangxi_index": 89,
     "simplified_only": false,
-    "name_en": "compare",
-    "name_vi": "phụ"
+    "name_en": "double x",
+    "name_vi": "hào"
   },
   {
     "char": "爿",
     "kangxi_index": 90,
     "simplified_only": false,
-    "name_en": "fur",
-    "name_vi": "hào"
+    "name_en": "half tree trunk",
+    "name_vi": "tường"
   },
   {
     "char": "片",
     "kangxi_index": 91,
     "simplified_only": false,
-    "name_en": "clan",
-    "name_vi": "tường"
+    "name_en": "slice",
+    "name_vi": "phiến"
   },
   {
     "char": "牙",
     "kangxi_index": 92,
     "simplified_only": false,
-    "name_en": "steam",
-    "name_vi": "phiến"
+    "name_en": "fang",
+    "name_vi": "nha"
   },
   {
     "char": "牛",
     "kangxi_index": 93,
     "simplified_only": false,
-    "name_en": "water",
-    "name_vi": "nha"
+    "name_en": "cow",
+    "name_vi": "ngưu"
   },
   {
     "char": "犬",
     "kangxi_index": 94,
     "simplified_only": false,
-    "name_en": "fire",
-    "name_vi": "ngưu"
+    "name_en": "dog",
+    "name_vi": "khuyển"
   },
   {
     "char": "玄",
     "kangxi_index": 95,
     "simplified_only": false,
-    "name_en": "claw",
-    "name_vi": "khuyển"
+    "name_en": "profound",
+    "name_vi": "huyền"
   },
   {
     "char": "玉",
     "kangxi_index": 96,
     "simplified_only": false,
-    "name_en": "father",
-    "name_vi": "huyền"
+    "name_en": "jade",
+    "name_vi": "ngọc"
   },
   {
     "char": "瓜",
     "kangxi_index": 97,
     "simplified_only": false,
-    "name_en": "trigrams",
-    "name_vi": "ngọc"
+    "name_en": "melon",
+    "name_vi": "qua"
   },
   {
     "char": "瓦",
     "kangxi_index": 98,
     "simplified_only": false,
-    "name_en": "half",
-    "name_vi": "qua"
+    "name_en": "tile",
+    "name_vi": "ngõa"
   },
   {
     "char": "甘",
     "kangxi_index": 99,
     "simplified_only": false,
-    "name_en": "tree",
-    "name_vi": "ngõa"
+    "name_en": "sweet",
+    "name_vi": "cam"
   },
   {
     "char": "生",
     "kangxi_index": 100,
     "simplified_only": false,
-    "name_en": "trunk",
-    "name_vi": "cam"
+    "name_en": "life",
+    "name_vi": "sinh"
   },
   {
     "char": "用",
     "kangxi_index": 101,
     "simplified_only": false,
-    "name_en": "slice",
-    "name_vi": "sinh"
+    "name_en": "use",
+    "name_vi": "dụng"
   },
   {
     "char": "田",
     "kangxi_index": 102,
     "simplified_only": false,
-    "name_en": "tooth",
-    "name_vi": "dụng"
+    "name_en": "field",
+    "name_vi": "điền"
   },
   {
     "char": "疋",
     "kangxi_index": 103,
     "simplified_only": false,
-    "name_en": "cow",
-    "name_vi": "điền"
+    "name_en": "bolt of cloth",
+    "name_vi": "thất"
   },
   {
     "char": "疒",
     "kangxi_index": 104,
     "simplified_only": false,
-    "name_en": "dog",
-    "name_vi": "thất"
+    "name_en": "sickness",
+    "name_vi": "nạch"
   },
   {
     "char": "癶",
     "kangxi_index": 105,
     "simplified_only": false,
-    "name_en": "profound",
-    "name_vi": "nạch"
+    "name_en": "dotted tent",
+    "name_vi": "bát"
   },
   {
     "char": "白",
     "kangxi_index": 106,
     "simplified_only": false,
-    "name_en": "jade",
+    "name_en": "white",
     "name_vi": "bạch"
   },
   {
     "char": "皮",
     "kangxi_index": 107,
     "simplified_only": false,
-    "name_en": "melon",
+    "name_en": "skin",
     "name_vi": "bì"
   },
   {
     "char": "皿",
     "kangxi_index": 108,
     "simplified_only": false,
-    "name_en": "tile",
+    "name_en": "dish",
     "name_vi": "mãnh"
   },
   {
     "char": "目",
     "kangxi_index": 109,
     "simplified_only": false,
-    "name_en": "sweet",
+    "name_en": "eye",
     "name_vi": "mục"
   },
   {
     "char": "矛",
     "kangxi_index": 110,
     "simplified_only": false,
-    "name_en": "life",
+    "name_en": "spear",
     "name_vi": "mâu"
   },
   {
     "char": "矢",
     "kangxi_index": 111,
     "simplified_only": false,
-    "name_en": "use",
+    "name_en": "arrow",
     "name_vi": "thỉ"
   },
   {
     "char": "石",
     "kangxi_index": 112,
     "simplified_only": false,
-    "name_en": "field",
+    "name_en": "stone",
     "name_vi": "thạch"
   },
   {
     "char": "示",
     "kangxi_index": 113,
     "simplified_only": false,
-    "name_en": "sickness",
+    "name_en": "spirit",
     "name_vi": "thị"
   },
   {
     "char": "禸",
     "kangxi_index": 114,
     "simplified_only": false,
-    "name_en": "white",
-    "name_vi": "nhung"
+    "name_en": "track",
+    "name_vi": "nhựu"
   },
   {
     "char": "禾",
     "kangxi_index": 115,
     "simplified_only": false,
-    "name_en": "skin",
+    "name_en": "grain",
     "name_vi": "hòa"
   },
   {
     "char": "穴",
     "kangxi_index": 116,
     "simplified_only": false,
-    "name_en": "dish",
+    "name_en": "cave",
     "name_vi": "huyệt"
   },
   {
     "char": "立",
     "kangxi_index": 117,
     "simplified_only": false,
-    "name_en": "eye",
+    "name_en": "stand",
     "name_vi": "lập"
   },
   {
     "char": "竹",
     "kangxi_index": 118,
     "simplified_only": false,
-    "name_en": "spear",
+    "name_en": "bamboo",
     "name_vi": "trúc"
   },
   {
     "char": "米",
     "kangxi_index": 119,
     "simplified_only": false,
-    "name_en": "arrow",
+    "name_en": "rice",
     "name_vi": "mễ"
   },
   {
     "char": "糸",
     "kangxi_index": 120,
     "simplified_only": false,
-    "name_en": "stone",
+    "name_en": "silk",
     "name_vi": "mịch"
   },
   {
     "char": "缶",
     "kangxi_index": 121,
     "simplified_only": false,
-    "name_en": "altar",
+    "name_en": "jar",
     "name_vi": "phẫu"
   },
   {
     "char": "网",
     "kangxi_index": 122,
     "simplified_only": false,
-    "name_en": "glyph",
+    "name_en": "net",
     "name_vi": "võng"
   },
   {
     "char": "羊",
     "kangxi_index": 123,
     "simplified_only": false,
-    "name_en": "grain",
+    "name_en": "sheep",
     "name_vi": "dương"
   },
   {
     "char": "羽",
     "kangxi_index": 124,
     "simplified_only": false,
-    "name_en": "hole",
+    "name_en": "feather",
     "name_vi": "vũ"
   },
   {
     "char": "老",
     "kangxi_index": 125,
     "simplified_only": false,
-    "name_en": "stand",
+    "name_en": "old",
     "name_vi": "lão"
   },
   {
     "char": "而",
     "kangxi_index": 126,
     "simplified_only": false,
-    "name_en": "bamboo",
+    "name_en": "and",
     "name_vi": "nhi"
   },
   {
     "char": "耒",
     "kangxi_index": 127,
     "simplified_only": false,
-    "name_en": "rice",
-    "name_vi": "nhĩ"
+    "name_en": "plow",
+    "name_vi": "lỗi"
   },
   {
     "char": "耳",
     "kangxi_index": 128,
     "simplified_only": false,
-    "name_en": "silk",
-    "name_vi": "canh"
+    "name_en": "ear",
+    "name_vi": "nhĩ"
   },
   {
     "char": "聿",
     "kangxi_index": 129,
     "simplified_only": false,
-    "name_en": "jar",
-    "name_vi": "nhục"
+    "name_en": "brush",
+    "name_vi": "duật"
   },
   {
     "char": "肉",
     "kangxi_index": 130,
     "simplified_only": false,
-    "name_en": "net",
-    "name_vi": "thần"
+    "name_en": "meat",
+    "name_vi": "nhục"
   },
   {
     "char": "臣",
     "kangxi_index": 131,
     "simplified_only": false,
-    "name_en": "sheep",
-    "name_vi": "tự"
+    "name_en": "minister",
+    "name_vi": "thần"
   },
   {
     "char": "自",
     "kangxi_index": 132,
     "simplified_only": false,
-    "name_en": "feather",
-    "name_vi": "chí"
+    "name_en": "self",
+    "name_vi": "tự"
   },
   {
     "char": "至",
     "kangxi_index": 133,
     "simplified_only": false,
-    "name_en": "old",
-    "name_vi": "cữu"
+    "name_en": "arrive",
+    "name_vi": "chí"
   },
   {
     "char": "臼",
     "kangxi_index": 134,
     "simplified_only": false,
-    "name_en": "and",
-    "name_vi": "thiệt"
+    "name_en": "mortar",
+    "name_vi": "cữu"
   },
   {
     "char": "舌",
     "kangxi_index": 135,
     "simplified_only": false,
-    "name_en": "yet",
-    "name_vi": "sảo"
+    "name_en": "tongue",
+    "name_vi": "thiệt"
   },
   {
     "char": "舛",
     "kangxi_index": 136,
     "simplified_only": false,
-    "name_en": "plough",
-    "name_vi": "chu"
+    "name_en": "oppose",
+    "name_vi": "suyễn"
   },
   {
     "char": "舟",
     "kangxi_index": 137,
     "simplified_only": false,
-    "name_en": "ear",
-    "name_vi": "cấn"
+    "name_en": "boat",
+    "name_vi": "chu"
   },
   {
     "char": "艮",
     "kangxi_index": 138,
     "simplified_only": false,
-    "name_en": "brush",
-    "name_vi": "sắc"
+    "name_en": "stopping",
+    "name_vi": "cấn"
   },
   {
     "char": "色",
     "kangxi_index": 139,
     "simplified_only": false,
-    "name_en": "flesh",
-    "name_vi": "thảo"
+    "name_en": "color",
+    "name_vi": "sắc"
   },
   {
     "char": "艸",
     "kangxi_index": 140,
     "simplified_only": false,
-    "name_en": "minister",
-    "name_vi": "hổ"
+    "name_en": "grass",
+    "name_vi": "thảo"
   },
   {
     "char": "虍",
     "kangxi_index": 141,
     "simplified_only": false,
-    "name_en": "self",
-    "name_vi": "trùng"
+    "name_en": "tiger",
+    "name_vi": "hô"
   },
   {
     "char": "虫",
     "kangxi_index": 142,
     "simplified_only": false,
-    "name_en": "arrive",
-    "name_vi": "huyết"
+    "name_en": "insect",
+    "name_vi": "trùng"
   },
   {
     "char": "血",
     "kangxi_index": 143,
     "simplified_only": false,
-    "name_en": "mortar",
-    "name_vi": "hành"
+    "name_en": "blood",
+    "name_vi": "huyết"
   },
   {
     "char": "行",
     "kangxi_index": 144,
     "simplified_only": false,
-    "name_en": "tongue",
-    "name_vi": "y"
+    "name_en": "walk enclosure",
+    "name_vi": "hành"
   },
   {
     "char": "衣",
     "kangxi_index": 145,
     "simplified_only": false,
-    "name_en": "opposing",
-    "name_vi": "á"
+    "name_en": "clothes",
+    "name_vi": "y"
   },
   {
     "char": "襾",
     "kangxi_index": 146,
     "simplified_only": false,
-    "name_en": "boat",
-    "name_vi": "kiến"
+    "name_en": "west",
+    "name_vi": "á"
   },
   {
     "char": "見",
     "kangxi_index": 147,
     "simplified_only": false,
-    "name_en": "ridge",
-    "name_vi": "giác"
+    "name_en": "see",
+    "name_vi": "kiến"
   },
   {
     "char": "角",
     "kangxi_index": 148,
     "simplified_only": false,
-    "name_en": "color",
-    "name_vi": "ngôn"
+    "name_en": "horn",
+    "name_vi": "giác"
   },
   {
     "char": "言",
     "kangxi_index": 149,
     "simplified_only": false,
-    "name_en": "grass",
-    "name_vi": "cốc"
+    "name_en": "speech",
+    "name_vi": "ngôn"
   },
   {
     "char": "谷",
     "kangxi_index": 150,
     "simplified_only": false,
-    "name_en": "tiger",
-    "name_vi": "đậu"
+    "name_en": "valley",
+    "name_vi": "cốc"
   },
   {
     "char": "豆",
     "kangxi_index": 151,
     "simplified_only": false,
-    "name_en": "insect",
-    "name_vi": "thỉ"
+    "name_en": "bean",
+    "name_vi": "đậu"
   },
   {
     "char": "豕",
     "kangxi_index": 152,
     "simplified_only": false,
-    "name_en": "blood",
-    "name_vi": "trĩ"
+    "name_en": "pig",
+    "name_vi": "thỉ"
   },
   {
     "char": "豸",
     "kangxi_index": 153,
     "simplified_only": false,
-    "name_en": "walk",
-    "name_vi": "bối"
+    "name_en": "badger",
+    "name_vi": "trãi"
   },
   {
     "char": "貝",
     "kangxi_index": 154,
     "simplified_only": false,
-    "name_en": "clothing",
-    "name_vi": "xích"
+    "name_en": "shell",
+    "name_vi": "bối"
   },
   {
     "char": "赤",
     "kangxi_index": 155,
     "simplified_only": false,
-    "name_en": "cover",
-    "name_vi": "tẩu"
+    "name_en": "red",
+    "name_vi": "xích"
   },
   {
     "char": "走",
     "kangxi_index": 156,
     "simplified_only": false,
-    "name_en": "see",
-    "name_vi": "túc"
+    "name_en": "run",
+    "name_vi": "tẩu"
   },
   {
     "char": "足",
     "kangxi_index": 157,
     "simplified_only": false,
-    "name_en": "horn",
-    "name_vi": "thân"
+    "name_en": "foot",
+    "name_vi": "túc"
   },
   {
     "char": "身",
     "kangxi_index": 158,
     "simplified_only": false,
-    "name_en": "speech",
-    "name_vi": "xa"
+    "name_en": "body",
+    "name_vi": "thân"
   },
   {
     "char": "車",
     "kangxi_index": 159,
     "simplified_only": false,
-    "name_en": "valley",
-    "name_vi": "tân"
+    "name_en": "cart",
+    "name_vi": "xa"
   },
   {
     "char": "辛",
     "kangxi_index": 160,
     "simplified_only": false,
-    "name_en": "bean",
-    "name_vi": "thần"
+    "name_en": "bitter",
+    "name_vi": "tân"
   },
   {
     "char": "辰",
     "kangxi_index": 161,
     "simplified_only": false,
-    "name_en": "pig",
-    "name_vi": "sước"
+    "name_en": "morning",
+    "name_vi": "thần"
   },
   {
     "char": "辵",
     "kangxi_index": 162,
     "simplified_only": false,
-    "name_en": "boar",
-    "name_vi": "ấp"
+    "name_en": "walk",
+    "name_vi": "sước"
   },
   {
     "char": "邑",
     "kangxi_index": 163,
     "simplified_only": false,
-    "name_en": "shell",
-    "name_vi": "dậu"
+    "name_en": "city",
+    "name_vi": "ấp"
   },
   {
     "char": "酉",
     "kangxi_index": 164,
     "simplified_only": false,
-    "name_en": "red",
-    "name_vi": "thải"
+    "name_en": "wine",
+    "name_vi": "dậu"
   },
   {
     "char": "釆",
     "kangxi_index": 165,
     "simplified_only": false,
-    "name_en": "walk",
-    "name_vi": "lý"
+    "name_en": "distinguish",
+    "name_vi": "biện"
   },
   {
     "char": "里",
     "kangxi_index": 166,
     "simplified_only": false,
-    "name_en": "foot",
-    "name_vi": "kim"
+    "name_en": "village",
+    "name_vi": "lý"
   },
   {
     "char": "金",
     "kangxi_index": 167,
     "simplified_only": false,
-    "name_en": "body",
-    "name_vi": "trường"
+    "name_en": "gold",
+    "name_vi": "kim"
   },
   {
     "char": "長",
     "kangxi_index": 168,
     "simplified_only": false,
-    "name_en": "vehicle",
-    "name_vi": "môn"
+    "name_en": "long",
+    "name_vi": "trường"
   },
   {
     "char": "門",
     "kangxi_index": 169,
     "simplified_only": false,
-    "name_en": "bitter",
-    "name_vi": "phụ"
+    "name_en": "gate",
+    "name_vi": "môn"
   },
   {
     "char": "阜",
     "kangxi_index": 170,
     "simplified_only": false,
-    "name_en": "morning",
-    "name_vi": "lệ"
+    "name_en": "mound",
+    "name_vi": "phụ"
   },
   {
     "char": "隶",
     "kangxi_index": 171,
     "simplified_only": false,
-    "name_en": "walk",
-    "name_vi": "chuy"
+    "name_en": "slave",
+    "name_vi": "đãi"
   },
   {
     "char": "隹",
     "kangxi_index": 172,
     "simplified_only": false,
-    "name_en": "town",
-    "name_vi": "vũ"
+    "name_en": "short tailed bird",
+    "name_vi": "chuy"
   },
   {
     "char": "雨",
     "kangxi_index": 173,
     "simplified_only": false,
-    "name_en": "wine",
-    "name_vi": "thanh"
+    "name_en": "rain",
+    "name_vi": "vũ"
   },
   {
-    "char": "青",
+    "char": "靑",
     "kangxi_index": 174,
     "simplified_only": false,
-    "name_en": "gather",
-    "name_vi": "phi"
+    "name_en": "blue",
+    "name_vi": "thanh"
   },
   {
     "char": "非",
     "kangxi_index": 175,
     "simplified_only": false,
-    "name_en": "village",
-    "name_vi": "diện"
+    "name_en": "wrong",
+    "name_vi": "phi"
   },
   {
     "char": "面",
     "kangxi_index": 176,
     "simplified_only": false,
-    "name_en": "gold",
-    "name_vi": "cách"
+    "name_en": "face",
+    "name_vi": "diện"
   },
   {
     "char": "革",
     "kangxi_index": 177,
     "simplified_only": false,
-    "name_en": "long",
-    "name_vi": "vi"
+    "name_en": "leather",
+    "name_vi": "cách"
   },
   {
     "char": "韋",
     "kangxi_index": 178,
     "simplified_only": false,
-    "name_en": "gate",
-    "name_vi": "vận"
+    "name_en": "tanned leather",
+    "name_vi": "vi"
   },
   {
     "char": "韭",
     "kangxi_index": 179,
     "simplified_only": false,
-    "name_en": "mound",
-    "name_vi": "âm"
+    "name_en": "leek",
+    "name_vi": "cửu"
   },
   {
     "char": "音",
     "kangxi_index": 180,
     "simplified_only": false,
-    "name_en": "slave",
-    "name_vi": "hiệt"
+    "name_en": "sound",
+    "name_vi": "âm"
   },
   {
     "char": "頁",
     "kangxi_index": 181,
     "simplified_only": false,
-    "name_en": "short-tailed",
-    "name_vi": "phong"
+    "name_en": "leaf",
+    "name_vi": "hiệt"
   },
   {
     "char": "風",
     "kangxi_index": 182,
     "simplified_only": false,
-    "name_en": "bird",
-    "name_vi": "phi"
+    "name_en": "wind",
+    "name_vi": "phong"
   },
   {
     "char": "飛",
     "kangxi_index": 183,
     "simplified_only": false,
-    "name_en": "rain",
-    "name_vi": "thực"
+    "name_en": "fly",
+    "name_vi": "phi"
   },
   {
     "char": "食",
     "kangxi_index": 184,
     "simplified_only": false,
-    "name_en": "blue",
-    "name_vi": "thủ"
+    "name_en": "eat",
+    "name_vi": "thực"
   },
   {
     "char": "首",
     "kangxi_index": 185,
     "simplified_only": false,
-    "name_en": "non-face",
-    "name_vi": "hương"
+    "name_en": "head",
+    "name_vi": "thủ"
   },
   {
     "char": "香",
     "kangxi_index": 186,
     "simplified_only": false,
-    "name_en": "leather",
-    "name_vi": "mã"
+    "name_en": "fragrant",
+    "name_vi": "hương"
   },
   {
     "char": "馬",
     "kangxi_index": 187,
     "simplified_only": false,
-    "name_en": "leather",
-    "name_vi": "cốt"
+    "name_en": "horse",
+    "name_vi": "mã"
   },
   {
     "char": "骨",
     "kangxi_index": 188,
     "simplified_only": false,
-    "name_en": "strap",
-    "name_vi": "cao"
+    "name_en": "bone",
+    "name_vi": "cốt"
   },
   {
     "char": "高",
     "kangxi_index": 189,
     "simplified_only": false,
-    "name_en": "leek",
-    "name_vi": "tiêu"
+    "name_en": "tall",
+    "name_vi": "cao"
   },
   {
     "char": "髟",
     "kangxi_index": 190,
     "simplified_only": false,
-    "name_en": "sound",
-    "name_vi": "đấu"
+    "name_en": "hair",
+    "name_vi": "bưu"
   },
   {
     "char": "鬥",
     "kangxi_index": 191,
     "simplified_only": false,
-    "name_en": "page",
-    "name_vi": "xướng"
+    "name_en": "fight",
+    "name_vi": "đấu"
   },
   {
     "char": "鬯",
     "kangxi_index": 192,
     "simplified_only": false,
-    "name_en": "wind",
-    "name_vi": "cách"
+    "name_en": "sacrificial wine",
+    "name_vi": "sưởng"
   },
   {
     "char": "鬲",
     "kangxi_index": 193,
     "simplified_only": false,
-    "name_en": "fly",
-    "name_vi": "quỷ"
+    "name_en": "cauldron",
+    "name_vi": "cách"
   },
   {
     "char": "鬼",
     "kangxi_index": 194,
     "simplified_only": false,
-    "name_en": "food",
-    "name_vi": "ngư"
+    "name_en": "ghost",
+    "name_vi": "quỷ"
   },
   {
     "char": "魚",
     "kangxi_index": 195,
     "simplified_only": false,
-    "name_en": "head",
-    "name_vi": "điểu"
+    "name_en": "fish",
+    "name_vi": "ngư"
   },
   {
     "char": "鳥",
     "kangxi_index": 196,
     "simplified_only": false,
-    "name_en": "fragrance",
-    "name_vi": "lỗ"
+    "name_en": "bird",
+    "name_vi": "điểu"
   },
   {
     "char": "鹵",
     "kangxi_index": 197,
     "simplified_only": false,
-    "name_en": "horse",
-    "name_vi": "lộc"
+    "name_en": "salt",
+    "name_vi": "lỗ"
   },
   {
     "char": "鹿",
     "kangxi_index": 198,
     "simplified_only": false,
-    "name_en": "bone",
-    "name_vi": "mạch"
+    "name_en": "deer",
+    "name_vi": "lộc"
   },
   {
     "char": "麥",
     "kangxi_index": 199,
     "simplified_only": false,
-    "name_en": "tall",
-    "name_vi": "ma"
+    "name_en": "wheat",
+    "name_vi": "mạch"
   },
   {
     "char": "麻",
     "kangxi_index": 200,
     "simplified_only": false,
-    "name_en": "hair",
-    "name_vi": "hoàng"
+    "name_en": "hemp",
+    "name_vi": "ma"
   },
   {
     "char": "黃",
     "kangxi_index": 201,
     "simplified_only": false,
-    "name_en": "fighting",
-    "name_vi": "thử"
+    "name_en": "yellow",
+    "name_vi": "hoàng"
   },
   {
     "char": "黍",
     "kangxi_index": 202,
     "simplified_only": false,
-    "name_en": "vessel",
-    "name_vi": "hắc"
+    "name_en": "millet",
+    "name_vi": "thử"
   },
   {
     "char": "黑",
     "kangxi_index": 203,
     "simplified_only": false,
-    "name_en": "cauldron",
-    "name_vi": "chỉ"
+    "name_en": "black",
+    "name_vi": "hắc"
   },
   {
     "char": "黹",
     "kangxi_index": 204,
     "simplified_only": false,
-    "name_en": "divider",
-    "name_vi": "mãnh"
+    "name_en": "embroidery",
+    "name_vi": "chỉ"
   },
   {
     "char": "黽",
     "kangxi_index": 205,
     "simplified_only": false,
-    "name_en": "ghost",
-    "name_vi": "đỉnh"
+    "name_en": "frog",
+    "name_vi": "mãnh"
   },
   {
     "char": "鼎",
     "kangxi_index": 206,
     "simplified_only": false,
-    "name_en": "fish",
-    "name_vi": "cổ"
+    "name_en": "tripod",
+    "name_vi": "đỉnh"
   },
   {
     "char": "鼓",
     "kangxi_index": 207,
     "simplified_only": false,
-    "name_en": "bird",
-    "name_vi": "thử"
+    "name_en": "drum",
+    "name_vi": "cổ"
   },
   {
     "char": "鼠",
     "kangxi_index": 208,
     "simplified_only": false,
-    "name_en": "salt",
-    "name_vi": "tỵ"
+    "name_en": "rat",
+    "name_vi": "thử"
   },
   {
     "char": "鼻",
     "kangxi_index": 209,
     "simplified_only": false,
-    "name_en": "deer",
-    "name_vi": "tề"
+    "name_en": "nose",
+    "name_vi": "tỵ"
   },
   {
     "char": "齊",
     "kangxi_index": 210,
     "simplified_only": false,
-    "name_en": "wheat",
-    "name_vi": "xỉ"
+    "name_en": "even",
+    "name_vi": "tề"
   },
   {
     "char": "齒",
     "kangxi_index": 211,
     "simplified_only": false,
-    "name_en": "hemp",
-    "name_vi": "long"
+    "name_en": "tooth",
+    "name_vi": "xỉ"
   },
   {
     "char": "龍",
     "kangxi_index": 212,
     "simplified_only": false,
-    "name_en": "yellow",
-    "name_vi": "quy"
+    "name_en": "dragon",
+    "name_vi": "long"
   },
   {
     "char": "龜",
     "kangxi_index": 213,
     "simplified_only": false,
-    "name_en": "millet",
-    "name_vi": "quyển"
+    "name_en": "turtle",
+    "name_vi": "quy"
   },
   {
     "char": "龠",
     "kangxi_index": 214,
     "simplified_only": false,
     "name_en": "flute",
-    "name_vi": "quản"
+    "name_vi": "dược"
+  },
+  {
+    "char": "川",
+    "kangxi_index": null,
+    "simplified_only": true,
+    "name_en": "inch",
+    "name_vi": "xuyên"
+  },
+  {
+    "char": "青",
+    "kangxi_index": null,
+    "simplified_only": true,
+    "name_en": "gather",
+    "name_vi": "thanh"
   },
   {
     "char": "氵",
@@ -1573,27 +1587,6 @@
     "simplified_only": true,
     "name_en": "clothing (side form)",
     "name_vi": "y đứng"
-  },
-  {
-    "char": "月",
-    "kangxi_index": null,
-    "simplified_only": true,
-    "name_en": "flesh (component form)",
-    "name_vi": "nhục nguyệt"
-  },
-  {
-    "char": "廾",
-    "kangxi_index": null,
-    "simplified_only": true,
-    "name_en": "hands joined",
-    "name_vi": "củng"
-  },
-  {
-    "char": "癶",
-    "kangxi_index": null,
-    "simplified_only": true,
-    "name_en": "legs spread",
-    "name_vi": "bát chân"
   },
   {
     "char": "𠂉",

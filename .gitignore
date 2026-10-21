@@ -13,6 +13,11 @@ publish/
 data/*.db
 data/*.sqlite*
 data/voices.json
+data/mmah/
+data/hsk30/
+data/cedict/
+data/unihan/
+data/hanzi_writer/
 .claude/*
 !.claude/skills/
 /build/

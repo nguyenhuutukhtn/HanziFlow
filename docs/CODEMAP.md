@@ -9,13 +9,17 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `__init__.py` [4] — Mandarin audio course generator.
 - `audio_builder.py` [185] — FFmpeg-based audio assembly with per-segment pauses.
 - `audit.py` [136] — Read-only authoring audit for cross-lesson pattern continuity.
-- `cli.py` [252] — Command-line interface for validation, generation, transcripts and reviews.
+- `characters/__init__.py` [6] — Offline character data loading and lesson resolution.
+- `characters/bundle.py` [135] — Export/import the small authored Vietnamese character-data loop.
+- `characters/data.py` [228] — Small, lazy loaders for the offline character data sources.
+- `characters/resolve.py` [202] — Resolve lesson characters from loaded offline data.
+- `cli.py` [264] — Command-line interface for validation, generation, transcripts and reviews.
 - `config.py` [53] — Environment-backed configuration without exposing secrets.
 - `generate_plan.py` [82] — Cache/cost plan for a lesson's TTS segments: `generate --dry-run` and bundle import.
 - `lesson_schema.py` [105] — Validated, content-driven lesson schema.
 - `logs.py` [14] — Shared helper: write full detail behind a short CLI summary (docs/workflow.md).
 - `publish.py` [20] — Public publishing API; implementation is split into focused modules.
-- `publish_core.py` [282]
+- `publish_core.py` [298]
 - `publish_render.py` [39]
 - `publish_support.py` [123]
 - `publish_timeline.py` [204]
@@ -36,6 +40,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 
 ## Python scripts (`scripts/`)
 
+- `build_radicals.py` [62] — Build the radical metadata from a pinned UCD skeleton and authored names.
 - `codemap.py` [100] — Regenerate docs/CODEMAP.md: one line per source file, so agents open only what they need.
 
 ## Python tests (`tests/`)
@@ -45,10 +50,11 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `test_audio_tags.py` [193]
 - `test_audit.py` [144]
 - `test_bundle.py` [78]
+- `test_characters.py` [127]
 - `test_cli.py` [31]
 - `test_lesson_001_story.py` [114]
 - `test_lesson_schema.py` [67]
-- `test_publish.py` [367] ⚠
+- `test_publish.py` [419] ⚠
 - `test_publish_guided_zh.py` [28]
 - `test_review.py` [18]
 - `test_storage.py` [12]

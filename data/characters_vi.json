@@ -1,0 +1,334 @@
+{
+  "一": {
+    "han_viet": "nhất",
+    "vi_meaning": "một"
+  },
+  "上": {
+    "han_viet": "thượng",
+    "vi_meaning": "trên"
+  },
+  "不": {
+    "han_viet": "bất",
+    "vi_meaning": "không"
+  },
+  "中": {
+    "han_viet": "trung",
+    "vi_meaning": "Trung Quốc"
+  },
+  "也": {
+    "han_viet": "dã",
+    "vi_meaning": "cũng"
+  },
+  "事": {
+    "han_viet": "sự",
+    "vi_meaning": "việc, chuyện"
+  },
+  "些": {
+    "han_viet": "ta",
+    "vi_meaning": "một vài"
+  },
+  "今": {
+    "han_viet": "kim",
+    "vi_meaning": "nay"
+  },
+  "他": {
+    "han_viet": "tha",
+    "vi_meaning": "anh ấy"
+  },
+  "们": {
+    "han_viet": "môn",
+    "vi_meaning": "số nhiều"
+  },
+  "你": {
+    "han_viet": "nhĩ",
+    "vi_meaning": "bạn"
+  },
+  "先": {
+    "han_viet": "tiên",
+    "vi_meaning": "trước"
+  },
+  "关": {
+    "han_viet": "quan",
+    "vi_meaning": "liên quan"
+  },
+  "再": {
+    "han_viet": "tái",
+    "vi_meaning": "lại"
+  },
+  "别": {
+    "han_viet": "biệt",
+    "vi_meaning": "đừng"
+  },
+  "到": {
+    "han_viet": "đáo",
+    "vi_meaning": "đến"
+  },
+  "卖": {
+    "han_viet": "mại",
+    "vi_meaning": "bán"
+  },
+  "南": {
+    "han_viet": "nam",
+    "vi_meaning": "Nam"
+  },
+  "句": {
+    "han_viet": "cú",
+    "vi_meaning": "câu"
+  },
+  "同": {
+    "han_viet": "đồng",
+    "vi_meaning": "cùng"
+  },
+  "名": {
+    "han_viet": "danh",
+    "vi_meaning": "tên"
+  },
+  "后": {
+    "han_viet": "hậu",
+    "vi_meaning": "sau"
+  },
+  "吗": {
+    "han_viet": "ma",
+    "vi_meaning": "trợ từ hỏi"
+  },
+  "吧": {
+    "han_viet": "ba",
+    "vi_meaning": "nhé"
+  },
+  "听": {
+    "han_viet": "thính",
+    "vi_meaning": "nghe"
+  },
+  "和": {
+    "han_viet": "hòa",
+    "vi_meaning": "và"
+  },
+  "回": {
+    "han_viet": "hồi",
+    "vi_meaning": "trở về"
+  },
+  "外": {
+    "han_viet": "ngoại",
+    "vi_meaning": "ngoài"
+  },
+  "天": {
+    "han_viet": "thiên",
+    "vi_meaning": "ngày"
+  },
+  "好": {
+    "han_viet": "hảo",
+    "vi_meaning": "tốt"
+  },
+  "娜": {
+    "han_viet": "na",
+    "vi_meaning": "Na"
+  },
+  "子": {
+    "han_viet": "tử",
+    "vi_meaning": "con, hậu tố"
+  },
+  "字": {
+    "han_viet": "tự",
+    "vi_meaning": "chữ"
+  },
+  "安": {
+    "han_viet": "an",
+    "vi_meaning": "An"
+  },
+  "对": {
+    "han_viet": "đối",
+    "vi_meaning": "đúng"
+  },
+  "小": {
+    "han_viet": "tiểu",
+    "vi_meaning": "nhỏ"
+  },
+  "思": {
+    "han_viet": "tư",
+    "vi_meaning": "nghĩ"
+  },
+  "意": {
+    "han_viet": "ý",
+    "vi_meaning": "ý nghĩa"
+  },
+  "懂": {
+    "han_viet": "đổng",
+    "vi_meaning": "hiểu"
+  },
+  "我": {
+    "han_viet": "ngã",
+    "vi_meaning": "tôi, mình"
+  },
+  "或": {
+    "han_viet": "hoặc",
+    "vi_meaning": "hoặc"
+  },
+  "故": {
+    "han_viet": "cố",
+    "vi_meaning": "chuyện"
+  },
+  "文": {
+    "han_viet": "văn",
+    "vi_meaning": "tiếng, văn"
+  },
+  "明": {
+    "han_viet": "minh",
+    "vi_meaning": "Minh"
+  },
+  "是": {
+    "han_viet": "thị",
+    "vi_meaning": "là"
+  },
+  "最": {
+    "han_viet": "tối",
+    "vi_meaning": "nhất"
+  },
+  "有": {
+    "han_viet": "hữu",
+    "vi_meaning": "có"
+  },
+  "李": {
+    "han_viet": "lý",
+    "vi_meaning": "Lý"
+  },
+  "样": {
+    "han_viet": "dạng",
+    "vi_meaning": "dạng, kiểu"
+  },
+  "桌": {
+    "han_viet": "trác",
+    "vi_meaning": "bàn"
+  },
+  "次": {
+    "han_viet": "thứ",
+    "vi_meaning": "lần"
+  },
+  "没": {
+    "han_viet": "một",
+    "vi_meaning": "chưa, không có"
+  },
+  "猜": {
+    "han_viet": "sai",
+    "vi_meaning": "đoán"
+  },
+  "用": {
+    "han_viet": "dụng",
+    "vi_meaning": "dùng"
+  },
+  "的": {
+    "han_viet": "đích",
+    "vi_meaning": "của"
+  },
+  "看": {
+    "han_viet": "khán",
+    "vi_meaning": "nhìn"
+  },
+  "知": {
+    "han_viet": "tri",
+    "vi_meaning": "biết"
+  },
+  "短": {
+    "han_viet": "đoản",
+    "vi_meaning": "ngắn"
+  },
+  "示": {
+    "han_viet": "thị",
+    "vi_meaning": "tỏ ra"
+  },
+  "答": {
+    "han_viet": "đáp",
+    "vi_meaning": "trả lời"
+  },
+  "系": {
+    "han_viet": "hệ",
+    "vi_meaning": "hệ"
+  },
+  "者": {
+    "han_viet": "giả",
+    "vi_meaning": "người"
+  },
+  "表": {
+    "han_viet": "biểu",
+    "vi_meaning": "biểu thị"
+  },
+  "袋": {
+    "han_viet": "đại",
+    "vi_meaning": "túi"
+  },
+  "讲": {
+    "han_viet": "giảng",
+    "vi_meaning": "nói"
+  },
+  "词": {
+    "han_viet": "từ",
+    "vi_meaning": "từ"
+  },
+  "话": {
+    "han_viet": "thoại",
+    "vi_meaning": "lời nói"
+  },
+  "语": {
+    "han_viet": "ngữ",
+    "vi_meaning": "tiếng"
+  },
+  "说": {
+    "han_viet": "thuyết",
+    "vi_meaning": "nói"
+  },
+  "谁": {
+    "han_viet": "thùy",
+    "vi_meaning": "ai"
+  },
+  "起": {
+    "han_viet": "khởi",
+    "vi_meaning": "cùng"
+  },
+  "越": {
+    "han_viet": "việt",
+    "vi_meaning": "Việt"
+  },
+  "跟": {
+    "han_viet": "cân",
+    "vi_meaning": "với"
+  },
+  "轮": {
+    "han_viet": "luân",
+    "vi_meaning": "lượt"
+  },
+  "还": {
+    "han_viet": "hoàn",
+    "vi_meaning": "vẫn, còn"
+  },
+  "这": {
+    "han_viet": "giá",
+    "vi_meaning": "này"
+  },
+  "选": {
+    "han_viet": "tuyển",
+    "vi_meaning": "chọn"
+  },
+  "遍": {
+    "han_viet": "biến",
+    "vi_meaning": "lượt"
+  },
+  "道": {
+    "han_viet": "đạo",
+    "vi_meaning": "đường"
+  },
+  "那": {
+    "han_viet": "na",
+    "vi_meaning": "đó"
+  },
+  "里": {
+    "han_viet": "lý",
+    "vi_meaning": "trong"
+  },
+  "问": {
+    "han_viet": "vấn",
+    "vi_meaning": "hỏi"
+  },
+  "题": {
+    "han_viet": "đề",
+    "vi_meaning": "câu hỏi"
+  }
+}

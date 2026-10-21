@@ -46,6 +46,7 @@ def _matches_catalog_entry(package: Path, entry: dict[str, Any] | None) -> bool:
         (package / "lesson.json", files.get("manifest")),
         (package / "reference.json", files.get("reference")),
         (package / "items.json", files.get("items")),
+        (package / "characters.json", files.get("characters")),
         (package / "guided.mp3", tracks.get("guided")),
         (package / "timeline_guided.json", (tracks.get("guided") or {}).get("timeline")),
     ]
@@ -120,4 +121,3 @@ def _make_clip(source: Path, clips_dir: Path) -> dict[str, Any]:
     else:
         temporary.replace(destination)
     return {"file": f"clips/{destination.name}", **digest}
-

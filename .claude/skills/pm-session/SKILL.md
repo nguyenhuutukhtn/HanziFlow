@@ -11,12 +11,15 @@ Talk to the user in Vietnamese. Code, docs and briefs stay in English.
 
 1. **Orient (once per session):** `docs/STATUS.md`, `git status --short`, `ls docs/tasks/`. Don't read other docs unless the task needs them.
 2. **Review a task report:** check the report against the diff, never trust it alone.
-   - Run `scripts/check.sh` (one line per step). Read the code the report says changed only where the risk is (timing, state, deletes), via `grep -n` + a line range, not whole files.
+   - If the user pastes a `task-review` verdict (cheap reviewer agent, `.claude/skills/task-review/`): `pass` → commit; `fail`/`needs-PM` → open only the flagged files/lines. Still glance at its random samples.
+   - Otherwise re-run the brief's `Verify` script yourself; its printed values are the review. Pass → commit without reading code, unless the diff touches a risk area below.
+   - Run `scripts/check.sh` (one line per step).
+   - Read code only in risk areas: timing/state, deletes/prune, paid TTS, secrets, contract/schema changes. Read the code the report says changed only where the risk is (timing, state, deletes), via `grep -n` + a line range, not whole files.
    - Read `git diff --stat`, then only the hunks that matter (`git diff <file> | grep '^+'`). Never re-read whole files.
    - Check against the spec section the brief named: contract consistency across files, safety (deletes, paid TTS, secrets), and whether STATUS/token_log were updated.
    - Verdict: **commit** (stage the exact paths, commit only when the user says so) or **fix**. A fix goes into a `docs/tasks/<ID>-fix.md` brief. Fix it yourself only if it's under ~10 lines and cheaper than a brief.
 3. **Device check per brief:** set `Device check: user` unless an objective number only a device can give is the acceptance (e.g. a logcat timing); then `agent (<one scripted command>)`. Listening, looks and feel are always the user's.
-4. **Next task:** pick it from STATUS "Next", write or refresh `docs/tasks/<ID>.md` with the template in `docs/tasks/README.md`, and name the cheapest agent that fits. Before writing the launch prompt, decide **continue vs fresh** (below), then hand the user the matching prompt.
+4. **Next task:** pick it from STATUS "Next", write or refresh `docs/tasks/<ID>.md` with the template in `docs/tasks/README.md` (follow its "Writing Acceptance + Verify": concrete expected values, a script that fails on mismatch), and name the cheapest agent that fits. Before writing the launch prompt, decide **continue vs fresh** (below), then hand the user the matching prompt.
 5. **Features/improvements:** ask the fewest questions that change the design, record decisions in STATUS "Open decisions" or the relevant architecture file, then write briefs.
 
 ## Continue the old agent window vs start a fresh agent

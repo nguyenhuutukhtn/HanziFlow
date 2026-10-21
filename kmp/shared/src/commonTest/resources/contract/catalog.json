@@ -1,18 +1,23 @@
 {
-  "catalog_version": 5,
+  "catalog_version": 11,
   "lessons": [
     {
-      "base_url": "lessons/lesson_001/v4/",
+      "base_url": "lessons/lesson_001/v7/",
       "files": {
+        "characters": {
+          "bytes": 51510,
+          "file": "characters.json",
+          "sha256": "53bd2019ecbdf386606a00a4d21b5d147f9508abc31c77a34485ee726827684b"
+        },
         "items": {
           "bytes": 240606,
           "file": "items.json",
-          "sha256": "c3acdea1e8c80520aa850b66dd565d59d17b88a793e4822e435c0ce18563cfc7"
+          "sha256": "5a6bce491e71684093dfdf1e1a4363295e1fc66773d2ebe5ce8c1f0c520826bf"
         },
         "manifest": {
           "bytes": 484,
           "file": "lesson.json",
-          "sha256": "6f94068e334ef7c7059980f91d5af007e96839ddb5c64c669ece482e2866eff7"
+          "sha256": "7adf4a660e15ebc2a6a357f2e23f483f64e908e5e417ca4283fc078b82985762"
         },
         "reference": {
           "bytes": 683488,
@@ -33,22 +38,22 @@
           "timeline": {
             "bytes": 144000,
             "file": "timeline_guided.json",
-            "sha256": "4205c75d50d077fca29e53033d0bf1a00e188cd01aa2bd5566bf88b884f30212"
+            "sha256": "5a3a0687b2014c83e3e40c6207c895ff05db04ded2f747655490923a91284315"
           }
         },
         "guided_zh": {
-          "bytes": 16434407,
-          "duration_ms": 2054243,
+          "bytes": 18839553,
+          "duration_ms": 2354883,
           "file": "guided_zh.mp3",
-          "sha256": "53b9c1468a862d0c991b30a3f7c655108b222340f13ce5758a3f7ccf02c688cd",
+          "sha256": "3a9f1821f0af74e6208061e87e1b005ad64947c9f17fe49cad69cd2c5969337e",
           "timeline": {
-            "bytes": 110935,
+            "bytes": 110124,
             "file": "timeline_guided_zh.json",
-            "sha256": "686e3086bf69d58db43ef4a49644c7db27a1eac961935bd78ffb852db6491a0b"
+            "sha256": "445dcfd6cd4c791b22f80c186607e2f467180303caa7fa0c810d6550bd890184"
           }
         }
       },
-      "version": 4
+      "version": 7
     }
   ],
   "schema_version": 1
