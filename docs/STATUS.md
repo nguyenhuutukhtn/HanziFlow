@@ -2,7 +2,7 @@
 
 Read this first in a new session instead of past chat history. Keep it short; update it at the end of every task.
 
-Last updated: 2026-10-21 (C2 Android tests/previews added; Gradle/pytest verification blocked) · branch `app-publish-pipeline` (not merged to `main`)
+Last updated: 2026-10-21 (C2 fully done incl. device check) · branch `app-publish-pipeline` (not merged to `main`)
 
 ## Working rules
 
@@ -14,8 +14,7 @@ Last updated: 2026-10-21 (C2 Android tests/previews added; Gradle/pytest verific
 
 ## Done
 
-- **C2-fix (partial):** compile blockers and the lookup actions/“Chữ của bài” sheet were addressed; verification remains blocked by Gradle's local socket permission and missing pytest.
-- **C2-test (partial):** added lookup/component-card UI coverage, no-character-data affordance coverage, and ViewModel character-index tests; existing previews remain repository-free. Verification is still blocked before compilation by the Gradle wrapper lock and missing pytest.
+- **C2 (done, incl. device check 2026-10-21):** character card UI shipped and verified on device — lookup-sheet chip row → card → component card → back; "Chữ của bài" lists 83 characters + "Bộ phận cần biết" (94 components); `phoneticFamily` capped at 4, view-only; no "Xem nét" anywhere; lookup sheet copy/share actions work. C2-fix and C2-test both landed and are committed (`7ada57f`, `37d9ad6`).
 
 - Content: Lesson 1 mini-story (guided track generated; practice track needs 2 paid TTS clips, skipped). Lesson 1 content audit still in progress.
 - Python: `mandarin-course publish` → `publish/` (catalog, lesson, reference with tokens, items + clips, sentence-level timeline, 64 kbps mono). Draft vocab `lessons/lesson_001_vocab.json` awaits learner review.
@@ -53,7 +52,9 @@ Last updated: 2026-10-21 (C2 Android tests/previews added; Gradle/pytest verific
    - **Worker control (2026-10-21, user):** PM is back to brief + review only; the **user runs every task in the Codex IDE extension** (interactive = Gradle/network get approved and actually compile; `codex exec` sandbox blocks them, which is why C2 twice reported "blocked by Gradle" without compiling). PM may propose deepcode/Haiku for mechanical Gradle-free work but **waits for the user's OK**, and fixes code itself only under ~10 lines. Callback channel both ways: `scripts/agent_ask.sh <ID> --inbox` / `"<question>"` on the worker side, `just tell|answer|asking <ID>` + `just watch <ID>` / `just stop-agents` on ours. A monitor UI pane was rejected — watching isn't the problem, injecting information mid-run is.
    - **PM process (2026-10-21):** PM launches workers itself (`codex exec`, `deepcode -x`, Haiku subagent); model per task + escalation + quota routing + model-switch rule in `.claude/skills/pm-session`; `just quota` (Codex 5h/week %, DeepSeek balance; Claude = `/usage`, no local source yet).
    - **W1** (next, brief not written): web player with an always-on-top floating window for office use (user, 2026-10-21). React + `kmp/shared` JS; anon public bucket, no sign-in. Catalog → download/stream → karaoke transcript (Hanzi large, pinyin/vi toggles) → "Cửa sổ nổi" via Document Picture-in-Picture (Chrome/Edge, Mac). Interactive inside the window: ±10s, replay line, tap-to-seek, tap a character → compact card from `characters.json`, copy char/line; Media Session API for keyboard/headset media keys.
-   - **C2** (`docs/tasks/C2.md` + `C2-fix.md` done; **`C2-test.md` open**): character card UI (Android) — lookup-sheet character chips, card (Hán-Việt/pinyin/vi/components/lesson words/phonetic family), "Chữ của bài" route, `characters.json` in the shared contract + download. Decided 2026-10-21: no stroke animation (base pack missing), no progress/SRS (G2c), phonetic_family shown max 4 view-only. Feature + shared contract + download + lookup chips + card + "Chữ của bài" sheet landed and `scripts/check.sh` passes (shared test prints 我 ngã, 意 ý, 答 đáp, 示 thị, 里 lý from the real v7 fixture). PM fixed 4 compile errors the sandboxed worker never saw. Remaining: Android UI/ViewModel tests + @Preview = `docs/tasks/C2-test.md` (user runs it); then device check.
+   - **C2 — done** (`docs/tasks/C2.md`/`C2-fix.md`/`C2-test.md`, device check OK 2026-10-21): character card UI shipped end to end, see "Done" above.
+   - **C3 (candidate, needs research before a brief):** per-character/word pronunciation playback from the character card — source audio unclear (no pre-rendered single-char clips today; options are a new per-char TTS pass, extracting a char-length slice from the existing word clip's forced-alignment timing, or piggybacking on `lessonWords`' word-level clip if one exists). Needs a cost/latency check before sizing.
+   - **C4 (candidate):** in the character card's "Từ trong bài" (lessonWords) row, tapping a word should jump to it — exact target still open (seek the transcript to that word's line? open that word's own lookup/card instead of just listing it?). Clarify with user before writing the brief.
    - Exercises: after G2c SRS base.
 
    **Before G2b, which is paused:**
@@ -72,7 +73,7 @@ Last updated: 2026-10-21 (C2 Android tests/previews added; Gradle/pytest verific
 
 ## Open decisions (user)
 
-- Character learning feature: design finalized 2026-10-21 in [architecture/characters.md](architecture/characters.md). C0/C1 done; C2 brief written and running (before W1).
+- Character learning feature: design finalized 2026-10-21 in [architecture/characters.md](architecture/characters.md). C0/C1/C2 done. C3 (per-char/word pronunciation) and C4 ("Từ trong bài" jump target) are backlog candidates needing research/clarification before a brief — see "Next".
 - W1 on Linux (office uses Firefox, no Document PiP): undecided. Options: Chrome/Chromium on Linux; Firefox video-PiP fallback (render transcript to canvas → video stream; view-only, play/pause only); Tauri shell with always-on-top later.
 - Decided 2026-10-21: no native Mac/Linux apps; desktop = the web app (+ optional Tauri wrapper later).
 - Decided 2026-10-21: iOS = native SwiftUI shell over the `kmp/shared` core as an XCFramework; no Compose Multiplatform. Web UI stays React.
