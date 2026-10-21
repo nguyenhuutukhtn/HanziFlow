@@ -45,7 +45,8 @@ Last updated: 2026-10-21 (C1-fix2 done) · branch `app-publish-pipeline` (not me
 
 0. **Now:** lesson authoring workflow (user, 2026-10-21; lesson 001 = model lesson). Steps: outline → one AI draft (any chat model, bundle is self-contained) → import gates + metrics vs lesson 001 → cross-model review by row id (findings, no rewrite) → row-level fixes → outside reviewer (knows zh↔vi, not Hán-Việt) checks flagged zh lines/translations; user does listening QA.
    - **T6b** (`docs/tasks/T6b.md`, continue T6a window): `lesson-metrics --against 001`, `export-rows`/`import-rows`.
-   - **PM after T6b:** skills `lesson-author` (outline, draft, row fixes) + `lesson-review` (rubric, row-id findings, Hán-Việt cross-model check of new chars). Then lesson 002.
+   - **Skills done (PM, 2026-10-21):** `.claude/skills/lesson-author` (outline → draft → gates → metrics → chars → row fixes → bible) + `lesson-review` (8-point rubric, findings by `ref`/`ref#n`, independent Hán-Việt check, outside-reviewer list); both linked under `.agents/skills/` for deepcode. **Next: lesson 002** — author = Codex (strong model), reviewer = DeepSeek (different model).
+   - Reviews: `task-review` now runs via `deepcode -x` (PM-invoked, reads only the verdict); worked on T6b (caught duplicate row refs).
    - **W1** (next, brief not written): web player with an always-on-top floating window for office use (user, 2026-10-21). React + `kmp/shared` JS; anon public bucket, no sign-in. Catalog → download/stream → karaoke transcript (Hanzi large, pinyin/vi toggles) → "Cửa sổ nổi" via Document Picture-in-Picture (Chrome/Edge, Mac). Interactive inside the window: ±10s, replay line, tap-to-seek, tap a character → compact card from `characters.json`, copy char/line; Media Session API for keyboard/headset media keys.
    - **C2** (not written yet): character card UI (Android). After W1.
    - Exercises: after G2c SRS base.
