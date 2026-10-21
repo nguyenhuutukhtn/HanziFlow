@@ -2,7 +2,7 @@
 
 Read this first in a new session instead of past chat history. Keep it short; update it at the end of every task.
 
-Last updated: 2026-10-21 (L4 done) · branch `app-publish-pipeline` (not merged to `main`)
+Last updated: 2026-10-21 (C0 done) · branch `app-publish-pipeline` (not merged to `main`)
 
 ## Working rules
 
@@ -38,6 +38,7 @@ Last updated: 2026-10-21 (L4 done) · branch `app-publish-pipeline` (not merged 
 - **P3:** repeat recall gaps use cached Vietnamese clip duration + pause; `!guided-only` story-row markers drop Vietnamese-dependent coach lines from `guided_zh`. Lesson 001 has four marked rows; acceptance metrics are 46 repeats, min 1200ms, avg 2430ms, 4 flagged drops, 0 remaining vi. Full checks and generate dry-run pass; no full lesson run per brief. PM review fixes: publish staleness check now drops `guided_only` like `chinese_only` (blocked the first v6 publish); `map_lead` also marked; U1 prune ignores non-versioned paths. Lesson 001 v6 published + uploaded (v5 kept). Listening QA of v6 pending.
 - **L4:** MediaSession connections now retain live player seek commands instead of a connect-time snapshot, restoring scrub/±10s/section seeks; `TrackSwitch` maps gaps and missing lines to the nearest forward shared cue, then backward. Added synthetic and real lesson fixture coverage. Full checks and the specified device action-bit check pass. User device check (4 seek bugs) + v6 Chinese-only listening QA: OK (2026-10-21).
 - **R1:** Character data sources researched and licensed for commercial use; see [docs/research/characters_data.md](research/characters_data.md). Recommendations: Unihan kVietnamese (Hán-Việt), MMAH dictionary.txt LGPL3 (decomposition+etymology), Hanzi Writer data APL (strokes), ivankra/hsk30 MIT (HSK 3.0), CC-CEDICT CC BY-SA 4.0 (English meanings); Vietnamese meanings + component names → author.
+- **C0:** Added `data/radicals_vi.json` with all 214 Kangxi radicals plus 28 simplified/component forms, including Vietnamese bộ names and required positional names.
 
 ## Next (in order)
 
