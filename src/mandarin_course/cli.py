@@ -22,6 +22,8 @@ from .storage import ProgressStore
 from .story import build_story, render_errors, render_summary, write_story
 from .story.bundle import BundleError, command_export_lesson, command_import_lesson
 from .story.ledger import command_ledger
+from .story.metrics import command_lesson_metrics
+from .story.rows import command_export_rows, command_import_rows
 from .transcript import write_transcripts
 from .tts import CachedTTS, ElevenLabsTTS, TTSError
 from .upload import StorageConfig, UploadError, upload_package
@@ -214,6 +216,19 @@ def build_parser() -> argparse.ArgumentParser:
     ledger = sub.add_parser("ledger", help="Write build/ledger_<id>.md: what lessons before <id> taught")
     ledger.add_argument("lesson_id", type=str, help="e.g. 002")
     ledger.add_argument("--lessons-dir", type=Path, default=Path("lessons"))
+    metrics = sub.add_parser("lesson-metrics", help="Compare lesson authoring metrics with a model lesson")
+    metrics.add_argument("lesson_id", type=str, help="e.g. 002")
+    metrics.add_argument("--against", type=str, default="001")
+    metrics.add_argument("--lessons-dir", type=Path, default=Path("lessons"))
+    metrics.add_argument("--json", action="store_true")
+    export_rows_parser = sub.add_parser("export-rows", help="Export selected story rows for revision")
+    export_rows_parser.add_argument("lesson_id", type=str, help="e.g. 001")
+    export_rows_parser.add_argument("row_ref", nargs="+")
+    export_rows_parser.add_argument("--lessons-dir", type=Path, default=Path("lessons"))
+    import_rows_parser = sub.add_parser("import-rows", help="Import selected story-row revisions")
+    import_rows_parser.add_argument("lesson_id", type=str, help="e.g. 001")
+    import_rows_parser.add_argument("file", type=Path)
+    import_rows_parser.add_argument("--lessons-dir", type=Path, default=Path("lessons"))
     import_lesson = sub.add_parser("import-lesson", help="Import an AI's story-source reply: build, validate, audit, dry-run")
     import_lesson.add_argument("lesson_id", type=str, help="e.g. 001")
     import_lesson.add_argument("file", type=Path, help="The AI's reply (bundle or bare story source)")
@@ -252,6 +267,12 @@ def main(argv: list[str] | None = None) -> int:
             return command_export_lesson(args.lesson_id, args.lessons_dir, args.note)
         if args.command == "ledger":
             return command_ledger(args.lesson_id, args.lessons_dir)
+        if args.command == "lesson-metrics":
+            return command_lesson_metrics(args.lesson_id, args.against, args.lessons_dir, args.json)
+        if args.command == "export-rows":
+            return command_export_rows(args.lesson_id, args.row_ref, args.lessons_dir)
+        if args.command == "import-rows":
+            return command_import_rows(args.lesson_id, args.file, args.lessons_dir, settings)
         if args.command == "import-lesson":
             return command_import_lesson(args.lesson_id, args.file, args.lessons_dir, settings)
         if args.command == "export-characters":

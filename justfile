@@ -25,6 +25,15 @@ lesson ID:
 export-lesson ID:
     mandarin-course export-lesson {{ID}}
 
+lesson-metrics ID:
+    mandarin-course lesson-metrics {{ID}}
+
+export-rows ID +REF:
+    mandarin-course export-rows {{ID}} {{REF}}
+
+import-rows ID FILE:
+    mandarin-course import-rows {{ID}} {{FILE}}
+
 # What lessons before ID taught (words, chars, patterns, premise, bible) -> build/ledger_<ID>.md
 ledger ID:
     mandarin-course ledger {{ID}}

@@ -13,7 +13,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `characters/bundle.py` [136] — Export/import the small authored Vietnamese character-data loop.
 - `characters/data.py` [228] — Small, lazy loaders for the offline character data sources.
 - `characters/resolve.py` [202] — Resolve lesson characters from loaded offline data.
-- `cli.py` [270] — Command-line interface for validation, generation, transcripts and reviews.
+- `cli.py` [291] — Command-line interface for validation, generation, transcripts and reviews.
 - `config.py` [53] — Environment-backed configuration without exposing secrets.
 - `generate_plan.py` [82] — Cache/cost plan for a lesson's TTS segments: `generate --dry-run` and bundle import.
 - `lesson_schema.py` [105] — Validated, content-driven lesson schema.
@@ -31,8 +31,10 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `story/blocks.py` [267] — Block types: each turns one `## <type>` section of a story source into segments.
 - `story/bundle.py` [213] — Export/import lesson story-source bundles (docs/workflow.md "Content loop").
 - `story/ledger.py` [163] — Lesson ledger: what lessons before N taught (words, characters, patterns, premise, bible).
+- `story/metrics.py` [139] — Advisory lesson metrics for the authoring loop.
 - `story/parser.py` [143] — Parse a lesson story source (`lessons/src/lesson_XXX.story.md`) into blocks.
 - `story/report.py` [46] — Short build-lesson output: ≤ 20 lines, errors with source line numbers.
+- `story/rows.py` [149] — Export and import row-scoped story-source revisions.
 - `transcript.py` [69] — Learner-facing Markdown transcripts.
 - `tts.py` [246] — ElevenLabs TTS adapter and deterministic audio cache.
 - `upload.py` [171] — Upload published lesson packages to Supabase Storage.
@@ -56,6 +58,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `test_ledger.py` [88]
 - `test_lesson_001_story.py` [114]
 - `test_lesson_schema.py` [67]
+- `test_metrics_rows.py` [88]
 - `test_publish.py` [419] ⚠
 - `test_publish_guided_zh.py` [28]
 - `test_review.py` [18]
