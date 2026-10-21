@@ -53,9 +53,19 @@ Last updated: 2026-10-21 (C2 fully done incl. device check) · branch `app-publi
    - **PM process (2026-10-21):** PM launches workers itself (`codex exec`, `deepcode -x`, Haiku subagent); model per task + escalation + quota routing + model-switch rule in `.claude/skills/pm-session`; `just quota` (Codex 5h/week %, DeepSeek balance; Claude = `/usage`, no local source yet).
    - **W1** (next, brief not written): web player with an always-on-top floating window for office use (user, 2026-10-21). React + `kmp/shared` JS; anon public bucket, no sign-in. Catalog → download/stream → karaoke transcript (Hanzi large, pinyin/vi toggles) → "Cửa sổ nổi" via Document Picture-in-Picture (Chrome/Edge, Mac). Interactive inside the window: ±10s, replay line, tap-to-seek, tap a character → compact card from `characters.json`, copy char/line; Media Session API for keyboard/headset media keys.
    - **C2 — done** (`docs/tasks/C2.md`/`C2-fix.md`/`C2-test.md`, device check OK 2026-10-21): character card UI shipped end to end, see "Done" above.
+   - **Now (user priority, 2026-10-21): character learning first, G2c/exercises later.** **S1**
+     (`docs/tasks/S1.md`) → **S2** (`docs/tasks/S2.md`) — "Xem nét" stroke-order animation.
+     Researched by PM before writing: `data/hanzi_writer/*.json` already fetched (R1), paths use
+     only `M L Q C Z` (checked 40 samples, no arcs), `stroke_available` already computed per
+     char; ships as a new app-downloaded "base pack" (not per-lesson, not bundled in the APK) —
+     lesson_001's 177 chars = ~316KB. S1 = pipeline build/upload + shared model + Android
+     download/cache. S2 = SVG path parser + animated renderer + the "Xem nét" entry point in
+     `CharacterCard.kt` (needs user ask-first per the model table — new Canvas/animation ground).
+   - **L5** (`docs/tasks/L5.md`, written, deferred by user 2026-10-21): "jump to current line"
+     button in the transcript — do after character learning.
    - **C3 (candidate, needs research before a brief):** per-character/word pronunciation playback from the character card — source audio unclear (no pre-rendered single-char clips today; options are a new per-char TTS pass, extracting a char-length slice from the existing word clip's forced-alignment timing, or piggybacking on `lessonWords`' word-level clip if one exists). Needs a cost/latency check before sizing.
    - **C4 (candidate):** in the character card's "Từ trong bài" (lessonWords) row, tapping a word should jump to it — exact target still open (seek the transcript to that word's line? open that word's own lookup/card instead of just listing it?). Clarify with user before writing the brief.
-   - Exercises: after G2c SRS base.
+   - **G2c (test flow/SRS) and exercises: deferred by user 2026-10-21**, after character learning (S1/S2, then C3/C4).
 
    **Before G2b, which is paused:**
    - **G2b / first-listen default:** Chinese-only's "always off on first listen" + a Settings-tab default wait for progress tracking (L2 intentionally didn't build this — no progress data to key off yet).
