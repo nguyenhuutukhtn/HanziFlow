@@ -15,6 +15,8 @@ class ContractParsingTest {
 
         assertEquals(1, catalog.schemaVersion)
         assertNull(catalog.generatedAt)
+        assertEquals(2, assertNotNull(catalog.strokePack).version)
+        assertEquals(300852L, catalog.strokePack.files.getValue("strokes.json").bytes)
         assertEquals("lesson_001", lesson.id)
         assertNull(lesson.tracks.practice)
         assertEquals("timeline_guided.json", lesson.tracks.guided.timeline.file)

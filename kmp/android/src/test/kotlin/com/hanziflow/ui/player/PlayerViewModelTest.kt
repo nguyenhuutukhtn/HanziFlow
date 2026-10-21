@@ -115,6 +115,23 @@ class PlayerViewModelTest {
     }
 
     @Test
+    fun `stroke pack failure keeps the character index and hides strokes`() = runTest {
+        val repository = FakeCourseRepository().apply {
+            charactersFiles = mapOf("lesson_001" to tempJson("characters", """{"lesson_id":"lesson_001","characters":[{"char":"我","pinyin":"wǒ","han_viet":"ngã","vi_meaning":"tôi"}],"components_prereq":[]}"""))
+            strokePackError = IllegalStateException("offline")
+        }
+        val connection = FakePlayerConnection()
+        val viewModel = PlayerViewModel(repository, FakeSettingsRepository(), connection)
+
+        connection.emit(PlaybackState(connected = true, lessonId = "lesson_001"))
+        val deadline = System.currentTimeMillis() + 2_000
+        while (viewModel.uiState.value.characterIndex == null && System.currentTimeMillis() < deadline) Thread.sleep(10)
+
+        assertEquals("我", viewModel.uiState.value.characterIndex?.entry("我")?.char)
+        assertNull(viewModel.uiState.value.strokePack)
+    }
+
+    @Test
     fun `transcript loads and the active line's cue drives seeking`() = runTest {
         val repository = repositoryWithTranscript("lesson_001")
         val connection = FakePlayerConnection()

@@ -136,20 +136,20 @@ class CourseRepositoryImpl @Inject constructor(
             CourseJson.catalog(response.body.string())
         }
         val ref = catalog.strokePack ?: return@withContext null
-        val clip = ref.files["strokes.json"] ?: return@withContext null
-        val destination = context.filesDir.resolve("course/stroke-pack/v${ref.version}/${clip.file}")
-        if (strokeVersion == ref.version && destination.isFile && verified(destination, clip.sha256, clip.bytes)) return@withContext destination
-        if (destination.isFile && verified(destination, clip.sha256, clip.bytes)) {
+        val metadata = ref.files["strokes.json"] ?: return@withContext null
+        val destination = context.filesDir.resolve("course/stroke-pack/v${ref.version}/strokes.json")
+        if (strokeVersion == ref.version && destination.isFile && verified(destination, metadata.sha256, metadata.bytes)) return@withContext destination
+        if (destination.isFile && verified(destination, metadata.sha256, metadata.bytes)) {
             strokeVersion = ref.version
             return@withContext destination
         }
         destination.parentFile?.mkdirs()
-        val url = CourseRepository.resolveUrl(settingsRepository.baseUrl(), "stroke-pack/v${ref.version}/${clip.file}")
+        val url = CourseRepository.resolveUrl(settingsRepository.baseUrl(), "stroke-pack/v${ref.version}/strokes.json")
         client.newCall(Request.Builder().url(url).build()).execute().use { response ->
-            check(response.isSuccessful) { "${clip.file}: HTTP ${response.code}" }
+            check(response.isSuccessful) { "strokes.json: HTTP ${response.code}" }
             FileOutputStream(destination).use { response.body.byteStream().copyTo(it) }
         }
-        check(verified(destination, clip.sha256, clip.bytes)) { "${clip.file}: SHA-256 mismatch" }
+        check(verified(destination, metadata.sha256, metadata.bytes)) { "strokes.json: SHA-256 mismatch" }
         strokeVersion = ref.version
         destination
     }

@@ -16,6 +16,13 @@ Last updated: 2026-10-21 (C2 fully done incl. device check) · branch `app-publi
 
 - **S1 (reviewed, tests added):** stroke-pack builder, versioned upload mapping, shared stroke model, Android catalog-scoped cache, plus flat-pack parsing and Python union/skip regression tests. Gradle verification remains blocked by the wrapper distribution lock in this environment.
 
+- **S2:** character cards now show “Xem nét” only when the loaded base stroke pack contains that character; the inline Android renderer parses Hanzi Writer M/L/Q/C/Z paths and animates each stroke in order with pause/replay. Focused Android tests pass (6 tests); full `scripts/check.sh` passes with `.venv` on `PATH`. Device visual check remains pending.
+
+- **S2-fix:** fixed the catalog stroke-pack metadata contract (`sha256` + `bytes`, no `file`) that had caused the device `MissingFieldException`. Offline/corrupt stroke-pack loading now preserves character cards and hides only “Xem nét”; shared contract and ViewModel regression tests pass. Device visual check remains pending.
+
+- **S2 device check OK (2026-10-21):** "Xem nét" shows and plays on device after S2-fix/fix2.
+- **S2-fix2:** stroke medians now decode as decimal values, matching real Hanzi Writer data (for example `懂` has `598.25`). A compact, exact 10-entry subset of the published v2 pack covers every-entry parsing and a malformed entry is skipped without dropping the rest of the pack. Device visual check remains pending.
+
 - **C2 (done, incl. device check 2026-10-21):** character card UI shipped and verified on device — lookup-sheet chip row → card → component card → back; "Chữ của bài" lists 83 characters + "Bộ phận cần biết" (94 components); `phoneticFamily` capped at 4, view-only; no "Xem nét" anywhere; lookup sheet copy/share actions work. C2-fix and C2-test both landed and are committed (`7ada57f`, `37d9ad6`).
 
 - Content: Lesson 1 mini-story (guided track generated; practice track needs 2 paid TTS clips, skipped). Lesson 1 content audit still in progress.
@@ -60,13 +67,13 @@ Last updated: 2026-10-21 (C2 fully done incl. device check) · branch `app-publi
      Researched by PM before writing: `data/hanzi_writer/*.json` already fetched (R1), paths use
      only `M L Q C Z` (checked 40 samples, no arcs), `stroke_available` already computed per
      char; ships as a new app-downloaded "base pack" (not per-lesson, not bundled in the APK) —
-     lesson_001's 177 chars = ~316KB. S1 = pipeline build/upload + shared model + Android
-     download/cache. S2 = SVG path parser + animated renderer + the "Xem nét" entry point in
-     `CharacterCard.kt` (needs user ask-first per the model table — new Canvas/animation ground).
+     lesson_001's 177 chars = ~316KB. S1 and S2 are done; the pending user device check for S2
+     covers stroke shape/orientation and replay across varying stroke counts.
    - **L5** (`docs/tasks/L5.md`, written, deferred by user 2026-10-21): "jump to current line"
      button in the transcript — do after character learning.
    - **C3 (candidate, needs research before a brief):** per-character/word pronunciation playback from the character card — source audio unclear (no pre-rendered single-char clips today; options are a new per-char TTS pass, extracting a char-length slice from the existing word clip's forced-alignment timing, or piggybacking on `lessonWords`' word-level clip if one exists). Needs a cost/latency check before sizing.
    - **C4 (candidate):** in the character card's "Từ trong bài" (lessonWords) row, tapping a word should jump to it — exact target still open (seek the transcript to that word's line? open that word's own lookup/card instead of just listing it?). Clarify with user before writing the brief.
+   - **U2 (candidate, UI polish; user 2026-10-21):** black text on black background somewhere in the app (seen during S2 device check — likely a Hanzi/stroke area or card in dark theme; find the exact screen with a dark-theme Roborazzi sweep). Fold into a general UI-optimization task later.
    - **G2c (test flow/SRS) and exercises: deferred by user 2026-10-21**, after character learning (S1/S2, then C3/C4).
 
    **Before G2b, which is paused:**

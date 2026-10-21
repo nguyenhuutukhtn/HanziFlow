@@ -5,10 +5,13 @@ package com.hanziflow.shared
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 import com.hanziflow.shared.characters.LessonCharacters
+import com.hanziflow.shared.characters.StrokeEntry
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromJsonElement
+import kotlinx.serialization.json.jsonObject
 
 @Serializable
 data class Clip(val file: String, val bytes: Long, val sha256: String)
@@ -41,7 +44,10 @@ data class Tracks(
 data class PackageFiles(val manifest: Clip, val reference: Clip, val items: Clip, val characters: Clip? = null)
 
 @Serializable
-data class StrokePackRef(val version: Int, val files: Map<String, Clip>)
+data class StrokePackRef(val version: Int, val files: Map<String, StrokePackFile>)
+
+@Serializable
+data class StrokePackFile(val bytes: Long, val sha256: String)
 
 @Serializable
 data class CatalogLesson(
@@ -199,7 +205,10 @@ object CourseJson {
     fun items(value: String): Items = codec.decodeFromString(value)
     fun timeline(value: String): Timeline = codec.decodeFromString(value)
     fun characters(value: String): LessonCharacters = codec.decodeFromString(value)
-    fun strokePack(value: String): com.hanziflow.shared.characters.StrokePack = codec.decodeFromString(value)
+    fun strokePack(value: String): com.hanziflow.shared.characters.StrokePack =
+        codec.parseToJsonElement(value).jsonObject.mapNotNull { (char, entry) ->
+            runCatching { char to codec.decodeFromJsonElement(StrokeEntry.serializer(), entry) }.getOrNull()
+        }.toMap()
 }
 
 @JsExport

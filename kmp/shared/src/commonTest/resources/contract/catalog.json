@@ -56,5 +56,14 @@
       "version": 7
     }
   ],
-  "schema_version": 1
+  "schema_version": 1,
+  "stroke_pack": {
+    "version": 2,
+    "files": {
+      "strokes.json": {
+        "sha256": "b9df2a7caeb2e54b83cc13fb97272461cde082acb3af9ea75bffbca5879e68fb",
+        "bytes": 300852
+      }
+    }
+  }
 }

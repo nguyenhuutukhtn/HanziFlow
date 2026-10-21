@@ -18,6 +18,17 @@ class CharacterContractTest {
     }
 
     @Test
+    fun realStrokePackSubsetParsesDecimalMediansAndSkipsBadEntries() {
+        val pack = CourseJson.strokePack(fixtureText("strokes_v2_subset.json"))
+        assertEquals(10, pack.size)
+        assertNotNull(pack["懂"])
+        assertTrue(pack.getValue("懂").medians.flatten().flatten().any { it % 1.0 != 0.0 })
+
+        val tolerant = CourseJson.strokePack("""{"我":{"strokes":["M 0 0"],"medians":[[[1]]]},"bad":{"strokes":false}}""")
+        assertEquals(setOf("我"), tolerant.keys)
+    }
+
+    @Test
     fun realLessonCharacterIndexMatchesContract() {
         val data = CourseJson.characters(fixtureText("characters.json"))
         val index = CharacterIndex(data)

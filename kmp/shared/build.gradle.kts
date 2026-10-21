@@ -8,6 +8,7 @@ val fixtureFiles = listOf(
     "items.json",
     "characters.json",
     "strokes.json",
+    "strokes_v2_subset.json",
     "timeline_guided.json",
     "timeline_guided_zh.json",
 )

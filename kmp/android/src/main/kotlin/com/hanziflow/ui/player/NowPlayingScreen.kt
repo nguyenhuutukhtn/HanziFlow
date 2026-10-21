@@ -171,7 +171,7 @@ fun NowPlayingScreen(
     }
     state.transcript.lookupCharacter?.let { char ->
         state.characterIndex?.entry(char)?.let { entry ->
-            ModalBottomSheet(onDismissRequest = onDismissCharacter) { CharacterCard(entry, state.characterIndex, onComponent = onCharacter) }
+            ModalBottomSheet(onDismissRequest = onDismissCharacter) { CharacterCard(entry, state.characterIndex, state.strokePack?.get(char), onComponent = onCharacter) }
         } ?: state.characterIndex?.component(char)?.let { component ->
             ModalBottomSheet(onDismissRequest = onDismissCharacter) {
                 CharacterCard(

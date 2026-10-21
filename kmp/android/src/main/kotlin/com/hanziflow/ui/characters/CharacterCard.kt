@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AssistChip
@@ -17,21 +18,31 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.hanziflow.shared.characters.CharacterEntry
 import com.hanziflow.shared.characters.CharacterIndex
+import com.hanziflow.shared.characters.StrokeEntry
 import com.hanziflow.ui.theme.HanziFlowTheme
 import com.hanziflow.ui.theme.Spacing
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun CharacterCard(entry: CharacterEntry, index: CharacterIndex, onComponent: (String) -> Unit = {}) {
+fun CharacterCard(entry: CharacterEntry, index: CharacterIndex, strokeEntry: StrokeEntry? = null, onComponent: (String) -> Unit = {}) {
+    var strokesOpen by remember { mutableStateOf(false) }
     Column(Modifier.padding(Spacing.xl), verticalArrangement = Arrangement.spacedBy(Spacing.md)) {
         Text(entry.char, style = MaterialTheme.typography.displayLarge)
         Text(entry.pinyin, style = MaterialTheme.typography.titleLarge)
         Text("Hán-Việt: ${entry.hanViet}")
         Text(entry.viMeaning, style = MaterialTheme.typography.bodyLarge)
+        if (strokeEntry != null) {
+            TextButton(onClick = { strokesOpen = !strokesOpen }) { Text("Xem nét") }
+            if (strokesOpen) StrokeAnimation(strokeEntry, Modifier.size(260.dp))
+        }
         entry.hskLevel?.let { FilterChip(selected = false, onClick = {}, label = { Text("HSK $it") }) }
         val components = index.componentsOf(entry.char)
         if (components.isNotEmpty()) {

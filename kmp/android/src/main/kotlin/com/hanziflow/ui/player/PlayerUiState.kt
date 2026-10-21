@@ -8,6 +8,7 @@ import com.hanziflow.shared.TimelineSection
 import com.hanziflow.shared.WordItem
 import com.hanziflow.shared.transcript.TranscriptViewMode
 import com.hanziflow.shared.characters.CharacterIndex
+import com.hanziflow.shared.characters.StrokePack
 
 data class PlayerUiState(
     val connected: Boolean = false,
@@ -25,6 +26,7 @@ data class PlayerUiState(
     val chineseOnly: Boolean = false,
     val transcript: TranscriptUiState = TranscriptUiState(),
     val characterIndex: CharacterIndex? = null,
+    val strokePack: StrokePack? = null,
 )
 
 data class TranscriptUiState(

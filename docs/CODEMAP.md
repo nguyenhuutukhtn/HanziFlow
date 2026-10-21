@@ -78,7 +78,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 
 ## KMP shared (main) (`kmp/shared/src/commonMain/`)
 
-- `kotlin/com/hanziflow/shared/Models.kt` [210] — Clip, Track, Tracks, PackageFiles — Track by its published name (`guided`, `guided_zh`, `practice`); null if absent or unknown.
+- `kotlin/com/hanziflow/shared/Models.kt` [219] — Clip, Track, Tracks, PackageFiles — Track by its published name (`guided`, `guided_zh`, `practice`); null if absent or unknown.
 - `kotlin/com/hanziflow/shared/characters/Characters.kt` [51] — LessonCharacters, CharacterEntry, ComponentEntry, CharacterIndex
 - `kotlin/com/hanziflow/shared/characters/StrokeData.kt` [9] — StrokeEntry
 - `kotlin/com/hanziflow/shared/testgen/GenerationContext.kt` [275] — TaggedWord, TaggedSentence, TaggedQa, Spec — One candidate (item, question-type) source the generator can draw a question from.
@@ -96,8 +96,8 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 
 ## KMP shared (tests) (`kmp/shared/src/commonTest/`)
 
-- `kotlin/com/hanziflow/shared/CharacterContractTest.kt` [35] — CharacterContractTest
-- `kotlin/com/hanziflow/shared/ContractParsingTest.kt` [71] — ContractParsingTest
+- `kotlin/com/hanziflow/shared/CharacterContractTest.kt` [46] — CharacterContractTest
+- `kotlin/com/hanziflow/shared/ContractParsingTest.kt` [73] — ContractParsingTest
 - `kotlin/com/hanziflow/shared/testgen/GoldenVectorTest.kt` [44] — GoldenVectorTest — Golden vectors: TestGenerator.generate() against the real lesson_001 items.json
 - `kotlin/com/hanziflow/shared/testgen/InvariantsTest.kt` [108] — InvariantsTest — Splits the real lesson_001 item bank into a synthetic "earlier" lesson and a
 - `kotlin/com/hanziflow/shared/testgen/TestSessionTest.kt` [89] — TestSessionTest
@@ -133,7 +133,9 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `kotlin/com/hanziflow/playback/PlayerConnectionImpl.kt` [164] — PlayerConnectionImpl — Applies the service's published loop/Chinese-only state; never set these any other way.
 - `kotlin/com/hanziflow/playback/ResumptionStore.kt` [38] — ResumptionStore — Loads/saves the last played lesson+track+position (local only), so playback survives an app restart.
 - `kotlin/com/hanziflow/ui/app/AppShellViewModel.kt` [36] — AppShellUiState, AppShellViewModel — Dark is the first-run default; the toggle lands with the Settings tab in G2b.
-- `kotlin/com/hanziflow/ui/characters/CharacterCard.kt` [88] — CharacterCard, role, CharacterListSheet, CharacterCardPreview
+- `kotlin/com/hanziflow/ui/characters/CharacterCard.kt` [99] — CharacterCard, role, CharacterListSheet, CharacterCardPreview
+- `kotlin/com/hanziflow/ui/characters/StrokeAnimation.kt` [75] — StrokeAnimation, Path.segment
+- `kotlin/com/hanziflow/ui/characters/StrokePath.kt` [23] — strokePath — Parses the absolute M/L/Q/C/Z subset used by Hanzi Writer paths.
 - `kotlin/com/hanziflow/ui/components/AppChips.kt` [12] — appFilterChipColors — Selected chips use the amber primary container, not M3's default teal secondary.
 - `kotlin/com/hanziflow/ui/components/MiniPlayer.kt` [183] — MiniPlayer — Persistent mini-player, docked above the bottom navigation on every tab.
 - `kotlin/com/hanziflow/ui/components/TrackLabels.kt` [13] — trackDisplayName — Display names only: internal ids stay `guided` / `practice` everywhere in data,
@@ -143,8 +145,8 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `kotlin/com/hanziflow/ui/navigation/AppShell.kt` [207] — Routes, Tab — Bottom-nav destinations; Review and Settings are G2b/G2c placeholders in this pass.
 - `kotlin/com/hanziflow/ui/player/LookupSheet.kt` [59] — LookupSheet
 - `kotlin/com/hanziflow/ui/player/NowPlayingScreen.kt` [300] — NowPlayingScreen, NowPlayingHeader, fakeLine, NowPlayingPreview — Full-screen Now Playing route. Stateless; [PlayerViewModel] owns all command logic.
-- `kotlin/com/hanziflow/ui/player/PlayerUiState.kt` [43] — PlayerUiState, TranscriptUiState
-- `kotlin/com/hanziflow/ui/player/PlayerViewModel.kt` [266] — PlayerViewModel — Section bottom sheet row tap: seek to that section's start and close the sheet (UI-side).
+- `kotlin/com/hanziflow/ui/player/PlayerUiState.kt` [45] — PlayerUiState, TranscriptUiState
+- `kotlin/com/hanziflow/ui/player/PlayerViewModel.kt` [268] — PlayerViewModel — Section bottom sheet row tap: seek to that section's start and close the sheet (UI-side).
 - `kotlin/com/hanziflow/ui/player/SectionControls.kt` [128] — SectionRow, SectionLoopChip, SectionListSheet — "▤ <section title> · n/N ▾" on the left (opens the section list), "↻ Lặp phần này"
 - `kotlin/com/hanziflow/ui/player/TranscriptPanel.kt` [337] ⚠ — TranscriptPanel, TranscriptViewSwitcher, TranscriptLineRow, TokenRow — One-dataset, several-views karaoke transcript. Pure rendering decisions come from
 - `kotlin/com/hanziflow/ui/player/TransportSection.kt` [195] — TransportSection, SeekBar, formatTime — Track switch, seek bar, speed chips and primary transport controls. Split out of NowPlayingScreen (line budget).
@@ -158,14 +160,15 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 
 - `kotlin/com/hanziflow/architecture/LayeringTest.kt` [86] — LayeringTest — Enforces the dependency rules from docs/app_architecture.md "Code architecture (Android)",
 - `kotlin/com/hanziflow/data/CourseRepositoryTest.kt` [25] — CourseRepositoryTest
-- `kotlin/com/hanziflow/fakes/FakeCourseRepository.kt` [46] — FakeCourseRepository — In-memory [CourseRepository] fake: no Room/OkHttp/WorkManager, just recorded calls and canned returns.
+- `kotlin/com/hanziflow/fakes/FakeCourseRepository.kt` [50] — FakeCourseRepository — In-memory [CourseRepository] fake: no Room/OkHttp/WorkManager, just recorded calls and canned returns.
 - `kotlin/com/hanziflow/fakes/FakePlayerConnection.kt` [75] — FakePlayerConnection — Lets a ViewModel test drive the service's published state without Media3 or a device.
 - `kotlin/com/hanziflow/fakes/FakeSettingsRepository.kt` [35] — FakeSettingsRepository
 - `kotlin/com/hanziflow/playback/LoopPublisherTest.kt` [74] — LoopPublisherTest
-- `kotlin/com/hanziflow/ui/PlayerUiTest.kt` [205] — PlayerUiTest
+- `kotlin/com/hanziflow/ui/PlayerUiTest.kt` [218] — PlayerUiTest
 - `kotlin/com/hanziflow/ui/ScreenshotFixtures.kt` [223] — ComposeContentTestRule.captureScreen, MiniPlayerFrame, NowPlayingFrame, nowPlayingState — Fake-state fixtures shared by the Roborazzi screenshot tests (kept out of the test files for the line budget).
 - `kotlin/com/hanziflow/ui/SectionReplayScreenshotTest.kt` [44] — SectionReplayScreenshotTest — Section replay / Chinese-only visuals; split out of [UiScreenshotTest] for the line budget.
 - `kotlin/com/hanziflow/ui/UiScreenshotTest.kt` [82] — UiScreenshotTest — Fake-state visuals, recorded into kmp/android/build/outputs/roborazzi until the
+- `kotlin/com/hanziflow/ui/characters/StrokePathTest.kt` [27] — StrokePathTest
 - `kotlin/com/hanziflow/ui/library/LibraryViewModelTest.kt` [77] — LibraryViewModelTest
 - `kotlin/com/hanziflow/ui/navigation/AppShellTest.kt` [91] — AppShellTest
-- `kotlin/com/hanziflow/ui/player/PlayerViewModelTest.kt` [260] — PlayerViewModelTest — Blocks the real test thread (not virtual time) until [lines] load from the fake repository's IO.
+- `kotlin/com/hanziflow/ui/player/PlayerViewModelTest.kt` [277] — PlayerViewModelTest — Blocks the real test thread (not virtual time) until [lines] load from the fake repository's IO.

@@ -181,7 +181,9 @@ class PlayerViewModel @Inject constructor(
         if (_uiState.value.lessonId == lessonId && _uiState.value.characterIndex != null) return
         viewModelScope.launch(Dispatchers.IO) {
             val index = courseRepository.charactersFile(lessonId)?.let { CharacterIndex(CourseJson.characters(it.readText())) }
-            _uiState.update { if (it.lessonId == lessonId) it.copy(characterIndex = index) else it }
+            // Offline or a bad pack must only hide "Xem nét", never crash the app or drop the character index.
+            val strokePack = runCatching { courseRepository.strokePackFile()?.let { CourseJson.strokePack(it.readText()) } }.getOrNull()
+            _uiState.update { if (it.lessonId == lessonId) it.copy(characterIndex = index, strokePack = strokePack) else it }
         }
     }
 

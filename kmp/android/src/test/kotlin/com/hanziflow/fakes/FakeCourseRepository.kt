@@ -23,6 +23,7 @@ class FakeCourseRepository : CourseRepository {
     var itemsFiles: Map<String, File> = emptyMap()
     var charactersFiles: Map<String, File> = emptyMap()
     var strokePack: File? = null
+    var strokePackError: Throwable? = null
     var clipFiles: Map<Pair<String, String>, File> = emptyMap()
     var catalogLessons: Map<String, CatalogLesson> = emptyMap()
 
@@ -40,7 +41,10 @@ class FakeCourseRepository : CourseRepository {
     override suspend fun referenceFile(lessonId: String): File? = referenceFiles[lessonId]
     override suspend fun itemsFile(lessonId: String): File? = itemsFiles[lessonId]
     override suspend fun charactersFile(lessonId: String): File? = charactersFiles[lessonId]
-    override suspend fun strokePackFile(): File? = strokePack
+    override suspend fun strokePackFile(): File? {
+        strokePackError?.let { throw it }
+        return strokePack
+    }
     override suspend fun clipFile(lessonId: String, relative: String): File? = clipFiles[lessonId to relative]
     override suspend fun catalogLesson(id: String): CatalogLesson? = catalogLessons[id]
 }

@@ -24,6 +24,8 @@ import com.hanziflow.shared.characters.CharacterEntry
 import com.hanziflow.shared.characters.CharacterIndex
 import com.hanziflow.shared.characters.ComponentEntry
 import com.hanziflow.shared.characters.LessonCharacters
+import com.hanziflow.shared.characters.StrokeEntry
+import com.hanziflow.ui.characters.CharacterCard
 import com.hanziflow.ui.theme.HanziFlowTheme
 import org.junit.Rule
 import org.junit.Test
@@ -201,5 +203,16 @@ class PlayerUiTest {
             )
         } }
         compose.onNodeWithText("Chữ của bài").assertDoesNotExist()
+    }
+
+    @Test
+    fun `view strokes action follows loaded stroke pack entry`() {
+        val entry = CharacterEntry("我", "wǒ", "ngã", viMeaning = "tôi")
+        val index = CharacterIndex(LessonCharacters("lesson_001", characters = listOf(entry)))
+        var strokeEntry by mutableStateOf<StrokeEntry?>(null)
+        compose.setContent { HanziFlowTheme { CharacterCard(entry, index, strokeEntry) } }
+        compose.onNodeWithText("Xem nét").assertDoesNotExist()
+        compose.runOnIdle { strokeEntry = StrokeEntry(listOf("M 0 0 L 100 0 L 100 100 Z"), emptyList()) }
+        compose.onNodeWithText("Xem nét").assertExists()
     }
 }
