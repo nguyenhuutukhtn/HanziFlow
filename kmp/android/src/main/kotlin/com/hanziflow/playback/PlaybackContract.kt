@@ -12,18 +12,18 @@ object PlaybackContract {
     const val COMMAND_SECTION_STOP_AFTER_PASS = "com.hanziflow.SECTION_STOP_AFTER_PASS"
     const val COMMAND_SECTION_NEXT = "com.hanziflow.SECTION_NEXT"
     const val COMMAND_CLEAR_LOOP = "com.hanziflow.CLEAR_LOOP"
-    const val COMMAND_SET_CHINESE_ONLY = "com.hanziflow.SET_CHINESE_ONLY"
+    const val COMMAND_SWITCH_TRACK = "com.hanziflow.SWITCH_TRACK"
 
     const val EXTRA_LINE_ID = "line_id"
     const val EXTRA_START_MS = "start_ms"
     const val EXTRA_END_MS = "end_ms"
-    /** Session-extras keys, as published by [PlaybackExtras.build]. Absent when that loop/flag isn't active. */
+    /** Session-extras keys, as published by [PlaybackExtras.build]. Absent when that loop isn't active. */
     const val EXTRA_LOOP_LINE_ID = "loop_line_id"
     const val EXTRA_LOOP_SECTION_ID = "loop_section_id"
     const val EXTRA_LOOP_SECTION_TITLE = "loop_section_title"
     const val EXTRA_LOOP_SECTION_PASS = "loop_section_pass"
     const val EXTRA_LOOP_SECTION_STOP_AFTER_PASS = "loop_section_stop_after_pass"
-    const val EXTRA_CHINESE_ONLY = "chinese_only"
+    const val EXTRA_TRACK = "track"
 
     /** Display names only; persisted ids stay `guided` / `practice`. Used by UI and the lock screen. */
     fun trackLabelRes(track: String): Int =

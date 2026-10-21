@@ -22,7 +22,7 @@ class FakePlayerConnection : PlayerConnection {
     var stopSectionLoopAfterPassCalls = 0
     var nextSectionCalls = 0
     var clearLoopCalls = 0
-    val chineseOnlyCalls = mutableListOf<Boolean>()
+    val switchTrackCalls = mutableListOf<String>()
     val playClipCalls = mutableListOf<String>()
 
     fun emit(state: PlaybackState) { _state.value = state }
@@ -66,9 +66,9 @@ class FakePlayerConnection : PlayerConnection {
         _state.value = _state.value.copy(loopedLineId = null, sectionLoop = null)
     }
 
-    override fun setChineseOnly(enabled: Boolean) {
-        chineseOnlyCalls += enabled
-        _state.value = _state.value.copy(chineseOnly = enabled)
+    override fun switchTrack(track: String) {
+        switchTrackCalls += track
+        _state.value = _state.value.copy(track = track)
     }
 
     override fun playClip(uri: String) { playClipCalls += uri }

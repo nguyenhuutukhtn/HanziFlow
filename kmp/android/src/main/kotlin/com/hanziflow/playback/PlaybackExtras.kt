@@ -6,7 +6,7 @@ import androidx.media3.session.SessionCommand
 
 /** Builds the session extras / custom layout [PlaybackService] publishes; split out to keep it under the line budget. */
 object PlaybackExtras {
-    fun build(loop: LoopState?, chineseOnly: Boolean): Bundle {
+    fun build(loop: LoopState?): Bundle {
         val extras = Bundle()
         when (loop) {
             is LoopState.Line -> {
@@ -22,7 +22,6 @@ object PlaybackExtras {
             }
             null -> Unit
         }
-        extras.putBoolean(PlaybackContract.EXTRA_CHINESE_ONLY, chineseOnly)
         return extras
     }
 

@@ -5,6 +5,11 @@ import com.hanziflow.fakes.FakePlayerConnection
 import com.hanziflow.fakes.FakeSettingsRepository
 import com.hanziflow.playback.PlaybackState
 import com.hanziflow.playback.SectionLoopInfo
+import com.hanziflow.shared.CatalogLesson
+import com.hanziflow.shared.Clip
+import com.hanziflow.shared.PackageFiles
+import com.hanziflow.shared.Track
+import com.hanziflow.shared.Tracks
 import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -54,9 +59,23 @@ class PlayerViewModelTest {
             """{"schema_version":1,"lesson_id":"$lessonId","lesson_version":1,"words":[]}""",
         )
         return FakeCourseRepository().apply {
+            lessonsFlow.value = listOf(
+                com.hanziflow.data.LessonEntity(lessonId, "Lesson", "A1", 1, 1, catalogJson = "{}"),
+            )
             referenceFiles = mapOf(lessonId to reference)
             timelineFiles = mapOf((lessonId to track) to timeline)
+            trackFiles = mapOf((lessonId to "guided_zh") to tempJson("guided_zh", "{}"))
             itemsFiles = mapOf(lessonId to items)
+            catalogLessons = mapOf(
+                lessonId to CatalogLesson(
+                    lessonId, 1, 1, "Lesson", "A1", "",
+                    Tracks(
+                        Track("guided.mp3", 1, 5_000, "", Clip("timeline_guided.json", 1, "")),
+                        guidedZh = Track("guided_zh.mp3", 1, 4_000, "", Clip("timeline_guided_zh.json", 1, "")),
+                    ),
+                    PackageFiles(Clip("lesson.json", 1, ""), Clip("reference.json", 1, ""), Clip("items.json", 1, "")),
+                ),
+            )
         }
     }
 
@@ -162,11 +181,13 @@ class PlayerViewModelTest {
 
         connection.emit(PlaybackState(connected = true, lessonId = "lesson_001", track = "guided", positionMs = 0))
         awaitTranscriptLoaded(viewModel)
+        Thread.sleep(50)
 
         viewModel.setChineseOnly(true)
 
-        assertEquals(listOf(false, true), connection.chineseOnlyCalls)
+        assertEquals(listOf("guided", "guided_zh"), connection.switchTrackCalls)
         assertEquals(false, viewModel.uiState.value.transcript.showVietnamese)
+        Thread.sleep(50)
         assertEquals(true, settings.chineseOnlyEnabled("lesson_001", "guided"))
     }
 

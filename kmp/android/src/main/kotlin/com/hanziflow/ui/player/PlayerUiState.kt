@@ -15,6 +15,7 @@ data class PlayerUiState(
     val lessonTitle: String? = null,
     val track: String = "guided",
     val practiceAvailable: Boolean = false,
+    val chineseOnlyAvailable: Boolean = false,
     val positionMs: Long = 0,
     val durationMs: Long = 0,
     val speed: Float = 1f,

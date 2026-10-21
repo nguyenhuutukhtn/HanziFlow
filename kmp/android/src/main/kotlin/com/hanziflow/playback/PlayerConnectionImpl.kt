@@ -115,8 +115,8 @@ class PlayerConnectionImpl @Inject constructor(
     override fun nextSection() = sendCommand(PlaybackContract.COMMAND_SECTION_NEXT)
     override fun clearLoop() = sendCommand(PlaybackContract.COMMAND_CLEAR_LOOP)
 
-    override fun setChineseOnly(enabled: Boolean) =
-        sendCommand(PlaybackContract.COMMAND_SET_CHINESE_ONLY, bundleOf(PlaybackContract.EXTRA_CHINESE_ONLY to enabled))
+    override fun switchTrack(track: String) =
+        sendCommand(PlaybackContract.COMMAND_SWITCH_TRACK, bundleOf(PlaybackContract.EXTRA_TRACK to track))
 
     override fun playClip(uri: String) {
         controller?.pause()
@@ -159,7 +159,6 @@ class PlayerConnectionImpl @Inject constructor(
                     stopAfterPass = extras.getBoolean(PlaybackContract.EXTRA_LOOP_SECTION_STOP_AFTER_PASS),
                 )
             },
-            chineseOnly = extras.getBoolean(PlaybackContract.EXTRA_CHINESE_ONLY),
         )
     }
 }

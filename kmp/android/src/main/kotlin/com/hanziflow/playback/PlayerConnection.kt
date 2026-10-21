@@ -21,7 +21,7 @@ interface PlayerConnection {
     fun stopSectionLoopAfterPass()
     fun nextSection()
     fun clearLoop()
-    fun setChineseOnly(enabled: Boolean)
+    fun switchTrack(track: String)
 
     /** Plays a short word/sentence clip (lookup) on a side player, pausing main playback. */
     fun playClip(uri: String)

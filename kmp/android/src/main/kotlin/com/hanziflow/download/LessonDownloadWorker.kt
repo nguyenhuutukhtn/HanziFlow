@@ -50,6 +50,10 @@ class LessonDownloadWorker @AssistedInject constructor(
             val initial = buildList {
                 add(lesson.tracks.guided.asClip())
                 add(lesson.tracks.guided.timeline)
+                lesson.tracks.guidedZh?.let {
+                    add(it.asClip())
+                    add(it.timeline)
+                }
                 lesson.tracks.practice?.let {
                     add(it.asClip())
                     add(it.timeline)

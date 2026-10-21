@@ -14,14 +14,11 @@ object CueNavigation {
     /**
      * Start of the next transcript cue after [positionMs]. Inside a cue this is the
      * following cue; in a gap it is the next cue that starts later. Null when there
-     * is no next cue (or no timeline at all). [skipTarget] (e.g. Chinese-only) can
-     * redirect a candidate that lands inside a skipped range; return null from it to
-     * keep the candidate as-is.
+     * is no next cue (or no timeline at all).
      */
     fun nextCueStartMs(
         cues: List<TimelineCue>,
         positionMs: Long,
-        skipTarget: (Long) -> Long? = { null },
     ): Long? {
         if (cues.isEmpty()) return null
         val activeIndex = TranscriptCues.activeCueIndex(cues, positionMs)
@@ -30,7 +27,7 @@ object CueNavigation {
         } else {
             cues.firstOrNull { it.startMs > positionMs }?.startMs
         }
-        return candidate?.let { skipTarget(it) ?: it }
+        return candidate
     }
 
     /**
@@ -41,7 +38,6 @@ object CueNavigation {
     fun previousCueStartMs(
         cues: List<TimelineCue>,
         positionMs: Long,
-        skipTarget: (Long) -> Long? = { null },
     ): Long? {
         if (cues.isEmpty()) return null
         val activeIndex = TranscriptCues.activeCueIndex(cues, positionMs)
@@ -56,6 +52,6 @@ object CueNavigation {
         } else {
             cues.lastOrNull { it.startMs < positionMs }?.startMs ?: cues.first().startMs
         }
-        return skipTarget(candidate) ?: candidate
+        return candidate
     }
 }

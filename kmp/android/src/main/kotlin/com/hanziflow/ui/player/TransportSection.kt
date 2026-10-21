@@ -34,7 +34,6 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.hanziflow.R
-import com.hanziflow.shared.transcript.ChineseOnlyPlan
 import com.hanziflow.ui.components.appFilterChipColors
 import com.hanziflow.ui.components.trackDisplayName
 import com.hanziflow.ui.theme.Spacing
@@ -178,16 +177,7 @@ private fun SeekBar(state: PlayerUiState, onSeekTo: (Long) -> Unit) {
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            val remaining = if (state.chineseOnly) {
-                val effective = ChineseOnlyPlan.effectiveRemainingMs(
-                    state.transcript.cues,
-                    state.positionMs,
-                    state.durationMs,
-                )
-                stringResource(R.string.effective_remaining_time, formatTime(effective))
-            } else {
-                formatTime(state.durationMs)
-            }
+            val remaining = formatTime(state.durationMs)
             Text(
                 remaining,
                 style = MaterialTheme.typography.labelMedium,

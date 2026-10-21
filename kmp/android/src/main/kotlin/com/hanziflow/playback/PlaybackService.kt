@@ -7,6 +7,7 @@ import android.view.KeyEvent
 import androidx.core.content.IntentCompat
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
+import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
@@ -20,7 +21,10 @@ import com.google.common.util.concurrent.SettableFuture
 import com.hanziflow.MainActivity
 import com.hanziflow.data.CourseDatabase
 import com.hanziflow.data.CourseRepository
+import com.hanziflow.data.SettingsRepository
+import com.hanziflow.shared.CourseJson
 import com.hanziflow.shared.TimelineSection
+import com.hanziflow.shared.transcript.TrackSwitch
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
@@ -34,6 +38,7 @@ import kotlinx.coroutines.launch
 class PlaybackService : MediaSessionService() {
     @Inject lateinit var courseRepository: CourseRepository
     @Inject lateinit var courseDatabase: CourseDatabase
+    @Inject lateinit var settingsRepository: SettingsRepository
     private lateinit var player: ExoPlayer
     private lateinit var session: MediaSession
     private lateinit var coordinator: PlaybackCoordinator
@@ -60,7 +65,7 @@ class PlaybackService : MediaSessionService() {
             .setSeekForwardIncrementMs(10_000)
             .build()
         coordinator = PlaybackCoordinator(
-            player, cueSkipper, loopController, resumptionStore, scope, persistenceScope, ::publishState,
+            player, cueSkipper, loopController, resumptionStore, scope, persistenceScope, ::publishState, ::resumeTarget,
         )
         val activityIntent = PendingIntent.getActivity(
             this, 0, Intent(this, MainActivity::class.java),
@@ -83,7 +88,7 @@ class PlaybackService : MediaSessionService() {
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession = session
 
     private fun publishState() {
-        session.setSessionExtras(PlaybackExtras.build(loopController.current, cueSkipper.chineseOnlyEnabled))
+        session.setSessionExtras(PlaybackExtras.build(loopController.current))
         session.setCustomLayout(PlaybackExtras.customLayout(loopController.current))
     }
 
@@ -99,7 +104,7 @@ class PlaybackService : MediaSessionService() {
                 .add(SessionCommand(PlaybackContract.COMMAND_SECTION_STOP_AFTER_PASS, Bundle.EMPTY))
                 .add(SessionCommand(PlaybackContract.COMMAND_SECTION_NEXT, Bundle.EMPTY))
                 .add(SessionCommand(PlaybackContract.COMMAND_CLEAR_LOOP, Bundle.EMPTY))
-                .add(SessionCommand(PlaybackContract.COMMAND_SET_CHINESE_ONLY, Bundle.EMPTY))
+                .add(SessionCommand(PlaybackContract.COMMAND_SWITCH_TRACK, Bundle.EMPTY))
                 .build()
             return MediaSession.ConnectionResult.accept(sessionCommands, session.player.availableCommands)
         }
@@ -151,10 +156,7 @@ class PlaybackService : MediaSessionService() {
                     loopController.clear()
                     publishState()
                 }
-                PlaybackContract.COMMAND_SET_CHINESE_ONLY -> {
-                    cueSkipper.setChineseOnly(args.getBoolean(PlaybackContract.EXTRA_CHINESE_ONLY))
-                    publishState()
-                }
+                PlaybackContract.COMMAND_SWITCH_TRACK -> switchTrack(args.getString(PlaybackContract.EXTRA_TRACK).orEmpty())
             }
             return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
         }
@@ -169,12 +171,67 @@ class PlaybackService : MediaSessionService() {
             scope.launch {
                 runCatching {
                     val restored = resumptionStore.load() ?: error("No downloaded playback to resume")
+                    val target = resumeTarget(restored)
                     player.setPlaybackSpeed(restored.saved.speed.coerceIn(0.8f, 1.1f))
-                    MediaSession.MediaItemsWithStartPosition(listOf(restored.mediaItem()), 0, restored.saved.positionMs)
+                    MediaSession.MediaItemsWithStartPosition(listOf(target.first), 0, target.second)
                 }.onSuccess(result::set).onFailure(result::setException)
             }
             return result
         }
+    }
+
+    private fun switchTrack(requestedTrack: String) {
+        scope.launch {
+            val current = player.currentMediaItem ?: return@launch
+            val parts = current.mediaId.split('|', limit = 2)
+            if (parts.size != 2 || requestedTrack !in setOf("guided", "guided_zh") || parts[1] !in setOf("guided", "guided_zh")) return@launch
+            val target = requestedTrack
+            if (parts[1] == target) return@launch
+            val item = courseRepository.trackFile(parts[0], target) ?: return@launch
+            val sourceTimeline = courseRepository.timelineFile(parts[0], parts[1]) ?: return@launch
+            val targetTimeline = courseRepository.timelineFile(parts[0], target) ?: return@launch
+            val source = CourseJson.timeline(sourceTimeline.readText())
+            val destination = CourseJson.timeline(targetTimeline.readText())
+            val position = TrackSwitch.positionFor(source.cues, destination.cues, player.currentPosition)
+            settingsRepository.setChineseOnlyEnabled(parts[0], "guided", target == "guided_zh")
+            val wasPlaying = player.playWhenReady
+            val speed = player.playbackParameters.speed
+            loopController.clear()
+            player.setMediaItem(
+                PlaybackContract.mediaItem(
+                    parts[0], target, item.toURI().toString(),
+                    player.mediaMetadata.title?.toString() ?: parts[0],
+                    getString(PlaybackContract.trackLabelRes(target)),
+                ),
+            )
+            player.setPlaybackSpeed(speed)
+            player.prepare()
+            player.seekTo(position)
+            player.playWhenReady = wasPlaying
+            publishState()
+        }
+    }
+
+    private suspend fun resumeTarget(resumption: ResumptionStore.Resumption): Pair<MediaItem, Long> {
+        val saved = resumption.saved
+        val enabled = settingsRepository.chineseOnlyEnabled(saved.lessonId, "guided")
+        val targetTrack = when {
+            saved.track == "guided" && enabled -> "guided_zh"
+            saved.track == "guided_zh" && !enabled -> "guided"
+            else -> saved.track
+        }
+        if (targetTrack == saved.track) return resumption.mediaItem() to saved.positionMs
+        val sourceFile = courseRepository.timelineFile(saved.lessonId, saved.track) ?: return resumption.mediaItem() to saved.positionMs
+        val targetFile = courseRepository.timelineFile(saved.lessonId, targetTrack) ?: return resumption.mediaItem() to saved.positionMs
+        val trackFile = courseRepository.trackFile(saved.lessonId, targetTrack) ?: return resumption.mediaItem() to saved.positionMs
+        val source = CourseJson.timeline(sourceFile.readText())
+        val target = CourseJson.timeline(targetFile.readText())
+        val position = TrackSwitch.positionFor(source.cues, target.cues, saved.positionMs)
+        val item = PlaybackContract.mediaItem(
+            saved.lessonId, targetTrack, trackFile.toURI().toString(), resumption.title,
+            getString(PlaybackContract.trackLabelRes(targetTrack)),
+        )
+        return item to position
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {

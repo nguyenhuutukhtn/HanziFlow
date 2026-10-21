@@ -22,7 +22,19 @@ data class Track(
 )
 
 @Serializable
-data class Tracks(val guided: Track, val practice: Track? = null)
+data class Tracks(
+    val guided: Track,
+    val practice: Track? = null,
+    @SerialName("guided_zh") val guidedZh: Track? = null,
+) {
+    /** Track by its published name (`guided`, `guided_zh`, `practice`); null if absent or unknown. */
+    fun forName(name: String): Track? = when (name) {
+        "guided" -> guided
+        "guided_zh" -> guidedZh
+        "practice" -> practice
+        else -> null
+    }
+}
 
 @Serializable
 data class PackageFiles(val manifest: Clip, val reference: Clip, val items: Clip)
@@ -189,4 +201,3 @@ object ContractParser {
     fun catalogVersion(json: String): Int = CourseJson.catalog(json).catalogVersion
     fun normalizeItems(json: String): String = CourseJson.codec.encodeToString(CourseJson.items(json))
 }
-

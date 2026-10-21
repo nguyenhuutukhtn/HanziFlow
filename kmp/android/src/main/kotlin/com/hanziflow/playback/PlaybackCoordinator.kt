@@ -1,7 +1,7 @@
 package com.hanziflow.playback
 
-import android.util.Log
 import androidx.media3.common.Player
+import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import com.hanziflow.data.PlaybackEntity
 import kotlinx.coroutines.CoroutineScope
@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 /**
  * Everything [PlaybackService] does with ExoPlayer that isn't MediaSession wiring:
- * the position-check tick (loop repeat/release, Chinese-only skip), headset cue
+ * the position-check tick (loop repeat/release), headset cue
  * navigation, resumption restore/save. Runs on the service's own scope, so it keeps
  * working with the screen off and the UI closed.
  */
@@ -24,6 +24,8 @@ class PlaybackCoordinator(
     private val scope: CoroutineScope,
     private val persistenceScope: CoroutineScope,
     private val onStateChanged: () -> Unit,
+    private val resumeTarget: suspend (ResumptionStore.Resumption) -> Pair<MediaItem, Long> =
+        { it.mediaItem() to it.saved.positionMs },
 ) {
     private var saveJob: Job? = null
     private var tickerJob: Job? = null
@@ -71,11 +73,7 @@ class PlaybackCoordinator(
     }
 
     /**
-     * 150ms position-check tick: loop repeat/release and Chinese-only skip. Three
-     * more precise approaches (Media3 `PlayerMessage` at the range start; a
-     * self-correcting exact-gap delay) were tried and measured no better on this
-     * device (docs/tasks/L2-fix.md "Findings") — reverted, pending a PM decision on
-     * a different architecture (no live skip at all).
+     * 150ms position-check tick for loop repeat/release and resumption persistence.
      */
     fun start() {
         tickerJob = scope.launch {
@@ -83,27 +81,21 @@ class PlaybackCoordinator(
                 delay(TICK_MS)
                 val positionMs = player.currentPosition
                 val loopTarget = loopController.onPositionReached(positionMs)
-                val ids = currentMediaIds()
-                val hit = if (ids != null) cueSkipper.skipHitAt(ids.first, ids.second, positionMs) else null
-                if (hit != null) logSkip(hit, positionMs)
-                (loopTarget ?: hit?.targetMs)?.let(::seekIgnoringLoop)
+                loopTarget?.let(::seekIgnoringLoop)
                 if (loopTarget != null) onStateChanged()
             }
         }
-    }
-
-    private fun logSkip(hit: CueSkipper.SkipHit, atMs: Long) {
-        Log.d(TAG, "skip vi start=${hit.rangeStartMs} at=$atMs late=${atMs - hit.rangeStartMs}ms → ${hit.targetMs}")
     }
 
     fun restoreAsynchronously() {
         scope.launch {
             val restored = resumptionStore.load() ?: return@launch
             if (player.mediaItemCount == 0) {
-                player.setMediaItem(restored.mediaItem())
+                val target = resumeTarget(restored)
+                player.setMediaItem(target.first)
                 player.setPlaybackSpeed(restored.saved.speed.coerceIn(0.8f, 1.1f))
                 player.prepare()
-                player.seekTo(restored.saved.positionMs)
+                player.seekTo(target.second)
             }
         }
     }
@@ -187,6 +179,5 @@ class PlaybackCoordinator(
 
     private companion object {
         const val TICK_MS = 150L
-        const val TAG = "PlaybackCoordinator"
     }
 }

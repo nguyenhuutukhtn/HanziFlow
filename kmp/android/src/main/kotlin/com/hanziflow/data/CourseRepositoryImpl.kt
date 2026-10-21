@@ -37,6 +37,10 @@ class CourseRepositoryImpl @Inject constructor(
         val catalog = CourseJson.catalog(json)
         catalog.lessons.forEach { remote ->
             val previous = dao.lesson(remote.id)
+            // Same version but a different track set (package downloaded by an older app
+            // build that didn't know a track) needs a re-download, not "DOWNLOADED".
+            val downloadedTracks = previous?.downloadedCatalogJson
+                ?.let { CourseJson.codec.decodeFromString(CatalogLesson.serializer(), it).tracks }
             dao.putLesson(
                 LessonEntity(
                     id = remote.id,
@@ -49,7 +53,7 @@ class CourseRepositoryImpl @Inject constructor(
                     catalogJson = CourseJson.codec.encodeToString(CatalogLesson.serializer(), remote),
                     downloadState = when {
                         previous?.downloadState == "DOWNLOADING" -> "DOWNLOADING"
-                        previous?.downloadedVersion == remote.version -> "DOWNLOADED"
+                        previous?.downloadedVersion == remote.version && downloadedTracks == remote.tracks -> "DOWNLOADED"
                         previous?.downloadedVersion != null -> "UPDATE_AVAILABLE"
                         else -> "AVAILABLE"
                     },
@@ -87,7 +91,7 @@ class CourseRepositoryImpl @Inject constructor(
         val entity = dao.lesson(lessonId) ?: return null
         val version = entity.downloadedVersion ?: return null
         val lesson = downloadedLesson(entity)
-        val artifact = if (track == "practice") lesson.tracks.practice else lesson.tracks.guided
+        val artifact = lesson.tracks.forName(track)
         return artifact?.let { packageFile(lessonId, version, it.file) }
     }
 
@@ -95,7 +99,7 @@ class CourseRepositoryImpl @Inject constructor(
         val entity = dao.lesson(lessonId) ?: return null
         val version = entity.downloadedVersion ?: return null
         val lesson = downloadedLesson(entity)
-        val artifact = if (track == "practice") lesson.tracks.practice?.timeline else lesson.tracks.guided.timeline
+        val artifact = lesson.tracks.forName(track)?.timeline
         return artifact?.let { packageFile(lessonId, version, it.file) }
     }
 

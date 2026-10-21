@@ -42,6 +42,15 @@ class PlayerViewModel @Inject constructor(
     private var practiceLookupJob: Job? = null
 
     init {
+        // A (re-)download finishing changes which tracks are on disk; re-check
+        // instead of keeping the value computed when the lesson was opened.
+        viewModelScope.launch {
+            courseRepository.lessons.collect {
+                val id = _uiState.value.lessonId ?: return@collect
+                val available = courseRepository.trackFile(id, "guided_zh") != null
+                _uiState.update { state -> if (state.lessonId == id) state.copy(chineseOnlyAvailable = available) else state }
+            }
+        }
         viewModelScope.launch {
             playerConnection.state.collect { playback ->
                 _uiState.update {
@@ -54,7 +63,7 @@ class PlayerViewModel @Inject constructor(
                         durationMs = playback.durationMs,
                         speed = playback.speed,
                         sectionLoop = playback.sectionLoop,
-                        chineseOnly = playback.chineseOnly,
+                        chineseOnly = playback.track == "guided_zh",
                         transcript = it.transcript.copy(loopedLineId = playback.loopedLineId),
                     )
                 }
@@ -141,10 +150,10 @@ class PlayerViewModel @Inject constructor(
 
     fun setChineseOnly(enabled: Boolean) {
         val lessonId = _uiState.value.lessonId ?: return
-        val track = _uiState.value.track
-        playerConnection.setChineseOnly(enabled)
+        if (!_uiState.value.chineseOnlyAvailable || _uiState.value.track == "practice") return
+        playerConnection.switchTrack(if (enabled) "guided_zh" else "guided")
         if (enabled) setTranscriptVietnamese(false)
-        viewModelScope.launch { settingsRepository.setChineseOnlyEnabled(lessonId, track, enabled) }
+        viewModelScope.launch { settingsRepository.setChineseOnlyEnabled(lessonId, "guided", enabled) }
     }
 
     fun setTranscriptViewMode(mode: TranscriptViewMode) {
@@ -194,9 +203,9 @@ class PlayerViewModel @Inject constructor(
             val savedView = settingsRepository.transcriptView(track)
                 ?.let { runCatching { TranscriptViewMode.valueOf(it) }.getOrNull() }
                 ?: TranscriptViewMode.PINYIN_ONLY
-            val chineseOnly = settingsRepository.chineseOnlyEnabled(lessonId, track)
+            val chineseOnly = settingsRepository.chineseOnlyEnabled(lessonId, "guided") && track != "practice"
             val vi = settingsRepository.vietnameseEnabled() && !chineseOnly
-            playerConnection.setChineseOnly(chineseOnly)
+            if (track != "practice") playerConnection.switchTrack(if (chineseOnly) "guided_zh" else "guided")
             _uiState.update {
                 it.copy(
                     transcript = TranscriptUiState(
@@ -235,8 +244,9 @@ class PlayerViewModel @Inject constructor(
                         .first { it.id == lessonId }
                         .title
                 }
-            val practiceAvailable = courseRepository.catalogLesson(lessonId)?.tracks?.practice != null
-            _uiState.update { it.copy(lessonTitle = title, practiceAvailable = practiceAvailable) }
+            val tracks = courseRepository.catalogLesson(lessonId)?.tracks
+            val chineseOnlyDownloaded = courseRepository.trackFile(lessonId, "guided_zh") != null
+            _uiState.update { it.copy(lessonTitle = title, practiceAvailable = tracks?.practice != null, chineseOnlyAvailable = chineseOnlyDownloaded) }
         }
     }
 }

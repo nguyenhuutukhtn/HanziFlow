@@ -18,6 +18,8 @@ class ContractParsingTest {
         assertEquals("lesson_001", lesson.id)
         assertNull(lesson.tracks.practice)
         assertEquals("timeline_guided.json", lesson.tracks.guided.timeline.file)
+        assertEquals("timeline_guided_zh.json", lesson.tracks.forName("guided_zh")?.timeline?.file)
+        assertNull(lesson.tracks.forName("unknown"))
         assertEquals(lesson.id, manifest.id)
         assertEquals(7, manifest.newPatterns.size)
     }
@@ -53,7 +55,17 @@ class ContractParsingTest {
         assertTrue(timeline.cues.all { cue -> cue.sectionId != null && cue.sectionId in sectionIds })
         assertTrue(timeline.cues.all { cue -> cue.language != null && cue.type != null })
     }
+
+    @Test
+    fun parsesChineseOnlyTimelineWithoutVietnameseCues() {
+        val timeline = CourseJson.timeline(fixtureText("timeline_guided_zh.json"))
+        assertEquals("guided_zh", timeline.track)
+        assertTrue(timeline.cues.none { it.language == "vi-VN" })
+        assertEquals(8, timeline.sections.size)
+        assertEquals(0L, timeline.sections.first().startMs)
+        assertEquals(timeline.durationMs, timeline.sections.last().endMs)
+        timeline.sections.zipWithNext { earlier, later -> assertEquals(earlier.endMs, later.startMs) }
+    }
 }
 
 fun fixtureText(relativePath: String): String = FIXTURE_JSON.getValue(relativePath)
-

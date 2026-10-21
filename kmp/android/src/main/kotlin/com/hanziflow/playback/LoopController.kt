@@ -7,7 +7,7 @@ import com.hanziflow.shared.transcript.SectionNavigation
 /**
  * Owns the single active loop (line or section) and the position-check logic that
  * repeats or releases it. [PlaybackService] polls [onPositionReached] on the same
- * tick it checks Chinese-only skipping; this class never touches ExoPlayer itself.
+ * tick it checks loop boundaries; this class never touches ExoPlayer itself.
  */
 class LoopController {
     private val publisher = LoopPublisher()

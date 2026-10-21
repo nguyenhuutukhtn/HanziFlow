@@ -87,8 +87,7 @@ fun NowPlayingScreen(
             onVietnameseToggle = onVietnameseToggle,
             vietnameseEnabled = !state.chineseOnly,
             trailingSwitch = {
-                // Old timelines have no `language` tag on cues: Chinese-only has nothing to key off, so it's disabled.
-                val chineseOnlySupported = state.transcript.cues.any { it.language != null }
+                val chineseOnlySupported = state.chineseOnlyAvailable && state.track != "practice"
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text(stringResource(R.string.chinese_only_switch), style = MaterialTheme.typography.labelMedium)
                     Switch(

@@ -59,7 +59,6 @@
 
     <!-- Chinese-only listening -->
     <string name="chinese_only_switch">Chỉ nghe tiếng Trung</string>
-    <string name="effective_remaining_time">≈ %1$s</string>
 
     <!-- Section replay -->
     <string name="section_row">%1$s · %2$d/%3$d</string>
