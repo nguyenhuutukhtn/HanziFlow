@@ -21,6 +21,7 @@ from .publish import PublishError, publish_lesson, render_publish_report, render
 from .storage import ProgressStore
 from .story import build_story, render_errors, render_summary, write_story
 from .story.bundle import BundleError, command_export_lesson, command_import_lesson
+from .story.ledger import command_ledger
 from .transcript import write_transcripts
 from .tts import CachedTTS, ElevenLabsTTS, TTSError
 from .upload import StorageConfig, UploadError, upload_package
@@ -210,6 +211,9 @@ def build_parser() -> argparse.ArgumentParser:
     export_lesson.add_argument("lesson_id", type=str, help="e.g. 001")
     export_lesson.add_argument("--note", type=str, default=None, help="Appended to the bundle's task header")
     export_lesson.add_argument("--lessons-dir", type=Path, default=Path("lessons"))
+    ledger = sub.add_parser("ledger", help="Write build/ledger_<id>.md: what lessons before <id> taught")
+    ledger.add_argument("lesson_id", type=str, help="e.g. 002")
+    ledger.add_argument("--lessons-dir", type=Path, default=Path("lessons"))
     import_lesson = sub.add_parser("import-lesson", help="Import an AI's story-source reply: build, validate, audit, dry-run")
     import_lesson.add_argument("lesson_id", type=str, help="e.g. 001")
     import_lesson.add_argument("file", type=Path, help="The AI's reply (bundle or bare story source)")
@@ -246,6 +250,8 @@ def main(argv: list[str] | None = None) -> int:
             return command_voices_sync(settings)
         if args.command == "export-lesson":
             return command_export_lesson(args.lesson_id, args.lessons_dir, args.note)
+        if args.command == "ledger":
+            return command_ledger(args.lesson_id, args.lessons_dir)
         if args.command == "import-lesson":
             return command_import_lesson(args.lesson_id, args.file, args.lessons_dir, settings)
         if args.command == "export-characters":

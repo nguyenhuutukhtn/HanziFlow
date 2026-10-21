@@ -25,6 +25,10 @@ lesson ID:
 export-lesson ID:
     mandarin-course export-lesson {{ID}}
 
+# What lessons before ID taught (words, chars, patterns, premise, bible) -> build/ledger_<ID>.md
+ledger ID:
+    mandarin-course ledger {{ID}}
+
 # Import an AI's reply: build + validate + audit + dry-run count, never paid TTS.
 import-lesson ID FILE:
     mandarin-course import-lesson {{ID}} {{FILE}}

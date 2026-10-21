@@ -8,6 +8,7 @@ from pathlib import Path
 
 from ..lesson_schema import load_lesson
 from ..logs import write_log
+from ..story.ledger import chars_taught_before
 from .data import CharacterLoaders
 from .resolve import resolve_lesson_characters
 
@@ -30,7 +31,7 @@ def _lesson(short_id: str, lessons_dir: Path):
 def _missing_rows(short_id: str, lessons_dir: Path) -> list[dict]:
     lesson, vocab = _lesson(short_id, lessons_dir)
     data = json.loads(AUTHORED_PATH.read_text(encoding="utf-8")) if AUTHORED_PATH.is_file() else {}
-    resolved = resolve_lesson_characters(lesson.model_dump(mode="json"), set(), CharacterLoaders().as_dict(), vocab.words)
+    resolved = resolve_lesson_characters(lesson.model_dump(mode="json"), chars_taught_before(lessons_dir, lesson.lesson_id), CharacterLoaders().as_dict(), vocab.words)
     unihan = CharacterLoaders().unihan.load()
     rows = []
     for character in resolved["characters"]:
@@ -104,7 +105,7 @@ def import_characters(short_id: str, reply_path: Path, lessons_dir: Path = Path(
     existing.update({row["char"]: {"han_viet": row["han_viet"], "vi_meaning": row["vi_meaning"]} for row in rows})
     AUTHORED_PATH.parent.mkdir(parents=True, exist_ok=True)
     AUTHORED_PATH.write_text(json.dumps(dict(sorted(existing.items())), ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    resolved = resolve_lesson_characters(lesson.model_dump(mode="json"), set(), CharacterLoaders().as_dict(), _lesson(short_id, lessons_dir)[1].words)
+    resolved = resolve_lesson_characters(lesson.model_dump(mode="json"), chars_taught_before(lessons_dir, lesson.lesson_id), CharacterLoaders().as_dict(), _lesson(short_id, lessons_dir)[1].words)
     review = [
         "# Character review: " + lesson.lesson_id,
         "",

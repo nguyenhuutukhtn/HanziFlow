@@ -17,6 +17,7 @@ from ..generate_plan import audio_plan
 from ..lesson_schema import Lesson, load_lesson
 from ..logs import write_log
 from .assemble import BuildResult, build_story, write_story
+from .ledger import build_ledger
 
 BUNDLES_DIR = Path("build/bundles")
 CHECKLIST_PATH = Path("docs/authoring_checklist.md")
@@ -52,7 +53,7 @@ def _already_taught(lessons_dir: Path, short_id: str) -> list[str]:
     lesson_id = _lesson_id(short_id)
     lessons = [lesson for lesson in load_authoring_lessons(lessons_dir) if lesson.lesson_id < lesson_id]
     if not lessons:
-        return ["(none — this is the first lesson)"]
+        return [build_ledger(lessons_dir, lesson_id).rstrip()]
     report = build_report(lessons)
     lines = []
     for lesson in report.lessons:
@@ -62,7 +63,7 @@ def _already_taught(lessons_dir: Path, short_id: str) -> list[str]:
             f"coach new=[{', '.join(lesson.coach_phrases_introduced)}] "
             f"reduced=[{', '.join(lesson.coach_phrases_reduced)}]"
         )
-    return lines
+    return lines + ["", build_ledger(lessons_dir, lesson_id).rstrip()]
 
 
 def _task_header(short_id: str, exists: bool, example_id: str | None, note: str | None) -> str:

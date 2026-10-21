@@ -15,6 +15,7 @@ from .publish_support import (
 )
 from .publish_timeline import PublishError, _enrich_timeline, _load_and_validate_timeline, _reference_lines
 from .publish_tokens import _strip_punctuation, load_vocab, sentence_item_id, tokenize_mandarin, tones_from_pinyin, word_item_id
+from .story.ledger import chars_taught_before
 def publish_lesson(lesson_path: Path, settings: Settings, out: Path, force: bool = False) -> PublishReport:
     """Publish a lesson package; the version number is assigned here, not read from the
     lesson JSON ``version`` field (kept in the schema but ignored for packaging; see
@@ -49,7 +50,7 @@ def publish_lesson(lesson_path: Path, settings: Settings, out: Path, force: bool
         paths = ", ".join(missing_character_data)
         raise PublishError(f"Character data missing: {paths}; run: just fetch-character-data")
     character_loaders = character_bundle.as_dict()
-    characters = resolve_lesson_characters(lesson.model_dump(mode="json"), set(), character_loaders, vocab.words)
+    characters = resolve_lesson_characters(lesson.model_dump(mode="json"), chars_taught_before(lesson_path.parent, lesson.lesson_id), character_loaders, vocab.words)
     missing_authored = [entry["char"] for entry in characters["characters"] if not entry.get("han_viet") or not entry.get("vi_meaning")]
     if missing_authored:
         raise PublishError(f"{len(missing_authored)} characters lack Vietnamese data: run just export-characters {lesson.lesson_id.rsplit('_', 1)[1]}")
