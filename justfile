@@ -51,3 +51,7 @@ import-characters ID FILE:
 # Record Roborazzi goldens, only after the user approved the screen (see android-ui-testing skill).
 approve-screens:
     cd kmp && ./gradlew -q :android:recordRoborazziDebug
+
+# Codex 5h/week %, DeepSeek balance, Claude hint
+quota:
+    scripts/quota.sh

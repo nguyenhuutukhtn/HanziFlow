@@ -47,8 +47,9 @@ Last updated: 2026-10-21 (C1-fix2 done) · branch `app-publish-pipeline` (not me
    - **T6b** (`docs/tasks/T6b.md`, continue T6a window): `lesson-metrics --against 001`, `export-rows`/`import-rows`.
    - **Skills done (PM, 2026-10-21):** `.claude/skills/lesson-author` (outline → draft → gates → metrics → chars → row fixes → bible) + `lesson-review` (8-point rubric, findings by `ref`/`ref#n`, independent Hán-Việt check, outside-reviewer list); both linked under `.agents/skills/` for deepcode. **Next: lesson 002** — author = Codex (strong model), reviewer = DeepSeek (different model).
    - Reviews: `task-review` now runs via `deepcode -x` (PM-invoked, reads only the verdict); worked on T6b (caught duplicate row refs).
+   - **PM process (2026-10-21):** PM launches workers itself (`codex exec`, `deepcode -x`, Haiku subagent); model per task + escalation + quota routing + model-switch rule in `.claude/skills/pm-session`; `just quota` (Codex 5h/week %, DeepSeek balance; Claude = `/usage`, no local source yet).
    - **W1** (next, brief not written): web player with an always-on-top floating window for office use (user, 2026-10-21). React + `kmp/shared` JS; anon public bucket, no sign-in. Catalog → download/stream → karaoke transcript (Hanzi large, pinyin/vi toggles) → "Cửa sổ nổi" via Document Picture-in-Picture (Chrome/Edge, Mac). Interactive inside the window: ±10s, replay line, tap-to-seek, tap a character → compact card from `characters.json`, copy char/line; Media Session API for keyboard/headset media keys.
-   - **C2** (not written yet): character card UI (Android). After W1.
+   - **C2** (not written yet): character card UI (Android). **Next, before W1 and lesson 002 (user, 2026-10-21)** — PM writes the brief from [architecture/characters.md](architecture/characters.md) and launches the worker itself; user only does the device check.
    - Exercises: after G2c SRS base.
 
    **Before G2b, which is paused:**

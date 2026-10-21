@@ -9,7 +9,7 @@ Talk to the user in Vietnamese. Code, docs and briefs stay in English.
 
 ## Loop
 
-1. **Orient (once per session):** `docs/STATUS.md`, `git status --short`, `ls docs/tasks/`. Don't read other docs unless the task needs them.
+1. **Orient (once per session):** `docs/STATUS.md`, `git status --short`, `ls docs/tasks/`, `scripts/quota.sh`. Don't read other docs unless the task needs them.
 2. **Review a task report:** check the report against the diff, never trust it alone.
    - If the user pastes a `task-review` verdict (cheap reviewer agent, `.claude/skills/task-review/`): `pass` → commit; `fail`/`needs-PM` → open only the flagged files/lines. Still glance at its random samples.
    - Otherwise re-run the brief's `Verify` script yourself; its printed values are the review. Pass → commit without reading code, unless the diff touches a risk area below.
@@ -41,6 +41,33 @@ Prompts:
 - Continue (no AGENTS.md re-read, no re-explaining what it already knows): `Next: docs/tasks/<ID>.md. You already know <files/area>; read only the brief and anything new it names. Report with the same template.` For a fix, list the review findings in 1–3 lines in the prompt itself, and point to the `-fix` brief only if one was written.
 
 Note it in the brief's header too (`Suggested agent: continue <prev task> window` or a named agent), so the choice survives a PM reset.
+
+## Running workers (PM drives them; the user talks only to PM)
+
+- **Codex:** `codex exec -m <model> -c model_reasoning_effort=<effort> -s workspace-write -o build/logs/<ID>.out "<prompt>" > build/logs/<ID>.log 2>&1` in the background (Bash `run_in_background`). Read only `build/logs/<ID>.out`; read the `.log` tail only if the run failed. Continue a window: `codex exec resume <session id> -o … "<prompt>"` (id from the brief's header line `Session:`; record it after each run, newest file in `~/.codex/sessions/`).
+- **DeepSeek:** `deepcode -x -p "<prompt>" > build/logs/<ID>.deepseek.out 2>&1`; continue with `-r <id>`. Skills reach it via `.agents/skills/` symlinks.
+- **Claude Haiku subagent** (`Agent`, `model: haiku`): mechanical `task-review`, file search, log summaries. Inside the Claude plan, cheapest option.
+- Hand the user only what needs them: outline/story approval, device checks, listening QA, `upload`, paid TTS confirmation. Workers never run `upload` or non-dry-run `generate`.
+
+## Model per task
+
+Before every launch run `scripts/quota.sh` (one line per provider) and write `Suggested agent: <tool>/<model> (<effort>)` + `Session:` in the brief header.
+
+| Work | First choice (model · effort) |
+|---|---|
+| task-review, Verify re-run, log/diff summary | Haiku subagent · low; DeepSeek flash · low when a different vendor matters |
+| Small fix with tests, Python/pipeline S–M with a scripted Verify | Codex `gpt-5.6-luna` · low |
+| Android timing/state, contract changes, hard algorithms, 2nd fix of the same bug | Codex `gpt-5.6-sol` or `gpt-5.6-terra` · medium — **ask first** |
+| Lesson content (`lesson-author`) | Codex `gpt-5.6-sol` · medium — **ask first**; review (`lesson-review`) on a different vendor (DeepSeek or Claude Sonnet) · medium |
+
+- **Effort defaults to low** (user rule, 2026-10-21). Codex: `-c model_reasoning_effort=low`; Haiku/Sonnet subagent: say "keep it short" in the prompt; DeepSeek: `reasoningEffort` in `.deepcode/settings.json`. Medium only where the table says; high = ask first. A low-effort run that fails goes to medium on the same model before a model upgrade.
+
+- **Cheap = run without asking:** Codex `gpt-5.6-luna`, DeepSeek flash, Claude Haiku subagent.
+- **Anything else needs the user's OK before launch** (user rule, 2026-10-21): one line — task, model, why the cheap one isn't enough, current `just quota`. This includes `gpt-reserve` until the user ranks it, DeepSeek's expensive model, Sonnet/Opus subagents and raising effort to high. Never `gpt-6-astra` (burns quota).
+- **Escalate, don't retry:** a cheap model that fails a task once → propose one tier up (asking as above). Never a third attempt on the same tier.
+- **Quota routing:** Codex 5h > 80% → wait or use DeepSeek; Codex week < 50% used with ≤ 2 days to reset → move DeepSeek work to Codex, and offer (ask) one tier up for pending hard tasks; DeepSeek balance < 1 USD → tell the user.
+- **PM model:** Sonnet for the routine loop (report → Verify → commit → next prompt). Say **"Nên chuyển /model opus"** (after a reset, see below) for feature design, architecture decisions, timing/state/contract risk reviews, the first brief of a new area. On Opus, say when the remaining work is routine and Sonnet is enough.
+- **Switching models costs a full re-read:** caches are per model, so a switch re-processes the whole history uncached. Switch only at session start: write state to disk, reset, open the new session on the new model.
 
 ## Reset rule
 
