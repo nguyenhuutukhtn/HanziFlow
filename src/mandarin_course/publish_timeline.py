@@ -161,7 +161,8 @@ def _enrich_timeline(timeline: dict[str, Any], lesson: Lesson, track: str, packa
     segment_by_line_id: dict[str, Segment] = {}
     expected_sequence: list[str] = []
     for segment in lesson.segments:
-        if track == "guided_zh" and segment.language == "vi-VN":
+        # Same drop rule as audio_builder.chinese_only.
+        if track == "guided_zh" and (segment.language == "vi-VN" or segment.guided_only):
             continue
         line_ids = _segment_line_ids(segment)
         for line_id in line_ids:

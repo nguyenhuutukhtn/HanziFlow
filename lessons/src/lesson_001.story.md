@@ -16,7 +16,7 @@ coach_phrases: 我们一起听小故事吧。 | 我们先听短句。 | 这一�
 ## activity Nghe chuyện
 ## say
 roles | 我们一起听小故事吧。 | wǒmen yìqǐ tīng xiǎo gùshi ba. | Mình cùng nghe một câu chuyện ngắn nhé. | 500
-voices | 我先用中文讲。再用越南语说意思。 | wǒ xiān yòng Zhōngwén jiǎng. zài yòng Yuènányǔ shuō yìsi. | Mình kể bằng tiếng Trung trước. Rồi nói nghĩa bằng tiếng Việt. | 700
+voices!guided-only | 我先用中文讲。再用越南语说意思。 | wǒ xiān yòng Zhōngwén jiǎng. zài yòng Yuènányǔ shuō yìsi. | Mình kể bằng tiếng Trung trước. Rồi nói nghĩa bằng tiếng Việt. | 700
 scene_bag | 桌上有一袋外卖。这不是安娜的桌子。这不是李明的桌子。安娜和李明看袋子。 | zhuō shàng yǒu yí dài wàimài. zhè bú shì Ānnà de zhuōzi. zhè bú shì Lǐ Míng de zhuōzi. Ānnà hé Lǐ Míng kàn dàizi. | Trên bàn có một túi đồ ăn mang về. Đây không phải bàn của Anna. Đây không phải bàn của Lý Minh. Anna và Lý Minh nhìn túi. | 700
 listen_first | 我们先听。不用回答。 | wǒmen xiān tīng. bú yòng huídá. | Mình nghe trước. Chưa cần trả lời. | 500
 ## story prefix=s1 from=story
@@ -32,7 +32,7 @@ tongshi | coach_zh | 同事。 | tóngshì. | Đồng nghiệp.
 shei | coach_zh | 谁的？ | shuí de? | Của ai?
 mingzi | coach_zh | 名字。 | míngzi. | Tên.
 ## say
-map_lead | 我们听一句，再听意思。 | wǒmen tīng yí jù, zài tīng yìsi. | Mình nghe một câu, rồi nghe nghĩa.
+map_lead!guided-only | 我们听一句，再听意思。 | wǒmen tīng yí jù, zài tīng yìsi. | Mình nghe một câu, rồi nghe nghĩa.
 ## gloss
 map_bag | coach_zh | 桌上有一袋外卖。 | zhuō shàng yǒu yí dài wàimài. | Trên bàn có một túi đồ ăn mang về.
 map_unknown | coach_zh | 安娜和李明不知道是谁的。 | Ānnà hé Lǐ Míng bù zhīdào shì shuí de. | Anna và Lý Minh không biết của ai.
@@ -150,7 +150,7 @@ an_lead | 这次袋子上有安娜的名字。这是安娜的。 | zhè cì dài
 ## story prefix=an_s from=anna
 ## gloss prefix=an from=anna
 ## say
-an_vi | 这一轮还有越南语。 | zhè yì lún hái yǒu Yuènányǔ. | Vòng này mình vẫn có tiếng Việt nhé.
+an_vi!guided-only | 这一轮还有越南语。 | zhè yì lún hái yǒu Yuènányǔ. | Vòng này mình vẫn có tiếng Việt nhé.
 ## ask prefix=a1 from=anna[:10] vi
 ## say
 an_word | 名字。 | míngzi. | Tên. | 300
@@ -175,7 +175,7 @@ rt_lead | 我们用别的话说一次。 | wǒmen yòng bié de huà shuō yí c
 ## gloss prefix=rt from=retold
 ## story prefix=rt2 from=retold
 ## say
-k_ask | 这一轮还有越南语。 | zhè yì lún hái yǒu Yuènányǔ. | Vòng này mình vẫn có tiếng Việt nhé.
+k_ask!guided-only | 这一轮还有越南语。 | zhè yì lún hái yǒu Yuènányǔ. | Vòng này mình vẫn có tiếng Việt nhé.
 ## ask prefix=k1 from=retell vi
 ## say
 k2_go | 我们再听。你答。 | wǒmen zài tīng. nǐ dá. | Mình nghe lại. Bạn trả lời.
@@ -186,7 +186,7 @@ k3_lead | 这一轮听中文。 | zhè yì lún tīng Zhōngwén. | Vòng này n
 
 ## activity Nghe lại
 ## say
-close_cue | 我们再听一次故事吧。意思你知道。 | wǒmen zài tīng yí cì gùshi ba. yìsi nǐ zhīdào. | Mình nghe lại chuyện một lần nữa. Nghĩa thì bạn đã biết.
+close_cue!guided-only | 我们再听一次故事吧。意思你知道。 | wǒmen zài tīng yí cì gùshi ba. yìsi nǐ zhīdào. | Mình nghe lại chuyện một lần nữa. Nghĩa thì bạn đã biết.
 ## zh
 close_lead | 袋子上有同事的名字。这是同事的。 | dàizi shàng yǒu tóngshì de míngzi. zhè shì tóngshì de. | Trên túi có tên đồng nghiệp. Đây là của đồng nghiệp. | 600
 ## story prefix=s3 from=story
@@ -328,4 +328,3 @@ food | 这是外卖吗？ | zhè shì wàimài ma? | Đây là đồ ăn mang v�
 who | 这是谁的？ | zhè shì shuí de? | Của ai? | 同事的。 | tóngshì de. | Của đồng nghiệp.
 food_ts | 外卖是同事的吗？ | wàimài shì tóngshì de ma? | Đồ ăn mang về là của đồng nghiệp phải không? | 是
 or_ts | 这是同事的还是安娜的？ | zhè shì tóngshì de háishi Ānnà de? | Của đồng nghiệp hay của Anna? | 同事的。 | tóngshì de. | Của đồng nghiệp. | 5500
-

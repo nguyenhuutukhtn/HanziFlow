@@ -141,3 +141,46 @@ def test_chinese_only_drops_vietnamese_and_replaces_only_internal_gap(lesson_dat
     assert [segment.id for segment in result.segments] == ["one", "two"]
     assert result.segments[0].pause_before_ms == 120
     assert result.segments[1].pause_before_ms == 400
+
+
+def test_chinese_only_preserves_a_response_gap_from_a_dropped_hint(lesson_data):
+    lesson_data["segments"] = [
+        {"id": "prompt", "activity": "q", "type": "prompt", "language": "zh-CN", "speaker": "coach_zh", "text": "你好吗？", "pinyin": "nǐ hǎo ma", "translation": "Bạn khỏe không？", "pause_after_ms": 100},
+        {"id": "hint", "activity": "q", "type": "context", "language": "vi-VN", "speaker": "coach", "text": "Gợi ý", "translation": "Gợi ý", "pause_after_ms": 5000},
+        {"id": "answer", "activity": "q", "type": "model_answer", "language": "zh-CN", "speaker": "coach_zh", "text": "我很好。", "pinyin": "wǒ hěn hǎo", "translation": "Tôi khỏe.", "pause_before_ms": 80},
+    ]
+    result = chinese_only(Lesson.model_validate(lesson_data))
+    assert [segment.id for segment in result.segments] == ["prompt", "answer"]
+    assert result.segments[1].pause_before_ms == 5000
+
+
+def test_chinese_only_uses_the_longest_pause_in_a_dropped_run(lesson_data):
+    lesson_data["segments"] = [
+        {"id": "prompt", "activity": "q", "type": "prompt", "language": "zh-CN", "speaker": "coach_zh", "text": "你好吗？", "pinyin": "nǐ hǎo ma", "translation": "Bạn khỏe không？"},
+        {"id": "hint_one", "activity": "q", "type": "context", "language": "vi-VN", "speaker": "coach", "text": "Gợi ý 1", "translation": "Gợi ý 1", "pause_after_ms": 1800},
+        {"id": "hint_two", "activity": "q", "type": "context", "language": "vi-VN", "speaker": "coach", "text": "Gợi ý 2", "translation": "Gợi ý 2", "pause_after_ms": 3200},
+        {"id": "answer", "activity": "q", "type": "model_answer", "language": "zh-CN", "speaker": "coach_zh", "text": "我很好。", "pinyin": "wǒ hěn hǎo", "translation": "Tôi khỏe."},
+    ]
+    result = chinese_only(Lesson.model_validate(lesson_data))
+    assert result.segments[1].pause_before_ms == 3200
+
+
+def test_chinese_only_uses_cached_duration_for_an_identical_repeat(lesson_data):
+    lesson_data["segments"] = [
+        {"id": "first", "activity": "q", "type": "prompt", "language": "zh-CN", "speaker": "coach_zh", "text": "同一句。", "pinyin": "tóng yí jù", "translation": "Cùng một câu."},
+        {"id": "hint", "activity": "q", "type": "context", "language": "vi-VN", "speaker": "coach", "text": "Gợi ý", "translation": "Gợi ý", "pause_after_ms": 400},
+        {"id": "again", "activity": "q", "type": "model_answer", "language": "zh-CN", "speaker": "coach_zh", "text": "同一句。", "pinyin": "tóng yí jù", "translation": "Cùng một câu."},
+    ]
+    result = chinese_only(Lesson.model_validate(lesson_data), duration_ms_for=lambda segment: 900)
+    assert result.segments[1].pause_before_ms == 1300
+
+
+def test_chinese_only_drops_guided_only_segments(lesson_data):
+    lesson_data["segments"] = [
+        {"id": "before", "activity": "q", "type": "prompt", "language": "zh-CN", "speaker": "coach_zh", "text": "前面。", "pinyin": "qiánmiàn", "translation": "Trước."},
+        {"id": "coach", "activity": "q", "type": "narration", "language": "zh-CN", "speaker": "coach_zh", "text": "只有越南语。", "pinyin": "zhǐyǒu Yuènányǔ", "translation": "Chỉ có tiếng Việt.", "guided_only": True, "pause_after_ms": 600},
+        {"id": "after", "activity": "q", "type": "prompt", "language": "zh-CN", "speaker": "coach_zh", "text": "后面。", "pinyin": "hòumiàn", "translation": "Sau."},
+    ]
+    result = chinese_only(Lesson.model_validate(lesson_data))
+    assert [segment.id for segment in result.segments] == ["before", "after"]
+    assert result.segments[1].pause_before_ms == 400

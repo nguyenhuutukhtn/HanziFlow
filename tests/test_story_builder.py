@@ -65,3 +65,14 @@ def test_build_lesson_cli_writes_both_variants(tmp_path, capsys):
     assert ids == ["hi", "hi_vi", "q_q1", "q_q1_vi", "q_q1_a", "q_q1_av", "q_q1_ok", "q_q1_ok_vi"]
     assert json.loads((tmp_path / "lesson_009_practice.json").read_text(encoding="utf-8"))["target_duration_minutes"] == 5
     assert len(capsys.readouterr().out.splitlines()) == 4
+
+
+def test_guided_only_row_marker_is_not_part_of_segment_id(tmp_path):
+    body = GUIDED + "## activity A\n## say\ncoach!guided-only | 这一轮只有越南语。 | zhè yì lún zhǐ yǒu Yuènányǔ. | Vòng này chỉ có tiếng Việt.\n"
+    story = tmp_path / "lesson_009.story.md"
+    story.write_text(HEADER + body, encoding="utf-8")
+    result = build_story(story, tmp_path)
+    assert not result.errors
+    segment = result.variants[0].lesson["segments"][0]
+    assert segment["id"] == "coach"
+    assert segment["guided_only"] is True

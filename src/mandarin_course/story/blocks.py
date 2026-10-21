@@ -42,6 +42,7 @@ class Line:
     pinyin: str
     gloss: str
     pause: int | None = None
+    guided_only: bool = False
 
 
 @dataclass
@@ -70,7 +71,8 @@ def _check_cells(row: Row, shape: str, minimum: int, maximum: int) -> None:
 def text_row(row: Row, speaker: str = "coach_zh") -> Line:
     _check_cells(row, "key | 中文 | pinyin | Vietnamese [| pause_ms]", 4, 5)
     pause = _pause(row, row.cells[4]) if len(row.cells) == 5 else None
-    return Line(row.line, row.cells[0], speaker, *row.cells[1:4], pause)
+    key, guided_only = _row_key(row.cells[0])
+    return Line(row.line, key, speaker, *row.cells[1:4], pause, guided_only)
 
 
 def line_row(row: Row) -> Line:
@@ -78,7 +80,15 @@ def line_row(row: Row) -> Line:
     if row.cells[1] not in SPEAKERS:
         raise StoryError(row.line, f"unknown speaker '{row.cells[1]}' (expected one of {', '.join(sorted(SPEAKERS))})")
     pause = _pause(row, row.cells[5]) if len(row.cells) == 6 else None
-    return Line(row.line, *row.cells[:5], pause)
+    key, guided_only = _row_key(row.cells[0])
+    return Line(row.line, key, *row.cells[1:5], pause, guided_only)
+
+
+def _row_key(value: str) -> tuple[str, bool]:
+    marker = "!guided-only"
+    if value.endswith(marker):
+        return value[:-len(marker)].rstrip(), True
+    return value, False
 
 
 def question_row(row: Row) -> Question:
@@ -108,7 +118,8 @@ class Builder:
         self.activity = ""
 
     def seg(self, line: int, sid: str, kind: str, language: str, text: str, *, speaker: str,
-            pinyin: str | None = None, translation: str | None = None, pause: int = 0, speed: float = 1.0) -> None:
+            pinyin: str | None = None, translation: str | None = None, pause: int = 0, speed: float = 1.0,
+            guided_only: bool = False) -> None:
         item = {
             "id": sid,
             "activity": self.activity,
@@ -122,13 +133,15 @@ class Builder:
         if language == "zh-CN":
             item["pinyin"] = pinyin
             item["translation"] = translation
+        if guided_only:
+            item["guided_only"] = True
         self.segments.append(item)
         self.lines.append(line)
 
     def zh(self, line: Line, sid: str, pause: int, speed: float = 1.0, kind: str | None = None) -> None:
         kind = kind or ("narration" if line.speaker == "coach_zh" else "dialogue")
         self.seg(line.line, sid, kind, "zh-CN", line.text, speaker=line.speaker, pinyin=line.pinyin,
-                 translation=line.gloss, pause=pause, speed=speed)
+                 translation=line.gloss, pause=pause, speed=speed, guided_only=line.guided_only)
 
     def vi(self, line_no: int, sid: str, text: str, pause: int) -> None:
         self.seg(line_no, sid, "narration", "vi-VN", text, speaker="coach", pause=pause)

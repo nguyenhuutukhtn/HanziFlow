@@ -8,8 +8,9 @@ import subprocess
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Callable
 
-from .lesson_schema import Lesson
+from .lesson_schema import Lesson, Segment
 from .tts import CachedTTS
 
 
@@ -59,20 +60,30 @@ def probe_duration(path: Path) -> float:
 
 MAX_TIMELINE_DRIFT_MS = 150
 CHINESE_ONLY_GAP_MS = 400
+RESPONSE_GAP_MIN_MS = 1500
 
 
-def chinese_only(lesson: Lesson) -> Lesson:
-    """Return the lesson with Vietnamese segments removed and short inter-language gaps."""
+def chinese_only(lesson: Lesson, duration_ms_for: Callable[[Segment], int] | None = None) -> Lesson:
+    """Remove dropped segments while preserving response and recall gaps."""
     kept = []
-    dropped_between = False
+    dropped = []
     for segment in lesson.segments:
-        if segment.language == "vi-VN":
-            dropped_between = bool(kept)
+        if segment.language == "vi-VN" or segment.guided_only:
+            dropped.append(segment)
             continue
-        if dropped_between:
-            segment = segment.model_copy(update={"pause_before_ms": CHINESE_ONLY_GAP_MS})
+        if dropped and kept:
+            pause_before_ms = CHINESE_ONLY_GAP_MS
+            if len(dropped) == 1 and dropped[0].language == "vi-VN" and dropped[0].text.strip() and kept[-1].text.strip() == segment.text.strip():
+                if duration_ms_for is None:
+                    raise AudioBuildError(f"Missing cached duration for recall gap at segment {dropped[0].id}")
+                pause_before_ms = duration_ms_for(dropped[0]) + dropped[0].pause_after_ms
+            else:
+                longest_pause = max(item.pause_after_ms for item in dropped)
+                if longest_pause >= RESPONSE_GAP_MIN_MS:
+                    pause_before_ms = longest_pause
+            segment = segment.model_copy(update={"pause_before_ms": pause_before_ms})
         kept.append(segment)
-        dropped_between = False
+        dropped = []
     return lesson.model_copy(update={"segments": kept})
 
 

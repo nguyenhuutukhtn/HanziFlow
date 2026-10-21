@@ -10,7 +10,7 @@ from pathlib import Path
 
 from pydantic import ValidationError
 
-from .audio_builder import AudioBuildError, build_audio, chinese_only, timeline_path_for
+from .audio_builder import AudioBuildError, build_audio, chinese_only, probe_duration, timeline_path_for
 from .audit import build_report, load_authoring_lessons, render_report
 from .config import Settings
 from .generate_plan import audio_plan, print_plan
@@ -67,7 +67,10 @@ def command_generate(path: Path, settings: Settings, dry_run: bool, assume_yes: 
     tts = CachedTTS(ElevenLabsTTS(settings), settings)
     audio_path = output_dir / _audio_filename(lesson)
     duration = build_audio(lesson, tts, audio_path)
-    zh_lesson = chinese_only(lesson)
+    zh_lesson = chinese_only(
+        lesson,
+        duration_ms_for=lambda segment: round(probe_duration(tts.get(segment, lesson)) * 1000),
+    )
     zh_audio_path = output_dir / f"{lesson.lesson_id}_guided_zh.mp3"
 
     class CacheOnlyTTS:

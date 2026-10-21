@@ -52,6 +52,7 @@ class Segment(BaseModel):
     turns: list[DialogueTurn] = Field(default_factory=list)
     metadata: dict[str, str | int | float | bool] = Field(default_factory=dict)
     tts_tags: list[str] = Field(default_factory=list)
+    guided_only: bool = False
 
     @model_validator(mode="after")
     def require_mandarin_learning_fields(self) -> "Segment":

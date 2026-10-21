@@ -12,6 +12,7 @@ For writing or revising a `lessons/src/lesson_XXX.story.md`. Self-contained: no 
 ## Block types and row shapes
 
 - `## say` / `## zh`: `key | 中文 | pinyin | Vietnamese [| pause_ms]` — bilingual (`say`) or Mandarin-only (`zh`) coach line.
+- Add `!guided-only` to a row key (for example `close_cue!guided-only`) when its Mandarin line only makes sense with the following Vietnamese explanation; it is omitted from `guided_zh`.
 - `## story`, `## gloss`, `## shadow`: `key | speaker | 中文 | pinyin | Vietnamese [| pause_ms]`; speaker is `coach_zh`, `anna`, or `li_ming`.
 - `## teach prefix=`: exactly three rows keyed `rule`, `ex`, `ans` — explain a signal word, give an example, give the model answer.
 - `## buildup prefix=`: a `full` row then chunk rows; each chunk's text must contain the previous chunk's text, and the last chunk's text must sit inside `full`'s text.

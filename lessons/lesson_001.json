@@ -64,7 +64,8 @@
       "pause_after_ms": 400,
       "playback_speed": 1.0,
       "pinyin": "wǒ xiān yòng Zhōngwén jiǎng. zài yòng Yuènányǔ shuō yìsi.",
-      "translation": "Mình kể bằng tiếng Trung trước. Rồi nói nghĩa bằng tiếng Việt."
+      "translation": "Mình kể bằng tiếng Trung trước. Rồi nói nghĩa bằng tiếng Việt.",
+      "guided_only": true
     },
     {
       "id": "voices_vi",
@@ -506,7 +507,8 @@
       "pause_after_ms": 400,
       "playback_speed": 1.0,
       "pinyin": "wǒmen tīng yí jù, zài tīng yìsi.",
-      "translation": "Mình nghe một câu, rồi nghe nghĩa."
+      "translation": "Mình nghe một câu, rồi nghe nghĩa.",
+      "guided_only": true
     },
     {
       "id": "map_lead_vi",
@@ -4878,7 +4880,8 @@
       "pause_after_ms": 400,
       "playback_speed": 1.0,
       "pinyin": "zhè yì lún hái yǒu Yuènányǔ.",
-      "translation": "Vòng này mình vẫn có tiếng Việt nhé."
+      "translation": "Vòng này mình vẫn có tiếng Việt nhé.",
+      "guided_only": true
     },
     {
       "id": "an_vi_vi",
@@ -8314,7 +8317,8 @@
       "pause_after_ms": 400,
       "playback_speed": 1.0,
       "pinyin": "zhè yì lún hái yǒu Yuènányǔ.",
-      "translation": "Vòng này mình vẫn có tiếng Việt nhé."
+      "translation": "Vòng này mình vẫn có tiếng Việt nhé.",
+      "guided_only": true
     },
     {
       "id": "k_ask_vi",
@@ -8748,7 +8752,8 @@
       "pause_after_ms": 400,
       "playback_speed": 1.0,
       "pinyin": "wǒmen zài tīng yí cì gùshi ba. yìsi nǐ zhīdào.",
-      "translation": "Mình nghe lại chuyện một lần nữa. Nghĩa thì bạn đã biết."
+      "translation": "Mình nghe lại chuyện một lần nữa. Nghĩa thì bạn đã biết.",
+      "guided_only": true
     },
     {
       "id": "close_cue_vi",
