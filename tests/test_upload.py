@@ -218,21 +218,6 @@ def test_changed_versioned_file_is_never_overwritten(tmp_path, remote):
     assert storage.objects.get("catalog.json") != FILES["catalog.json"]
 
 
-def test_default_output_is_short_and_reports_counts(tmp_path):
-    root = write_package(tmp_path)
-    storage = FakeStorage()
-
-    report, lines = run(root, storage)
-
-    assert len(lines) <= 20
-    assert any(line.startswith("Uploaded 3 file(s)") for line in lines)
-    assert any(line.startswith("Verified: ok") for line in lines)
-    assert any(line.startswith("Pruned: 0 remote object(s), 0 local version dir(s)") for line in lines)
-    assert report.verified is True
-    assert report.pruned_remote == 0
-    assert report.pruned_local == 0
-
-
 def test_verification_checks_every_new_version_file_from_the_public_endpoint(tmp_path):
     root = write_package(tmp_path)
     storage = FakeStorage()
@@ -261,86 +246,6 @@ def test_verification_failure_raises_and_deletes_nothing(tmp_path, monkeypatch):
 
     # Nothing was pruned: every uploaded object is still present.
     assert set(FILES).issubset(storage.objects)
-
-
-def test_prune_removes_only_superseded_version_remote_and_local(tmp_path):
-    old_and_new = {
-        "lessons/lesson_001/v1/lesson.json": b'{"lesson_id": "lesson_001", "version": 1}',
-        "lessons/lesson_001/v1/guided.mp3": b"ID3 old audio in v1",
-        "lessons/lesson_001/v2/lesson.json": b'{"lesson_id": "lesson_001", "version": 2}',
-        "lessons/lesson_001/v2/guided.mp3": b"ID3 new audio in v2",
-        "catalog.json": json.dumps({
-            "schema_version": 1, "catalog_version": 2,
-            "lessons": [{"id": "lesson_001", "version": 2, "order": 1}],
-        }).encode(),
-    }
-    root = write_package(tmp_path, old_and_new)
-    storage = FakeStorage({
-        "lessons/lesson_001/v1/lesson.json": old_and_new["lessons/lesson_001/v1/lesson.json"],
-        "lessons/lesson_001/v1/guided.mp3": old_and_new["lessons/lesson_001/v1/guided.mp3"],
-    })
-
-    report, lines = run(root, storage)
-
-    assert report.pruned_remote == 2
-    assert report.pruned_local == 1
-    assert not any(key.startswith("lessons/lesson_001/v1/") for key in storage.objects)
-    assert not (root / "lessons/lesson_001/v1").exists()
-    assert (root / "lessons/lesson_001/v2").exists()
-    assert any(key.startswith("lessons/lesson_001/v2/") for key in storage.objects)
-    assert len(lines) <= 20
-
-
-def test_no_prune_skips_deletion(tmp_path):
-    old_and_new = {
-        "lessons/lesson_001/v1/lesson.json": b'{"lesson_id": "lesson_001", "version": 1}',
-        "lessons/lesson_001/v2/lesson.json": b'{"lesson_id": "lesson_001", "version": 2}',
-        "catalog.json": json.dumps({
-            "schema_version": 1, "catalog_version": 2,
-            "lessons": [{"id": "lesson_001", "version": 2, "order": 1}],
-        }).encode(),
-    }
-    root = write_package(tmp_path, old_and_new)
-    storage = FakeStorage({"lessons/lesson_001/v1/lesson.json": old_and_new["lessons/lesson_001/v1/lesson.json"]})
-
-    report, lines = run(root, storage, prune=False)
-
-    assert report.pruned_remote == 0
-    assert report.pruned_local == 0
-    assert "lessons/lesson_001/v1/lesson.json" in storage.objects
-    assert (root / "lessons/lesson_001/v1").exists()
-    assert any("--no-prune" in line for line in lines)
-
-
-def test_dry_run_makes_no_write_or_delete_calls(tmp_path):
-    old_and_new = {
-        "lessons/lesson_001/v1/lesson.json": b'{"lesson_id": "lesson_001", "version": 1}',
-        "lessons/lesson_001/v2/lesson.json": b'{"lesson_id": "lesson_001", "version": 2}',
-        "catalog.json": json.dumps({
-            "schema_version": 1, "catalog_version": 2,
-            "lessons": [{"id": "lesson_001", "version": 2, "order": 1}],
-        }).encode(),
-    }
-    root = write_package(tmp_path, old_and_new)
-    storage = FakeStorage({"lessons/lesson_001/v1/lesson.json": old_and_new["lessons/lesson_001/v1/lesson.json"]})
-
-    report, lines = run(root, storage, dry_run=True)
-
-    # No uploads, deletes, or verification GETs were made — only HEAD checks and the list call.
-    assert all(request.method in ("HEAD", "POST") for request in storage.requests)
-    assert all(not (request.method == "POST" and request.url.path.startswith(OBJECT_PREFIX)) for request in storage.requests)
-    assert all(request.method != "GET" for request in storage.requests)
-    assert all(request.method != "DELETE" for request in storage.requests)
-    assert storage.objects == {
-        "lessons/lesson_001/v1/lesson.json": old_and_new["lessons/lesson_001/v1/lesson.json"],
-    }
-    assert report.dry_run is True
-    # Counts reflect what WOULD be pruned; nothing was actually deleted (checked above).
-    assert report.pruned_remote == 1
-    assert report.pruned_local == 1
-    assert (root / "lessons/lesson_001/v1").exists()
-    assert any(line.startswith("  delete  (local)") and "v1" in line for line in lines)
-    assert any("Dry run only" in line for line in lines)
 
 
 def test_dry_run_reports_size_for_every_file(tmp_path):

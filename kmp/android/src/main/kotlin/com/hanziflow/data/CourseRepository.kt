@@ -24,5 +24,8 @@ interface CourseRepository {
         fun workName(id: String) = "lesson-download-$id"
         fun resolveUrl(base: String, relative: String): String =
             java.net.URI(base.trimEnd('/') + "/").resolve(relative).toString()
+
+        fun catalogUrl(base: String, nowMs: Long): String =
+            resolveUrl(base, "catalog.json") + "?t=$nowMs"
     }
 }

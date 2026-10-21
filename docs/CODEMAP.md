@@ -7,12 +7,12 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 ## Python pipeline (`src/mandarin_course/`)
 
 - `__init__.py` [4] — Mandarin audio course generator.
-- `audio_builder.py` [174] — FFmpeg-based audio assembly with per-segment pauses.
+- `audio_builder.py` [185] — FFmpeg-based audio assembly with per-segment pauses.
 - `audit.py` [136] — Read-only authoring audit for cross-lesson pattern continuity.
-- `cli.py` [249] — Command-line interface for validation, generation, transcripts and reviews.
+- `cli.py` [252] — Command-line interface for validation, generation, transcripts and reviews.
 - `config.py` [53] — Environment-backed configuration without exposing secrets.
 - `generate_plan.py` [82] — Cache/cost plan for a lesson's TTS segments: `generate --dry-run` and bundle import.
-- `lesson_schema.py` [104] — Validated, content-driven lesson schema.
+- `lesson_schema.py` [105] — Validated, content-driven lesson schema.
 - `logs.py` [14] — Shared helper: write full detail behind a short CLI summary (docs/workflow.md).
 - `publish.py` [20] — Public publishing API; implementation is split into focused modules.
 - `publish_core.py` [282]
@@ -24,13 +24,14 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `storage.py` [60] — SQLite progress store. Ratings are learner supplied; no automatic scoring.
 - `story/__init__.py` [7] — Story source (`lessons/src/*.story.md`) -> guided + practice lesson JSON.
 - `story/assemble.py` [208] — Assemble guided + practice lesson JSON from a parsed story source.
-- `story/blocks.py` [254] — Block types: each turns one `## <type>` section of a story source into segments.
+- `story/blocks.py` [267] — Block types: each turns one `## <type>` section of a story source into segments.
 - `story/bundle.py` [212] — Export/import lesson story-source bundles (docs/workflow.md "Content loop").
 - `story/parser.py` [143] — Parse a lesson story source (`lessons/src/lesson_XXX.story.md`) into blocks.
 - `story/report.py` [46] — Short build-lesson output: ≤ 20 lines, errors with source line numbers.
 - `transcript.py` [69] — Learner-facing Markdown transcripts.
 - `tts.py` [246] — ElevenLabs TTS adapter and deterministic audio cache.
-- `upload.py` [406] ⚠ — Upload published lesson packages to the public Supabase Storage bucket.
+- `upload.py` [171] — Upload published lesson packages to Supabase Storage.
+- `upload_storage.py` [197] — HTTP and Storage REST helpers for the lesson uploader.
 - `voice_registry.py` [226] — ElevenLabs voice registry: synced once, cached locally, used for deterministic per-lesson voice selection.
 
 ## Python scripts (`scripts/`)
@@ -40,7 +41,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 ## Python tests (`tests/`)
 
 - `conftest.py` [57]
-- `test_audio_builder.py` [143]
+- `test_audio_builder.py` [186]
 - `test_audio_tags.py` [193]
 - `test_audit.py` [144]
 - `test_bundle.py` [78]
@@ -50,10 +51,11 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `test_publish.py` [367] ⚠
 - `test_review.py` [18]
 - `test_storage.py` [12]
-- `test_story_builder.py` [67]
+- `test_story_builder.py` [78]
 - `test_transcript.py` [37]
 - `test_tts.py` [130]
-- `test_upload.py` [393] ⚠ — Upload tests use httpx.MockTransport: no network, no real Supabase project.
+- `test_upload.py` [298] — Upload tests use httpx.MockTransport: no network, no real Supabase project.
+- `test_upload_pruning.py` [125] — Upload retry and retention tests.
 
 ## Supabase migrations (`supabase/migrations/`)
 
@@ -93,7 +95,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `kotlin/com/hanziflow/HanziFlowApplication.kt` [15] — HanziFlowApplication
 - `kotlin/com/hanziflow/MainActivity.kt` [88] — MainActivity — Thin composition root: wires the activity-scoped screen ViewModels (via Hilt) to
 - `kotlin/com/hanziflow/data/CourseDatabase.kt` [93] — LessonEntity, SettingEntity, PlaybackEntity, CourseDao
-- `kotlin/com/hanziflow/data/CourseRepository.kt` [28] — CourseRepository — Course catalog, downloads, and the downloaded lesson package file store.
+- `kotlin/com/hanziflow/data/CourseRepository.kt` [31] — CourseRepository — Course catalog, downloads, and the downloaded lesson package file store.
 - `kotlin/com/hanziflow/data/CourseRepositoryImpl.kt` [135] — CourseRepositoryImpl
 - `kotlin/com/hanziflow/data/ProgressRepository.kt` [12] — ProgressRepository, ProgressRepositoryImpl — Placeholder for progress sync (lesson_progress / test_attempts) work (D2).
 - `kotlin/com/hanziflow/data/SettingsRepository.kt` [76] — SettingsRepository, SettingsRepositoryImpl — Simple key/value app settings (catalog base URL, transcript view, Vietnamese toggle, theme).
@@ -137,7 +139,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 ## Android app (tests) (`kmp/android/src/test/`)
 
 - `kotlin/com/hanziflow/architecture/LayeringTest.kt` [86] — LayeringTest — Enforces the dependency rules from docs/app_architecture.md "Code architecture (Android)",
-- `kotlin/com/hanziflow/data/CourseRepositoryTest.kt` [18] — CourseRepositoryTest
+- `kotlin/com/hanziflow/data/CourseRepositoryTest.kt` [25] — CourseRepositoryTest
 - `kotlin/com/hanziflow/fakes/FakeCourseRepository.kt` [42] — FakeCourseRepository — In-memory [CourseRepository] fake: no Room/OkHttp/WorkManager, just recorded calls and canned returns.
 - `kotlin/com/hanziflow/fakes/FakePlayerConnection.kt` [75] — FakePlayerConnection — Lets a ViewModel test drive the service's published state without Media3 or a device.
 - `kotlin/com/hanziflow/fakes/FakeSettingsRepository.kt` [35] — FakeSettingsRepository

@@ -22,7 +22,7 @@ publish/
             └── clips/<sha256>.mp3
 ```
 
-Use versioned paths. Never overwrite a published version in place; CDN and devices may have cached it. Upload versioned files with a one-year `cacheControl`; upload `catalog.json` with no-cache. For this personal deployment, a replacement release ends with cleanup: only after the new package and catalog have been verified from the public endpoint, delete the superseded version from both local `publish/` and Supabase Storage. Delete only the exact old version prefix; never remove the fallback before verification succeeds.
+Use versioned paths. Never overwrite a published version in place; CDN and devices may have cached it. Upload versioned files with a one-year `cacheControl`; upload `catalog.json` with no-cache. The uploader cache-buster-checks the catalog before uploading, then verifies the plain public catalog URL with retries for up to two minutes before any cleanup. A replacement release keeps the catalog version and the highest older version for one cycle in both local `publish/` and Supabase Storage; older versions are deleted only after verification. Android adds a timestamp query only to its catalog request; immutable package files remain plain URLs.
 
 Versioning rule (decided 2026-10-20, replaces manual version bumps):
 

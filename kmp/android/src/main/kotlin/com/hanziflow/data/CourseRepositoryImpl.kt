@@ -29,7 +29,7 @@ class CourseRepositoryImpl @Inject constructor(
     override val lessons: Flow<List<LessonEntity>> = dao.observeLessons()
 
     override suspend fun syncCatalog() = withContext(Dispatchers.IO) {
-        val request = Request.Builder().url(CourseRepository.resolveUrl(settingsRepository.baseUrl(), "catalog.json")).build()
+        val request = Request.Builder().url(CourseRepository.catalogUrl(settingsRepository.baseUrl(), System.currentTimeMillis())).build()
         val json = client.newCall(request).execute().use { response ->
             check(response.isSuccessful) { "Catalog HTTP ${response.code}" }
             response.body.string()

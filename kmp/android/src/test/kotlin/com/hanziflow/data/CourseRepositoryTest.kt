@@ -14,5 +14,12 @@ class CourseRepositoryTest {
             ),
         )
     }
-}
 
+    @Test
+    fun addsCacheBusterOnlyToCatalogUrl() {
+        assertEquals(
+            "http://192.168.1.2:8000/catalog.json?t=1234",
+            CourseRepository.catalogUrl("http://192.168.1.2:8000/", 1234),
+        )
+    }
+}
