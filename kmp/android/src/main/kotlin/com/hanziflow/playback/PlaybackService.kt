@@ -106,7 +106,9 @@ class PlaybackService : MediaSessionService() {
                 .add(SessionCommand(PlaybackContract.COMMAND_CLEAR_LOOP, Bundle.EMPTY))
                 .add(SessionCommand(PlaybackContract.COMMAND_SWITCH_TRACK, Bundle.EMPTY))
                 .build()
-            return MediaSession.ConnectionResult.accept(sessionCommands, session.player.availableCommands)
+            return MediaSession.ConnectionResult.AcceptedResultBuilder(session)
+                .setAvailableSessionCommands(sessionCommands)
+                .build()
         }
 
         @UnstableApi

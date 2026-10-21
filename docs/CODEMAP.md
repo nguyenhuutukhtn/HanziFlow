@@ -18,7 +18,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `publish_core.py` [282]
 - `publish_render.py` [39]
 - `publish_support.py` [123]
-- `publish_timeline.py` [203]
+- `publish_timeline.py` [204]
 - `publish_tokens.py` [171]
 - `review.py` [27] — Small, transparent spaced-repetition policy.
 - `storage.py` [60] — SQLite progress store. Ratings are learner supplied; no automatic scoring.
@@ -49,6 +49,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `test_lesson_001_story.py` [114]
 - `test_lesson_schema.py` [67]
 - `test_publish.py` [367] ⚠
+- `test_publish_guided_zh.py` [28]
 - `test_review.py` [18]
 - `test_storage.py` [12]
 - `test_story_builder.py` [78]
@@ -74,7 +75,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `kotlin/com/hanziflow/shared/testgen/TestSession.kt` [110] — TestSession — Processes answer(choiceIndex) / reveal() against a generated test, applying the
 - `kotlin/com/hanziflow/shared/transcript/CueNavigation.kt` [57] — CueNavigation — Headset / transport cue navigation over one track's timeline. Cues are assumed
 - `kotlin/com/hanziflow/shared/transcript/SectionNavigation.kt` [43] — SectionNavigation, SectionLoop — Pure lookups over a track's `timeline.sections` (assumed sorted, contiguous, covering the track).
-- `kotlin/com/hanziflow/shared/transcript/TrackSwitch.kt` [27] — TrackSwitch — Maps a position between two timelines that share the same published line ids.
+- `kotlin/com/hanziflow/shared/transcript/TrackSwitch.kt` [29] — TrackSwitch — Maps a position between two timelines that share the same published line ids.
 - `kotlin/com/hanziflow/shared/transcript/TranscriptCues.kt` [63] — TranscriptCues — Pure cue-lookup logic over a track's timeline cues (assumed sorted ascending by
 - `kotlin/com/hanziflow/shared/transcript/TranscriptRendering.kt` [117] — TranscriptViewMode, TokenRenderDecision, LineRenderDecision, TranscriptRendering — One dataset, several views, switched instantly. Vietnamese is an independent toggle.
 
@@ -86,7 +87,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `kotlin/com/hanziflow/shared/testgen/TestSessionTest.kt` [89] — TestSessionTest
 - `kotlin/com/hanziflow/shared/transcript/CueNavigationTest.kt` [65] — CueNavigationTest
 - `kotlin/com/hanziflow/shared/transcript/SectionNavigationTest.kt` [59] — SectionNavigationTest
-- `kotlin/com/hanziflow/shared/transcript/TrackSwitchTest.kt` [44] — TrackSwitchTest
+- `kotlin/com/hanziflow/shared/transcript/TrackSwitchTest.kt` [108] — TrackSwitchTest
 - `kotlin/com/hanziflow/shared/transcript/TranscriptCuesTest.kt` [101] — TranscriptCuesTest
 - `kotlin/com/hanziflow/shared/transcript/TranscriptRenderingTest.kt` [135] — TranscriptRenderingTest
 
@@ -110,7 +111,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `kotlin/com/hanziflow/playback/PlaybackContract.kt` [62] — PlaybackContract — Session command/extra keys shared by [PlaybackService] and [PlayerConnectionImpl], and the MediaItem factory both use.
 - `kotlin/com/hanziflow/playback/PlaybackCoordinator.kt` [183] — PlaybackCoordinator — Everything [PlaybackService] does with ExoPlayer that isn't MediaSession wiring:
 - `kotlin/com/hanziflow/playback/PlaybackExtras.kt` [39] — PlaybackExtras — Builds the session extras / custom layout [PlaybackService] publishes; split out to keep it under the line budget.
-- `kotlin/com/hanziflow/playback/PlaybackService.kt` [255] — PlaybackService — MediaSession wiring only: loop/skip/resumption logic lives in [PlaybackCoordinator] & friends.
+- `kotlin/com/hanziflow/playback/PlaybackService.kt` [257] — PlaybackService — MediaSession wiring only: loop/skip/resumption logic lives in [PlaybackCoordinator] & friends.
 - `kotlin/com/hanziflow/playback/PlaybackState.kt` [21] — PlaybackState, SectionLoopInfo — Mirrors the service's [androidx.media3.session.MediaController] state, including loop (session extras).
 - `kotlin/com/hanziflow/playback/PlayerConnection.kt` [28] — PlayerConnection — The only thing on the UI side allowed to touch [androidx.media3.session.MediaController]
 - `kotlin/com/hanziflow/playback/PlayerConnectionImpl.kt` [164] — PlayerConnectionImpl — Applies the service's published loop/Chinese-only state; never set these any other way.

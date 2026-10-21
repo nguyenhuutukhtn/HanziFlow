@@ -2,7 +2,7 @@
 
 Read this first in a new session instead of past chat history. Keep it short; update it at the end of every task.
 
-Last updated: 2026-10-21 (P1 done) · branch `app-publish-pipeline` (not merged to `main`)
+Last updated: 2026-10-21 (L4 done) · branch `app-publish-pipeline` (not merged to `main`)
 
 ## Working rules
 
@@ -36,11 +36,11 @@ Last updated: 2026-10-21 (P1 done) · branch `app-publish-pipeline` (not merged 
 - **U1:** upload split into sub-300-line storage/orchestration modules; unchanged catalogs are cache-busted and skipped, catalog verification retries the plain URL for up to 120s, prune keeps current + previous versions, and Android cache-busts only `catalog.json`. Full automated checks pass; real lesson run reached cached dry-run (0 paid TTS) but was interrupted during slow FFmpeg normalization before publish/upload summary.
 - **P2:** `chinese_only` now preserves the longest internal dropped-Vietnamese pause when it is ≥1.5s, with the existing 400ms fallback; focused and full automated checks pass. Real lesson regeneration confirmed 0 paid TTS but was interrupted during slow FFmpeg normalization before v5/upload.
 - **P3:** repeat recall gaps use cached Vietnamese clip duration + pause; `!guided-only` story-row markers drop Vietnamese-dependent coach lines from `guided_zh`. Lesson 001 has four marked rows; acceptance metrics are 46 repeats, min 1200ms, avg 2430ms, 4 flagged drops, 0 remaining vi. Full checks and generate dry-run pass; no full lesson run per brief. PM review fixes: publish staleness check now drops `guided_only` like `chinese_only` (blocked the first v6 publish); `map_lead` also marked; U1 prune ignores non-versioned paths. Lesson 001 v6 published + uploaded (v5 kept). Listening QA of v6 pending.
+- **L4:** MediaSession connections now retain live player seek commands instead of a connect-time snapshot, restoring scrub/±10s/section seeks; `TrackSwitch` maps gaps and missing lines to the nearest forward shared cue, then backward. Added synthetic and real lesson fixture coverage. Full checks and the specified device action-bit check pass.
 
 ## Next (in order)
 
 0. **Now (before G2b, which is paused):**
-   - **L4 (next, no brief yet) — playback seek bugs on device (user, 2026-10-21, v6):** (1) seek bar scrubbing does nothing; (2) toggling Chinese-only jumps to the end of the track; (3) choosing a section (e.g. "Nghe lại") doesn't jump there; (4) ±10s buttons do nothing. All four are seeks → likely one root cause in the service/L3 track-switch path; MP3s have Info headers (CBR seekable), so suspect app side first.
    - **G2b / first-listen default:** Chinese-only's "always off on first listen" + a Settings-tab default wait for progress tracking (L2 intentionally didn't build this — no progress data to key off yet).
    - Lesson 2 may now be written via `just export-lesson 002` → any AI → `just import-lesson 002 <reply>` (T2b).
 

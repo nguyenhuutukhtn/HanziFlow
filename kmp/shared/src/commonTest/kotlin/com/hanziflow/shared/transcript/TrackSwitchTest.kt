@@ -35,10 +35,74 @@ class TrackSwitchTest {
     }
 
     @Test
+    fun positionInGapMapsToTheNextMappedCue() {
+        val from = listOf(
+            TimelineCue("one", 100, 200),
+            TimelineCue("two", 300, 400),
+        )
+        val to = listOf(
+            TimelineCue("one", 10, 20),
+            TimelineCue("two", 30, 40),
+        )
+
+        assertEquals(30, TrackSwitch.positionFor(from, to, 250))
+    }
+
+    @Test
+    fun gapAfterUnmappedVietnameseCueMapsToTheNextChineseCue() {
+        val from = listOf(
+            TimelineCue("vi", 100, 200, language = "vi-VN"),
+            TimelineCue("zh", 300, 400, language = "zh-CN"),
+        )
+        val to = listOf(TimelineCue("zh", 30, 40, language = "zh-CN"))
+
+        assertEquals(30, TrackSwitch.positionFor(from, to, 250))
+    }
+
+    @Test
+    fun missingSourceLineWalksForwardBeforeWalkingBackward() {
+        val from = listOf(
+            TimelineCue("before", 100, 200),
+            TimelineCue("guided_only", 300, 400),
+            TimelineCue("after", 500, 600),
+        )
+        val to = listOf(
+            TimelineCue("before", 10, 20),
+            TimelineCue("after", 30, 40),
+        )
+
+        assertEquals(30, TrackSwitch.positionFor(from, to, 350))
+    }
+
+    @Test
+    fun realLessonGapMapsToTheNextSharedLine() {
+        val (left, right) = guided.cues.zipWithNext().first { (current, next) ->
+            current.endMs < next.startMs && chinese.cues.any { it.lineId == next.lineId }
+        }
+        val expected = chinese.cues.first { it.lineId == right.lineId }.startMs
+
+        assertEquals(expected, TrackSwitch.positionFor(guided.cues, chinese.cues, left.endMs + 1))
+    }
+
+    @Test
     fun beforeFirstAndAfterLastStayInsideTheTargetTimeline() {
         val tinyFrom = listOf(TimelineCue("first", 100, 200), TimelineCue("last", 300, 400))
         val tinyTo = listOf(TimelineCue("first", 10, 20), TimelineCue("last", 30, 40))
         assertEquals(10, TrackSwitch.positionFor(tinyFrom, tinyTo, 0))
         assertEquals(30, TrackSwitch.positionFor(tinyFrom, tinyTo, 999))
+    }
+
+    @Test
+    fun afterLastCueUsesNearestMappedCueAndNeverTheTargetLastCueByDefault() {
+        val from = listOf(
+            TimelineCue("first", 100, 200),
+            TimelineCue("missing", 300, 400),
+        )
+        val to = listOf(
+            TimelineCue("first", 10, 20),
+            TimelineCue("other", 30, 40),
+        )
+
+        assertEquals(10, TrackSwitch.positionFor(from, to, 999))
     }
 }

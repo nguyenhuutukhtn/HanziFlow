@@ -9,19 +9,21 @@ object TrackSwitch {
         val from = fromCues.sortedBy { it.startMs }
         val to = toCues.sortedBy { it.startMs }
         if (from.isEmpty()) return to.first().startMs
-        val source = from.firstOrNull { positionMs in it.startMs until it.endMs }
-            ?: if (positionMs < from.first().startMs) from.first() else from.last()
-        val target = source?.let { cue ->
-            to.firstOrNull { it.lineId == cue.lineId }
-                ?: if (cue.language == "vi-VN") {
-                    from.firstOrNull { it.startMs >= cue.endMs && it.language == "zh-CN" }
-                        ?.let { next -> to.firstOrNull { it.lineId == next.lineId } }
-                } else null
-        }
-        return target?.startMs ?: if (positionMs < from.first().startMs) {
-            to.first().startMs
-        } else {
-            to.last().startMs
-        }
+        val targetByLineId = to.associateBy { it.lineId }
+        val sourceIndex = from.indexOfFirst { positionMs in it.startMs until it.endMs }
+            .takeIf { it >= 0 }
+            ?: from.indexOfFirst { it.startMs > positionMs }.takeIf { it >= 0 }
+            ?: from.lastIndex
+
+        from.subList(sourceIndex, from.size)
+            .firstNotNullOfOrNull { targetByLineId[it.lineId] }
+            ?.let { return it.startMs }
+
+        from.subList(0, sourceIndex)
+            .asReversed()
+            .firstNotNullOfOrNull { targetByLineId[it.lineId] }
+            ?.let { return it.startMs }
+
+        return to.first().startMs
     }
 }
