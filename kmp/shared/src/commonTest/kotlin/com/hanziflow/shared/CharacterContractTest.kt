@@ -5,8 +5,18 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 class CharacterContractTest {
+    @Test
+    fun strokePackParsesFlatContractPayload() {
+        val pack = CourseJson.strokePack(fixtureText("strokes.json"))
+        assertEquals(setOf("我", "们", "扌"), pack.keys)
+        assertEquals(1, pack["我"]!!.strokes.size)
+        assertEquals(1, pack["们"]!!.medians.size)
+        assertTrue(pack["扌"]!!.strokes.single().startsWith("M"))
+    }
+
     @Test
     fun realLessonCharacterIndexMatchesContract() {
         val data = CourseJson.characters(fixtureText("characters.json"))

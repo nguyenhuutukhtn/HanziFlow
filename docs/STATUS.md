@@ -14,7 +14,7 @@ Last updated: 2026-10-21 (C2 fully done incl. device check) · branch `app-publi
 
 ## Done
 
-- **S1 (reviewed, not yet committed):** stroke-pack builder, versioned upload mapping, shared stroke model, Android catalog-scoped cache. PM review (full `scripts/check.sh` now passes) found + fixed 2 bugs directly (both <10 lines): `StrokePack` was shaped as `{strokes: {...}}` but the real pack file is a flat `{char: entry}` map (now a `typealias` + added the missing `CourseJson.strokePack` parser); `stroke_pack.py` crashed the whole build for any lesson without `files.characters` (now skipped). Test gap (no test exercises the fixed parsing, no Python test for the union/skip logic) deferred to `docs/tasks/S1-fix.md` rather than PM writing test/fixture infra itself (role boundary, see pm-session skill "Role").
+- **S1 (reviewed, tests added):** stroke-pack builder, versioned upload mapping, shared stroke model, Android catalog-scoped cache, plus flat-pack parsing and Python union/skip regression tests. Gradle verification remains blocked by the wrapper distribution lock in this environment.
 
 - **C2 (done, incl. device check 2026-10-21):** character card UI shipped and verified on device — lookup-sheet chip row → card → component card → back; "Chữ của bài" lists 83 characters + "Bộ phận cần biết" (94 components); `phoneticFamily` capped at 4, view-only; no "Xem nét" anywhere; lookup sheet copy/share actions work. C2-fix and C2-test both landed and are committed (`7ada57f`, `37d9ad6`).
 

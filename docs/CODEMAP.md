@@ -65,6 +65,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `test_review.py` [18]
 - `test_storage.py` [12]
 - `test_story_builder.py` [78]
+- `test_stroke_pack.py` [27]
 - `test_transcript.py` [37]
 - `test_tts.py` [130]
 - `test_upload.py` [298] — Upload tests use httpx.MockTransport: no network, no real Supabase project.
@@ -95,7 +96,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 
 ## KMP shared (tests) (`kmp/shared/src/commonTest/`)
 
-- `kotlin/com/hanziflow/shared/CharacterContractTest.kt` [25] — CharacterContractTest
+- `kotlin/com/hanziflow/shared/CharacterContractTest.kt` [35] — CharacterContractTest
 - `kotlin/com/hanziflow/shared/ContractParsingTest.kt` [71] — ContractParsingTest
 - `kotlin/com/hanziflow/shared/testgen/GoldenVectorTest.kt` [44] — GoldenVectorTest — Golden vectors: TestGenerator.generate() against the real lesson_001 items.json
 - `kotlin/com/hanziflow/shared/testgen/InvariantsTest.kt` [108] — InvariantsTest — Splits the real lesson_001 item bank into a synthetic "earlier" lesson and a
