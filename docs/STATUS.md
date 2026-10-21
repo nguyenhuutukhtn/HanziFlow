@@ -36,11 +36,18 @@ Last updated: 2026-10-21 (L4 done) · branch `app-publish-pipeline` (not merged 
 - **U1:** upload split into sub-300-line storage/orchestration modules; unchanged catalogs are cache-busted and skipped, catalog verification retries the plain URL for up to 120s, prune keeps current + previous versions, and Android cache-busts only `catalog.json`. Full automated checks pass; real lesson run reached cached dry-run (0 paid TTS) but was interrupted during slow FFmpeg normalization before publish/upload summary.
 - **P2:** `chinese_only` now preserves the longest internal dropped-Vietnamese pause when it is ≥1.5s, with the existing 400ms fallback; focused and full automated checks pass. Real lesson regeneration confirmed 0 paid TTS but was interrupted during slow FFmpeg normalization before v5/upload.
 - **P3:** repeat recall gaps use cached Vietnamese clip duration + pause; `!guided-only` story-row markers drop Vietnamese-dependent coach lines from `guided_zh`. Lesson 001 has four marked rows; acceptance metrics are 46 repeats, min 1200ms, avg 2430ms, 4 flagged drops, 0 remaining vi. Full checks and generate dry-run pass; no full lesson run per brief. PM review fixes: publish staleness check now drops `guided_only` like `chinese_only` (blocked the first v6 publish); `map_lead` also marked; U1 prune ignores non-versioned paths. Lesson 001 v6 published + uploaded (v5 kept). Listening QA of v6 pending.
-- **L4:** MediaSession connections now retain live player seek commands instead of a connect-time snapshot, restoring scrub/±10s/section seeks; `TrackSwitch` maps gaps and missing lines to the nearest forward shared cue, then backward. Added synthetic and real lesson fixture coverage. Full checks and the specified device action-bit check pass.
+- **L4:** MediaSession connections now retain live player seek commands instead of a connect-time snapshot, restoring scrub/±10s/section seeks; `TrackSwitch` maps gaps and missing lines to the nearest forward shared cue, then backward. Added synthetic and real lesson fixture coverage. Full checks and the specified device action-bit check pass. User device check (4 seek bugs) + v6 Chinese-only listening QA: OK (2026-10-21).
+- **R1:** Character data sources researched and licensed for commercial use; see [docs/research/characters_data.md](research/characters_data.md). Recommendations: Unihan kVietnamese (Hán-Việt), MMAH dictionary.txt LGPL3 (decomposition+etymology), Hanzi Writer data APL (strokes), ivankra/hsk30 MIT (HSK 3.0), CC-CEDICT CC BY-SA 4.0 (English meanings); Vietnamese meanings + component names → author.
 
 ## Next (in order)
 
-0. **Now (before G2b, which is paused):**
+0. **Now:** character learning, pulled forward by the user (2026-10-21). R1 done. Design finalized in `docs/architecture/characters.md` (2026-10-21). Briefs written:
+   - **C0** (`docs/tasks/C0.md`): author `data/radicals_vi.json` (~250 bộ thủ Vietnamese names). Fresh Claude Code agent.
+   - **C1** (`docs/tasks/C1.md`): pipeline `characters.json` per lesson package. Fresh Codex/DeepSeek. Needs C0 first.
+   - **C2** (not written yet): character card UI (Android). After C1.
+   - Exercises: after G2c SRS base.
+
+   **Before G2b, which is paused:**
    - **G2b / first-listen default:** Chinese-only's "always off on first listen" + a Settings-tab default wait for progress tracking (L2 intentionally didn't build this — no progress data to key off yet).
    - Lesson 2 may now be written via `just export-lesson 002` → any AI → `just import-lesson 002 <reply>` (T2b).
 
@@ -56,6 +63,6 @@ Last updated: 2026-10-21 (L4 done) · branch `app-publish-pipeline` (not merged 
 
 ## Open decisions (user)
 
-- Character learning feature (after G2c, not scheduled): decisions + draft in [architecture/characters.md](architecture/characters.md).
+- Character learning feature: design finalized 2026-10-21 in [architecture/characters.md](architecture/characters.md). C0/C1 briefs written; C2 brief after C1.
 - Decided 2026-10-21: iOS = native SwiftUI shell over the `kmp/shared` core as an XCFramework; no Compose Multiplatform. Web UI stays React.
 - None. Decided 2026-10-20: pass rule = first-try 100%; accent amber; track names "Học có hướng dẫn" / "Luyện nghe"; UI review changes adopted (see docs/ui/README.md "Review decisions").

@@ -25,6 +25,58 @@ Vietnamese-speaking adult who types Chinese (pinyin IME) and rarely hand-writes.
 - **`kmp/shared`:** unlock rule (heard words → characters → missing components), SRS scheduler (FSRS-style), exercise generation. Shared by Android, iOS and web.
 - **Platform shells:** character card, review screens, stroke animation renderer.
 
+## Data sources (decided 2026-10-21 from R1 research)
+
+| Need | Source | License |
+|------|--------|---------|
+| Hán-Việt readings | Unihan kVietnamese + kTraditionalVariant fallback | Unicode License |
+| Decomposition + semantic/phonetic roles | Make Me a Hanzi `dictionary.txt` | LGPL 3.0 (data only) |
+| Stroke-order paths | Hanzi Writer data | Arphic Public License |
+| HSK level | ivankra/hsk30 | MIT |
+| English meanings | CC-CEDICT | CC BY-SA 4.0 |
+| Vietnamese meanings | Author (AI gen + human review) — `vi_meaning: null` in C1 | — |
+| Component names in Vietnamese (bộ thủ) | Author ~250 entries — `data/radicals_vi.json` | — |
+
+See `docs/research/characters_data.md` for full license analysis + sample records.
+
+## Packaging decisions (decided 2026-10-21)
+
+- **Stroke data ships separately** as a one-time-download base package (not per-lesson). Lesson `characters.json` carries a `stroke_available: bool` flag only; the renderer fetches from the base pack.
+- **Vietnamese meanings start null** in `characters.json`. Authored later via story source or a review pass.
+- **Bộ thủ names** authored before C1 (task C0): ~250 radicals + simplified-only components, AI-generated, human-reviewed, saved to `data/radicals_vi.json`.
+
+## characters.json schema (per lesson package)
+
+```json
+{
+  "lesson_id": "lesson_001",
+  "characters": [
+    {
+      "char": "妈",
+      "pinyin": "mā",
+      "han_viet": "mã",
+      "hsk_level": 1,
+      "decomp_ids": "⿰女马",
+      "semantic": "女",
+      "phonetic": "马",
+      "en_meaning": "mother, mama",
+      "vi_meaning": null,
+      "phonetic_family": ["妈", "吗", "码", "骂"],
+      "stroke_available": true,
+      "lesson_words": ["妈妈"]
+    }
+  ],
+  "components_prereq": [
+    {
+      "char": "女",
+      "role": "semantic",
+      "name_en": "woman",
+      "name_vi": "nữ"
+    }
+  ]
+}
+```
+
 ## Before designing in detail
 
-Research data sources and their licenses (commercial use): Hán-Việt readings, component/IDS decomposition with semantic/phonetic roles, stroke-order paths (e.g. Make Me a Hanzi / Hanzi Writer data), frequency + HSK 3.0 lists, Vietnamese meanings. Check samples (妈, 学, 谢) for simplified-character accuracy. A source with an unclear license is not used.
+~~Research data sources~~ — Done (R1). Next: C0 (bộ thủ data), then C1 (pipeline characters.json), C2 (character card UI).
