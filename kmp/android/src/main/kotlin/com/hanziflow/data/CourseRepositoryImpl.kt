@@ -12,6 +12,8 @@ import com.hanziflow.shared.CatalogLesson
 import com.hanziflow.shared.CourseJson
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
+import java.io.FileOutputStream
+import java.security.MessageDigest
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -26,6 +28,7 @@ class CourseRepositoryImpl @Inject constructor(
     private val client: OkHttpClient,
 ) : CourseRepository {
     private val dao = database.dao()
+    private var strokeVersion: Int? = null
     override val lessons: Flow<List<LessonEntity>> = dao.observeLessons()
 
     override suspend fun syncCatalog() = withContext(Dispatchers.IO) {
@@ -126,6 +129,31 @@ class CourseRepositoryImpl @Inject constructor(
         return packageFile(lessonId, version, file.file)
     }
 
+    override suspend fun strokePackFile(): File? = withContext(Dispatchers.IO) {
+        val request = Request.Builder().url(CourseRepository.catalogUrl(settingsRepository.baseUrl(), System.currentTimeMillis())).build()
+        val catalog = client.newCall(request).execute().use { response ->
+            check(response.isSuccessful) { "Catalog HTTP ${response.code}" }
+            CourseJson.catalog(response.body.string())
+        }
+        val ref = catalog.strokePack ?: return@withContext null
+        val clip = ref.files["strokes.json"] ?: return@withContext null
+        val destination = context.filesDir.resolve("course/stroke-pack/v${ref.version}/${clip.file}")
+        if (strokeVersion == ref.version && destination.isFile && verified(destination, clip.sha256, clip.bytes)) return@withContext destination
+        if (destination.isFile && verified(destination, clip.sha256, clip.bytes)) {
+            strokeVersion = ref.version
+            return@withContext destination
+        }
+        destination.parentFile?.mkdirs()
+        val url = CourseRepository.resolveUrl(settingsRepository.baseUrl(), "stroke-pack/v${ref.version}/${clip.file}")
+        client.newCall(Request.Builder().url(url).build()).execute().use { response ->
+            check(response.isSuccessful) { "${clip.file}: HTTP ${response.code}" }
+            FileOutputStream(destination).use { response.body.byteStream().copyTo(it) }
+        }
+        check(verified(destination, clip.sha256, clip.bytes)) { "${clip.file}: SHA-256 mismatch" }
+        strokeVersion = ref.version
+        destination
+    }
+
     override suspend fun clipFile(lessonId: String, relative: String): File? {
         val entity = dao.lesson(lessonId) ?: return null
         val version = entity.downloadedVersion ?: return null
@@ -141,4 +169,14 @@ class CourseRepositoryImpl @Inject constructor(
 
     private fun packageFile(lessonId: String, version: Int, relative: String): File? =
         context.filesDir.resolve("course/packages/$lessonId/v$version/$relative").takeIf(File::isFile)
+
+    private fun verified(file: File, sha256: String, bytes: Long): Boolean {
+        if (file.length() != bytes) return false
+        val digest = MessageDigest.getInstance("SHA-256")
+        file.inputStream().use { input ->
+            val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+            while (true) { val count = input.read(buffer); if (count < 0) break; digest.update(buffer, 0, count) }
+        }
+        return digest.digest().joinToString("") { "%02x".format(it) }.equals(sha256, true)
+    }
 }

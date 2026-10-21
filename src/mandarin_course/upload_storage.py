@@ -99,6 +99,8 @@ def version_prefix(relative: str) -> str | None:
     parts = relative.split("/")
     if len(parts) >= 3 and parts[0] == "lessons" and _VERSION_DIR.match(parts[2]):
         return "/".join(parts[:3]) + "/"
+    if len(parts) >= 3 and parts[0] == "stroke-pack" and _VERSION_DIR.match(parts[1]):
+        return "/".join(parts[:2]) + "/"
     return None
 
 

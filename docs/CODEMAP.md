@@ -13,7 +13,8 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `characters/bundle.py` [136] — Export/import the small authored Vietnamese character-data loop.
 - `characters/data.py` [228] — Small, lazy loaders for the offline character data sources.
 - `characters/resolve.py` [202] — Resolve lesson characters from loaded offline data.
-- `cli.py` [291] — Command-line interface for validation, generation, transcripts and reviews.
+- `characters/stroke_pack.py` [43] — Build the catalog-scoped Hanzi Writer stroke data package.
+- `cli.py` [299] — Command-line interface for validation, generation, transcripts and reviews.
 - `config.py` [53] — Environment-backed configuration without exposing secrets.
 - `generate_plan.py` [82] — Cache/cost plan for a lesson's TTS segments: `generate --dry-run` and bundle import.
 - `lesson_schema.py` [105] — Validated, content-driven lesson schema.
@@ -37,8 +38,8 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `story/rows.py` [149] — Export and import row-scoped story-source revisions.
 - `transcript.py` [69] — Learner-facing Markdown transcripts.
 - `tts.py` [246] — ElevenLabs TTS adapter and deterministic audio cache.
-- `upload.py` [171] — Upload published lesson packages to Supabase Storage.
-- `upload_storage.py` [197] — HTTP and Storage REST helpers for the lesson uploader.
+- `upload.py` [197] — Upload published lesson packages to Supabase Storage.
+- `upload_storage.py` [199] — HTTP and Storage REST helpers for the lesson uploader.
 - `voice_registry.py` [226] — ElevenLabs voice registry: synced once, cached locally, used for deterministic per-lesson voice selection.
 
 ## Python scripts (`scripts/`)
@@ -76,8 +77,9 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 
 ## KMP shared (main) (`kmp/shared/src/commonMain/`)
 
-- `kotlin/com/hanziflow/shared/Models.kt` [205] — Clip, Track, Tracks, PackageFiles — Track by its published name (`guided`, `guided_zh`, `practice`); null if absent or unknown.
+- `kotlin/com/hanziflow/shared/Models.kt` [210] — Clip, Track, Tracks, PackageFiles — Track by its published name (`guided`, `guided_zh`, `practice`); null if absent or unknown.
 - `kotlin/com/hanziflow/shared/characters/Characters.kt` [51] — LessonCharacters, CharacterEntry, ComponentEntry, CharacterIndex
+- `kotlin/com/hanziflow/shared/characters/StrokeData.kt` [9] — StrokeEntry
 - `kotlin/com/hanziflow/shared/testgen/GenerationContext.kt` [275] — TaggedWord, TaggedSentence, TaggedQa, Spec — One candidate (item, question-type) source the generator can draw a question from.
 - `kotlin/com/hanziflow/shared/testgen/Phonetics.kt` [89] — toneless, confusableKey, applyTone, capitalizeLike — Tone-mark variants for each base vowel, index 0 = no mark (tone 5 / neutral).
 - `kotlin/com/hanziflow/shared/testgen/Prng.kt` [87] — Rng — Deterministic, cross-platform PRNG (SplitMix32-style xorshift on Int).
@@ -109,8 +111,8 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `kotlin/com/hanziflow/HanziFlowApplication.kt` [15] — HanziFlowApplication
 - `kotlin/com/hanziflow/MainActivity.kt` [90] — MainActivity — Thin composition root: wires the activity-scoped screen ViewModels (via Hilt) to
 - `kotlin/com/hanziflow/data/CourseDatabase.kt` [93] — LessonEntity, SettingEntity, PlaybackEntity, CourseDao
-- `kotlin/com/hanziflow/data/CourseRepository.kt` [32] — CourseRepository — Course catalog, downloads, and the downloaded lesson package file store.
-- `kotlin/com/hanziflow/data/CourseRepositoryImpl.kt` [144] — CourseRepositoryImpl
+- `kotlin/com/hanziflow/data/CourseRepository.kt` [33] — CourseRepository — Course catalog, downloads, and the downloaded lesson package file store.
+- `kotlin/com/hanziflow/data/CourseRepositoryImpl.kt` [182] — CourseRepositoryImpl
 - `kotlin/com/hanziflow/data/ProgressRepository.kt` [12] — ProgressRepository, ProgressRepositoryImpl — Placeholder for progress sync (lesson_progress / test_attempts) work (D2).
 - `kotlin/com/hanziflow/data/SettingsRepository.kt` [76] — SettingsRepository, SettingsRepositoryImpl — Simple key/value app settings (catalog base URL, transcript view, Vietnamese toggle, theme).
 - `kotlin/com/hanziflow/di/AppModule.kt` [28] — AppModule — Room DB / DAO and the shared OkHttp client: the only places this app talks to disk/network directly.
@@ -155,7 +157,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 
 - `kotlin/com/hanziflow/architecture/LayeringTest.kt` [86] — LayeringTest — Enforces the dependency rules from docs/app_architecture.md "Code architecture (Android)",
 - `kotlin/com/hanziflow/data/CourseRepositoryTest.kt` [25] — CourseRepositoryTest
-- `kotlin/com/hanziflow/fakes/FakeCourseRepository.kt` [44] — FakeCourseRepository — In-memory [CourseRepository] fake: no Room/OkHttp/WorkManager, just recorded calls and canned returns.
+- `kotlin/com/hanziflow/fakes/FakeCourseRepository.kt` [46] — FakeCourseRepository — In-memory [CourseRepository] fake: no Room/OkHttp/WorkManager, just recorded calls and canned returns.
 - `kotlin/com/hanziflow/fakes/FakePlayerConnection.kt` [75] — FakePlayerConnection — Lets a ViewModel test drive the service's published state without Media3 or a device.
 - `kotlin/com/hanziflow/fakes/FakeSettingsRepository.kt` [35] — FakeSettingsRepository
 - `kotlin/com/hanziflow/playback/LoopPublisherTest.kt` [74] — LoopPublisherTest

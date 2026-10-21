@@ -13,6 +13,7 @@ from pydantic import ValidationError
 from .audio_builder import AudioBuildError, build_audio, chinese_only, probe_duration, timeline_path_for
 from .audit import build_report, load_authoring_lessons, render_report
 from .characters.bundle import command_export_characters, command_import_characters
+from .characters.stroke_pack import build_stroke_pack
 from .config import Settings
 from .generate_plan import audio_plan, print_plan
 from .lesson_schema import Lesson, load_lesson
@@ -137,6 +138,9 @@ def command_publish(path: Path, settings: Settings, out: Path, force: bool, as_j
 def command_upload(out: Path, dry_run: bool, prune: bool) -> int:
     config = StorageConfig.from_env()
     upload_package(out, config, dry_run=dry_run, prune=prune)
+
+def command_build_stroke_pack(out: Path) -> int:
+    build_stroke_pack(out)
     return 0
 
 
@@ -206,6 +210,8 @@ def build_parser() -> argparse.ArgumentParser:
     upload.add_argument("--out", type=Path, default=Path("publish"))
     upload.add_argument("--dry-run", action="store_true", help="List uploads and deletions; make no writes")
     upload.add_argument("--no-prune", action="store_true", help="Skip deleting superseded versions")
+    stroke = sub.add_parser("build-stroke-pack", help="Build the catalog-scoped stroke data package")
+    stroke.add_argument("--out", type=Path, default=Path("publish"))
     voices = sub.add_parser("voices", help="Manage the local ElevenLabs voice registry")
     voices_sub = voices.add_subparsers(dest="voices_command", required=True)
     voices_sub.add_parser("sync", help="Fetch and cache available Mandarin/Vietnamese voices (not a paid TTS call)")
@@ -261,6 +267,8 @@ def main(argv: list[str] | None = None) -> int:
             return command_publish(args.lesson, settings, args.out, args.force, args.json)
         if args.command == "upload":
             return command_upload(args.out, args.dry_run, not args.no_prune)
+        if args.command == "build-stroke-pack":
+            return command_build_stroke_pack(args.out)
         if args.command == "voices":
             return command_voices_sync(settings)
         if args.command == "export-lesson":

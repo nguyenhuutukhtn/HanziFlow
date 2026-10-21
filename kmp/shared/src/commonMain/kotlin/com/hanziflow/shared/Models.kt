@@ -41,6 +41,9 @@ data class Tracks(
 data class PackageFiles(val manifest: Clip, val reference: Clip, val items: Clip, val characters: Clip? = null)
 
 @Serializable
+data class StrokePackRef(val version: Int, val files: Map<String, Clip>)
+
+@Serializable
 data class CatalogLesson(
     val id: String,
     val version: Int,
@@ -58,6 +61,7 @@ data class Catalog(
     @SerialName("catalog_version") val catalogVersion: Int,
     @SerialName("generated_at") val generatedAt: String? = null,
     val lessons: List<CatalogLesson>,
+    @SerialName("stroke_pack") val strokePack: StrokePackRef? = null,
 )
 
 @Serializable
@@ -195,6 +199,7 @@ object CourseJson {
     fun items(value: String): Items = codec.decodeFromString(value)
     fun timeline(value: String): Timeline = codec.decodeFromString(value)
     fun characters(value: String): LessonCharacters = codec.decodeFromString(value)
+    fun strokePack(value: String): com.hanziflow.shared.characters.StrokePack = codec.decodeFromString(value)
 }
 
 @JsExport

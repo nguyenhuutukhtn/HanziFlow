@@ -43,7 +43,13 @@ class UploadReport:
 def package_files(root: Path) -> list[PackageFile]:
     if not root.is_dir():
         raise UploadError(f"Publish directory not found: {root}")
-    files = [PackageFile(path.relative_to(root).as_posix(), path, path.stat().st_size) for path in root.rglob("*") if path.is_file()]
+    files = []
+    for path in root.rglob("*"):
+        if path.is_file():
+            relative = path.relative_to(root).as_posix()
+            if relative.startswith("stroke_pack/"):
+                relative = "stroke-pack/" + relative[len("stroke_pack/"):]
+            files.append(PackageFile(relative, path, path.stat().st_size))
     if not any(item.relative == CATALOG_NAME for item in files):
         raise UploadError(f"{root / CATALOG_NAME} is missing; run `mandarin-course publish` first")
     files.sort(key=lambda item: (not item.versioned, item.relative))
@@ -78,6 +84,12 @@ def _local_prune_candidates(root: Path, lesson_id: str, current: int) -> list[Pa
     paths = [path for path in directory.iterdir() if path.is_dir() and path.name.startswith("v") and path.name[1:].isdigit()]
     keep = _keep_candidates(sorted(int(path.name[1:]) for path in paths), current)
     return [path for path in paths if int(path.name[1:]) not in keep]
+
+def _stroke_prune_candidates(root: Path, current: int) -> list[Path]:
+    directory = root / "stroke_pack"
+    paths = [p for p in directory.iterdir() if p.is_dir() and p.name.startswith("v") and p.name[1:].isdigit()] if directory.is_dir() else []
+    keep = _keep_candidates(sorted(int(p.name[1:]) for p in paths), current)
+    return [p for p in paths if int(p.name[1:]) not in keep]
 
 
 def _catalog_matches(http, config: StorageConfig, item: PackageFile, clock: Callable[[], float]) -> bool:
@@ -156,6 +168,20 @@ def upload_package(root: Path, config: StorageConfig, *, dry_run: bool = False, 
                     delete_remote(http, config, remote_targets)
                     for path in local_targets:
                         shutil.rmtree(path)
+                pruned_remote += len(remote_targets)
+                pruned_local += len(local_targets)
+            stroke = catalog.get("stroke_pack")
+            if stroke:
+                remote_paths_to_delete = remote_paths(http, config, "stroke-pack/")
+                keep = _keep_candidates(sorted({n for path in remote_paths_to_delete if (n := _number(path)) is not None}), int(stroke["version"]))
+                remote_targets = [p for p in remote_paths_to_delete if (n := _number(p)) is not None and n not in keep]
+                local_targets = _stroke_prune_candidates(root, int(stroke["version"]))
+                if dry_run:
+                    for path in remote_targets: echo(f"  delete  (remote) {path}")
+                    for path in local_targets: echo(f"  delete  (local)  {path.relative_to(root)}/")
+                else:
+                    delete_remote(http, config, remote_targets)
+                    for path in local_targets: shutil.rmtree(path)
                 pruned_remote += len(remote_targets)
                 pruned_local += len(local_targets)
     if dry_run:
