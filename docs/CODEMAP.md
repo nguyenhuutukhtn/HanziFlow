@@ -7,14 +7,19 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 ## Python pipeline (`src/mandarin_course/`)
 
 - `__init__.py` [4] — Mandarin audio course generator.
-- `audio_builder.py` [158] — FFmpeg-based audio assembly with per-segment pauses.
+- `audio_builder.py` [174] — FFmpeg-based audio assembly with per-segment pauses.
 - `audit.py` [136] — Read-only authoring audit for cross-lesson pattern continuity.
-- `cli.py` [233] — Command-line interface for validation, generation, transcripts and reviews.
+- `cli.py` [249] — Command-line interface for validation, generation, transcripts and reviews.
 - `config.py` [53] — Environment-backed configuration without exposing secrets.
 - `generate_plan.py` [82] — Cache/cost plan for a lesson's TTS segments: `generate --dry-run` and bundle import.
 - `lesson_schema.py` [104] — Validated, content-driven lesson schema.
 - `logs.py` [14] — Shared helper: write full detail behind a short CLI summary (docs/workflow.md).
-- `publish.py` [714] ⚠ — Build deterministic, versioned app packages from generated local audio.
+- `publish.py` [20] — Public publishing API; implementation is split into focused modules.
+- `publish_core.py` [282]
+- `publish_render.py` [39]
+- `publish_support.py` [123]
+- `publish_timeline.py` [203]
+- `publish_tokens.py` [171]
 - `review.py` [27] — Small, transparent spaced-repetition policy.
 - `storage.py` [60] — SQLite progress store. Ratings are learner supplied; no automatic scoring.
 - `story/__init__.py` [7] — Story source (`lessons/src/*.story.md`) -> guided + practice lesson JSON.
@@ -35,7 +40,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 ## Python tests (`tests/`)
 
 - `conftest.py` [57]
-- `test_audio_builder.py` [129]
+- `test_audio_builder.py` [143]
 - `test_audio_tags.py` [193]
 - `test_audit.py` [144]
 - `test_bundle.py` [78]

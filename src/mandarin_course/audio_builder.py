@@ -58,6 +58,22 @@ def probe_duration(path: Path) -> float:
 
 
 MAX_TIMELINE_DRIFT_MS = 150
+CHINESE_ONLY_GAP_MS = 400
+
+
+def chinese_only(lesson: Lesson) -> Lesson:
+    """Return the lesson with Vietnamese segments removed and short inter-language gaps."""
+    kept = []
+    dropped_between = False
+    for segment in lesson.segments:
+        if segment.language == "vi-VN":
+            dropped_between = bool(kept)
+            continue
+        if dropped_between:
+            segment = segment.model_copy(update={"pause_before_ms": CHINESE_ONLY_GAP_MS})
+        kept.append(segment)
+        dropped_between = False
+    return lesson.model_copy(update={"segments": kept})
 
 
 def validate_timeline_drift(
@@ -77,7 +93,7 @@ def timeline_path_for(audio_path: Path) -> Path:
     return audio_path.with_suffix(".timeline.json")
 
 
-def build_audio(lesson: Lesson, tts: CachedTTS, destination: Path) -> float:
+def build_audio(lesson: Lesson, tts: CachedTTS, destination: Path, *, track: str | None = None) -> float:
     if not shutil.which("ffmpeg") or not shutil.which("ffprobe"):
         raise AudioBuildError("FFmpeg and ffprobe must be installed and available on PATH")
     by_id = {segment.id: segment for segment in lesson.segments}
@@ -140,7 +156,7 @@ def build_audio(lesson: Lesson, tts: CachedTTS, destination: Path) -> float:
                 "schema_version": 1,
                 "lesson_id": lesson.lesson_id,
                 "lesson_version": lesson.version,
-                "track": lesson.variant or "guided",
+                "track": track or lesson.variant or "guided",
                 "duration_ms": round(elapsed_ms),
                 "cues": cues,
             }

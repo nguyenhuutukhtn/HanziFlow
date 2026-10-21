@@ -1,18 +1,18 @@
 {
-  "catalog_version": 1,
+  "catalog_version": 5,
   "lessons": [
     {
-      "base_url": "lessons/lesson_001/v1/",
+      "base_url": "lessons/lesson_001/v4/",
       "files": {
         "items": {
           "bytes": 240606,
           "file": "items.json",
-          "sha256": "522ad1e38b93bd8e4b051448bca0b60ec708a2878053fc86cc821e512e27b793"
+          "sha256": "c3acdea1e8c80520aa850b66dd565d59d17b88a793e4822e435c0ce18563cfc7"
         },
         "manifest": {
           "bytes": 484,
           "file": "lesson.json",
-          "sha256": "a0d83231b88ba2cee80b24f3f2a7ffbd244d70d7ac0252c4ccdb656deca9e2ea"
+          "sha256": "6f94068e334ef7c7059980f91d5af007e96839ddb5c64c669ece482e2866eff7"
         },
         "reference": {
           "bytes": 683488,
@@ -33,11 +33,22 @@
           "timeline": {
             "bytes": 144000,
             "file": "timeline_guided.json",
-            "sha256": "8bdf884df5e6fb9f431d9a2c9b9217e0eadd80d1a156026b977490754a97ef71"
+            "sha256": "4205c75d50d077fca29e53033d0bf1a00e188cd01aa2bd5566bf88b884f30212"
+          }
+        },
+        "guided_zh": {
+          "bytes": 16434407,
+          "duration_ms": 2054243,
+          "file": "guided_zh.mp3",
+          "sha256": "53b9c1468a862d0c991b30a3f7c655108b222340f13ce5758a3f7ccf02c688cd",
+          "timeline": {
+            "bytes": 110935,
+            "file": "timeline_guided_zh.json",
+            "sha256": "686e3086bf69d58db43ef4a49644c7db27a1eac961935bd78ffb852db6491a0b"
           }
         }
       },
-      "version": 1
+      "version": 4
     }
   ],
   "schema_version": 1

@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from mandarin_course.audio_builder import AudioBuildError, build_audio, build_timeline, validate_timeline_drift
+from mandarin_course.audio_builder import AudioBuildError, build_audio, build_timeline, chinese_only, validate_timeline_drift
 from mandarin_course.config import Settings
 from mandarin_course.lesson_schema import Lesson
 from mandarin_course.tts import CachedTTS
@@ -127,3 +127,17 @@ def test_turns_segment_builds_grouped_cue_for_each_repetition(tmp_path, lesson_d
 def test_timeline_drift_over_limit_fails():
     with pytest.raises(AudioBuildError, match="drift is 151.0 ms"):
         validate_timeline_drift(1_151, 1_000)
+
+
+def test_chinese_only_drops_vietnamese_and_replaces_only_internal_gap(lesson_data):
+    lesson_data["segments"] = [
+        {"id": "lead", "activity": "a", "type": "context", "language": "vi-VN", "speaker": "coach", "text": "Mở đầu", "translation": "Mở đầu", "pause_after_ms": 900},
+        {"id": "one", "activity": "a", "type": "narration", "language": "zh-CN", "speaker": "coach_zh", "text": "你好。", "pinyin": "nǐ hǎo", "translation": "Xin chào.", "pause_before_ms": 120, "pause_after_ms": 250},
+        {"id": "middle", "activity": "a", "type": "context", "language": "vi-VN", "speaker": "coach", "text": "Giải thích", "translation": "Giải thích", "pause_before_ms": 800, "pause_after_ms": 900},
+        {"id": "two", "activity": "a", "type": "narration", "language": "zh-CN", "speaker": "coach_zh", "text": "再见。", "pinyin": "zài jiàn", "translation": "Tạm biệt.", "pause_before_ms": 70},
+        {"id": "tail", "activity": "a", "type": "context", "language": "vi-VN", "speaker": "coach", "text": "Kết thúc", "translation": "Kết thúc", "pause_after_ms": 700},
+    ]
+    result = chinese_only(Lesson.model_validate(lesson_data))
+    assert [segment.id for segment in result.segments] == ["one", "two"]
+    assert result.segments[0].pause_before_ms == 120
+    assert result.segments[1].pause_before_ms == 400
