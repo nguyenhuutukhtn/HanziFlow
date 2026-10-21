@@ -55,3 +55,23 @@ approve-screens:
 # Codex 5h/week %, DeepSeek balance, Claude hint
 quota:
     scripts/quota.sh
+
+# Follow a running worker agent's live log (PM launches them; Ctrl-C only stops the tail).
+watch ID:
+    tail -f build/logs/{{ID}}.log
+
+# Kill every running worker agent (codex / deepcode) — take the session back.
+stop-agents:
+    bash -c 'pkill -f "codex exec" || true; pkill -f deepcode || true; echo stopped'
+
+# Push a note to a running worker (it reads them at each checkpoint): just tell C2-fix "dùng Spacing.md"
+tell ID +MSG:
+    bash -c 'mkdir -p build/logs && printf "%s\n" "{{MSG}}" >> build/logs/{{ID}}.inbox && echo sent'
+
+# Answer the question a worker is blocked on (see build/logs/<ID>.ask).
+answer ID +MSG:
+    bash -c 'mkdir -p build/logs && printf "%s\n" "{{MSG}}" > build/logs/{{ID}}.answer && echo answered'
+
+# What is the worker waiting for, if anything?
+asking ID:
+    bash -c 'cat build/logs/{{ID}}.ask 2>/dev/null || echo "(not waiting)"'

@@ -13,6 +13,12 @@ Talk to the user in Vietnamese. Code, docs and briefs stay in English.
 2. **Review a task report:** check the report against the diff, never trust it alone.
    - If the user pastes a `task-review` verdict (cheap reviewer agent, `.claude/skills/task-review/`): `pass` → commit; `fail`/`needs-PM` → open only the flagged files/lines. Still glance at its random samples.
    - Otherwise re-run the brief's `Verify` script yourself; its printed values are the review. Pass → commit without reading code, unless the diff touches a risk area below.
+   - **A silent/empty result from a `-q` or piped command is not a pass.** Gradle with `-q`
+     prints nothing both when tests run and pass *and* when a `--tests` filter matches zero
+     classes (exit 0 either way). Always confirm the actual run: check the command's exit
+     code, and for Gradle tests, grep the real count from
+     `**/build/test-results/.../TEST-*.xml` (`tests="N" failures="0" errors="0"` with N
+     matching what you expect) instead of trusting bare stdout.
    - Run `scripts/check.sh` (one line per step).
    - Read code only in risk areas: timing/state, deletes/prune, paid TTS, secrets, contract/schema changes. Read the code the report says changed only where the risk is (timing, state, deletes), via `grep -n` + a line range, not whole files.
    - Read `git diff --stat`, then only the hunks that matter (`git diff <file> | grep '^+'`). Never re-read whole files.
@@ -42,11 +48,48 @@ Prompts:
 
 Note it in the brief's header too (`Suggested agent: continue <prev task> window` or a named agent), so the choice survives a PM reset.
 
-## Running workers (PM drives them; the user talks only to PM)
+## Who runs the worker (user, 2026-10-21 — PM is back to brief + review)
 
-- **Codex:** `codex exec -m <model> -c model_reasoning_effort=<effort> -s workspace-write -o build/logs/<ID>.out "<prompt>" > build/logs/<ID>.log 2>&1` in the background (Bash `run_in_background`). Read only `build/logs/<ID>.out`; read the `.log` tail only if the run failed. Continue a window: `codex exec resume <session id> -o … "<prompt>"` (id from the brief's header line `Session:`; record it after each run, newest file in `~/.codex/sessions/`).
+- **The user runs every real task**, in the Codex IDE extension (it is interactive, so Gradle
+  and anything else needing network or `~/.gradle` just asks for approval and works — the
+  reason both `codex exec` attempts at C2 reported "blocked by Gradle" and never compiled).
+  PM writes the brief, hands over one paste-ready prompt, then only reads the report, runs
+  `scripts/check.sh` and reviews.
+- **PM may run, after asking:** `task-review` and other mechanical, Gradle-free work on
+  deepcode or a Haiku subagent. PM proposes it in one line (task, tool, why) and waits for the
+  user's OK — cheap tools no longer mean "launch without asking" (user, 2026-10-21).
+- **PM fixes code itself only under ~10 lines** (a missing import, a wrong map key, an
+  `@OptIn`), never a compile-fix loop: that is a worker's job, in the user's window.
+- Launching anything from PM goes through `scripts/agent_run.sh` (wall-clock cap + loop
+  watchdog).
+  Reason: a worker PM launched sends every one of its loops through PM's own context, and PM
+  is blind while it runs (it is only woken when the command exits).
+
+## Callback channel (so a worker can be corrected without restarting it)
+
+Every launch prompt ends with these two lines, and the brief's Verify stays unchanged:
+
+```text
+Before each major step run: bash scripts/agent_ask.sh <ID> --inbox (new notes = instructions).
+Missing information? Run: bash scripts/agent_ask.sh <ID> "<question>" and use its answer instead of guessing.
+```
+
+- The user pushes a note mid-run with `just tell <ID> "..."` — the worker picks it up at its
+  next checkpoint, no restart, nothing redone.
+- A blocked worker writes `build/logs/<ID>.ask` and waits up to 15 minutes; `just asking <ID>`
+  shows the question, `just answer <ID> "..."` releases it.
+- When PM launched the run itself, PM arms a `Monitor` on `tail -f build/logs/<ID>.log` filtered
+  to `ASK-PM:|FAIL|Error|Traceback|KILLED` so the question wakes PM mid-run. Monitors expire
+  after 30 minutes — re-arm while the run is alive.
+- `just watch <ID>` tails the live log; `just stop-agents` kills codex/deepcode (the codex
+  session stays on disk, so `codex exec resume` continues from there).
+
+## Worker command shapes (PM-run launches; the same commands are what PM hands the user)
+
+- **Codex:** flags come **before** the subcommand; `resume` only accepts `-c`. `codex exec -m <model> -c model_reasoning_effort=<effort> -s workspace-write -o build/logs/<ID>.out "<prompt>" > build/logs/<ID>.log 2>&1` in the background (Bash `run_in_background`). Read only `build/logs/<ID>.out`; read the `.log` tail only if the run failed. Continue a window: `codex exec -m <model> -c model_reasoning_effort=<effort> -s workspace-write -o build/logs/<ID>.out resume <session id> "<prompt>"` (id from the brief's header line `Session:`; record it after each run, newest file in `~/.codex/sessions/`).
 - **DeepSeek:** `deepcode -x -p "<prompt>" > build/logs/<ID>.deepseek.out 2>&1`; continue with `-r <id>`. Skills reach it via `.agents/skills/` symlinks.
 - **Claude Haiku subagent** (`Agent`, `model: haiku`): mechanical `task-review`, file search, log summaries. Inside the Claude plan, cheapest option.
+- Gradle in the codex sandbox cannot write `~/.gradle` unless the launch passes `-c 'sandbox_workspace_write.writable_roots=["<home>/.gradle"]'`; without it an Android/KMP task reports "partial, blocked by Gradle" and its code was never compiled.
 - Hand the user only what needs them: outline/story approval, device checks, listening QA, `upload`, paid TTS confirmation. Workers never run `upload` or non-dry-run `generate`.
 
 ## Model per task
@@ -62,7 +105,9 @@ Before every launch run `scripts/quota.sh` (one line per provider) and write `Su
 
 - **Effort defaults to low** (user rule, 2026-10-21). Codex: `-c model_reasoning_effort=low`; Haiku/Sonnet subagent: say "keep it short" in the prompt; DeepSeek: `reasoningEffort` in `.deepcode/settings.json`. Medium only where the table says; high = ask first. A low-effort run that fails goes to medium on the same model before a model upgrade.
 
-- **Cheap = run without asking:** Codex `gpt-5.6-luna`, DeepSeek flash, Claude Haiku subagent.
+- **Nothing launches without the user's OK** (user, 2026-10-21): even deepcode/Haiku for a
+  `task-review` is proposed in one line and waits. The cost that matters is not the worker's
+  price, it is PM's own context when a worker loops.
 - **Anything else needs the user's OK before launch** (user rule, 2026-10-21): one line — task, model, why the cheap one isn't enough, current `just quota`. This includes `gpt-reserve` until the user ranks it, DeepSeek's expensive model, Sonnet/Opus subagents and raising effort to high. Never `gpt-6-astra` (burns quota).
 - **Escalate, don't retry:** a cheap model that fails a task once → propose one tier up (asking as above). Never a third attempt on the same tier.
 - **Quota routing:** Codex 5h > 80% → wait or use DeepSeek; Codex week < 50% used with ≤ 2 days to reset → move DeepSeek work to Codex, and offer (ask) one tier up for pending hard tasks; DeepSeek balance < 1 USD → tell the user.
