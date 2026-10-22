@@ -35,6 +35,7 @@ Then: update STATUS.md + a token_log.md row, report with the AGENTS.md template,
 ## Writing Acceptance + Verify
 
 - Check **content, not only counts**: name concrete expected values (`听 = tīng, hsk 1`, `走 = tẩu`), not just "≥ 95% non-empty". Coverage passed on data that was wrong (C1-fix: 听 = "smile").
+- Tests named in Acceptance are part of the deliverable, not polish (W2b: UI done, 0 of 5 tests → fix round). Workers write them before styling details; briefs for UI tasks say "write the Acceptance tests first".
 - Verify is a script that prints those values and exits non-zero on mismatch, so the PM re-runs it instead of reading code.
 - Data tasks: sample at least 5 specific records spread across the dataset, not only the first entries.
 - **Pipeline-generated data a client parses (S1/S2: 3 fix rounds):** the brief must require (1) a test that parses the REAL published file, or a mechanical extract of it (script-derived, include known odd entries, e.g. `懂` has float medians), never hand-picked or hand-written samples; (2) every new catalog/package field present in the contract fixtures copied from a real `publish/` run; (3) a model type distinct per file shape (catalog metadata `{sha256,bytes}` is not a package `Clip` that has `file`); (4) a network/parse failure of an optional feature must hide that feature only, never crash or drop other state.

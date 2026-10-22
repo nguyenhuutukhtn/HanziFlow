@@ -1,0 +1,57 @@
+:root {
+  --color-canvas: #fbfaf7;
+  --color-surface: #fff;
+  --color-surface-subtle: #f6f2ed;
+  --color-surface-active: #fff4ed;
+  --color-content: #282725;
+  --color-content-muted: #74716b;
+  --color-content-on-accent: #fff;
+  --color-brand: #ee7047;
+  --color-brand-subtle: #fff0e9;
+  --color-success: #6caf83;
+  --color-border: #ebe6df;
+  --radius-card: 18px;
+  --radius-control: 12px;
+  --space-page-x: 54px;
+  --space-1: 8px;
+  --space-2: 12px;
+  --space-3: 18px;
+  --space-4: 24px;
+  --font-display: "Noto Serif SC", Georgia, serif;
+  --font-body: "Be Vietnam Pro", Arial, sans-serif;
+  --font-hanzi: "Noto Serif SC", serif;
+  --hanzi-size: 28px;
+  --accent: var(--color-brand);
+  --surface: var(--color-surface);
+  --surface-soft: var(--color-surface-subtle);
+  --text: var(--color-content);
+  --muted: var(--color-content-muted);
+  --border: var(--color-border);
+  color-scheme: light;
+}
+.theme-paper {
+  --color-canvas: #f3eadb;
+  --color-surface: #fbf4e9;
+  --color-surface-subtle: #ede1ce;
+  --color-surface-active: #f7ead9;
+  --color-content: #40382e;
+  --color-content-muted: #746958;
+  --color-brand: #bd6e45;
+  --color-brand-subtle: #f5e4d3;
+  --color-border: #e2d4c0;
+  color-scheme: light;
+}
+.theme-dark {
+  --color-canvas: #1d2325;
+  --color-surface: #273033;
+  --color-surface-subtle: #313b3d;
+  --color-surface-active: #392f2b;
+  --color-content: #f4f0e8;
+  --color-content-muted: #bcc5c3;
+  --color-brand: #f28b5e;
+  --color-brand-subtle: #3e302b;
+  --color-border: #3c484a;
+  --color-success: #79c294;
+  --color-content-on-accent: #1d2325;
+  color-scheme: dark;
+}

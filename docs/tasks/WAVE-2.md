@@ -9,6 +9,8 @@ Agents run one at a time, reset between tasks. PM reviews only at the ✅ checkp
 |---|---|---|---|---|---|
 | 1 | [W2a](W2a.md) shared cue "place" (speaking / last started / next) for silences | `TranscriptCues.kt`, `web/PlayerJs.kt` + tests | — | Codex luna · low | ✅ PM re-runs Verify (W2c/W2d use the API) |
 | 2 | [W2b](W2b.md) web design system: tokens, 3 themes, shell, Library, Settings, code split | `web/` | — | Codex terra · medium (ask) | ✅ user approves the look (3 themes, desktop + phone) |
+| 2b | [W2b-fix](W2b-fix.md) missing tests, Prettier, doc gaps | `web/`, `check.sh` web step | W2b | continue W2b window | PM re-runs Verify |
+| 2c | [W2b2](W2b2.md) shadcn/ui component layer on our tokens (user: no browser-default controls) | `web/`, `design_system.md` | W2b-fix | continue W2b window | ✅ user looks at controls |
 | 3 | [W2c](W2c.md) Player screen in v0 style + UX2 (place in silences) + UX3 (free scroll, "Về câu đang phát") | `web/src/` player/transcript/card files | W2a, W2b | Codex terra · medium (ask) | — |
 | 4 | [W2d](W2d.md) floating window (PiP) in v0 style + UX1 (controls always visible) | `web/src/` pip files | W2c | continue W2c window | ✅ end of wave, user device check |
 

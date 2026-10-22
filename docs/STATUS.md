@@ -14,6 +14,8 @@ Last updated: 2026-10-22 (Wave 1 W1a–W1c done, user tested OK; UI redesign pen
 
 ## Done
 
+- **W2b + fix:** web foundation has the Sáng/Giấy/Tối token themes, persistent theme/view/Hanzi-size settings, desktop sidebar and ≤720px mobile navigation, and a real-catalog-only Library. Its five acceptance tests now join the three existing web tests; Prettier guards future long-line regressions. `docs/ui/design_system.md` is the handoff source for later web/Android work. Awaiting the user’s visual checkpoint before W2c restyles the Player.
+
 - **W1a:** `kmp/shared` now exports `LessonSessionJs` and `CatalogJs` to JS: catalog paths/tracks, cue and section navigation, transcript decisions, and character entry/components all cross the boundary as primitives or JSON. Real v7 fixture tests pass on JVM, JS browser, JS Node, and Android host; the browser production library emits JS and TypeScript definitions containing `LessonSessionJs`. Wave 1 checkpoint is ready before W1b.
 - **W1b:** added the Vite/React web player: public catalog library, guided/guided_zh playback with shared position mapping, streaming audio controls/speeds, shared-facade karaoke rendering and view toggles. The build copies (but never commits) the KMP JS bundle, derives the public content URL locally, and has a live catalog/facade/CORS-range check. `just web`, `web-build`, and `web-deploy` are available; user deployment still requires one-time Wrangler login.
 - **W1c:** Document PiP floating window, media keys, character card + copy, shortcuts (`web/src/`). PM checkpoint: all checks pass; code is crammed into very long lines (App.tsx 29 lines / 9 KB) — to be restructured with the UI redesign, not a separate fix.

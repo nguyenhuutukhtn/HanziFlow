@@ -1,6 +1,6 @@
 # W2c — Player screen in v0 style + UX2 (place in silences) + UX3 (free scroll)
 Status: todo · Suggested agent: codex/gpt-5.6-terra (medium), ask first · Session: new · Size: L · Device check: user
-Wave: 2 · Owns: `web/src/screens/Player*`, `web/src/components/` (Transcript, PlayerBar, CharacterCard and new player parts), their CSS and tests · Depends on: W2a, W2b · Checkpoint after: no (W2d continues this window)
+Wave: 2 · Owns: `web/src/screens/Player*`, `web/src/components/` (Transcript, PlayerBar, CharacterCard and new player parts), their CSS and tests · Depends on: W2a, W2b2 · Checkpoint after: no (W2d continues this window)
 
 ## Goal
 The Player looks like v0's player and fixes two problems the user hit (2026-10-22): (UX2) in the silence after a
@@ -15,6 +15,13 @@ transcript yanks back down on every new line even after the user scrolled up to 
 - W2b's `web/src` files you touch; facade: `cuePlaceJson` (W2a), `lineJson`, `sectionsJson` (`{id,title,start_ms,end_ms}`), `characterJson`
 
 ## Do
+0. **Structure first (no new libraries — no Redux/TanStack/Zustand):** domain logic stays in the shared facade; the web
+   is a view. Extract (a) `usePlayer()` — one owner of the `<audio>` element, position, playing, speed, track, view mode,
+   follow-mode and the commands (toggle, seek, prev/next sentence, replay), exposed via a React context so the main
+   Player, the PiP window (W2d), media keys and keyboard all read the same state; (b) `src/content.ts` — the only
+   module that builds URLs and fetches catalog/timeline/reference/characters (the future R2 move and offline cache
+   change only this file). Components get state from the context, not long prop chains.
+   Controls use the shadcn components from W2b2 per the rule in `docs/ui/design_system.md` (no native select/checkbox).
 1. **Layout** per v0: back + lesson title; track switch as a segmented control (labels from `tracksJson` `display_name`);
    transcript card; fixed bottom player bar. Desktop may keep v0's right column only for a keyboard-shortcut card (no fake stats).
 2. **Lines**: zh lines as tokens with pinyin above (existing render decisions, `--hanzi-size`); `vi-VN` lines styled as v0's
@@ -34,7 +41,7 @@ transcript yanks back down on every new line even after the user scrolled up to 
    Vietnamese meaning, HSK chip (hidden when null), decomposition, components (tap → that char), lesson words, "Sao chép".
    No "Xem nét" on web yet.
 
-## Acceptance (vitest, with a fake session)
+## Acceptance (vitest, with a fake session) — write these tests first, before styling details
 - Gap position → `last` line has the "vừa đọc" marker and `next` has "Tiếp theo"; speaking position → only the active style.
 - A user `wheel`/`scroll` event → follow off and the pill appears; clicking it calls `scrollIntoView` and hides the pill;
   a programmatic scroll does not turn follow off.

@@ -17,10 +17,11 @@ Make the PiP window a compact player in v0's `.floating-player` style whose cont
    Paused → the play button reads "Nghe tiếp".
 2. UX2 inside PiP: in a silence show the `last` line with the "vừa đọc" marker and a one-line "Tiếp theo" preview of `next`.
 3. Same keyboard shortcuts as the Player, handled in the PiP document.
-4. The PiP document gets the current theme class and font size, and follows changes while open.
-5. Tapping a character in PiP opens the card inside PiP as a compact sheet (existing behaviour, new look).
+4. Popovers/drawers inside PiP use W2b2's `PortalContainerContext` set to the PiP document body.
+5. The PiP document gets the current theme class and font size, and follows changes while open.
+6. Tapping a character in PiP opens the card inside PiP as a compact sheet (existing behaviour, new look).
 
-## Acceptance (vitest)
+## Acceptance (vitest) — write these tests first, before styling details
 - Rendered PiP body contains the four controls outside any scroll container; paused state shows "Nghe tiếp".
 - Gap position shows "vừa đọc" + "Tiếp theo"; theme class change in the main document is mirrored into the PiP document.
 

@@ -1,5 +1,449 @@
-:root { color: #ececee; background: #15161a; font-family: "Noto Sans", system-ui, sans-serif; }
-* { box-sizing: border-box; } body { margin: 0; } button, select { font: inherit; } button { cursor: pointer; }
-.shell { max-width: 850px; margin: auto; min-height: 100vh; padding: 24px; } h1 { margin: 8px 0; }
-.library { display: grid; gap: 12px; margin-top: 24px; }.lesson, .line { border: 0; text-align: left; border-radius: 12px; background: #23252b; color: #ececee; padding: 16px; }.lesson { display: grid; gap: 4px; }.lesson span, .pinyin { color: #a7a9b3; }.controls, .views { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 16px 0; }.controls button, select { border: 0; border-radius: 8px; padding: 9px 12px; background: #35373f; color: inherit; }.controls button:nth-of-type(2) { background: #f2b155; color: #2a1800; }.transcript { display: grid; gap: 8px; padding: 0; list-style: none; }.line { width: 100%; }.line.active { background: #4a350f; color: #ffe2b0; }.hanzi, .pinyin, .meaning { display: block; }.hanzi { font-size: 22px; line-height: 1.55; }.pinyin { font-size: 13px; line-height: 1.4; }.meaning { color: #9fb4d6; font-size: 14px; margin-top: 4px; }.placeholder { color: #a7a9b3; }
-.character { cursor: pointer; }.character:hover, .character:focus { color: #f2b155; outline: none; }.character-card { position: fixed; z-index: 3; right: 18px; bottom: 18px; width: min(300px, calc(100vw - 36px)); background: #23252b; border: 1px solid #535661; border-radius: 12px; padding: 14px; box-shadow: 0 8px 24px #0008; }.character-card h2 { margin: 0; font-size: 28px; }.character-card p { margin: 6px 0; }.components { display: flex; gap: 6px; flex-wrap: wrap; }.pip-shell { padding: 12px; min-height: 100vh; }.pip-shell .controls { margin: 8px 0; }.pip-shell .transcript { gap: 5px; }.pip-shell .line { padding: 8px; }.pip-shell .hanzi { font-size: 17px; }.pip-shell .line.active .hanzi { font-size: 25px; }.pip-shell .meaning { display: none; }
+@import "./theme/tokens.css";
+
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--color-canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+}
+button,
+select {
+  font: inherit;
+  color: inherit;
+}
+button {
+  border: 0;
+  cursor: pointer;
+}
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+button:focus-visible,
+select:focus-visible,
+.character:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+.loading {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+}
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+.sidebar {
+  width: 252px;
+  flex: none;
+  padding: 32px 20px;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 56px;
+}
+.brand-mark {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--accent);
+  color: var(--color-content-on-accent);
+  font-family: var(--font-hanzi);
+}
+.brand strong {
+  font-size: 19px;
+}
+.brand strong span {
+  color: var(--accent);
+}
+.sidebar button,
+.mobile-nav button {
+  display: flex;
+  width: 100%;
+  min-height: 48px;
+  align-items: center;
+  gap: 13px;
+  padding: 0 14px;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--muted);
+  font-weight: 600;
+  text-align: left;
+}
+.sidebar button.active,
+.mobile-nav button.active {
+  background: var(--color-brand-subtle);
+  color: var(--accent);
+}
+.main-content {
+  min-width: 0;
+  flex: 1;
+}
+.mobile-header,
+.mobile-nav {
+  display: none;
+}
+.page-section,
+.player-page {
+  max-width: 970px;
+  margin: auto;
+  padding: 66px var(--space-page-x) 100px;
+}
+.eyebrow {
+  margin: 0 0 11px;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+.page-section h1,
+.player-top h1 {
+  margin: 0 0 8px;
+  font-family: var(--font-display);
+  font-size: 38px;
+  letter-spacing: -1.6px;
+}
+.subheading,
+.setting-card p,
+.setting-card small {
+  color: var(--muted);
+}
+.lesson-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 46px;
+}
+.lesson-card {
+  display: flex;
+  width: 100%;
+  min-height: 112px;
+  align-items: center;
+  gap: 18px;
+  padding: 18px 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  text-align: left;
+}
+.lesson-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 7px 22px #9f765018;
+}
+.lesson-order {
+  width: 28px;
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-size: 17px;
+}
+.lesson-card strong,
+.lesson-card small {
+  display: block;
+}
+.lesson-card strong {
+  font-family: var(--font-display);
+  font-size: 18px;
+}
+.lesson-card small {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.lesson-arrow {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 26px;
+}
+.settings-grid {
+  display: grid;
+  gap: 12px;
+  margin-top: 48px;
+}
+.setting-card {
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+}
+.setting-card h2,
+.setting-card strong {
+  display: block;
+  margin: 0 0 5px;
+  font-size: 14px;
+}
+.setting-card p,
+.setting-card small {
+  display: block;
+  margin: 0;
+  font-size: 12px;
+}
+.theme-options {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+.theme-option {
+  padding: 0;
+  background: none;
+  text-align: left;
+}
+.theme-preview {
+  display: grid;
+  width: 145px;
+  height: 90px;
+  margin-bottom: 8px;
+  place-items: center;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  font-family: var(--font-display);
+  font-size: 23px;
+}
+.theme-preview.light {
+  border-color: #eee5dc;
+  background: #fbfaf7;
+  color: #ee7047;
+}
+.theme-preview.paper {
+  background: #f3eadb;
+  color: #bd6e45;
+}
+.theme-preview.dark {
+  background: #1d2325;
+  color: #f28b5e;
+}
+.theme-option.selected .theme-preview {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--color-brand-subtle);
+}
+.row-setting {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.row-setting select,
+.controls select {
+  padding: 9px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-soft);
+}
+.segmented {
+  display: flex;
+  gap: 3px;
+  padding: 3px;
+  border-radius: 9px;
+  background: var(--surface-soft);
+}
+.segmented button {
+  min-height: 36px;
+  padding: 7px 11px;
+  border-radius: 6px;
+  background: none;
+  color: var(--muted);
+}
+.segmented button.active {
+  background: var(--surface);
+  color: var(--text);
+}
+.player-page {
+  max-width: 1120px;
+}
+.player-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.player-top h1 {
+  font-size: 24px;
+}
+.player-top button,
+.controls button {
+  padding: 9px 12px;
+  border-radius: 8px;
+  background: var(--surface-soft);
+}
+.controls,
+.views {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 0;
+}
+.controls button:nth-of-type(2) {
+  background: var(--accent);
+  color: var(--color-content-on-accent);
+}
+.transcript {
+  display: grid;
+  gap: 8px;
+  padding: 0;
+  list-style: none;
+}
+.line {
+  width: 100%;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  text-align: left;
+}
+.line.active {
+  border-color: var(--accent);
+  background: var(--color-surface-active);
+}
+.hanzi,
+.pinyin,
+.meaning {
+  display: block;
+}
+.hanzi {
+  font-family: var(--font-hanzi);
+  font-size: var(--hanzi-size);
+  line-height: 1.55;
+}
+.pinyin {
+  color: var(--accent);
+  font-size: 13px;
+}
+.meaning,
+.placeholder {
+  color: var(--muted);
+  font-size: 14px;
+}
+.character {
+  cursor: pointer;
+}
+.character:hover {
+  color: var(--accent);
+}
+.character-card {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 3;
+  width: min(300px, calc(100vw - 36px));
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  box-shadow: 0 8px 24px #0003;
+}
+.character-card h2 {
+  margin: 0;
+  font-family: var(--font-hanzi);
+  font-size: 28px;
+}
+.character-card p {
+  margin: 6px 0;
+}
+.components {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.components button,
+.character-card > button {
+  margin: 4px;
+  padding: 7px;
+  border-radius: 7px;
+  background: var(--surface-soft);
+}
+.pip-shell {
+  min-height: 100vh;
+  padding: 12px;
+}
+@media (max-width: 720px) {
+  .app-shell {
+    display: block;
+  }
+  .sidebar {
+    display: none;
+  }
+  .mobile-header {
+    display: flex;
+    height: 64px;
+    align-items: center;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .mobile-header .brand {
+    margin: 0;
+  }
+  .header-settings {
+    margin-left: auto;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 10px;
+    background: transparent;
+  }
+  .mobile-nav {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 5;
+    display: flex;
+    justify-content: space-around;
+    padding: 7px 10px calc(7px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .mobile-nav button {
+    width: auto;
+    min-width: 44px;
+    min-height: 44px;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    padding: 5px 12px;
+    font-size: 12px;
+  }
+  .page-section,
+  .player-page {
+    padding: 35px 20px 100px;
+  }
+  .page-section h1 {
+    font-size: 30px;
+  }
+  .lesson-list {
+    margin-top: 32px;
+  }
+  .lesson-card {
+    padding: 16px 13px;
+  }
+  .theme-options {
+    gap: 7px;
+  }
+  .theme-preview {
+    width: calc((100vw - 54px) / 3);
+    height: 70px;
+  }
+  .row-setting {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .player-page {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+  .player-top h1 {
+    font-size: 18px;
+  }
+  .character-card {
+    bottom: 76px;
+  }
+}
