@@ -2,7 +2,9 @@
 
 One row per task (code or content), filled at the end of the task. Tasks run one at a time so each row is a clean measurement. Purpose: find which kinds of work burn tokens and change the process, not to account precisely.
 
-How to read the numbers:
+Cost = **quota delta**, not tokens (user, 2026-10-22: subscriptions bill in % of plan, and token counts don't compare across models). The agent runs `scripts/quota.sh` at the start and the end of the task and writes e.g. `codex 5h 29→41 · wk 25→27` / `ds $4.53→4.40` / `claude ?` (the user fills in Claude `/usage`). Mark `reset` if a window reset mid-task. **Escaped** = bugs found after commit (device, listening), added later to the original task's row.
+
+Older rows (token-based):
 - Claude Code: `/cost` (or `/usage`) at the end of the session; one session per task.
 - Cursor: Settings → Usage for the request range.
 - DeepSeek: platform usage page for the day/time range.
@@ -47,3 +49,10 @@ Columns: **Kind** = code / content / review / design · **Tokens** = input / out
 | 2026-10-21 | S2-fix2 decimal medians | code | Codex GPT-5 | ? | ~15 min | ? | Matching the real pack's decimal coordinate contract and wiring a compact cross-platform fixture into the generated resource map | Derive fixtures mechanically from publish data and include each in the KMP fixture allowlist |
 
 | 2026-10-21 | S2 (+fix, fix2) total | code | Codex GPT-5 Terra medium | ? | ~55 min | 2 | Three rounds for one feature: S1 contract fixture gaps (Clip vs pack file, float medians) surfaced only on device | Real-file parse tests required in briefs (README "Writing Acceptance"); mid-tier from the start did not prevent it, brief did |
+
+## From 2026-10-22 (quota-based)
+
+Kind: `pipeline-py` / `android-ui` / `android-state` / `contract` / `web` / `content` / `review` / `design`.
+
+| Date | Task | Kind | Agent / model · effort | Quota Δ | Wall time | Fix rounds | Escaped | Biggest consumer | Fix |
+|---|---|---|---|---|---|---|---|---|---|

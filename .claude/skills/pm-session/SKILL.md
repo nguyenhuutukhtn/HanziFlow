@@ -37,7 +37,7 @@ report.
 ## Loop
 
 1. **Orient (once per session):** `docs/STATUS.md`, `git status --short`, `ls docs/tasks/`, `scripts/quota.sh`. Don't read other docs unless the task needs them.
-2. **Review a task report:** check the report against the diff, never trust it alone.
+2. **Review at a checkpoint (see "Waves"), not per task:** check each report against its diff, never trust it alone. Batch every task in the checkpoint into one pass: run `check.sh` once, then per task its verdict + risk hunks.
    - If the user pastes a `task-review` verdict (cheap reviewer agent, `.claude/skills/task-review/`): `pass` → commit; `fail`/`needs-PM` → open only the flagged files/lines. Still glance at its random samples.
    - Otherwise re-run the brief's `Verify` script yourself; its printed values are the review. Pass → commit without reading code, unless the diff touches a risk area below.
    - **A silent/empty result from a `-q` or piped command is not a pass.** Gradle with `-q`
@@ -52,8 +52,27 @@ report.
    - Check against the spec section the brief named: contract consistency across files, safety (deletes, paid TTS, secrets), and whether STATUS/token_log were updated.
    - Verdict: **commit** (stage the exact paths, commit only when the user says so) or **fix**. A fix goes into a `docs/tasks/<ID>-fix.md` brief. Fix it yourself only if it's under ~10 lines and cheaper than a brief.
 3. **Device check per brief:** set `Device check: user` unless an objective number only a device can give is the acceptance (e.g. a logcat timing); then `agent (<one scripted command>)`. Listening, looks and feel are always the user's.
-4. **Next task:** pick it from STATUS "Next", write or refresh `docs/tasks/<ID>.md` with the template in `docs/tasks/README.md` (follow its "Writing Acceptance + Verify": concrete expected values, a script that fails on mismatch), and name the cheapest agent that fits. Before writing the launch prompt, decide **continue vs fresh** (below), then hand the user the matching prompt.
+4. **Next wave:** plan 3–6 tasks from STATUS "Next" as one wave (see "Waves"), write or refresh each `docs/tasks/<ID>.md` with the template in `docs/tasks/README.md` (follow its "Writing Acceptance + Verify": concrete expected values, a script that fails on mismatch), and name the cheapest agent that fits. Before writing the launch prompt, decide **continue vs fresh** (below), then hand the user the matching prompt.
 5. **Features/improvements:** ask the fewest questions that change the design, record decisions in STATUS "Open decisions" or the relevant architecture file, then write briefs.
+
+## Waves (user, 2026-10-22 — replaces "PM reviews each task")
+
+Per-task PM review cost more in total than it saved: PM re-orients for every task, and a cheap
+worker looping through review → fix → review burns more than a stronger one finishing once.
+- **PM plans, the user runs.** PM writes a wave of 3–6 briefs plus `docs/tasks/WAVE-<n>.md`: order,
+  `Owns:` / `Depends on:` per task, suggested agent, and the **review checkpoints**.
+- **Still one agent at a time** (user: easier to monitor, and the quota delta per task stays exact).
+  The user resets the agent between tasks and calls PM only at a checkpoint.
+- **Self-verify gate:** the worker runs its brief's Verify and fixes failures in its own window
+  before reporting. It updates STATUS/token_log as usual, including its quota delta (see token_log).
+- **Checkpoints:** at the end of the wave, and **immediately after** any task that changes a contract
+  or schema, or that a later task builds on (S1's contract error sank S2: never batch past one).
+- **Checkpoint review:** for each task, read its report, propose a `task-review` on a cheap model
+  (user OK first), run `check.sh` once for all of them, then read only verdict flags + risk hunks.
+  Write one fix brief per failing task (escalated a tier). Commit per task, exact paths.
+- **Model quality** = per-task quota delta (% of plan, not tokens: tokens don't compare across
+  models) + fix rounds + escaped bugs (found after commit, charged back to the original row).
+  Review `token_log.md` by kind × model every ~10 tasks.
 
 ## Continue the old agent window vs start a fresh agent
 

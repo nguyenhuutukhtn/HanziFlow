@@ -6,7 +6,7 @@ Last updated: 2026-10-21 (C2 fully done incl. device check) · branch `app-publi
 
 ## Working rules
 
-- One task at a time, sequentially. No parallel agents.
+- Work in waves (user, 2026-10-22): PM plans 3–6 briefs + `docs/tasks/WAVE-<n>.md` with review checkpoints. Agents still run one at a time (the user resets between tasks); PM is called only at checkpoints. Details: `.claude/skills/pm-session` "Waves".
 - Agents report with the template in [AGENTS.md](../AGENTS.md) ("Task reports").
 - Bring a task back for human/PM review only for design decisions or when blocked.
 - Scripts first, AI as fallback: see [workflow.md](workflow.md). Find code via [CODEMAP.md](CODEMAP.md) (regenerate with `python3 scripts/codemap.py`); files over 300 lines (⚠ there) get split before they are extended.
@@ -54,6 +54,22 @@ Last updated: 2026-10-21 (C2 fully done incl. device check) · branch `app-publi
 
 ## Next (in order)
 
+**Top priority today (user, 2026-10-22, after one day of using the app): W1 — a web player in Chrome on Mac and Linux that stays on top**
+for listening while reading the text at work. The learner today follows by ear plus rough pinyin and
+can start learning Hanzi, so the window must show pinyin with the characters (not Hanzi-only) and keep
+tap-a-character → card. **Planned as [Wave 1](tasks/WAVE-1.md): W1a (shared JS facade, luna) → ✅ PM checkpoint → W1b (React app + Cloudflare Pages deploy) → W1c (Document PiP, media keys, char card) → ✅ checkpoint + user device check.**
+
+**Backlog from the same day of use (do later, user 2026-10-22):**
+- **S3 (bug, confirmed upside-down by user):** the "Xem nét" stroke animation renders the character
+  flipped vertically, so it appears to draw from the bottom up. Likely cause is the Y axis: Hanzi Writer/MMAH
+  coordinates are y-up in a 1024 box and need `translate(0, 900) scale(1, -1)` (applied to the medians as
+  well as the outlines) before drawing. Add a test that asserts the screen-space position of a known stroke
+  (e.g. the first stroke of 三 sits at the top).
+- **P4 (feature):** slower playback speeds 0.7× / 0.6× / 0.5×, so a beginner can hear clearly and
+  shadow. Android: Media3 `setPlaybackSpeed` (keeps pitch); web: `playbackRate`. Check by ear whether
+  0.5× time-stretch sounds acceptable. If not, the fallback is pre-rendered slow TTS clips, which are paid
+  and need a dry-run count first.
+
 0. **Now:** lesson authoring workflow (user, 2026-10-21; lesson 001 = model lesson). Steps: outline → one AI draft (any chat model, bundle is self-contained) → import gates + metrics vs lesson 001 → cross-model review by row id (findings, no rewrite) → row-level fixes → outside reviewer (knows zh↔vi, not Hán-Việt) checks flagged zh lines/translations; user does listening QA.
    - **T6b** (`docs/tasks/T6b.md`, continue T6a window): `lesson-metrics --against 001`, `export-rows`/`import-rows`.
    - **Skills done (PM, 2026-10-21):** `.claude/skills/lesson-author` (outline → draft → gates → metrics → chars → row fixes → bible) + `lesson-review` (8-point rubric, findings by `ref`/`ref#n`, independent Hán-Việt check, outside-reviewer list); both linked under `.agents/skills/` for deepcode. **Next: lesson 002** — author = Codex (strong model), reviewer = DeepSeek (different model).
@@ -93,7 +109,7 @@ Last updated: 2026-10-21 (C2 fully done incl. device check) · branch `app-publi
 ## Open decisions (user)
 
 - Character learning feature: design finalized 2026-10-21 in [architecture/characters.md](architecture/characters.md). C0/C1/C2 done. C3 (per-char/word pronunciation) and C4 ("Từ trong bài" jump target) are backlog candidates needing research/clarification before a brief — see "Next".
-- W1 on Linux (office uses Firefox, no Document PiP): undecided. Options: Chrome/Chromium on Linux; Firefox video-PiP fallback (render transcript to canvas → video stream; view-only, play/pause only); Tauri shell with always-on-top later.
+- W1 platforms decided 2026-10-22: Chrome on Mac **and Chrome on Linux** (Document PiP works in both); a native Linux app comes later. Firefox is not targeted.
 - Decided 2026-10-21: no native Mac/Linux apps; desktop = the web app (+ optional Tauri wrapper later).
 - Decided 2026-10-21: iOS = native SwiftUI shell over the `kmp/shared` core as an XCFramework; no Compose Multiplatform. Web UI stays React.
 - None. Decided 2026-10-20: pass rule = first-try 100%; accent amber; track names "Học có hướng dẫn" / "Luyện nghe"; UI review changes adopted (see docs/ui/README.md "Review decisions").

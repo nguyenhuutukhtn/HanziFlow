@@ -9,6 +9,7 @@ Lifecycle: `todo` → `in-progress` → `review` → `done` (set in the brief's 
 ```markdown
 # <ID> — <title>
 Status: todo · Suggested agent: <tool>/<model> (<effort>) · Session: <id or new> · Size: S/M/L · Device check: user | agent (<the scripted check>)
+Wave: <n or none> · Owns: <files/dirs this task may edit> · Depends on: <IDs or none> · Checkpoint after: yes | no
 
 ## Goal
 <1–3 sentences: what changes for the user/pipeline.>

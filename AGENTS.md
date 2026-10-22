@@ -51,9 +51,9 @@ Mandarin listening/speaking course for a Vietnamese-speaking learner.
   coordinate hunting; if a check needs more than that, stop and hand it to the user.
   Missing line = `user`.
 - At the end of a task, update [`docs/STATUS.md`](docs/STATUS.md) (Done / Next /
-  Open decisions) in a few lines, and add a row to [`docs/token_log.md`](docs/token_log.md).
-- Tasks run strictly one at a time (code and content alike), so each token-log row
-  measures one task.
+  Open decisions) in a few lines, and add a row to [`docs/token_log.md`](docs/token_log.md)
+  with the quota delta: run `scripts/quota.sh` at the start and at the end of the task.
+- Tasks run one at a time; edit only the files in your brief's `Owns:` line.
 
 ## Task reports
 
