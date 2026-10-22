@@ -124,7 +124,7 @@ describe("W2b shell and settings", () => {
   it("sets the HTML theme class and persists it across a remount", async () => {
     await renderLibrary();
     fireEvent.click(document.querySelector<HTMLButtonElement>(".sidebar button:last-child")!);
-    fireEvent.click(screen.getByRole("button", { name: /Giấy/ }));
+    fireEvent.click(screen.getByRole("radio", { name: /Giấy/ }));
     expect(document.documentElement).toHaveClass("theme-paper");
     cleanup();
     await renderLibrary();

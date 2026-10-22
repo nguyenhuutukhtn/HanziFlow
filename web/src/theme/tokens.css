@@ -1,4 +1,7 @@
 :root {
+  --text-body: 14px;
+  --text-secondary: 13px;
+  --text-caption: 12px;
   --color-canvas: #fbfaf7;
   --color-surface: #fff;
   --color-surface-subtle: #f6f2ed;
@@ -28,6 +31,15 @@
   --muted: var(--color-content-muted);
   --border: var(--color-border);
   color-scheme: light;
+}
+@theme inline {
+  --color-background: var(--color-canvas);
+  --color-foreground: var(--color-content);
+  --color-card: var(--color-surface);
+  --color-primary: var(--color-brand);
+  --color-muted: var(--color-surface-subtle);
+  --color-border: var(--color-border);
+  --color-ring: var(--color-brand);
 }
 .theme-paper {
   --color-canvas: #f3eadb;

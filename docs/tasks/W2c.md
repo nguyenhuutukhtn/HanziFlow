@@ -22,6 +22,11 @@ transcript yanks back down on every new line even after the user scrolled up to 
    module that builds URLs and fetches catalog/timeline/reference/characters (the future R2 move and offline cache
    change only this file). Components get state from the context, not long prop chains.
    Controls use the shadcn components from W2b2 per the rule in `docs/ui/design_system.md` (no native select/checkbox).
+   W2b2 shipped only `button`, `toggle-group`, `select`, `popover` (+ `portal-container`). Add the rest the Player needs as
+   standard shadcn files in `web/src/components/ui/` (Radix deps are already installed): `switch` (Tiếng Việt),
+   `slider` (seek), `tooltip` (section markers), `drawer` (card bottom sheet; add `vaul`, pinned), `dropdown-menu` only if
+   used. Every Radix `Portal` uses `PortalContainerContext`. Add one rule line per new component to `design_system.md`
+   "Components" (when to use it), and reuse `--text-body/secondary/caption` for all Vietnamese text.
 1. **Layout** per v0: back + lesson title; track switch as a segmented control (labels from `tracksJson` `display_name`);
    transcript card; fixed bottom player bar. Desktop may keep v0's right column only for a keyboard-shortcut card (no fake stats).
 2. **Lines**: zh lines as tokens with pinyin above (existing render decisions, `--hanzi-size`); `vi-VN` lines styled as v0's

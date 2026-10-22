@@ -1,4 +1,30 @@
 @import "./theme/tokens.css";
+@import "tailwindcss";
+
+.ui-button {
+  min-height: 36px;
+  border-radius: var(--radius-control);
+  background: var(--surface-soft);
+  padding: 7px 11px;
+}
+.ui-toggle-item {
+  min-height: 36px;
+  border-radius: calc(var(--radius-control) - 4px);
+  background: transparent;
+  color: var(--muted);
+  padding: 7px 11px;
+}
+.ui-toggle-item[data-state="on"] {
+  background: var(--surface);
+  color: var(--text);
+}
+.ui-popover {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--text) 18%, transparent);
+  padding: var(--space-2);
+}
 
 * {
   box-sizing: border-box;

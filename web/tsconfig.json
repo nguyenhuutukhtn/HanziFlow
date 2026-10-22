@@ -12,6 +12,8 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": { "@/*": ["./src/*"] },
     "strict": true
   },
   "include": ["src", "vite.config.ts"]

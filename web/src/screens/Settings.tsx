@@ -1,4 +1,6 @@
 import type { SettingsState, Theme, ViewMode } from "../settings";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const themes: { id: Theme; label: string }[] = [
   { id: "light", label: "Sáng" },
@@ -29,42 +31,59 @@ export function Settings({
         <section className="setting-card">
           <h2>Giao diện</h2>
           <p>Chọn màu sắc phù hợp với thời điểm học.</p>
-          <div className="theme-options">
+          <ToggleGroup
+            className="theme-options"
+            type="single"
+            value={settings.theme}
+            onValueChange={(theme) => theme && setSettings({ ...settings, theme: theme as Theme })}
+          >
             {themes.map((theme) => (
-              <button
+              <ToggleGroupItem
                 key={theme.id}
                 className={`theme-option ${settings.theme === theme.id ? "selected" : ""}`}
-                onClick={() => setSettings({ ...settings, theme: theme.id })}
+                value={theme.id}
+                aria-label={theme.label}
               >
                 <span className={`theme-preview ${theme.id}`}>Aa</span>
                 <span>{theme.label}</span>
-              </button>
+              </ToggleGroupItem>
             ))}
-          </div>
+          </ToggleGroup>
         </section>
         <label className="setting-card row-setting">
           <span>
             <strong>Chế độ hiển thị mặc định</strong>
             <small>Áp dụng cho transcript khi mở bài mới.</small>
           </span>
-          <select
-            aria-label="Chế độ hiển thị mặc định"
+          <Select
             value={settings.viewMode}
-            onChange={(event) => setSettings({ ...settings, viewMode: event.target.value as ViewMode })}
+            onValueChange={(viewMode) => setSettings({ ...settings, viewMode: viewMode as ViewMode })}
           >
-            {views.map((view) => (
-              <option key={view.id} value={view.id}>
-                {view.label}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger aria-label="Chế độ hiển thị mặc định">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {views.map((view) => (
+                <SelectItem key={view.id} value={view.id}>
+                  {view.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </label>
         <section className="setting-card row-setting">
           <span>
             <strong>Cỡ chữ Hán</strong>
             <small>Tùy chỉnh độ lớn của chữ Hán trong bài nghe.</small>
           </span>
-          <div className="segmented">
+          <ToggleGroup
+            className="segmented"
+            type="single"
+            value={String(settings.hanziSize)}
+            onValueChange={(value) =>
+              value && setSettings({ ...settings, hanziSize: Number(value) as SettingsState["hanziSize"] })
+            }
+          >
             {(
               [
                 { label: "Nhỏ", size: 22 },
@@ -72,15 +91,15 @@ export function Settings({
                 { label: "Lớn", size: 34 },
               ] as const
             ).map((item) => (
-              <button
+              <ToggleGroupItem
                 key={item.size}
                 className={settings.hanziSize === item.size ? "active" : ""}
-                onClick={() => setSettings({ ...settings, hanziSize: item.size })}
+                value={String(item.size)}
               >
                 {item.label}
-              </button>
+              </ToggleGroupItem>
             ))}
-          </div>
+          </ToggleGroup>
         </section>
       </div>
     </section>
