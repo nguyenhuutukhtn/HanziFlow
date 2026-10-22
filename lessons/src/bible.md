@@ -18,6 +18,6 @@ Authored data: update when a lesson adds cast, places or threads.
 - Variants already used: the bag is Li Ming's (pov), the bag is Anna's (Túi của Anna).
 
 #### Tense and style constraints
-- Present time only; no 了 / 过 / future markers until a lesson teaches them.
-- Short sentences; one new grammar point per line; everyday office scenes.
+- No tense/grammar restrictions (user, 2026-10-22): Vietnamese and Chinese grammar are close enough that the learner understands structures without lessons. Write whatever natural, common spoken Chinese needs (了, 过, 就, 能…); limits are on new words/characters only.
+- Short-to-medium natural sentences; everyday office scenes.
 - Names stay 安娜 and 李明 (Vietnamese text: Anna, Lý Minh); the coach speaks to the learner as "mình / bạn".

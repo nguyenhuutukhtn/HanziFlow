@@ -36,7 +36,7 @@ For writing or revising a `lessons/src/lesson_XXX.story.md`. Self-contained: no 
 3. Meaning mapping on key lines: Mandarin → Vietnamese → Mandarin again.
 4. Circling Q&A (yes/no, `A还是B`, short wh-questions) — the main drill.
 5. Pronunciation buildup on 3–5 genuinely hard lines only, by meaningful chunk, never by character.
-6. Point-of-view retelling: change subject/location/color/quantity/a flipped fact; never tense/aspect before its own lesson has introduced it.
+6. Point-of-view retelling: change subject/location/color/quantity/a flipped fact; tense is a fine variable too (no grammar restrictions, user 2026-10-22).
 7. Natural replay, Mandarin-only, no explanation.
 
 ## Vietnamese fade (within one lesson)

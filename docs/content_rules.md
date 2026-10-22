@@ -23,10 +23,7 @@ The current method is a **mini-story** format (Effortless English / TPRS-style):
    (`A还是B`), short wh-questions about concrete story facts, so the learner
    recognizes and guesses before they can produce.
 3. **Point-of-view retelling** repeats the story with one variable changed (subject,
-   location, color, quantity, a flipped fact). **Never change tense/aspect as a
-   retelling variable before that marker's own lesson has introduced it** (e.g. no
-   past-tense retelling before `了` lands in week 12) — that would teach an untaught
-   structure through the back door.
+   location, color, quantity, a flipped fact, or tense). No tense/grammar restrictions (user, 2026-10-22): Vietnamese and Chinese grammar are close enough that the learner understands structures without lessons. Write whatever natural, common spoken Chinese needs (了, 过, 就, 能…); limits are on new words/characters only.
 4. **Narrator shape is the Lesson 1 template:** one narrator, plus short lines
    from the people in the story. Do not reopen a scripted two-person dialogue.
 
