@@ -26,3 +26,10 @@ web/dist/
 web/public/shared/
 web/.env.local
 web/*.tsbuildinfo
+
+# Local-only design reference (v0 prototype); delete when the product UI is stable
+docs/ui/v0_export/
+docs/ui/v0_prompt.md
+docs/ui/v0_review_checklist.md
+.wrangler/
+.DS_Store

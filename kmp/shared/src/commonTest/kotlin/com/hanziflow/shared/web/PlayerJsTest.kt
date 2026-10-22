@@ -44,6 +44,11 @@ class PlayerJsTest {
     }
 
     @Test
+    fun cuePlaceJson_inGapAfterCue0End1840BeforeCue1Start2240() {
+        assertEquals("{\"speaking\":-1,\"last\":0,\"next\":1}", session.cuePlaceJson(2000.0))
+    }
+
+    @Test
     fun exposesTrackScopedLinesAndTrackSwitching() {
         val reference = CourseJson.reference(fixtureText("reference.json"))
         val guidedIds = CourseJson.codec.parseToJsonElement(session.linesJson("guided")).jsonArray

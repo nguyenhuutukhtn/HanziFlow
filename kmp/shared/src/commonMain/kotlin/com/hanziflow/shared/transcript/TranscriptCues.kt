@@ -7,6 +7,24 @@ import com.hanziflow.shared.TimelineCue
  * start_ms, as published). No I/O, platform APIs, or player state here.
  */
 object TranscriptCues {
+    data class CuePlace(val speaking: Int?, val lastStarted: Int?, val next: Int?)
+
+    /** Finds the speaking, last-started, and next cue with binary searches over start times. */
+    fun placeAt(cues: List<TimelineCue>, positionMs: Long): CuePlace {
+        if (cues.isEmpty()) return CuePlace(null, null, null)
+
+        var low = 0
+        var high = cues.size
+        while (low < high) {
+            val mid = (low + high) / 2
+            if (cues[mid].startMs <= positionMs) low = mid + 1 else high = mid
+        }
+        val next = low.takeIf { it < cues.size }
+        val lastStarted = (low - 1).takeIf { it >= 0 }
+        val speaking = lastStarted?.takeIf { positionMs < cues[it].endMs }
+        return CuePlace(speaking, lastStarted, next)
+    }
+
     /**
      * Index of the cue active at [positionMs] (cue.startMs <= positionMs < cue.endMs),
      * found by binary search. Null in a gap between cues, before the first cue, or

@@ -90,6 +90,12 @@ class LessonSessionJs(
     fun activeCueIndex(positionMs: Double): Int =
         TranscriptCues.activeCueIndex(timeline.cues, positionMs.toLong()) ?: -1
 
+    fun cuePlaceJson(positionMs: Double): String {
+        val place = TranscriptCues.placeAt(timeline.cues, positionMs.toLong())
+        fun Int?.jsonIndex(): Int = this ?: -1
+        return "{\"speaking\":${place.speaking.jsonIndex()},\"last\":${place.lastStarted.jsonIndex()},\"next\":${place.next.jsonIndex()}}"
+    }
+
     fun cueCount(): Int = timeline.cues.size
     fun cueJson(index: Int): String? = timeline.cues.getOrNull(index)?.let { CourseJson.codec.encodeToString(it) }
     fun linesJson(track: String): String = CourseJson.codec.encodeToString(linesFor(track).map { it.id })

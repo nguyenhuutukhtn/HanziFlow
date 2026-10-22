@@ -15,6 +15,36 @@ class TranscriptCuesTest {
     )
 
     @Test
+    fun placeAt_tracksSpeakingLastStartedAndNextAcrossGaps() {
+        val placed = listOf(
+            500L to Triple(0, 0, 1),
+            1000L to Triple(null, 0, 1),
+            1200L to Triple(null, 0, 1),
+            3000L to Triple(null, 1, 2),
+            4000L to Triple(2, 2, null),
+            6000L to Triple(null, 2, null),
+        )
+        val testCues = listOf(
+            TimelineCue("a", 0, 1000),
+            TimelineCue("b", 1500, 2500),
+            TimelineCue("c", 4000, 5000),
+        )
+        placed.forEach { (position, expected) ->
+            val actual = TranscriptCues.placeAt(testCues, position)
+            assertEquals(expected.first, actual.speaking, "speaking at $position")
+            assertEquals(expected.second, actual.lastStarted, "last at $position")
+            assertEquals(expected.third, actual.next, "next at $position")
+        }
+    }
+
+    @Test
+    fun placeAt_handlesBeforeFirstAndEmptyCues() {
+        val cuesStartingAt100 = listOf(TimelineCue("a", 100, 200))
+        assertEquals(TranscriptCues.CuePlace(null, null, 0), TranscriptCues.placeAt(cuesStartingAt100, 50))
+        assertEquals(TranscriptCues.CuePlace(null, null, null), TranscriptCues.placeAt(emptyList(), 0))
+    }
+
+    @Test
     fun activeCue_atStartBoundary_isInclusive() {
         assertEquals("a", TranscriptCues.activeCue(cues, 0)?.lineId)
         assertEquals("b", TranscriptCues.activeCue(cues, 1000)?.lineId)

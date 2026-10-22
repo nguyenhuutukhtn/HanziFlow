@@ -91,9 +91,9 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `kotlin/com/hanziflow/shared/transcript/CueNavigation.kt` [57] — CueNavigation — Headset / transport cue navigation over one track's timeline. Cues are assumed
 - `kotlin/com/hanziflow/shared/transcript/SectionNavigation.kt` [43] — SectionNavigation, SectionLoop — Pure lookups over a track's `timeline.sections` (assumed sorted, contiguous, covering the track).
 - `kotlin/com/hanziflow/shared/transcript/TrackSwitch.kt` [29] — TrackSwitch — Maps a position between two timelines that share the same published line ids.
-- `kotlin/com/hanziflow/shared/transcript/TranscriptCues.kt` [63] — TranscriptCues — Pure cue-lookup logic over a track's timeline cues (assumed sorted ascending by
+- `kotlin/com/hanziflow/shared/transcript/TranscriptCues.kt` [81] — TranscriptCues — Pure cue-lookup logic over a track's timeline cues (assumed sorted ascending by
 - `kotlin/com/hanziflow/shared/transcript/TranscriptRendering.kt` [117] — TranscriptViewMode, TokenRenderDecision, LineRenderDecision, TranscriptRendering — One dataset, several views, switched instantly. Vietnamese is an independent toggle.
-- `kotlin/com/hanziflow/shared/web/PlayerJs.kt` [194] — TrackJson, TokenJson, LineJson, CharacterJson — Small JS-facing facade for one lesson's player data and transcript rules.
+- `kotlin/com/hanziflow/shared/web/PlayerJs.kt` [200] — TrackJson, TokenJson, LineJson, CharacterJson — Small JS-facing facade for one lesson's player data and transcript rules.
 
 ## KMP shared (tests) (`kmp/shared/src/commonTest/`)
 
@@ -105,9 +105,9 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `kotlin/com/hanziflow/shared/transcript/CueNavigationTest.kt` [65] — CueNavigationTest
 - `kotlin/com/hanziflow/shared/transcript/SectionNavigationTest.kt` [59] — SectionNavigationTest
 - `kotlin/com/hanziflow/shared/transcript/TrackSwitchTest.kt` [108] — TrackSwitchTest
-- `kotlin/com/hanziflow/shared/transcript/TranscriptCuesTest.kt` [101] — TranscriptCuesTest
+- `kotlin/com/hanziflow/shared/transcript/TranscriptCuesTest.kt` [131] — TranscriptCuesTest
 - `kotlin/com/hanziflow/shared/transcript/TranscriptRenderingTest.kt` [135] — TranscriptRenderingTest
-- `kotlin/com/hanziflow/shared/web/PlayerJsTest.kt` [106] — PlayerJsTest
+- `kotlin/com/hanziflow/shared/web/PlayerJsTest.kt` [111] — PlayerJsTest
 
 ## Android app (main) (`kmp/android/src/main/`)
 
