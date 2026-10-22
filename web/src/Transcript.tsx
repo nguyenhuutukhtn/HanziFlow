@@ -1,8 +1,7 @@
-import { useEffect, useRef } from "react";
-import type { Cue, RenderLine, Session } from "./facade";
+import { useEffect, useRef, useState } from "react";
+import type { Cue, CuePlace, RenderLine, Session } from "./facade";
 import { json } from "./facade";
 
-type TargetWindow = Pick<Window, "requestAnimationFrame">;
 type Props = {
   session: Session;
   track: string;
@@ -10,10 +9,12 @@ type Props = {
   view: string;
   showVietnamese: boolean;
   onSeek: (targetMs: number) => void;
-  targetWindow?: TargetWindow;
   onCharacter?: (char: string) => void;
   onCopy?: (text: string) => void;
+  onPrevious?: () => void;
+  onNext?: () => void;
 };
+const selected = () => Boolean(window.getSelection?.()?.toString());
 
 export function Transcript({
   session,
@@ -22,80 +23,162 @@ export function Transcript({
   view,
   showVietnamese,
   onSeek,
-  targetWindow,
   onCharacter,
   onCopy,
+  onPrevious,
+  onNext,
 }: Props) {
-  const active = session.activeCueIndex(positionMs);
-  const activeRef = useRef<HTMLButtonElement | null>(null);
-  const ids = json<string[]>(session.linesJson(track)) ?? [];
+  const [follow, setFollow] = useState(true);
+  const [outOfView, setOutOfView] = useState(false);
+  const programmed = useRef(false);
+  const programmedTimer = useRef<number>();
+  const activeRef = useRef<HTMLDivElement | null>(null);
   const cues = Array.from({ length: session.cueCount() }, (_, i) => json<Cue>(session.cueJson(i)));
-  const activeId = active >= 0 ? cues[active]?.line_id : undefined;
+  const place = json<CuePlace>(session.cuePlaceJson?.(positionMs) ?? null) ?? {
+    speaking: session.activeCueIndex(positionMs),
+    last: -1,
+    next: -1,
+  };
+  const ids = json<string[]>(session.linesJson(track)) ?? [];
+  const anchorIndex = place.speaking >= 0 ? place.speaking : place.last;
+  const activeId = place.speaking >= 0 ? cues[place.speaking]?.line_id : undefined;
+  const anchorId = anchorIndex >= 0 ? cues[anchorIndex]?.line_id : undefined;
+  const finishProgrammaticScroll = () => {
+    programmed.current = false;
+    if (programmedTimer.current) window.clearTimeout(programmedTimer.current);
+  };
+  const returnToActive = () => {
+    programmed.current = true;
+    setFollow(true);
+    setOutOfView(false);
+    const target = activeRef.current as
+      | (HTMLDivElement & { scrollIntoView?: (options: ScrollIntoViewOptions) => void })
+      | null;
+    target?.scrollIntoView?.({ block: "center", behavior: "smooth" });
+    if (programmedTimer.current) window.clearTimeout(programmedTimer.current);
+    programmedTimer.current = window.setTimeout(finishProgrammaticScroll, 1000);
+  };
   useEffect(() => {
-    if (activeRef.current && targetWindow)
-      targetWindow.requestAnimationFrame(() => {
-        const activeLine = activeRef.current;
-        if (typeof activeLine?.scrollIntoView === "function")
-          activeLine.scrollIntoView({ block: "center", behavior: "smooth" });
-      });
-  }, [activeId, targetWindow]);
+    if (follow && activeRef.current) returnToActive();
+  }, [anchorId]);
+  useEffect(() => {
+    const target = activeRef.current;
+    if (!target || follow || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(([entry]) => setOutOfView(!entry.isIntersecting));
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, [anchorId, follow]);
+  useEffect(() => {
+    window.addEventListener("scroll", stopFollowing);
+    window.addEventListener("wheel", stopFollowing);
+    window.addEventListener("touchmove", stopFollowing);
+    window.addEventListener("scrollend", finishProgrammaticScroll);
+    return () => {
+      window.removeEventListener("scroll", stopFollowing);
+      window.removeEventListener("wheel", stopFollowing);
+      window.removeEventListener("touchmove", stopFollowing);
+      window.removeEventListener("scrollend", finishProgrammaticScroll);
+      if (programmedTimer.current) window.clearTimeout(programmedTimer.current);
+    };
+  });
+  const stopFollowing = () => {
+    if (!programmed.current) {
+      setFollow(false);
+      setOutOfView(true);
+    }
+  };
   return (
-    <ol className="transcript" aria-label="Bản chép bài học">
-      {ids.map((id) => {
-        const line = json<RenderLine>(session.lineJson(id, view, showVietnamese, positionMs));
-        if (!line?.lineVisible) return null;
-        const isActive = id === activeId;
-        return (
-          <li key={id}>
-            <button
-              ref={isActive ? activeRef : undefined}
-              className={isActive ? "line active" : "line"}
-              onContextMenu={(event) => {
-                event.preventDefault();
-                onCopy?.(line.text);
-              }}
-              onClick={() => {
-                const target = session.seekTargetMs(id, positionMs);
-                if (target !== null) onSeek(target);
-              }}
-            >
-              {line.placeholder ? (
-                <span className="placeholder">…</span>
-              ) : (
-                <>
-                  {line.showHanzi && (
-                    <span className="hanzi">
-                      {[...line.text].map((char, index) =>
-                        /[\u3400-\u9fff]/.test(char) ? (
-                          <span
-                            className="character"
-                            role="button"
-                            tabIndex={0}
-                            key={index}
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              onCharacter?.(char);
-                            }}
-                            onKeyDown={(event) => {
-                              if (event.key === "Enter") onCharacter?.(char);
-                            }}
-                          >
-                            {char}
-                          </span>
-                        ) : (
-                          char
-                        ),
-                      )}
-                    </span>
-                  )}
-                  {line.showPinyinLine && line.pinyin && <span className="pinyin">{line.pinyin}</span>}
-                  {line.showTranslation && line.translation && <span className="meaning">{line.translation}</span>}
-                </>
-              )}
-            </button>
-          </li>
-        );
-      })}
-    </ol>
+    <div className="transcript-wrap">
+      <ol className="transcript" aria-label="Bản chép bài học">
+        {ids.map((id) => {
+          const line = json<RenderLine>(session.lineJson(id, view, showVietnamese, positionMs));
+          if (!line?.lineVisible) return null;
+          const cueIndex = cues.findIndex((cue) => cue?.line_id === id);
+          const state =
+            place.speaking >= 0
+              ? id === activeId
+                ? "active"
+                : cueIndex >= 0 && cueIndex < place.speaking
+                  ? "past"
+                  : ""
+              : cueIndex === place.last
+                ? "just-read"
+                : cueIndex === place.next
+                  ? "next"
+                  : cueIndex >= 0 && cueIndex < place.last
+                    ? "past"
+                    : "";
+          const seek = () => {
+            if (selected()) return;
+            const target = session.seekTargetMs(id, positionMs);
+            if (target != null) {
+              setFollow(true);
+              onSeek(target);
+            }
+          };
+          if (line.language === "vi-VN")
+            return (
+              <li key={id}>
+                <div className="coach-line" lang="vi-VN">
+                  {line.text}
+                </div>
+              </li>
+            );
+          return (
+            <li key={id}>
+              <div
+                ref={id === anchorId ? activeRef : undefined}
+                className={`line ${state}`}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(event) => event.key === "Enter" && seek()}
+                onClick={seek}
+                onContextMenu={(event) => {
+                  event.preventDefault();
+                  onCopy?.(line.text);
+                }}
+              >
+                {state === "just-read" && <span className="sr-only">vừa đọc</span>}
+                {state === "next" && <span className="next-hint">Tiếp theo</span>}
+                {line.placeholder ? (
+                  <span className="hidden-line" aria-label="Nội dung ẩn" />
+                ) : (
+                  <>
+                    {line.showHanzi && (
+                      <span className="hanzi">
+                        {line.tokens?.length
+                          ? line.tokens.map((token, index) => (
+                              <span
+                                className="character"
+                                role="button"
+                                tabIndex={0}
+                                key={`${token.hanzi}-${index}`}
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                  if (!selected()) onCharacter?.(token.hanzi);
+                                }}
+                                onKeyDown={(event) => event.key === "Enter" && onCharacter?.(token.hanzi)}
+                              >
+                                {token.hanzi}
+                              </span>
+                            ))
+                          : line.text}
+                      </span>
+                    )}
+                    {line.showPinyinLine && line.pinyin && <span className="pinyin">{line.pinyin}</span>}
+                    {line.showTranslation && line.translation && <span className="meaning">{line.translation}</span>}
+                  </>
+                )}
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+      {!follow && outOfView && anchorId && (
+        <button className="return-current" onClick={returnToActive}>
+          Về câu đang phát {activeRef.current && activeRef.current.getBoundingClientRect().top < 0 ? "↑" : "↓"}
+        </button>
+      )}
+    </div>
   );
 }

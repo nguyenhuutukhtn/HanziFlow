@@ -1,12 +1,17 @@
 export type Track = { name: string; display_name: string };
 
 export type Cue = { line_id: string; start_ms: number; end_ms: number };
+export type CuePlace = { speaking: number; last: number; next: number };
+export type Section = { id: string; title: string; start_ms: number; end_ms: number };
 
 export type RenderLine = {
   id: string;
   text: string;
   pinyin: string | null;
   translation: string | null;
+  type: string;
+  language: string;
+  tokens: { hanzi: string; pinyin: string | null; showPinyin: boolean }[];
 
   showHanzi: boolean;
   showPinyinLine: boolean;
@@ -21,6 +26,9 @@ export type Character = {
   pinyin: string;
   han_viet: string;
   vi_meaning: string;
+  hsk_level?: number | null;
+  decomp_ids?: string | null;
+  lesson_words?: string[];
   components: { char: string }[];
 };
 
@@ -34,10 +42,12 @@ type Session = {
   tracksJson(): string;
 
   activeCueIndex(position: number): number;
+  cuePlaceJson(position: number): string;
   cueCount(): number;
   cueJson(index: number): string | null;
 
   linesJson(track: string): string;
+  sectionsJson(): string;
   lineJson(id: string, view: string, vi: boolean, position: number): string | null;
 
   seekTargetMs(id: string, position: number): number | null;

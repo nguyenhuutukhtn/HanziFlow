@@ -47,6 +47,7 @@ report.
      `**/build/test-results/.../TEST-*.xml` (`tests="N" failures="0" errors="0"` with N
      matching what you expect) instead of trusting bare stdout.
    - Run `scripts/check.sh` (one line per step).
+   - Map each Acceptance bullet to a test (`grep -n` a keyword per bullet in the test files). A green suite can miss a bullet entirely (W2c: no section-marker test, so a missing `TooltipProvider` crashed the real Player).
    - Read code only in risk areas: timing/state, deletes/prune, paid TTS, secrets, contract/schema changes. Read the code the report says changed only where the risk is (timing, state, deletes), via `grep -n` + a line range, not whole files.
    - Read `git diff --stat`, then only the hunks that matter (`git diff <file> | grep '^+'`). Never re-read whole files.
    - Check against the spec section the brief named: contract consistency across files, safety (deletes, paid TTS, secrets), and whether STATUS/token_log were updated.

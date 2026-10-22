@@ -1,0 +1,169 @@
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import { catalogLesson, contentUrl, fetchJson, fetchText } from "./content";
+import { json, shared, type Cue, type Section, type Session, type Track } from "./facade";
+import type { ViewMode } from "./settings";
+
+type PlayerState = {
+  session?: Session;
+  track: string;
+  tracks: Track[];
+  position: number;
+  duration: number;
+  playing: boolean;
+  speed: number;
+  view: ViewMode;
+  vietnamese: boolean;
+  sections: Section[];
+  audio: React.RefObject<HTMLAudioElement>;
+  seek: (ms: number) => void;
+  toggle: () => void;
+  previous: () => void;
+  next: () => void;
+  replay: () => void;
+  setTrack: (track: string) => void;
+  setSpeed: (speed: number) => void;
+  setView: (view: ViewMode) => void;
+  setVietnamese: (value: boolean) => void;
+};
+const Context = createContext<PlayerState | null>(null);
+export const usePlayer = () => {
+  const player = useContext(Context);
+  if (!player) throw new Error("usePlayer requires PlayerProvider");
+  return player;
+};
+
+export function PlayerProvider({
+  catalog,
+  lessonId,
+  initialView,
+  children,
+}: {
+  catalog: string;
+  lessonId: string;
+  initialView: ViewMode;
+  children: ReactNode;
+}) {
+  const audio = useRef<HTMLAudioElement>(null);
+  const [track, setTrack] = useState("guided");
+  const [session, setSession] = useState<Session>();
+  const [timeline, setTimeline] = useState("");
+  const [position, setPosition] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [playing, setPlaying] = useState(false);
+  const [speed, setSpeed] = useState(1);
+  const [view, setView] = useState<ViewMode>(initialView);
+  const [vietnamese, setVietnamese] = useState(true);
+  useEffect(() => {
+    const lesson = catalogLesson(catalog, lessonId);
+    if (!lesson) return;
+    void Promise.all([
+      fetchText(`${lesson.base_url}${lesson.tracks[track].timeline.file}`),
+      fetchJson<string | object>(`${lesson.base_url}${lesson.files.reference.file}`),
+      lesson.files.characters
+        ? fetchJson<string | object>(`${lesson.base_url}${lesson.files.characters.file}`).catch(() => null)
+        : null,
+    ])
+      .then(([tl, reference, characters]) => {
+        setTimeline(tl);
+        setSession(
+          new (shared()!.com.hanziflow.shared.web.LessonSessionJs)(
+            catalog,
+            lessonId,
+            tl,
+            typeof reference === "string" ? reference : JSON.stringify(reference),
+            characters ? (typeof characters === "string" ? characters : JSON.stringify(characters)) : null,
+            track,
+          ),
+        );
+      })
+      .catch(() => setSession(undefined));
+  }, [catalog, lessonId, track]);
+  useEffect(() => {
+    if (audio.current) {
+      audio.current.playbackRate = speed;
+      audio.current.preservesPitch = true;
+    }
+  }, [speed, session]);
+  const seek = (ms: number) => {
+    if (audio.current) audio.current.currentTime = ms / 1000;
+    setPosition(ms);
+  };
+  const toggle = () => {
+    const element = audio.current;
+    if (element) void element[playing ? "pause" : "play"]();
+  };
+  const previous = () => {
+    const value = session?.previousCueStartMs(position);
+    if (value != null) seek(value);
+  };
+  const next = () => {
+    const value = session?.nextCueStartMs(position);
+    if (value != null) seek(value);
+  };
+  const replay = () => {
+    const cue = session && json<Cue>(session.cueJson(session.activeCueIndex(position)));
+    if (cue) seek(cue.start_ms);
+  };
+  const tracks = session ? (json<Track[]>(session.tracksJson()) ?? []) : [];
+  const sections = session ? (json<Section[]>(session.sectionsJson?.() ?? null) ?? []) : [];
+  const changeTrack = (name: string) => {
+    if (name === track || !session) return;
+    const old = timeline;
+    const time = audio.current?.currentTime ?? 0;
+    fetchText(session.timelinePath(name)!).then((text) => {
+      setTrack(name);
+      seek(shared()!.com.hanziflow.shared.web.TrackSwitchJs.positionFor(old, text, time * 1000));
+    });
+  };
+  const value: PlayerState = {
+    session,
+    track,
+    tracks,
+    position,
+    duration,
+    playing,
+    speed,
+    view,
+    vietnamese,
+    sections,
+    audio,
+    seek,
+    toggle,
+    previous,
+    next,
+    replay,
+    setTrack: changeTrack,
+    setSpeed,
+    setView,
+    setVietnamese,
+  };
+  useEffect(() => {
+    if (!session || !("mediaSession" in navigator)) return;
+    const media = navigator.mediaSession;
+    const handlers: [MediaSessionAction, MediaSessionActionHandler][] = [
+      ["play", toggle],
+      ["pause", toggle],
+      ["seekbackward", () => seek(Math.max(0, position - 10000))],
+      ["seekforward", () => seek(position + 10000)],
+      ["previoustrack", previous],
+      ["nexttrack", next],
+    ];
+    handlers.forEach(([action, handler]) => media.setActionHandler(action, handler));
+    return () => handlers.forEach(([action]) => media.setActionHandler(action, null));
+  }, [session, position, playing, track]);
+  return (
+    <Context.Provider value={value}>
+      {session && (
+        <audio
+          ref={audio}
+          src={contentUrl(session.audioPath(track)!)}
+          onTimeUpdate={(event) => setPosition(event.currentTarget.currentTime * 1000)}
+          onLoadedMetadata={(event) => setDuration(event.currentTarget.duration * 1000)}
+          onPlay={() => setPlaying(true)}
+          onPause={() => setPlaying(false)}
+        />
+      )}
+      {children}
+    </Context.Provider>
+  );
+}

@@ -39,6 +39,9 @@ describe("Player", () => {
       tracksJson() {
         return '[{"name":"guided","display_name":"Học có hướng dẫn"}]';
       }
+      sectionsJson() {
+        return '[{"id":"one","title":"Phần một","start_ms":500,"end_ms":1000}]';
+      }
       activeCueIndex() {
         return 0;
       }
@@ -52,7 +55,7 @@ describe("Player", () => {
         return '["a"]';
       }
       lineJson() {
-        return '{"id":"a","text":"字","pinyin":"zì","translation":null,"showHanzi":true,"showPinyinLine":true,"showTranslation":false,"lineVisible":true,"placeholder":false}';
+        return '{"id":"a","text":"字","pinyin":"zì","tokens":[{"hanzi":"字","pinyin":"zì","showPinyin":true}],"translation":null,"showHanzi":true,"showPinyinLine":true,"showTranslation":false,"lineVisible":true,"placeholder":false}';
       }
       seekTargetMs() {
         return 0;
@@ -97,12 +100,14 @@ describe("Player", () => {
     render(<App />);
     fireEvent.click(await screen.findByRole("button", { name: /Một/ }));
     await screen.findByLabelText("Tốc độ");
-    fireEvent.change(screen.getByLabelText("Tốc độ"), { target: { value: "0.7" } });
+    fireEvent.click(screen.getByRole("radio", { name: "0.7×" }));
     await waitFor(() => expect((document.querySelector("audio") as HTMLAudioElement).playbackRate).toBe(0.7));
     fireEvent.click(screen.getByRole("button", { name: "字" }));
     expect(screen.getByLabelText("Chữ 字")).toHaveTextContent("Hán-Việt: tự");
     expect(screen.getByLabelText("Chữ 字")).toHaveTextContent("Nghĩa: chữ");
-    expect(screen.queryByRole("button", { name: "Cửa sổ nổi" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Cửa sổ nổi" })).toBeDisabled();
+    fireEvent.click(screen.getByRole("button", { name: "Phần một" }));
+    expect((document.querySelector("audio") as HTMLAudioElement).currentTime).toBe(0.5);
     await waitFor(() => expect(mediaHandlers.nexttrack).toBeTypeOf("function"));
     mediaHandlers.nexttrack();
     expect(nextCue).toHaveBeenCalled();

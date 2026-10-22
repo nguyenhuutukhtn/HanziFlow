@@ -162,7 +162,7 @@ describe("W2b shell and settings", () => {
     );
     await renderLibrary();
     fireEvent.click(screen.getByRole("button", { name: /Một/ }));
-    await waitFor(() => expect(screen.getByLabelText("Hiển thị")).toHaveValue("HANZI_ONLY"));
+    await waitFor(() => expect(screen.getByRole("radio", { name: "Hán tự" })).toHaveAttribute("data-state", "on"));
   });
 
   it("has the mobile bottom navigation and hides the sidebar at 390px", async () => {

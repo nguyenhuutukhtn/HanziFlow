@@ -44,6 +44,9 @@ The source of truth is `web/src/theme/tokens.css`. Use semantic variables, not l
 - Card: surface background, one border, 18px radius. Hover may use brand border; do not imply unavailable progress.
 - Segmented control: subtle container; selected item has a surface fill; keep labels at 12px or larger.
 - Switch: accent track only when on; thumb stays surface-coloured.
+- Slider: use for a continuous, directly seekable audio position; never imitate it with an input range.
+- Tooltip: labels compact seek markers where their text is not otherwise visible.
+- Drawer: use a bottom sheet for detailed contextual content on phone widths.
 - Pill button: control radius, 44px minimum touch height on phone; accent fill only for the primary action.
 - Chip: subtle surface/border, compact metadata only—not made-up learner data.
 - Sheet/popover: surface card, border, 18px radius, modest shadow; preserve focus-visible accent ring.

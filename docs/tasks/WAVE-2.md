@@ -12,7 +12,9 @@ Agents run one at a time, reset between tasks. PM reviews only at the ✅ checkp
 | 2b | [W2b-fix](W2b-fix.md) missing tests, Prettier, doc gaps | `web/`, `check.sh` web step | W2b | continue W2b window | PM re-runs Verify |
 | 2c | [W2b2](W2b2.md) shadcn/ui component layer on our tokens (user: no browser-default controls) — partial: button/toggle-group/select/popover; rest moved to W2c | `web/`, `design_system.md` | W2b-fix | continue W2b window | ✅ user looks at controls |
 | 3 | [W2c](W2c.md) Player screen in v0 style + UX2 (place in silences) + UX3 (free scroll, "Về câu đang phát") | `web/src/` player/transcript/card files | W2a, W2b | Codex terra · medium (ask) | — |
+| 3b | [W2c-fix](W2c-fix.md) follow-mode on the real scroller, pill/markers in silences, one keyboard handler | `web/src/` Transcript/Player | W2c | continue W2c window | — |
 | 4 | [W2d](W2d.md) floating window (PiP) in v0 style + UX1 (controls always visible) | `web/src/` pip files | W2c | continue W2c window | ✅ end of wave, user device check |
+| 4b | [W2d-fix](W2d-fix.md) PiP tests + headless Chrome smoke in check.sh | `web/src/pip`, tests, `web/scripts/smoke.mjs`, `check.sh` | W2d | fresh terra | ✅ end of wave |
 
 Decisions (PM, 2026-10-22; user may veto):
 - Android redesign (Compose theme from the same tokens) is Wave 3, after the web look is approved in W2b.
