@@ -56,3 +56,5 @@ Kind: `pipeline-py` / `android-ui` / `android-state` / `contract` / `web` / `con
 
 | Date | Task | Kind | Agent / model · effort | Quota Δ | Wall time | Fix rounds | Escaped | Biggest consumer | Fix |
 |---|---|---|---|---|---|---|---|---|---|
+| 2026-10-22 | W1a shared JS player facade | web | Codex GPT-5 · default | 4% | ~5 min | 1 | none | Initial KMP serialization compile mismatch while flattening character JSON | Use a dedicated serializable JS DTO for merged entry/components payloads |
+| 2026-10-22 | W1b React web player + deploy scripts | web | Codex GPT-5 · default | 9% | ~35 min | 5 | none | Initial Vite/TypeScript harness plus two manual-browser integration fixes (derived Vite URL, shared enum names) | Start from a small jsdom Vite test config, derive `.env.local` in the build script, and expose transcript view values as a JS-safe facade contract |

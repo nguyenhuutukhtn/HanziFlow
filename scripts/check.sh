@@ -23,6 +23,7 @@ run_step() {
 }
 
 run_step pytest python3 -m pytest -q -p no:warnings
+run_step web bash -c "npm --prefix web run typecheck && npm --prefix web test -- --run"
 run_step kmp-shared bash -c "cd kmp && ./gradlew -q :shared:allTests"
 # android:testDebugUnitTest also runs the Konsist architecture/layering test
 # (kmp/android/src/test/kotlin/com/hanziflow/architecture/LayeringTest.kt).
@@ -34,6 +35,12 @@ if [ -n "$oversize" ]; then
   echo "ok      file-size-audit (over 300 lines: $oversize)"
 else
   echo "ok      file-size-audit (none over 300 lines)"
+fi
+
+# Crammed lines dodge the 300-line audit (W1c: App.tsx 29 lines, 9 KB).
+longlines=$(grep -rlE '^.{201,}' web/src kmp/*/src/*/kotlin src --include='*.ts' --include='*.tsx' --include='*.kt' --include='*.py' 2>/dev/null | sed 's#.*/##' | paste -sd, - | sed 's/,/, /g' || true)
+if [ -n "$longlines" ]; then
+  echo "ok      long-line-audit (lines over 200 chars: $longlines)"
 fi
 
 echo "All checks passed."

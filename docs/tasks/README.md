@@ -9,7 +9,7 @@ Lifecycle: `todo` → `in-progress` → `review` → `done` (set in the brief's 
 ```markdown
 # <ID> — <title>
 Status: todo · Suggested agent: <tool>/<model> (<effort>) · Session: <id or new> · Size: S/M/L · Device check: user | agent (<the scripted check>)
-Wave: <n or none> · Owns: <files/dirs this task may edit> · Depends on: <IDs or none> · Checkpoint after: yes | no
+Wave: <n or none> · Owns: <files/dirs this task may edit; `docs/STATUS.md` + `docs/token_log.md` are always implied> · Depends on: <IDs or none> · Checkpoint after: yes | no
 
 ## Goal
 <1–3 sentences: what changes for the user/pipeline.>
@@ -38,6 +38,7 @@ Then: update STATUS.md + a token_log.md row, report with the AGENTS.md template,
 - Verify is a script that prints those values and exits non-zero on mismatch, so the PM re-runs it instead of reading code.
 - Data tasks: sample at least 5 specific records spread across the dataset, not only the first entries.
 - **Pipeline-generated data a client parses (S1/S2: 3 fix rounds):** the brief must require (1) a test that parses the REAL published file, or a mechanical extract of it (script-derived, include known odd entries, e.g. `懂` has float medians), never hand-picked or hand-written samples; (2) every new catalog/package field present in the contract fixtures copied from a real `publish/` run; (3) a model type distinct per file shape (catalog metadata `{sha256,bytes}` is not a package `Clip` that has `file`); (4) a network/parse failure of an optional feature must hide that feature only, never crash or drop other state.
+- **API/facade for another client (W1a-fix):** list in the brief the existing consumer's call sites to mirror (e.g. Android `TranscriptPanel.kt:107-225`) and require every field/iteration they use; a facade that passes its own tests can still miss what the next task needs.
 - Device check order for features that need downloaded data: confirm the data is uploaded (`curl` the public URL, HTTP 200) before blaming the app.
 
 ## Agent choice (cheapest that fits)

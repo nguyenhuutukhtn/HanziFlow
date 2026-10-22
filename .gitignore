@@ -21,3 +21,8 @@ data/hanzi_writer/
 .claude/*
 !.claude/skills/
 /build/
+web/node_modules/
+web/dist/
+web/public/shared/
+web/.env.local
+web/*.tsbuildinfo

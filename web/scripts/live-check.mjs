@@ -1,0 +1,22 @@
+import { createRequire } from "node:module";
+import { readFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
+
+const properties = await readFile(new URL("../../kmp/local.properties", import.meta.url), "utf8");
+const match = properties.match(/^supabase\.url=(.+)$/m);
+if (!match) throw new Error("kmp/local.properties is missing supabase.url");
+const base = `${match[1].trim().replace(/\/$/, "")}/storage/v1/object/public/course/`;
+const get = async (path, options) => { const response = await fetch(`${base}${path}`, options); if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`); return response; };
+const catalogText = await (await get(`catalog.json?v=${Date.now()}`)).text();
+const catalog = JSON.parse(catalogText); const lesson = catalog.lessons.find((item) => item.id === "lesson_001");
+if (!lesson) throw new Error("lesson_001 missing from live catalog");
+const prefix = lesson.base_url;
+const [timeline, reference] = await Promise.all([get(`${prefix}${lesson.tracks.guided.timeline.file}`).then((r) => r.text()), get(`${prefix}${lesson.files.reference.file}`).then((r) => r.text())]);
+const libraryFile = new URL("../public/shared/HanziFlow-shared.js", import.meta.url);
+const require = createRequire(import.meta.url);
+const library = require(fileURLToPath(libraryFile));
+const session = new library.com.hanziflow.shared.web.LessonSessionJs(catalogText, "lesson_001", timeline, reference, null, "guided");
+if (session.cueCount() !== JSON.parse(timeline).cues.length) throw new Error("facade cueCount disagrees with live timeline");
+const audio = await get(`${prefix}${lesson.tracks.guided.file}`, { headers: { Range: "bytes=0-1" } });
+if (![200, 206].includes(audio.status) || !audio.headers.get("access-control-allow-origin")) throw new Error("guided MP3 does not provide CORS range streaming");
+console.log("ok live catalog, facade, and CORS range stream");

@@ -2,7 +2,7 @@
 
 Read this first in a new session instead of past chat history. Keep it short; update it at the end of every task.
 
-Last updated: 2026-10-21 (C2 fully done incl. device check) · branch `app-publish-pipeline` (not merged to `main`)
+Last updated: 2026-10-22 (Wave 1 W1a–W1c done, user tested OK; UI redesign pending) · branch `app-publish-pipeline` (not merged to `main`)
 
 ## Working rules
 
@@ -13,6 +13,10 @@ Last updated: 2026-10-21 (C2 fully done incl. device check) · branch `app-publi
 - Every task (code or content) logs its token use in [token_log.md](token_log.md); review the log periodically to cut the most expensive steps.
 
 ## Done
+
+- **W1a:** `kmp/shared` now exports `LessonSessionJs` and `CatalogJs` to JS: catalog paths/tracks, cue and section navigation, transcript decisions, and character entry/components all cross the boundary as primitives or JSON. Real v7 fixture tests pass on JVM, JS browser, JS Node, and Android host; the browser production library emits JS and TypeScript definitions containing `LessonSessionJs`. Wave 1 checkpoint is ready before W1b.
+- **W1b:** added the Vite/React web player: public catalog library, guided/guided_zh playback with shared position mapping, streaming audio controls/speeds, shared-facade karaoke rendering and view toggles. The build copies (but never commits) the KMP JS bundle, derives the public content URL locally, and has a live catalog/facade/CORS-range check. `just web`, `web-build`, and `web-deploy` are available; user deployment still requires one-time Wrangler login.
+- **W1c:** Document PiP floating window, media keys, character card + copy, shortcuts (`web/src/`). PM checkpoint: all checks pass; code is crammed into very long lines (App.tsx 29 lines / 9 KB) — to be restructured with the UI redesign, not a separate fix.
 
 - **S1 (reviewed, tests added):** stroke-pack builder, versioned upload mapping, shared stroke model, Android catalog-scoped cache, plus flat-pack parsing and Python union/skip regression tests. Gradle verification remains blocked by the wrapper distribution lock in this environment.
 
@@ -57,7 +61,7 @@ Last updated: 2026-10-21 (C2 fully done incl. device check) · branch `app-publi
 **Top priority today (user, 2026-10-22, after one day of using the app): W1 — a web player in Chrome on Mac and Linux that stays on top**
 for listening while reading the text at work. The learner today follows by ear plus rough pinyin and
 can start learning Hanzi, so the window must show pinyin with the characters (not Hanzi-only) and keep
-tap-a-character → card. **Planned as [Wave 1](tasks/WAVE-1.md): W1a (shared JS facade, luna) → ✅ PM checkpoint → W1b (React app + Cloudflare Pages deploy) → W1c (Document PiP, media keys, char card) → ✅ checkpoint + user device check.**
+tap-a-character → card. **Planned as [Wave 1](tasks/WAVE-1.md): W1a ✅ (shared JS facade) → PM checkpoint → W1b ✅ (React app + Cloudflare Pages deploy script) → W1c ✅ (Document PiP, media keys, char card) → ✅ checkpoint passed, user device check OK.**
 
 **Backlog from the same day of use (do later, user 2026-10-22):**
 - **S3 (bug, confirmed upside-down by user):** the "Xem nét" stroke animation renders the character
@@ -107,6 +111,7 @@ tap-a-character → card. **Planned as [Wave 1](tasks/WAVE-1.md): W1a (shared JS
 4. Known follow-ups: test question type balancing (C2: cloze dominates); merge multi-character names in tokenizer + vocab (A3: 李明 split into 李/明). `upload` re-uploads an unchanged catalog.json every run (skip when remote sha256 matches). Split `publish.py` (714) / `upload.py` (406) before extending them again.
 
 ## Open decisions (user)
+- **UI/UX redesign for commercial quality (2026-10-22):** web + Android look unprofessional. User proposes Vercel v0. PM advice: v0 designs from a prompt with mock data shaped like the facade JSON (not repo access); output = design tokens + screen references, then worker briefs port to web (Vite/React) and Compose. Awaiting user's choice.
 
 - Character learning feature: design finalized 2026-10-21 in [architecture/characters.md](architecture/characters.md). C0/C1/C2 done. C3 (per-char/word pronunciation) and C4 ("Từ trong bài" jump target) are backlog candidates needing research/clarification before a brief — see "Next".
 - W1 platforms decided 2026-10-22: Chrome on Mac **and Chrome on Linux** (Document PiP works in both); a native Linux app comes later. Firefox is not targeted.

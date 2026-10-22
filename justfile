@@ -17,6 +17,17 @@ fetch-character-data:
 app:
     cd kmp && ./gradlew -q :android:assembleDebug :android:installDebug
 
+# Start the web player locally (builds the shared JS facade first).
+web:
+    bash scripts/web_build.sh
+    npm --prefix web run dev
+
+web-build:
+    bash scripts/web_build.sh
+
+web-deploy:
+    bash scripts/web_deploy.sh
+
 # One lesson, start to finish: dry-run -> generate (asks before paid TTS) -> publish -> upload.
 lesson ID:
     bash scripts/lesson.sh {{ID}}

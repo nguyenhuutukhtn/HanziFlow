@@ -5,6 +5,7 @@ Planned 2026-10-22 (user's top priority). Agents run one at a time, reset betwee
 | Order | Task | Owns | Depends on | Suggested agent | Checkpoint after |
 |---|---|---|---|---|---|
 | 1 | [W1a](W1a.md) shared JS facade for the player | `kmp/shared/src/commonMain/.../web/`, its tests, `kmp/shared/build.gradle.kts` | — | Codex luna · low | ✅ (W1b/W1c build on its API) |
+| 1b | [W1a-fix](W1a-fix.md) facade gaps: line text/language, per-track line list, track-switch | `web/PlayerJs.kt` + test | W1a | continue W1a window (luna · low) | PM re-runs Verify |
 | 2 | [W1b](W1b.md) web app: library + player + transcript + build/deploy scripts | `web/`, `justfile`, `scripts/web_*.sh`, `.gitignore` | W1a | Codex terra · medium (ask) | — |
 | 3 | [W1c](W1c.md) floating window (Document PiP) + media keys + character card + copy | `web/src/` | W1b | Codex terra · medium (ask) | ✅ end of wave, user device check |
 
