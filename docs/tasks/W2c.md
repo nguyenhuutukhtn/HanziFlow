@@ -29,20 +29,28 @@ transcript yanks back down on every new line even after the user scrolled up to 
    "Components" (when to use it), and reuse `--text-body/secondary/caption` for all Vietnamese text.
 1. **Layout** per v0: back + lesson title; track switch as a segmented control (labels from `tracksJson` `display_name`);
    transcript card; fixed bottom player bar. Desktop may keep v0's right column only for a keyboard-shortcut card (no fake stats).
-2. **Lines**: zh lines as tokens with pinyin above (existing render decisions, `--hanzi-size`); `vi-VN` lines styled as v0's
+2. **Selectable text (user, 2026-10-22):** on the web the learner must be able to select and copy transcript text. Lines
+   and tokens are not `<button>`s: use elements with `role="button"`/`tabIndex` (keyboard Enter = seek) and
+   `user-select: text`; ignore the click when it ends a text selection (`getSelection()?.toString()` non-empty).
+   Tapping a Hanzi token still opens the card; a drag-selection never seeks or opens it.
+3. **Vietnamese size (user screenshot, 2026-10-22):** `vi-VN` coach lines currently render at Hanzi size in the serif
+   font, while the gloss under zh lines is tiny. All Vietnamese text — coach lines and glosses — uses the UI font and
+   the `--text-*` tokens (coach line `--text-body`, gloss `--text-secondary`); only Hanzi uses `--hanzi-size`/`--font-hanzi`.
+   Test: a `vi-VN` line's computed class/style never references the Hanzi size.
+4. **Lines**: zh lines as tokens with pinyin above (existing render decisions, `--hanzi-size`); `vi-VN` lines styled as v0's
    coach line (smaller, muted, accent left border); model answer placeholder vs revealed in v0's two looks (reveal stays
    position-based). View modes as a 4-option segmented control incl. "Ẩn" (`HIDDEN` → v0's soft bar per line); "Tiếng Việt" switch.
-3. **Player bar**: seek bar with section markers (`sectionsJson`, tooltip = title, click = seek to section start), time labels,
+5. **Player bar**: seek bar with section markers (`sectionsJson`, tooltip = title, click = seek to section start), time labels,
    previous sentence / play-pause / next sentence, "Nghe lại câu", speed (1 / 0.8 / 0.7× — drop 0.6/0.5, they distort on web), "Cửa sổ nổi" button.
    Keyboard: Space play/pause, ←/→ previous/next **sentence**, Shift+←/→ ∓10 s, R replay; ignored in inputs/selects.
-4. **UX2** from `cuePlaceJson(position)`: `speaking` line = active style (v0 `.active-line`); when `speaking` is -1, the `last`
+6. **UX2** from `cuePlaceJson(position)`: `speaking` line = active style (v0 `.active-line`); when `speaking` is -1, the `last`
    line keeps a "vừa đọc" style (accent marker, no fill, label "vừa đọc" for screen readers) and the `next` line shows a small
    "Tiếp theo" hint; lines before `last` are faded. Grouped cues mark all their lines as today.
-5. **UX3**: auto-follow is on by default. A user scroll (wheel, touch, scrollbar, keyboard — anything we didn't start) turns it
+7. **UX3**: auto-follow is on by default. A user scroll (wheel, touch, scrollbar, keyboard — anything we didn't start) turns it
    off; our own `scrollIntoView` must not (guard with a flag cleared on `scrollend`/timeout). While off and the current line is
    outside the viewport (IntersectionObserver), show a floating pill "Về câu đang phát" with ↑/↓ by direction; click → scroll to
    it, follow on. Tapping a line to seek also turns follow on.
-6. **Character card** per v0: popover next to the tapped token on desktop, bottom sheet at ≤ 720px; char, pinyin, Hán-Việt,
+8. **Character card** per v0: popover next to the tapped token on desktop, bottom sheet at ≤ 720px; char, pinyin, Hán-Việt,
    Vietnamese meaning, HSK chip (hidden when null), decomposition, components (tap → that char), lesson words, "Sao chép".
    No "Xem nét" on web yet.
 

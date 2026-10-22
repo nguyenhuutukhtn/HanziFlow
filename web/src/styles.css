@@ -2,6 +2,10 @@
 @import "tailwindcss";
 
 .ui-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
   min-height: 36px;
   border-radius: var(--radius-control);
   background: var(--surface-soft);
