@@ -32,9 +32,15 @@ export function PipPlayer({ win }: { win: Window }) {
     return () => win.document.removeEventListener("keydown", key);
   }, [player, win]);
   useEffect(() => {
-    win.document.documentElement.className = document.documentElement.className;
-    win.document.documentElement.style.cssText = document.documentElement.style.cssText;
-  }, [win, player.view]);
+    const syncTheme = () => {
+      win.document.documentElement.className = document.documentElement.className;
+      win.document.documentElement.style.cssText = document.documentElement.style.cssText;
+    };
+    syncTheme();
+    const observer = new MutationObserver(syncTheme);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class", "style"] });
+    return () => observer.disconnect();
+  }, [win]);
   return (
     <PortalContainerProvider container={win.document.body}>
       <section className="floating-player">

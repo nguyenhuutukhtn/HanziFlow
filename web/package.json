@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "preview": "vite preview",
     "typecheck": "tsc -b --pretty false",
     "test": "vitest",
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
@@ -33,7 +34,7 @@
     "vite": "6.2.5"
   },
   "devDependencies": {
-    "@playwright/test": "^1.54.2",
+    "@playwright/test": "1.54.2",
     "@testing-library/jest-dom": "6.6.3",
     "@testing-library/react": "16.2.0",
     "@types/node": "22.15.3",

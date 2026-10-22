@@ -14,6 +14,9 @@ Last updated: 2026-10-22 (Wave 1 W1a–W1c done, user tested OK; UI redesign pen
 
 ## Done
 
+- **Wave 2 checkpoint (PM, 2026-10-22):** W2d-fix verified (19/19, `ok smoke`, check.sh green). PM re-ran the Tooltip negative probe and removed a hard-coded "Tooltip provider error" message from `smoke.mjs` that could fake it; the real error is caught. User device check: PiP controls OK, but the view is raw one-line text → [Wave 3](tasks/WAVE-3.md) W3a.
+
+- **W2d-fix:** PiP acceptance now has two isolated-document tests (four pinned controls, paused/gap copy, live theme mirroring, and PiP-local control events). The browser smoke refreshes the KMP facade before rebuilding/previewing, opens a real catalog lesson, clicks a section marker, and fails on page errors; it is integrated into `check.sh`. Stale facades report `cuePlaceJson` once instead of silently degrading. Playwright is pinned; `19/19` web tests and full checks pass. The required negative probe confirmed removing the Tooltip provider yields `FAIL smoke: …Tooltip…`; it was restored, then smoke returned `ok smoke`.
 - **W2c + fix:** web Player now uses one `PlayerProvider`/`usePlayer()` state owner and a single `content.ts` published-content boundary. The v0-style transcript/player bar adds section seek markers, speeds, media keys/shortcuts, selectable text, Vietnamese typography, silence-aware “vừa đọc”/“Tiếp theo” state, and opt-out auto-follow with a return pill. Follow observes the real page scroller, holds programmatic scrolling through `scrollend` (1s fallback), anchors gaps to the last cue, and uses direction-aware pill arrows; shortcuts are consolidated and ignore modified/slider keys. Character details use desktop popover/mobile Vaul sheet; 17 web tests pass. W2d may now reuse this shared player state for PiP.
 - **W2b + fix:** web foundation has the Sáng/Giấy/Tối token themes, persistent theme/view/Hanzi-size settings, desktop sidebar and ≤720px mobile navigation, and a real-catalog-only Library. Its five acceptance tests now join the three existing web tests; Prettier guards future long-line regressions. `docs/ui/design_system.md` is the handoff source for later web/Android work.
 
@@ -61,6 +64,8 @@ Last updated: 2026-10-22 (Wave 1 W1a–W1c done, user tested OK; UI redesign pen
 - **T6b:** Added advisory `lesson-metrics --against` and row-scoped `export-rows`/`import-rows`; repeated story refs now require `ref#n`, with transactional imports through build/validate/audit/dry-run.
 
 ## Next (in order)
+
+**Now: [Wave 3](tasks/WAVE-3.md) — W3a PiP learning view (whole transcript, `拼` toggle, tap to peek pinyin, no Vietnamese in PiP), then S3 + Android redesign (briefs at the W3a checkpoint).**
 
 **Top priority today (user, 2026-10-22, after one day of using the app): W1 — a web player in Chrome on Mac and Linux that stays on top**
 for listening while reading the text at work. The learner today follows by ear plus rough pinyin and

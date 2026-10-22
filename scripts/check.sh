@@ -24,7 +24,7 @@ run_step() {
 
 py=python3; [ -x .venv/bin/python3 ] && py=.venv/bin/python3  # agents' shells don't activate the venv
 run_step pytest "$py" -m pytest -q -p no:warnings
-run_step web bash -c "npm --prefix web run typecheck && npm --prefix web run format:check && npm --prefix web test -- --run"
+run_step web bash -c "npm --prefix web run typecheck && npm --prefix web run format:check && npm --prefix web test -- --run && node web/scripts/smoke.mjs"
 run_step kmp-shared bash -c "cd kmp && ./gradlew -q :shared:allTests"
 # android:testDebugUnitTest also runs the Konsist architecture/layering test
 # (kmp/android/src/test/kotlin/com/hanziflow/architecture/LayeringTest.kt).

@@ -15,6 +15,7 @@ type Props = {
   onNext?: () => void;
 };
 const selected = () => Boolean(window.getSelection?.()?.toString());
+let reportedMissingCuePlaceJson = false;
 
 export function Transcript({
   session,
@@ -34,14 +35,15 @@ export function Transcript({
   const programmedTimer = useRef<number>();
   const activeRef = useRef<HTMLDivElement | null>(null);
   const cues = Array.from({ length: session.cueCount() }, (_, i) => json<Cue>(session.cueJson(i)));
-  const place = json<CuePlace>(session.cuePlaceJson?.(positionMs) ?? null) ?? {
-    speaking: session.activeCueIndex(positionMs),
-    last: -1,
-    next: -1,
-  };
+  const cuePlaceJson = (session as Partial<Session>).cuePlaceJson;
+  if (!cuePlaceJson && !reportedMissingCuePlaceJson) {
+    reportedMissingCuePlaceJson = true;
+    console.error("The shared facade is missing cuePlaceJson; rebuild web/public/shared.");
+  }
+  const place = json<CuePlace>(cuePlaceJson?.call(session, positionMs) ?? null);
   const ids = json<string[]>(session.linesJson(track)) ?? [];
-  const anchorIndex = place.speaking >= 0 ? place.speaking : place.last;
-  const activeId = place.speaking >= 0 ? cues[place.speaking]?.line_id : undefined;
+  const anchorIndex = place ? (place.speaking >= 0 ? place.speaking : place.last) : -1;
+  const activeId = place?.speaking != null && place.speaking >= 0 ? cues[place.speaking]?.line_id : undefined;
   const anchorId = anchorIndex >= 0 ? cues[anchorIndex]?.line_id : undefined;
   const finishProgrammaticScroll = () => {
     programmed.current = false;
@@ -95,17 +97,17 @@ export function Transcript({
           if (!line?.lineVisible) return null;
           const cueIndex = cues.findIndex((cue) => cue?.line_id === id);
           const state =
-            place.speaking >= 0
+            place && place.speaking >= 0
               ? id === activeId
                 ? "active"
                 : cueIndex >= 0 && cueIndex < place.speaking
                   ? "past"
                   : ""
-              : cueIndex === place.last
+              : cueIndex === place?.last
                 ? "just-read"
-                : cueIndex === place.next
+                : cueIndex === place?.next
                   ? "next"
-                  : cueIndex >= 0 && cueIndex < place.last
+                  : place && cueIndex >= 0 && cueIndex < place.last
                     ? "past"
                     : "";
           const seek = () => {

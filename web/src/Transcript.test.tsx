@@ -5,6 +5,7 @@ import { Transcript } from "./Transcript";
 const session = (active = 0) =>
   ({
     activeCueIndex: () => active,
+    cuePlaceJson: () => JSON.stringify({ speaking: active, last: active, next: -1 }),
     cueCount: () => 2,
     cueJson: () => '{"line_id":"a","start_ms":0}',
     linesJson: () => '["a"]',
