@@ -2,7 +2,7 @@
 
 Read this first in a new session instead of past chat history. Keep it short; update it at the end of every task.
 
-Last updated: 2026-10-23 (M1 lesson-format contract complete) · branch `app-publish-pipeline` (not merged to `main`)
+Last updated: 2026-10-23 (W3b done; Wave 5 paused for user re-prioritization) · branch `app-publish-pipeline` (not merged to `main`)
 
 ## Working rules
 
@@ -14,12 +14,16 @@ Last updated: 2026-10-23 (M1 lesson-format contract complete) · branch `app-pub
 
 ## Done
 
+- **W3b:** Web auto-follow now centers the active line in the transcript area left visible above the sticky player controls, and PiP scrolls its own transcript container. Programmatic scrolls preserve follow; wheel/touch/scroll keys/scrollbar input opt out. Real lesson-1 Playwright checks pass five cues at 1280×800 and 390×844 (all offsets within ±10%, follow on); PiP offset is covered in jsdom because headless Chrome cannot open Document PiP. User main-window/PiP check pending. PM checkpoint (2026-10-23): Haiku review + `check.sh` green outside the sandbox; PM added a 1.5 s fallback that clears the programmatic-scroll flag if `scrollend` never fires or the target is out of range.
+
+- **M5:** Web player selects the first available track (including persisted-track fallback), renders lesson 2's four facade labels, switches modes with mode audio/timeline and position reset, while preserving lesson 1 guided/practice mapping. M5-fix now stores track per lesson and tests the real modes fixture; focused M5-fix tests pass 5/5 and the full web suite passes 32/32. PM checkpoint (2026-10-23): Haiku review pass, `check.sh` green; web device check deferred until lesson 2 is uploaded (user: mobile first).
+
 - **M2:** `import-modes 002` deterministically builds and validates the four `modes_v1` lesson JSON tracks from `09_modes.md`, including folded answer/repeat gaps and mode metadata. Focused tests pass; full check is currently blocked by the existing Gradle wrapper lock during web-facade smoke.
 - **M3:** Mode voice selection, per-lesson cast pinning, mode-specific generate output, and dry-run reporting are implemented. Paid TTS was not run; focused tests and `scripts/modes.sh 002` pass. PM fix at checkpoint: a voice pinned in another lesson is never reused for a different role (lesson 2 had narrator = lesson 1 Anna); cast re-pinned, dry-run 288 clips ≤ 5,893 chars. **Next: user confirms paid TTS for the 4 mode files, then M4.**
 
 - **M1:** lesson schema and package readers now support format-defaulted `linear_v1` and map-backed `modes_v1` tracks (`hieu`, `nghe`, `phan_xa`, `noi`). Android deliberately filters modes lessons until its UI support arrives, while its downloader handles every published track. Python, shared facade/parser, and Android mapping/download contract tests pass; M4 will provide the first real modes publish fixture.
 
-- **M4:** `publish` now packages all four lesson-2 modes with independent timelines/reference tracks, empty items, union characters, ordered catalog tracks, and four-track change detection. Real `lesson_002` is locally published as v1; its catalog/reference/noi timeline are shared contract fixtures. Literal A/B and authored erhua tokenization are supported without changing lesson 1 (still v7). PM checkpoint (2026-10-23): `check.sh` green outside the sandbox, ContractParsingTest 6/6 incl. the real modes fixture; Haiku review caught a tones regression on standalone 儿 (`儿子 ér zi`), PM fixed + tests, Haiku re-review pass. Known, pre-existing: `女儿 nǚ ér` does not align (ü handling) — fix when a lesson needs it. **Next: user device check W3a → commit W3a, then M5.**
+- **M4:** `publish` now packages all four lesson-2 modes with independent timelines/reference tracks, empty items, union characters, ordered catalog tracks, and four-track change detection. Real `lesson_002` is locally published as v1; its catalog/reference/noi timeline are shared contract fixtures. Literal A/B and authored erhua tokenization are supported without changing lesson 1 (still v7). PM checkpoint (2026-10-23): `check.sh` green outside the sandbox, ContractParsingTest 6/6 incl. the real modes fixture; Haiku review caught a tones regression on standalone 儿 (`儿子 ér zi`), PM fixed + tests, Haiku re-review pass. Known, pre-existing: `女儿 nǚ ér` does not align (ü handling) — fix when a lesson needs it. W3a committed (`4745baf`) with its PiP device check deferred (PiP is for desktop). **Next: M5.**
 
 - **W3a:** PiP is now the full shared transcript with gap/follow states, PiP-only ruby pinyin and a shared `拼` view toggle. Vietnamese is omitted, and pinyin-off taps peek one token before opening the PiP-local character card. PiP controls are pinned outside the transcript. Isolated PiP coverage adds 8 tests; 27/27 web tests, smoke, and full checks pass. User PiP device checkpoint pending.
 
@@ -74,7 +78,7 @@ Last updated: 2026-10-23 (M1 lesson-format contract complete) · branch `app-pub
 
 ## Next (in order)
 
-**Now: [Wave 4](tasks/WAVE-4.md) — `modes_v1` for lesson 2 (M1 contract first, PM checkpoint after M1, M3, M4). W3a PiP device checkpoint still pending in parallel; S3 + Android redesign after.**
+**Now: user re-ranks priorities after W3b; [Wave 5](tasks/WAVE-5.md) (Android lesson 2, A1–A3 briefed) remains paused until then. Pending user checks: W3b main + PiP follow, W3a PiP, M5 web (after `upload`).**
 
 **Top priority today (user, 2026-10-22, after one day of using the app): W1 — a web player in Chrome on Mac and Linux that stays on top**
 for listening while reading the text at work. The learner today follows by ear plus rough pinyin and
@@ -134,6 +138,8 @@ tap-a-character → card. **Planned as [Wave 1](tasks/WAVE-1.md): W1a ✅ (share
 4. Known follow-ups: test question type balancing (C2: cloze dominates); merge multi-character names in tokenizer + vocab (A3: 李明 split into 李/明). `upload` re-uploads an unchanged catalog.json every run (skip when remote sha256 matches). Split `publish.py` (714) / `upload.py` (406) before extending them again.
 
 ## Open decisions (user)
+
+- **Nói mode (user, 2026-10-23):** recording must come with pronunciation scoring (which words are right/wrong). Research options (on-device vs cloud ASR/pronunciation assessment, Mandarin tone scoring, cost) before any brief; own wave after Wave 5. Until then Nói plays as a plain track.
 
 - **Lesson 2 = mode-based, content first (user, 2026-10-22):** four modes picked by situation — Hiểu (only mode with Vietnamese), Nghe, Phản xạ, Nói (Chinese only, narration included). Lesson 2 steps up from lesson 1 (phrases as the unit, longer sentences). Content is made chat-by-chat with any AI per [content/workflow.md](../content/workflow.md) (steps, prompts, vocabulary balance tiers/bands, ≤ 50 new chars); files in `content/lesson_002/` (00 known pack + 01 brief done). **Content ready for the listening build (2026-10-22):** topic = phone call, wrong building (王芳 female / 陈东 male, new voices; narrator female this lesson); `03_core.md` script (ChatGPT, reviewed) + `09_modes.md` four modes (Codex, PM naturalness pass; script check: only allowed chars, no 了, vi only in Hiểu). Hán tự (step 10) and final review deferred. **Next (coding): convert `09_modes.md` → story.md/lesson JSON** — needs mode activity names, gap rows → answer pauses, speakers wang_fang/chen_dong + per-lesson narrator gender in `voice_registry.py`. App side (mode tracks/switcher, story.md conversion) decided later. Planned small tool: a counting script for exposure bands over `content/` markdown (AI counts are estimates).
 - **Lesson format types (user, 2026-10-22):** each lesson declares a format type; a new lesson picks a type instead of redesigning. `linear_v1` = lesson 1 (one long guided track + guided_zh + practice). `modes_v1` = lesson 2 (four mode tracks Hiểu / Nghe / Phản xạ / Nói, content in `content/lesson_<id>/09_modes.md` row format). Pipeline and app branch on the type; old lessons keep theirs.

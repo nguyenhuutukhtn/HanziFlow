@@ -25,7 +25,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `publish_render.py` [39]
 - `publish_support.py` [141]
 - `publish_timeline.py` [204]
-- `publish_tokens.py` [202]
+- `publish_tokens.py` [207]
 - `review.py` [27] — Small, transparent spaced-repetition policy.
 - `storage.py` [60] — SQLite progress store. Ratings are learner supplied; no automatic scoring.
 - `story/__init__.py` [7] — Story source (`lessons/src/*.story.md`) -> guided + practice lesson JSON.
@@ -65,7 +65,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `test_lesson_schema.py` [113]
 - `test_m3_modes.py` [99]
 - `test_metrics_rows.py` [88]
-- `test_publish.py` [434] ⚠
+- `test_publish.py` [437] ⚠
 - `test_publish_guided_zh.py` [28]
 - `test_publish_modes.py` [84]
 - `test_review.py` [18]
