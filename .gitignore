@@ -33,3 +33,4 @@ docs/ui/v0_prompt.md
 docs/ui/v0_review_checklist.md
 .wrangler/
 .DS_Store
+web/.vite/

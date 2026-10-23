@@ -2,7 +2,7 @@
 
 Read this first in a new session instead of past chat history. Keep it short; update it at the end of every task.
 
-Last updated: 2026-10-23 (W3b done; Wave 5 paused for user re-prioritization) · branch `app-publish-pipeline` (not merged to `main`)
+Last updated: 2026-10-23 (W3b done; Wave 5 paused for user re-prioritization) · branch `main` (app-publish-pipeline merged + deleted 2026-10-23)
 
 ## Working rules
 
