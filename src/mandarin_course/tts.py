@@ -121,6 +121,7 @@ def voice_ids_for(segment: Segment, settings: Settings, lesson: Lesson) -> list[
         roles=roles,
         prefer_accent=prefer_accent,
         cast_path=cast_path,
+        role_genders=lesson.voice_genders,
     )
     voice_ids: list[str] = []
     for speaker, role in zip(speakers, roles, strict=True):

@@ -24,7 +24,7 @@ Wave: <n or none> · Owns: <files/dirs this task may edit; `docs/STATUS.md` + `d
 - <observable checks>
 
 ## Verify
-<exact commands; the agent runs them and pastes the output (≤ 15 lines) into the report>
+<exact commands, first line `source .venv/bin/activate`; the agent runs them and pastes the output (≤ 15 lines) into the report>
 
 ## Out of scope
 <what not to touch>

@@ -81,6 +81,8 @@ def preferred_accent_for_level(level: str, language: str) -> str | None:
 KNOWN_ROLE_GENDER: dict[str, str] = {
     "anna": "female",
     "li_ming": "male",
+    "wang_fang": "female",
+    "chen_dong": "male",
 }
 
 
@@ -96,6 +98,7 @@ def pick_voices_for_roles(
     version: int,
     roles: list[str],
     prefer_accent: str | None = None,
+    role_genders: dict[str, str] | None = None,
 ) -> dict[str, VoiceProfile]:
     """Assign one voice per role for a single segment/turns list.
 
@@ -116,7 +119,7 @@ def pick_voices_for_roles(
     claim_order = sorted(dict.fromkeys(roles), key=lambda role: _role_seed(lesson_id, version, role))
 
     def tier_for(role: str):
-        expected_gender = KNOWN_ROLE_GENDER.get(role)
+        expected_gender = (role_genders or {}).get(role, KNOWN_ROLE_GENDER.get(role))
 
         def tier(profile: VoiceProfile) -> tuple[int, int, str]:
             gender_ok = expected_gender is None or profile.gender == expected_gender
@@ -156,6 +159,7 @@ def resolve_roles_with_pinning(
     roles: list[str],
     prefer_accent: str | None,
     cast_path: Path,
+    role_genders: dict[str, str] | None = None,
 ) -> dict[str, VoiceProfile | None]:
     """Like `pick_voices_for_roles`, but once a role's voice has been picked for this
     lesson, it is pinned to `cast_path` and reused forever after — even if the
@@ -184,7 +188,30 @@ def resolve_roles_with_pinning(
         already_pinned_ids = {
             voice_id for key, voice_id in pinned.items() if key.startswith(f"{language}:")
         } | {profile.voice_id for profile in resolved.values() if profile}
-        available = [p for p in profiles if p.voice_id not in already_pinned_ids] or profiles
+        # Across lessons a voice keeps one role: a role pinned elsewhere under the same
+        # name reuses that voice if its gender still fits; every other voice pinned in
+        # another lesson is kept away from this lesson's new roles (lesson 2's narrator
+        # must not sound like lesson 1's Anna).
+        elsewhere: dict[str, str] = {}
+        reused = False
+        for other in sorted(cast_path.parent.parent.glob(f"*/{cast_path.name}")):
+            if other.parent != cast_path.parent:
+                for key, voice_id in load_pinned_cast(other).items():
+                    if key.startswith(f"{language}:"):
+                        elsewhere.setdefault(voice_id, key.split(":", 1)[1])
+        for voice_id, role in elsewhere.items():
+            gender = (role_genders or {}).get(role, KNOWN_ROLE_GENDER.get(role))
+            profile = by_id.get(voice_id)
+            if role in unresolved_roles and profile and voice_id not in already_pinned_ids and (
+                gender is None or profile.gender == gender
+            ):
+                resolved[role] = profile
+                pinned[f"{language}:{role}"] = voice_id
+                already_pinned_ids.add(voice_id)
+                unresolved_roles.remove(role)
+                reused = True
+        protected = already_pinned_ids | set(elsewhere)
+        available = [p for p in profiles if p.voice_id not in protected] or profiles
         fresh = pick_voices_for_roles(
             available,
             language=language,
@@ -192,8 +219,9 @@ def resolve_roles_with_pinning(
             version=version,
             roles=unresolved_roles,
             prefer_accent=prefer_accent,
+            role_genders=role_genders,
         )
-        changed = False
+        changed = reused
         for role in unresolved_roles:
             profile = fresh.get(role)
             resolved[role] = profile

@@ -52,6 +52,8 @@ def load_authoring_lessons(lessons_dir: Path) -> list[Lesson]:
         if not re.fullmatch(r"lesson_\d+", path.stem):
             continue
         lesson = load_lesson(path)
+        if lesson.format == "modes_v1":
+            continue
         if lesson.variant == "practice" or path.stem != lesson.lesson_id:
             continue
         by_id[lesson.lesson_id] = lesson

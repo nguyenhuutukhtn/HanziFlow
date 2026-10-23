@@ -14,6 +14,9 @@ Last updated: 2026-10-23 (M1 lesson-format contract complete) · branch `app-pub
 
 ## Done
 
+- **M2:** `import-modes 002` deterministically builds and validates the four `modes_v1` lesson JSON tracks from `09_modes.md`, including folded answer/repeat gaps and mode metadata. Focused tests pass; full check is currently blocked by the existing Gradle wrapper lock during web-facade smoke.
+- **M3:** Mode voice selection, per-lesson cast pinning, mode-specific generate output, and dry-run reporting are implemented. Paid TTS was not run; focused tests and `scripts/modes.sh 002` pass. PM fix at checkpoint: a voice pinned in another lesson is never reused for a different role (lesson 2 had narrator = lesson 1 Anna); cast re-pinned, dry-run 288 clips ≤ 5,893 chars. **Next: user confirms paid TTS for the 4 mode files, then M4.**
+
 - **M1:** lesson schema and package readers now support format-defaulted `linear_v1` and map-backed `modes_v1` tracks (`hieu`, `nghe`, `phan_xa`, `noi`). Android deliberately filters modes lessons until its UI support arrives, while its downloader handles every published track. Python, shared facade/parser, and Android mapping/download contract tests pass; M4 will provide the first real modes publish fixture.
 
 - **Wave 2 checkpoint (PM, 2026-10-22):** W2d-fix verified (19/19, `ok smoke`, check.sh green). PM re-ran the Tooltip negative probe and removed a hard-coded "Tooltip provider error" message from `smoke.mjs` that could fake it; the real error is caught. User device check: PiP controls OK, but the view is raw one-line text → [Wave 3](tasks/WAVE-3.md) W3a.

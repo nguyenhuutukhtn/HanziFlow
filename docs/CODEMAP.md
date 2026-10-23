@@ -8,13 +8,13 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 
 - `__init__.py` [4] — Mandarin audio course generator.
 - `audio_builder.py` [185] — FFmpeg-based audio assembly with per-segment pauses.
-- `audit.py` [136] — Read-only authoring audit for cross-lesson pattern continuity.
+- `audit.py` [138] — Read-only authoring audit for cross-lesson pattern continuity.
 - `characters/__init__.py` [6] — Offline character data loading and lesson resolution.
 - `characters/bundle.py` [136] — Export/import the small authored Vietnamese character-data loop.
 - `characters/data.py` [228] — Small, lazy loaders for the offline character data sources.
 - `characters/resolve.py` [202] — Resolve lesson characters from loaded offline data.
 - `characters/stroke_pack.py` [43] — Build the catalog-scoped Hanzi Writer stroke data package.
-- `cli.py` [299] — Command-line interface for validation, generation, transcripts and reviews.
+- `cli.py` [317] ⚠ — Command-line interface for validation, generation, transcripts and reviews.
 - `config.py` [53] — Environment-backed configuration without exposing secrets.
 - `generate_plan.py` [82] — Cache/cost plan for a lesson's TTS segments: `generate --dry-run` and bundle import.
 - `lesson_schema.py` [115] — Validated, content-driven lesson schema.
@@ -33,14 +33,15 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `story/bundle.py` [213] — Export/import lesson story-source bundles (docs/workflow.md "Content loop").
 - `story/ledger.py` [163] — Lesson ledger: what lessons before N taught (words, characters, patterns, premise, bible).
 - `story/metrics.py` [139] — Advisory lesson metrics for the authoring loop.
+- `story/modes.py` [134] — Import the four lesson-2 listening/speaking modes.
 - `story/parser.py` [143] — Parse a lesson story source (`lessons/src/lesson_XXX.story.md`) into blocks.
 - `story/report.py` [46] — Short build-lesson output: ≤ 20 lines, errors with source line numbers.
 - `story/rows.py` [149] — Export and import row-scoped story-source revisions.
 - `transcript.py` [69] — Learner-facing Markdown transcripts.
-- `tts.py` [246] — ElevenLabs TTS adapter and deterministic audio cache.
+- `tts.py` [247] — ElevenLabs TTS adapter and deterministic audio cache.
 - `upload.py` [197] — Upload published lesson packages to Supabase Storage.
 - `upload_storage.py` [199] — HTTP and Storage REST helpers for the lesson uploader.
-- `voice_registry.py` [226] — ElevenLabs voice registry: synced once, cached locally, used for deterministic per-lesson voice selection.
+- `voice_registry.py` [254] — ElevenLabs voice registry: synced once, cached locally, used for deterministic per-lesson voice selection.
 
 ## Python scripts (`scripts/`)
 
@@ -56,9 +57,11 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `test_bundle.py` [78]
 - `test_characters.py` [127]
 - `test_cli.py` [31]
+- `test_import_modes.py` [40]
 - `test_ledger.py` [88]
 - `test_lesson_001_story.py` [114]
 - `test_lesson_schema.py` [113]
+- `test_m3_modes.py` [99]
 - `test_metrics_rows.py` [88]
 - `test_publish.py` [419] ⚠
 - `test_publish_guided_zh.py` [28]

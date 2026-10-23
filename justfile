@@ -53,6 +53,12 @@ ledger ID:
 import-lesson ID FILE:
     mandarin-course import-lesson {{ID}} {{FILE}}
 
+import-modes ID:
+    mandarin-course import-modes {{ID}}
+
+modes ID:
+    bash scripts/modes.sh {{ID}}
+
 export-characters ID:
     mandarin-course export-characters {{ID}}
 

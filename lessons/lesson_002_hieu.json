@@ -1,0 +1,1260 @@
+{
+  "lesson_id": "lesson_002",
+  "title": "你在哪儿？",
+  "level": "absolute_beginner",
+  "communicative_goals": [
+    "Hỏi và nói mình đang ở đâu: tòa nào, tầng nào, ở cửa"
+  ],
+  "new_patterns": [
+    "在 + nơi chốn",
+    "在哪儿？",
+    "V 不去 / V 不见"
+  ],
+  "voice_genders": {
+    "coach_zh": "female"
+  },
+  "format": "modes_v1",
+  "variant": "hieu",
+  "version": 1,
+  "target_duration_minutes": 8,
+  "segments": [
+    {
+      "id": "hieu_h1",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "Trước hết, mình nghe câu chuyện từng câu một. Sau mỗi câu sẽ có nghĩa tiếng Việt.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h2",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "Chú ý cách hỏi một người đang ở đâu, ở tòa nào và ở tầng nào.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h3",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "Sau đó mình nghe lại trọn câu chuyện bằng tiếng Trung.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h4",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "王芳今天来开会。她在一座楼的门口，进不去。",
+      "pause_after_ms": 1000,
+      "pinyin": "Wáng Fāng jīntiān lái kāihuì. Tā zài yí zuò lóu de ménkǒu, jìn bu qù.",
+      "translation": "Hôm nay Vương Phương đến họp. Cô ấy đứng ở cửa một tòa nhà, không vào được."
+    },
+    {
+      "id": "hieu_h5",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "Vương Phương đến họp hôm nay. Cô ấy ở cửa một tòa nhà nhưng không vào được.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h6",
+      "activity": "Hiểu",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "speaker": "wang_fang",
+      "text": "喂，陈东，你在八楼吗？",
+      "pause_after_ms": 1000,
+      "pinyin": "Wéi, Chén Dōng, nǐ zài bā lóu ma?",
+      "translation": "A lô, Trần Đông, anh đang ở tầng tám à?"
+    },
+    {
+      "id": "hieu_h7",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "Vương Phương gọi Trần Đông và hỏi anh có đang ở tầng tám không.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h8",
+      "activity": "Hiểu",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "speaker": "chen_dong",
+      "text": "对，我在八楼。你在哪儿？",
+      "pause_after_ms": 1000,
+      "pinyin": "Duì, wǒ zài bā lóu. Nǐ zài nǎr?",
+      "translation": "Đúng, tôi đang ở tầng tám. Cô đang ở đâu?"
+    },
+    {
+      "id": "hieu_h9",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "Trần Đông xác nhận vị trí của mình rồi hỏi Vương Phương đang ở đâu.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h10",
+      "activity": "Hiểu",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "speaker": "wang_fang",
+      "text": "我在楼下，门口这里。我没有卡，进不去。",
+      "pause_after_ms": 1000,
+      "pinyin": "Wǒ zài lóu xià, ménkǒu zhèlǐ. Wǒ méiyǒu kǎ, jìn bu qù.",
+      "translation": "Tôi ở dưới tòa nhà, ngay cửa đây. Tôi không có thẻ, không vào được."
+    },
+    {
+      "id": "hieu_h11",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "Cô ấy đang ở dưới tòa nhà, ngay cửa, nhưng không có thẻ nên không vào được.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h12",
+      "activity": "Hiểu",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "speaker": "chen_dong",
+      "text": "好，你等一下，我马上下楼接你。",
+      "pause_after_ms": 1000,
+      "pinyin": "Hǎo, nǐ děng yíxià, wǒ mǎshàng xià lóu jiē nǐ.",
+      "translation": "Được, cô đợi một chút, tôi xuống đón cô ngay."
+    },
+    {
+      "id": "hieu_h13",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "Trần Đông bảo cô đợi một chút; anh sẽ xuống đón ngay.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h14",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "陈东从八楼下来，在大厅找王芳。",
+      "pause_after_ms": 1000,
+      "pinyin": "Chén Dōng cóng bā lóu xiàlái, zài dàtīng zhǎo Wáng Fāng.",
+      "translation": "Trần Đông từ tầng tám đi xuống, tìm Vương Phương ở sảnh."
+    },
+    {
+      "id": "hieu_h15",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "Trần Đông đi từ tầng tám xuống và tìm Vương Phương trong sảnh.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h16",
+      "activity": "Hiểu",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "speaker": "chen_dong",
+      "text": "我在大厅，你在哪个门口？",
+      "pause_after_ms": 1000,
+      "pinyin": "Wǒ zài dàtīng, nǐ zài nǎ ge ménkǒu?",
+      "translation": "Tôi đang ở sảnh, cô ở cửa nào?"
+    },
+    {
+      "id": "hieu_h17",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "Anh đang ở sảnh và hỏi cô đứng ở cửa nào.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h18",
+      "activity": "Hiểu",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "speaker": "wang_fang",
+      "text": "我在门口啊。你能看见我吗？",
+      "pause_after_ms": 1000,
+      "pinyin": "Wǒ zài ménkǒu a. Nǐ néng kànjiàn wǒ ma?",
+      "translation": "Tôi ở ngay cửa mà. Anh có thấy tôi không?"
+    },
+    {
+      "id": "hieu_h19",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "Cô nói mình ở cửa và hỏi anh có nhìn thấy mình không.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h20",
+      "activity": "Hiểu",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "speaker": "chen_dong",
+      "text": "看不见。我在这里，你在哪儿？",
+      "pause_after_ms": 1000,
+      "pinyin": "Kàn bu jiàn. Wǒ zài zhèlǐ, nǐ zài nǎr?",
+      "translation": "Không thấy. Tôi đang ở đây, cô ở đâu?"
+    },
+    {
+      "id": "hieu_h21",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "Anh không thấy cô, và hỏi lại cô đang ở đâu.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h22",
+      "activity": "Hiểu",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "speaker": "wang_fang",
+      "text": "你旁边有什么？我旁边有一家咖啡店。",
+      "pause_after_ms": 1000,
+      "pinyin": "Nǐ pángbiān yǒu shénme? Wǒ pángbiān yǒu yì jiā kāfēidiàn.",
+      "translation": "Bên cạnh anh có gì? Bên cạnh tôi có một quán cà phê."
+    },
+    {
+      "id": "hieu_h23",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "Cô hỏi bên cạnh anh có gì và nói cạnh mình có một quán cà phê.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h24",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "陈东看看旁边，没有咖啡店。",
+      "pause_after_ms": 1000,
+      "pinyin": "Chén Dōng kànkan pángbiān, méiyǒu kāfēidiàn.",
+      "translation": "Trần Đông nhìn quanh, bên cạnh không có quán cà phê nào."
+    },
+    {
+      "id": "hieu_h25",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "Trần Đông nhìn quanh bên cạnh sảnh nhưng không có quán cà phê.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h26",
+      "activity": "Hiểu",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "speaker": "chen_dong",
+      "text": "咖啡店在你旁边？你在哪个楼的门口？",
+      "pause_after_ms": 1000,
+      "pinyin": "Kāfēidiàn zài nǐ pángbiān? Nǐ zài nǎ ge lóu de ménkǒu?",
+      "translation": "Quán cà phê ở cạnh cô à? Cô đang ở cửa tòa nào?"
+    },
+    {
+      "id": "hieu_h27",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "Anh kiểm tra lại dấu hiệu quán cà phê và hỏi cô đang ở cửa tòa nào.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h28",
+      "activity": "Hiểu",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "speaker": "wang_fang",
+      "text": "对，咖啡店在我旁边。我在A座门口等你啊。",
+      "pause_after_ms": 1000,
+      "pinyin": "Duì, kāfēidiàn zài wǒ pángbiān. Wǒ zài A zuò ménkǒu děng nǐ a.",
+      "translation": "Đúng, quán cà phê ở cạnh tôi. Tôi đang đợi anh ở cửa tòa A mà."
+    },
+    {
+      "id": "hieu_h29",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "Cô khẳng định quán cà phê ở cạnh mình và nghĩ mình đang đợi ở cửa tòa A.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h30",
+      "activity": "Hiểu",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "speaker": "chen_dong",
+      "text": "等一下，A座旁边没有咖啡店。你是不是在B座？",
+      "pause_after_ms": 1000,
+      "pinyin": "Děng yíxià, A zuò pángbiān méiyǒu kāfēidiàn. Nǐ shì bu shì zài B zuò?",
+      "translation": "Đợi chút, cạnh tòa A không có quán cà phê. Có phải cô đang ở tòa B không?"
+    },
+    {
+      "id": "hieu_h31",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "Trần Đông nhận ra dấu hiệu không khớp và hỏi có phải cô ở tòa B không.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h32",
+      "activity": "Hiểu",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "speaker": "wang_fang",
+      "text": "啊？这里不是A座吗？我以为我在A座。怎么办？",
+      "pause_after_ms": 1000,
+      "pinyin": "Á? Zhèlǐ bú shì A zuò ma? Wǒ yǐwéi wǒ zài A zuò. Zěnme bàn?",
+      "translation": "Hả? Đây không phải tòa A à? Tôi cứ tưởng mình ở tòa A. Làm sao đây?"
+    },
+    {
+      "id": "hieu_h33",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "Vương Phương ngạc nhiên: cô cứ tưởng mình đang ở tòa A và hỏi phải làm sao.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h34",
+      "activity": "Hiểu",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "speaker": "chen_dong",
+      "text": "别急，A座在B座对面。你马上过来，我在门口等你。",
+      "pause_after_ms": 1000,
+      "pinyin": "Bié jí, A zuò zài B zuò duìmiàn. Nǐ mǎshàng guòlái, wǒ zài ménkǒu děng nǐ.",
+      "translation": "Đừng vội, tòa A ở đối diện tòa B. Cô sang đây ngay đi, tôi đợi cô ở cửa."
+    },
+    {
+      "id": "hieu_h35",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "Anh bảo cô đừng vội: tòa A đối diện tòa B; cô chỉ cần sang đó.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h36",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "几分钟后，王芳走到A座门口。",
+      "pause_after_ms": 1000,
+      "pinyin": "Jǐ fēnzhōng hòu, Wáng Fāng zǒu dào A zuò ménkǒu.",
+      "translation": "Vài phút sau, Vương Phương đi đến cửa tòa A."
+    },
+    {
+      "id": "hieu_h37",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "Vài phút sau, Vương Phương đến được cửa tòa A.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h38",
+      "activity": "Hiểu",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "speaker": "wang_fang",
+      "text": "陈东，我在这里！你能看见我吗？",
+      "pause_after_ms": 1000,
+      "pinyin": "Chén Dōng, wǒ zài zhèlǐ! Nǐ néng kànjiàn wǒ ma?",
+      "translation": "Trần Đông, tôi ở đây! Anh có thấy tôi không?"
+    },
+    {
+      "id": "hieu_h39",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "Lần này cô gọi anh và hỏi anh có nhìn thấy mình không.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h40",
+      "activity": "Hiểu",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "speaker": "chen_dong",
+      "text": "看见你了！好，我们一起进去开会。",
+      "pause_after_ms": 1000,
+      "pinyin": "Kànjiàn nǐ le! Hǎo, wǒmen yìqǐ jìnqù kāihuì.",
+      "translation": "Thấy cô rồi! Được, chúng ta cùng vào họp."
+    },
+    {
+      "id": "hieu_h41",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "Anh thấy cô rồi, hai người cùng vào họp.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h42",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "开会。王芳今天来开会。",
+      "pause_after_ms": 1000,
+      "pinyin": "Kāihuì. Wáng Fāng jīntiān lái kāihuì.",
+      "translation": "Họp. Hôm nay Vương Phương đến họp."
+    },
+    {
+      "id": "hieu_h43",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "开会 là họp; âm Hán-Việt là khai hội.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h44",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "一座楼。她在一座楼的门口。",
+      "pause_after_ms": 1000,
+      "pinyin": "Yí zuò lóu. Tā zài yí zuò lóu de ménkǒu.",
+      "translation": "Một tòa nhà. Cô ấy ở cửa một tòa nhà."
+    },
+    {
+      "id": "hieu_h45",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "座 là lượng từ cho tòa nhà; 楼 là tòa nhà hoặc tầng lầu.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h46",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "门口。她在门口，进不去。",
+      "pause_after_ms": 1000,
+      "pinyin": "Ménkǒu. Tā zài ménkǒu, jìn bu qù.",
+      "translation": "Cửa ra vào. Cô ấy ở cửa, không vào được."
+    },
+    {
+      "id": "hieu_h47",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "门口 là ngay cửa; 进不去 là không vào được.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h48",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "八楼。陈东在八楼。",
+      "pause_after_ms": 1000,
+      "pinyin": "Bā lóu. Chén Dōng zài bā lóu.",
+      "translation": "Tầng tám. Trần Đông ở tầng tám."
+    },
+    {
+      "id": "hieu_h49",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "八楼 là tầng tám.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h50",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "哪儿。你在哪儿？",
+      "pause_after_ms": 1000,
+      "pinyin": "Nǎr. Nǐ zài nǎr?",
+      "translation": "Đâu. Bạn đang ở đâu?"
+    },
+    {
+      "id": "hieu_h51",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "哪儿 nghĩa là đâu; 在哪儿 hỏi vị trí của người hoặc vật.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h52",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "楼下。我在楼下。",
+      "pause_after_ms": 1000,
+      "pinyin": "Lóu xià. Wǒ zài lóu xià.",
+      "translation": "Dưới tòa nhà. Tôi ở dưới tòa nhà."
+    },
+    {
+      "id": "hieu_h53",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "楼下 là phía dưới tòa nhà hoặc tầng dưới.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h54",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "卡。我没有卡。",
+      "pause_after_ms": 1000,
+      "pinyin": "Kǎ. Wǒ méiyǒu kǎ.",
+      "translation": "Thẻ. Tôi không có thẻ."
+    },
+    {
+      "id": "hieu_h55",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "卡 là thẻ.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h56",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "等一下。你等一下。",
+      "pause_after_ms": 1000,
+      "pinyin": "Děng yíxià. Nǐ děng yíxià.",
+      "translation": "Đợi một chút. Bạn đợi một chút."
+    },
+    {
+      "id": "hieu_h57",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "等一下 là đợi một chút, một cụm rất thường dùng.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h58",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "马上。我马上下楼接你。",
+      "pause_after_ms": 1000,
+      "pinyin": "Mǎshàng. Wǒ mǎshàng xià lóu jiē nǐ.",
+      "translation": "Ngay. Tôi xuống lầu đón bạn ngay."
+    },
+    {
+      "id": "hieu_h59",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "马上 là ngay lập tức.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h60",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "下楼。我马上下楼。",
+      "pause_after_ms": 1000,
+      "pinyin": "Xià lóu. Wǒ mǎshàng xià lóu.",
+      "translation": "Xuống lầu. Tôi xuống lầu ngay."
+    },
+    {
+      "id": "hieu_h61",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "下楼 là đi xuống lầu.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h62",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "接你。我下楼接你。",
+      "pause_after_ms": 1000,
+      "pinyin": "Jiē nǐ. Wǒ xià lóu jiē nǐ.",
+      "translation": "Đón bạn. Tôi xuống lầu đón bạn."
+    },
+    {
+      "id": "hieu_h63",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "接 ở đây là đón một người.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h64",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "从八楼下来。陈东从八楼下来。",
+      "pause_after_ms": 1000,
+      "pinyin": "Cóng bā lóu xiàlái. Chén Dōng cóng bā lóu xiàlái.",
+      "translation": "Từ tầng tám đi xuống. Trần Đông từ tầng tám đi xuống."
+    },
+    {
+      "id": "hieu_h65",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "从 chỉ điểm bắt đầu; 下来 là đi từ trên xuống về phía người nói.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h66",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "大厅。陈东在大厅。",
+      "pause_after_ms": 1000,
+      "pinyin": "Dàtīng. Chén Dōng zài dàtīng.",
+      "translation": "Sảnh. Trần Đông ở sảnh."
+    },
+    {
+      "id": "hieu_h67",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "大厅 là đại sảnh, tức khu sảnh lớn.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h68",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "找王芳。陈东在大厅找王芳。",
+      "pause_after_ms": 1000,
+      "pinyin": "Zhǎo Wáng Fāng. Chén Dōng zài dàtīng zhǎo Wáng Fāng.",
+      "translation": "Tìm Vương Phương. Trần Đông tìm Vương Phương ở sảnh."
+    },
+    {
+      "id": "hieu_h69",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "找 là tìm.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h70",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "哪个门口。你在哪个门口？",
+      "pause_after_ms": 1000,
+      "pinyin": "Nǎ ge ménkǒu. Nǐ zài nǎ ge ménkǒu?",
+      "translation": "Cửa nào. Bạn đang ở cửa nào?"
+    },
+    {
+      "id": "hieu_h71",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "哪个 nghĩa là cái nào; ở đây là cửa nào.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h72",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "看见。我没看见你。",
+      "pause_after_ms": 1000,
+      "pinyin": "Kànjiàn. Wǒ méi kànjiàn nǐ.",
+      "translation": "Nhìn thấy. Tôi không nhìn thấy bạn."
+    },
+    {
+      "id": "hieu_h73",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "看见 là nhìn thấy, nhấn vào kết quả có thấy hay không.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h74",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "旁边。你旁边有什么？",
+      "pause_after_ms": 1000,
+      "pinyin": "Pángbiān. Nǐ pángbiān yǒu shénme?",
+      "translation": "Bên cạnh. Bên cạnh bạn có gì?"
+    },
+    {
+      "id": "hieu_h75",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "旁边 là bên cạnh.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h76",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "什么。你旁边有什么？",
+      "pause_after_ms": 1000,
+      "pinyin": "Shénme. Nǐ pángbiān yǒu shénme?",
+      "translation": "Gì. Bên cạnh bạn có gì?"
+    },
+    {
+      "id": "hieu_h77",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "什么 nghĩa là gì.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h78",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "咖啡店。我旁边有一家咖啡店。",
+      "pause_after_ms": 1000,
+      "pinyin": "Kāfēidiàn. Wǒ pángbiān yǒu yì jiā kāfēidiàn.",
+      "translation": "Quán cà phê. Bên cạnh tôi có một quán cà phê."
+    },
+    {
+      "id": "hieu_h79",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "咖啡店 là quán cà phê.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h80",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "看看。陈东看看旁边。",
+      "pause_after_ms": 1000,
+      "pinyin": "Kànkan. Chén Dōng kànkan pángbiān.",
+      "translation": "Nhìn thử. Trần Đông nhìn quanh."
+    },
+    {
+      "id": "hieu_h81",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "看看 là nhìn thử một chút, nghe nhẹ và tự nhiên trong lời kể.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h82",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "是不是。你是不是在B座？",
+      "pause_after_ms": 1000,
+      "pinyin": "Shì bu shì. Nǐ shì bu shì zài B zuò?",
+      "translation": "Có phải hay không. Có phải bạn đang ở tòa B không?"
+    },
+    {
+      "id": "hieu_h83",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "是不是 dùng để hỏi xác nhận: có phải hay không.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h84",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "以为。我以为我在A座。",
+      "pause_after_ms": 1000,
+      "pinyin": "Yǐwéi. Wǒ yǐwéi wǒ zài A zuò.",
+      "translation": "Cứ tưởng. Tôi cứ tưởng mình ở tòa A."
+    },
+    {
+      "id": "hieu_h85",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "以为 là cứ tưởng một điều là đúng.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h86",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "怎么办？这里不是A座，怎么办？",
+      "pause_after_ms": 1000,
+      "pinyin": "Zěnme bàn? Zhèlǐ bú shì A zuò, zěnme bàn?",
+      "translation": "Làm sao đây? Đây không phải tòa A, làm sao đây?"
+    },
+    {
+      "id": "hieu_h87",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "怎么办 là làm sao đây, dùng khi cần một cách giải quyết.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h88",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "别急。别急，A座在B座对面。",
+      "pause_after_ms": 1000,
+      "pinyin": "Bié jí. Bié jí, A zuò zài B zuò duìmiàn.",
+      "translation": "Đừng vội. Đừng vội, tòa A đối diện tòa B."
+    },
+    {
+      "id": "hieu_h89",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "别急 là đừng vội, đừng sốt ruột.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h90",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "对面。A座在B座对面。",
+      "pause_after_ms": 1000,
+      "pinyin": "Duìmiàn. A zuò zài B zuò duìmiàn.",
+      "translation": "Đối diện. Tòa A ở đối diện tòa B."
+    },
+    {
+      "id": "hieu_h91",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "对面 là phía đối diện; âm Hán-Việt gợi nghĩa đối diện.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h92",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "过来。你马上过来。",
+      "pause_after_ms": 1000,
+      "pinyin": "Guòlái. Nǐ mǎshàng guòlái.",
+      "translation": "Sang đây. Bạn sang đây ngay."
+    },
+    {
+      "id": "hieu_h93",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "过来 là sang đây, đi về phía người nói.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h94",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "几分钟后。几分钟后，王芳走到A座门口。",
+      "pause_after_ms": 1000,
+      "pinyin": "Jǐ fēnzhōng hòu. Jǐ fēnzhōng hòu, Wáng Fāng zǒu dào A zuò ménkǒu.",
+      "translation": "Vài phút sau. Vài phút sau, Vương Phương đi đến cửa tòa A."
+    },
+    {
+      "id": "hieu_h95",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "几分钟 là vài phút; 后 là sau.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h96",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "走到。王芳走到A座门口。",
+      "pause_after_ms": 1000,
+      "pinyin": "Zǒu dào. Wáng Fāng zǒu dào A zuò ménkǒu.",
+      "translation": "Đi đến. Vương Phương đi đến cửa tòa A."
+    },
+    {
+      "id": "hieu_h97",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "走到 là đi đến một nơi.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h98",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "进去。我们一起进去开会。",
+      "pause_after_ms": 1000,
+      "pinyin": "Jìnqù. Wǒmen yìqǐ jìnqù kāihuì.",
+      "translation": "Đi vào. Chúng ta cùng đi vào họp."
+    },
+    {
+      "id": "hieu_h99",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "进去 là đi vào, hướng rời xa người nói.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h100",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "vi-VN",
+      "speaker": "coach",
+      "text": "Mẫu 在 + nơi chốn nói một người hoặc vật đang ở đâu. Còn 在哪儿 dùng để hỏi đang ở đâu.",
+      "pause_after_ms": 1000
+    },
+    {
+      "id": "hieu_h101",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "我在八楼。",
+      "pause_after_ms": 1000,
+      "pinyin": "Wǒ zài bā lóu.",
+      "translation": "Tôi ở tầng tám."
+    },
+    {
+      "id": "hieu_h102",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "我在大厅。",
+      "pause_after_ms": 1000,
+      "pinyin": "Wǒ zài dàtīng.",
+      "translation": "Tôi ở sảnh."
+    },
+    {
+      "id": "hieu_h103",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "你在哪儿？",
+      "pause_after_ms": 1000,
+      "pinyin": "Nǐ zài nǎr?",
+      "translation": "Bạn đang ở đâu?"
+    },
+    {
+      "id": "hieu_h104",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "王芳今天来开会。她在一座楼的门口，进不去。",
+      "pause_after_ms": 1000,
+      "pinyin": "Wáng Fāng jīntiān lái kāihuì. Tā zài yí zuò lóu de ménkǒu, jìn bu qù.",
+      "translation": "Hôm nay Vương Phương đến họp. Cô ấy đứng ở cửa một tòa nhà, không vào được."
+    },
+    {
+      "id": "hieu_h105",
+      "activity": "Hiểu",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "speaker": "wang_fang",
+      "text": "喂，陈东，你在八楼吗？",
+      "pause_after_ms": 1000,
+      "pinyin": "Wéi, Chén Dōng, nǐ zài bā lóu ma?",
+      "translation": "A lô, Trần Đông, anh đang ở tầng tám à?"
+    },
+    {
+      "id": "hieu_h106",
+      "activity": "Hiểu",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "speaker": "chen_dong",
+      "text": "对，我在八楼。你在哪儿？",
+      "pause_after_ms": 1000,
+      "pinyin": "Duì, wǒ zài bā lóu. Nǐ zài nǎr?",
+      "translation": "Đúng, tôi đang ở tầng tám. Cô đang ở đâu?"
+    },
+    {
+      "id": "hieu_h107",
+      "activity": "Hiểu",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "speaker": "wang_fang",
+      "text": "我在楼下，门口这里。我没有卡，进不去。",
+      "pause_after_ms": 1000,
+      "pinyin": "Wǒ zài lóu xià, ménkǒu zhèlǐ. Wǒ méiyǒu kǎ, jìn bu qù.",
+      "translation": "Tôi ở dưới tòa nhà, ngay cửa đây. Tôi không có thẻ, không vào được."
+    },
+    {
+      "id": "hieu_h108",
+      "activity": "Hiểu",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "speaker": "chen_dong",
+      "text": "好，你等一下，我马上下楼接你。",
+      "pause_after_ms": 1000,
+      "pinyin": "Hǎo, nǐ děng yíxià, wǒ mǎshàng xià lóu jiē nǐ.",
+      "translation": "Được, cô đợi một chút, tôi xuống đón cô ngay."
+    },
+    {
+      "id": "hieu_h109",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "陈东从八楼下来，在大厅找王芳。",
+      "pause_after_ms": 1000,
+      "pinyin": "Chén Dōng cóng bā lóu xiàlái, zài dàtīng zhǎo Wáng Fāng.",
+      "translation": "Trần Đông từ tầng tám đi xuống, tìm Vương Phương ở sảnh."
+    },
+    {
+      "id": "hieu_h110",
+      "activity": "Hiểu",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "speaker": "chen_dong",
+      "text": "我在大厅，你在哪个门口？",
+      "pause_after_ms": 1000,
+      "pinyin": "Wǒ zài dàtīng, nǐ zài nǎ ge ménkǒu?",
+      "translation": "Tôi đang ở sảnh, cô ở cửa nào?"
+    },
+    {
+      "id": "hieu_h111",
+      "activity": "Hiểu",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "speaker": "wang_fang",
+      "text": "我在门口啊。你能看见我吗？",
+      "pause_after_ms": 1000,
+      "pinyin": "Wǒ zài ménkǒu a. Nǐ néng kànjiàn wǒ ma?",
+      "translation": "Tôi ở ngay cửa mà. Anh có thấy tôi không?"
+    },
+    {
+      "id": "hieu_h112",
+      "activity": "Hiểu",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "speaker": "chen_dong",
+      "text": "看不见。我在这里，你在哪儿？",
+      "pause_after_ms": 1000,
+      "pinyin": "Kàn bu jiàn. Wǒ zài zhèlǐ, nǐ zài nǎr?",
+      "translation": "Không thấy. Tôi đang ở đây, cô ở đâu?"
+    },
+    {
+      "id": "hieu_h113",
+      "activity": "Hiểu",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "speaker": "wang_fang",
+      "text": "你旁边有什么？我旁边有一家咖啡店。",
+      "pause_after_ms": 1000,
+      "pinyin": "Nǐ pángbiān yǒu shénme? Wǒ pángbiān yǒu yì jiā kāfēidiàn.",
+      "translation": "Bên cạnh anh có gì? Bên cạnh tôi có một quán cà phê."
+    },
+    {
+      "id": "hieu_h114",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "陈东看看旁边，没有咖啡店。",
+      "pause_after_ms": 1000,
+      "pinyin": "Chén Dōng kànkan pángbiān, méiyǒu kāfēidiàn.",
+      "translation": "Trần Đông nhìn quanh, bên cạnh không có quán cà phê nào."
+    },
+    {
+      "id": "hieu_h115",
+      "activity": "Hiểu",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "speaker": "chen_dong",
+      "text": "咖啡店在你旁边？你在哪个楼的门口？",
+      "pause_after_ms": 1000,
+      "pinyin": "Kāfēidiàn zài nǐ pángbiān? Nǐ zài nǎ ge lóu de ménkǒu?",
+      "translation": "Quán cà phê ở cạnh cô à? Cô đang ở cửa tòa nào?"
+    },
+    {
+      "id": "hieu_h116",
+      "activity": "Hiểu",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "speaker": "wang_fang",
+      "text": "对，咖啡店在我旁边。我在A座门口等你啊。",
+      "pause_after_ms": 1000,
+      "pinyin": "Duì, kāfēidiàn zài wǒ pángbiān. Wǒ zài A zuò ménkǒu děng nǐ a.",
+      "translation": "Đúng, quán cà phê ở cạnh tôi. Tôi đang đợi anh ở cửa tòa A mà."
+    },
+    {
+      "id": "hieu_h117",
+      "activity": "Hiểu",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "speaker": "chen_dong",
+      "text": "等一下，A座旁边没有咖啡店。你是不是在B座？",
+      "pause_after_ms": 1000,
+      "pinyin": "Děng yíxià, A zuò pángbiān méiyǒu kāfēidiàn. Nǐ shì bu shì zài B zuò?",
+      "translation": "Đợi chút, cạnh tòa A không có quán cà phê. Có phải cô đang ở tòa B không?"
+    },
+    {
+      "id": "hieu_h118",
+      "activity": "Hiểu",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "speaker": "wang_fang",
+      "text": "啊？这里不是A座吗？我以为我在A座。怎么办？",
+      "pause_after_ms": 1000,
+      "pinyin": "Á? Zhèlǐ bú shì A zuò ma? Wǒ yǐwéi wǒ zài A zuò. Zěnme bàn?",
+      "translation": "Hả? Đây không phải tòa A à? Tôi cứ tưởng mình ở tòa A. Làm sao đây?"
+    },
+    {
+      "id": "hieu_h119",
+      "activity": "Hiểu",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "speaker": "chen_dong",
+      "text": "别急，A座在B座对面。你马上过来，我在门口等你。",
+      "pause_after_ms": 1000,
+      "pinyin": "Bié jí, A zuò zài B zuò duìmiàn. Nǐ mǎshàng guòlái, wǒ zài ménkǒu děng nǐ.",
+      "translation": "Đừng vội, tòa A ở đối diện tòa B. Cô sang đây ngay đi, tôi đợi cô ở cửa."
+    },
+    {
+      "id": "hieu_h120",
+      "activity": "Hiểu",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "几分钟后，王芳走到A座门口。",
+      "pause_after_ms": 1000,
+      "pinyin": "Jǐ fēnzhōng hòu, Wáng Fāng zǒu dào A zuò ménkǒu.",
+      "translation": "Vài phút sau, Vương Phương đi đến cửa tòa A."
+    },
+    {
+      "id": "hieu_h121",
+      "activity": "Hiểu",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "speaker": "wang_fang",
+      "text": "陈东，我在这里！你能看见我吗？",
+      "pause_after_ms": 1000,
+      "pinyin": "Chén Dōng, wǒ zài zhèlǐ! Nǐ néng kànjiàn wǒ ma?",
+      "translation": "Trần Đông, tôi ở đây! Anh có thấy tôi không?"
+    },
+    {
+      "id": "hieu_h122",
+      "activity": "Hiểu",
+      "type": "dialogue",
+      "language": "zh-CN",
+      "speaker": "chen_dong",
+      "text": "看见你了！好，我们一起进去开会。",
+      "pause_after_ms": 1000,
+      "pinyin": "Kànjiàn nǐ le! Hǎo, wǒmen yìqǐ jìnqù kāihuì.",
+      "translation": "Thấy cô rồi! Được, chúng ta cùng vào họp."
+    }
+  ]
+}

@@ -13,7 +13,7 @@ W3a (PiP) device checkpoint is independent of this wave; its uncommitted web fil
 | 5 | [M5](M5.md) Web: mode switcher via existing track toggle, default first track | `web/src/player-context.tsx`, `web/src/screens/`, tests | M4, W3a committed | Codex luna · low, fresh | ✅ user on device |
 
 Between M3 and M4 (user): `just modes 002` (dry-run) → confirm count → generate the 4 files (paid).
-After M4 (user): `mandarin-course upload` when M5 is ready to try against the CDN (local publish works for dev).
+After M4 (user): first `just app` on the phone (Android builds before M1 cannot parse a catalog lesson without `guided`), then `mandarin-course upload` when M5 is ready to try against the CDN (local publish works for dev).
 
 Launch prompt (M1, fresh):
 ```text

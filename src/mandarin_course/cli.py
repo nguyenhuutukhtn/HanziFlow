@@ -24,6 +24,7 @@ from .story import build_story, render_errors, render_summary, write_story
 from .story.bundle import BundleError, command_export_lesson, command_import_lesson
 from .story.ledger import command_ledger
 from .story.metrics import command_lesson_metrics
+from .story.modes import ModesError, import_modes
 from .story.rows import command_export_rows, command_import_rows
 from .transcript import write_transcripts
 from .tts import CachedTTS, ElevenLabsTTS, TTSError
@@ -71,7 +72,13 @@ def command_generate(path: Path, settings: Settings, dry_run: bool, assume_yes: 
     write_transcripts(lesson, output_dir)
     tts = CachedTTS(ElevenLabsTTS(settings), settings)
     audio_path = output_dir / _audio_filename(lesson)
-    duration = build_audio(lesson, tts, audio_path)
+    duration = build_audio(lesson, tts, audio_path, track=lesson.variant if lesson.format == "modes_v1" else None)
+    if lesson.format == "modes_v1":
+        print(f"Created {audio_path} ({duration / 60:.2f} minutes)")
+        timeline = json.loads(timeline_path_for(audio_path).read_text(encoding="utf-8"))
+        drift_ms = abs(duration * 1000 - timeline["duration_ms"])
+        print(f"Timeline: {timeline_path_for(audio_path)} ({len(timeline['cues'])} cues; drift {drift_ms:.1f} ms)")
+        return 0
     zh_lesson = chinese_only(
         lesson,
         duration_ms_for=lambda segment: round(probe_duration(tts.get(segment, lesson)) * 1000),
@@ -104,6 +111,13 @@ def command_audit(lessons_dir: Path, up_to: str | None) -> int:
     lessons = load_authoring_lessons(lessons_dir)
     report = build_report(lessons, up_to=up_to)
     print(render_report(report), end="")
+    return 0
+
+
+def command_import_modes(lesson_id: str) -> int:
+    for mode, segments, gaps, minutes in import_modes(lesson_id):
+        print(f"{mode}: {segments} segments, {gaps} gaps, ~{minutes} min")
+    print("Wrote 4 files")
     return 0
 
 
@@ -239,6 +253,8 @@ def build_parser() -> argparse.ArgumentParser:
     import_lesson.add_argument("lesson_id", type=str, help="e.g. 001")
     import_lesson.add_argument("file", type=Path, help="The AI's reply (bundle or bare story source)")
     import_lesson.add_argument("--lessons-dir", type=Path, default=Path("lessons"))
+    modes = sub.add_parser("import-modes", help="Build lesson-2 mode tracks from 09_modes.md")
+    modes.add_argument("lesson_id", type=str)
     export_characters = sub.add_parser("export-characters", help="Write a Markdown bundle for authored character data")
     export_characters.add_argument("lesson_id", type=str, help="e.g. 001")
     export_characters.add_argument("--lessons-dir", type=Path, default=Path("lessons"))
@@ -283,12 +299,14 @@ def main(argv: list[str] | None = None) -> int:
             return command_import_rows(args.lesson_id, args.file, args.lessons_dir, settings)
         if args.command == "import-lesson":
             return command_import_lesson(args.lesson_id, args.file, args.lessons_dir, settings)
+        if args.command == "import-modes":
+            return command_import_modes(args.lesson_id)
         if args.command == "export-characters":
             return command_export_characters(args.lesson_id, args.lessons_dir)
         if args.command == "import-characters":
             return command_import_characters(args.lesson_id, args.file, args.lessons_dir)
         return command_review(settings, args.json)
-    except (ValidationError, ValueError) as exc:
+    except (ValidationError, ModesError, ValueError) as exc:
         print(f"Lesson validation failed: {exc}", file=sys.stderr)
     except (TTSError, AudioBuildError, PublishError, UploadError, BundleError, OSError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
