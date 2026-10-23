@@ -27,8 +27,8 @@ class FakePlayerConnection : PlayerConnection {
 
     fun emit(state: PlaybackState) { _state.value = state }
 
-    override fun play(lessonId: String, track: String, uri: String, title: String) {
-        playCalls += listOf(lessonId, track, uri, title)
+    override fun play(lessonId: String, track: String, uri: String, title: String, trackLabel: String) {
+        playCalls += listOf(lessonId, track, uri, title, trackLabel)
         _state.value = _state.value.copy(connected = true, playing = true, lessonId = lessonId, track = track)
     }
 

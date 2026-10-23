@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 interface PlayerConnection {
     val state: StateFlow<PlaybackState>
 
-    fun play(lessonId: String, track: String, uri: String, title: String)
+    fun play(lessonId: String, track: String, uri: String, title: String, trackLabel: String)
     fun toggle()
     fun seekBack()
     fun seekForward()

@@ -2,7 +2,7 @@
 
 Read this first in a new session instead of past chat history. Keep it short; update it at the end of every task.
 
-Last updated: 2026-10-23 (A1 done; Wave 5 continues with A2) · branch `main` (app-publish-pipeline merged + deleted 2026-10-23)
+Last updated: 2026-10-23 (A2 verified; Wave 5 continues with A3) · branch `main` (app-publish-pipeline merged + deleted 2026-10-23)
 
 ## Working rules
 
@@ -13,6 +13,8 @@ Last updated: 2026-10-23 (A1 done; Wave 5 continues with A2) · branch `main` (a
 - Every task (code or content) logs its token use in [token_log.md](token_log.md); review the log periodically to cut the most expensive steps.
 
 ## Done
+
+- **A2:** Android now keeps `modes_v1` lessons in the catalog, routes lesson 2 to a shared-`ModeInfo` picker (Hiểu / Nghe / Phản xạ / Nói with real track durations), resumes local position independently per lesson+track, clears a completed track's position, and sends the mode name to Now Playing, mini-player, and MediaSession metadata. Real-fixture ViewModel, progress, navigation, player-path, Compose, and light/dark Roborazzi coverage pass; picker goldens were recorded with `just approve-screens`. Full `scripts/check.sh` passes.
 
 - **A1:** lesson-mode gap rows now persist as typed `answer`/`repeat` metadata without affecting TTS cache keys. Modes publishing turns them into measured top-level timeline gaps; lesson 2 is locally published as v2 (Hiểu/Nghe: 0, Phản xạ: 40 answer, Nói: 42 repeat; first answer gap is `phan_xa_q2`, 3874–7294 ms). Shared `Timeline` parses old timelines with an empty gap list and ships ordered Vietnamese mode guidance. Contract fixtures/docs are refreshed from v2. Checkpoint 2026-10-23: Haiku task-review needs-PM (Kotlin never compiled); PM fixed ContractParsingTest `.single()` on the 2-lesson real catalog fixture; `check.sh` all green (ContractParsingTest 7/7, ModeInfoTest 1/1). Not uploaded.
 
@@ -80,7 +82,7 @@ Last updated: 2026-10-23 (A1 done; Wave 5 continues with A2) · branch `main` (a
 
 ## Next (in order)
 
-**Now: [Wave 5](tasks/WAVE-5.md) (re-scoped 2026-10-23) — learn lesson 2 on the phone: A1 contract gaps ✅ → A2 mode picker lite → A3 Nghe/Phản xạ/Nói player → A4 "Lặp ×2". Lesson 2 v1 is uploaded; local v2 is not uploaded. Pending user checks: W3b follow (main + PiP), W3a PiP, M5 web.**
+**Now: [Wave 5](tasks/WAVE-5.md) (re-scoped 2026-10-23) — learn lesson 2 on the phone: A1 contract gaps ✅ → A2 mode picker lite ✅ → A3 Nghe/Phản xạ/Nói player → A4 "Lặp ×2". Lesson 2 v1 is uploaded; local v2 is not uploaded. Pending user checks: W3b follow (main + PiP), W3a PiP, M5 web.**
 
 **Top priority today (user, 2026-10-22, after one day of using the app): W1 — a web player in Chrome on Mac and Linux that stays on top**
 for listening while reading the text at work. The learner today follows by ear plus rough pinyin and

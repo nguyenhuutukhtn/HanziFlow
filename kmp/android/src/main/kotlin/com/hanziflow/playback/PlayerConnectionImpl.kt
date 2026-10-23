@@ -63,7 +63,7 @@ class PlayerConnectionImpl @Inject constructor(
         }
     }
 
-    override fun play(lessonId: String, track: String, uri: String, title: String) {
+    override fun play(lessonId: String, track: String, uri: String, title: String, trackLabel: String) {
         controller?.apply {
             setMediaItem(
                 PlaybackContract.mediaItem(
@@ -71,7 +71,7 @@ class PlayerConnectionImpl @Inject constructor(
                     track = track,
                     uri = uri,
                     title = title,
-                    trackLabel = context.getString(PlaybackContract.trackLabelRes(track)),
+                    trackLabel = trackLabel,
                 ),
             )
             prepare()

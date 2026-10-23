@@ -23,9 +23,10 @@ class M1ContractTest {
     )
 
     @Test
-    fun library_hides_modes_lessons_and_downloads_all_linear_track_files() {
+    fun library_includes_modes_lessons_and_downloader_keeps_all_track_files() {
         val linear = lesson("lesson_001")
-        assertEquals(listOf(linear), androidCatalogLessons(listOf(linear, lesson("lesson_002", "modes_v1"))))
+        val modes = lesson("lesson_002", "modes_v1")
+        assertEquals(listOf(linear, modes), androidCatalogLessons(listOf(linear, modes)))
         assertEquals(
             listOf("guided.mp3", "timeline_guided.json", "guided_zh.mp3", "timeline_guided_zh.json", "practice.mp3", "timeline_practice.json"),
             trackArtifacts(linear).map { it.file },

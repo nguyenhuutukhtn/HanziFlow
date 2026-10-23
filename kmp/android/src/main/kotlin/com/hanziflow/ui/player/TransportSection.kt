@@ -55,7 +55,13 @@ fun TransportSection(
             .padding(horizontal = Spacing.lg, vertical = Spacing.sm),
         verticalArrangement = Arrangement.spacedBy(Spacing.xs),
     ) {
-        if (state.practiceAvailable) {
+        if (state.modeName != null) {
+            Text(
+                state.modeName,
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        } else if (state.practiceAvailable) {
             Row(horizontalArrangement = Arrangement.spacedBy(Spacing.sm)) {
                 FilterChip(
                     selected = state.track == "guided",

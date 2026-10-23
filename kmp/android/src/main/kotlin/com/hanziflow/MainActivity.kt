@@ -18,6 +18,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hanziflow.ui.app.AppShellViewModel
 import com.hanziflow.ui.library.LibraryViewModel
 import com.hanziflow.ui.navigation.AppShell
+import com.hanziflow.ui.modes.ModePickerViewModel
 import com.hanziflow.ui.player.PlayerViewModel
 import com.hanziflow.ui.theme.HanziFlowTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,9 +52,11 @@ class MainActivity : ComponentActivity() {
 fun HanziFlowApp(
     libraryViewModel: LibraryViewModel = hiltViewModel(),
     playerViewModel: PlayerViewModel = hiltViewModel(),
+    modePickerViewModel: ModePickerViewModel = hiltViewModel(),
 ) {
     val libraryState by libraryViewModel.uiState.collectAsStateWithLifecycle()
     val playerState by playerViewModel.uiState.collectAsStateWithLifecycle()
+    val modePickerState by modePickerViewModel.uiState.collectAsStateWithLifecycle()
 
     AppShell(
         libraryState = libraryState,
@@ -86,5 +89,10 @@ fun HanziFlowApp(
         onSeekToSection = playerViewModel::seekToSection,
         onCharacter = playerViewModel::lookupCharacter,
         onDismissCharacter = playerViewModel::dismissCharacter,
+        modePickerState = modePickerState,
+        onOpenModePicker = { lesson -> modePickerViewModel.load(lesson.id) },
+        onPlayMode = { lessonId, track ->
+            libraryState.lessons.firstOrNull { it.id == lessonId }?.let { lesson -> playerViewModel.play(lesson, track) }
+        },
     )
 }

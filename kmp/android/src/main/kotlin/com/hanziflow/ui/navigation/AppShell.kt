@@ -24,11 +24,14 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.hanziflow.R
 import com.hanziflow.data.LessonEntity
+import com.hanziflow.shared.CourseJson
 import com.hanziflow.shared.transcript.TranscriptViewMode
 import com.hanziflow.ui.components.MiniPlayer
 import com.hanziflow.ui.components.trackDisplayName
 import com.hanziflow.ui.library.LibraryScreen
 import com.hanziflow.ui.library.LibraryUiState
+import com.hanziflow.ui.modes.ModePickerScreen
+import com.hanziflow.ui.modes.ModePickerUiState
 import com.hanziflow.ui.player.NowPlayingScreen
 import com.hanziflow.ui.player.PlayerUiState
 import com.hanziflow.ui.review.ReviewScreen
@@ -39,6 +42,7 @@ object Routes {
     const val REVIEW = "review"
     const val SETTINGS = "settings"
     const val NOW_PLAYING = "now_playing"
+    const val MODE_PICKER = "mode_picker"
 }
 
 /** Bottom-nav destinations; Review and Settings are G2b/G2c placeholders in this pass. */
@@ -91,6 +95,9 @@ fun AppShell(
     onSeekToSection: (String) -> Unit = {},
     onCharacter: (String) -> Unit = {},
     onDismissCharacter: () -> Unit = {},
+    modePickerState: ModePickerUiState = ModePickerUiState(),
+    onOpenModePicker: (LessonEntity) -> Unit = {},
+    onPlayMode: (String, String) -> Unit = { _, _ -> },
 ) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -168,13 +175,28 @@ fun AppShell(
                     onCancel = onCancel,
                     onDelete = onDelete,
                     onPlay = { lesson ->
-                        onPlayLesson(lesson)
-                        navController.navigate(Routes.NOW_PLAYING)
+                        val format = runCatching { CourseJson.codec.decodeFromString(com.hanziflow.shared.CatalogLesson.serializer(), lesson.catalogJson).format }.getOrDefault("linear_v1")
+                        if (format == "modes_v1") {
+                            onOpenModePicker(lesson)
+                            navController.navigate(Routes.MODE_PICKER)
+                        } else {
+                            onPlayLesson(lesson)
+                            navController.navigate(Routes.NOW_PLAYING)
+                        }
                     },
                 )
             }
             composable(Routes.REVIEW) { ReviewScreen() }
             composable(Routes.SETTINGS) { SettingsScreen() }
+            composable(Routes.MODE_PICKER) {
+                ModePickerScreen(
+                    state = modePickerState,
+                    onSelect = { track ->
+                        modePickerState.lessonId?.let { lessonId -> onPlayMode(lessonId, track) }
+                        navController.navigate(Routes.NOW_PLAYING)
+                    },
+                )
+            }
             composable(Routes.NOW_PLAYING) {
                 NowPlayingScreen(
                     state = playerState,

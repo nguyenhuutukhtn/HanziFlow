@@ -2,6 +2,7 @@ package com.hanziflow.ui.player
 
 import com.hanziflow.fakes.FakeCourseRepository
 import com.hanziflow.fakes.FakePlayerConnection
+import com.hanziflow.fakes.FakeProgressRepository
 import com.hanziflow.fakes.FakeSettingsRepository
 import com.hanziflow.playback.PlaybackState
 import com.hanziflow.playback.SectionLoopInfo
@@ -222,6 +223,27 @@ class PlayerViewModelTest {
 
         assertEquals("Download this lesson first", viewModel.uiState.value.message)
         assertEquals(emptyList<List<String>>(), connection.playCalls)
+    }
+
+    @Test
+    fun `mode track resumes its own position and clears it at the end`() = runTest {
+        val repository = repositoryWithTranscript("lesson_002", "noi")
+        val connection = FakePlayerConnection()
+        val progress = FakeProgressRepository().also { it.savePosition("lesson_002", "noi", 12_000) }
+        val viewModel = PlayerViewModel(repository, FakeSettingsRepository(), progress, connection)
+        val lesson = repository.lessonsFlow.value.single()
+
+        repository.trackFiles = mapOf("lesson_002" to "noi" to tempJson("noi", "audio"))
+        viewModel.play(lesson, "noi")
+        Thread.sleep(50)
+
+        assertEquals("noi", connection.playCalls.single()[1])
+        assertEquals(listOf(12_000L), connection.seekToCalls)
+        assertEquals(listOf("lesson_002" to "noi"), repository.timelineFileCalls)
+
+        connection.emit(connection.state.value.copy(positionMs = 5_000, durationMs = 5_000))
+        Thread.sleep(50)
+        assertEquals(0L, progress.stored("lesson_002", "noi"))
     }
 
     @Test

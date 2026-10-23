@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hanziflow.data.CourseRepository
 import com.hanziflow.data.LessonEntity
+import com.hanziflow.data.ProgressRepository
 import com.hanziflow.data.SettingsRepository
 import com.hanziflow.playback.PlayerConnection
 import com.hanziflow.shared.CourseJson
@@ -12,6 +13,7 @@ import com.hanziflow.shared.transcript.SectionNavigation
 import com.hanziflow.shared.transcript.TranscriptCues
 import com.hanziflow.shared.transcript.TranscriptViewMode
 import com.hanziflow.shared.characters.CharacterIndex
+import com.hanziflow.shared.modes.ModeInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -31,8 +33,12 @@ import kotlinx.coroutines.withTimeoutOrNull
 class PlayerViewModel @Inject constructor(
     private val courseRepository: CourseRepository,
     private val settingsRepository: SettingsRepository,
+    private val progressRepository: ProgressRepository,
     private val playerConnection: PlayerConnection,
 ) : ViewModel() {
+    constructor(courseRepository: CourseRepository, settingsRepository: SettingsRepository, playerConnection: PlayerConnection) :
+        this(courseRepository, settingsRepository, NoOpProgressRepository, playerConnection)
+
     private val _uiState = MutableStateFlow(PlayerUiState())
     val uiState: StateFlow<PlayerUiState> = _uiState.asStateFlow()
 
@@ -41,7 +47,7 @@ class PlayerViewModel @Inject constructor(
 
     private var transcriptLoadJob: Job? = null
     private var practiceLookupJob: Job? = null
-
+    private var lastSavedProgress: Triple<String, String, Long>? = null
     init {
         // A (re-)download finishing changes which tracks are on disk; re-check
         // instead of keeping the value computed when the lesson was opened.
@@ -60,6 +66,7 @@ class PlayerViewModel @Inject constructor(
                         playing = playback.playing,
                         lessonId = playback.lessonId,
                         track = playback.track,
+                        modeName = ModeInfo.all.firstOrNull { mode -> mode.id == playback.track }?.label,
                         positionMs = playback.positionMs,
                         durationMs = playback.durationMs,
                         speed = playback.speed,
@@ -68,6 +75,7 @@ class PlayerViewModel @Inject constructor(
                         transcript = it.transcript.copy(loopedLineId = playback.loopedLineId),
                     )
                 }
+                saveProgress(playback)
                 val id = playback.lessonId
                 if (id != null) {
                     ensureTranscriptLoaded(id, playback.track)
@@ -79,12 +87,18 @@ class PlayerViewModel @Inject constructor(
     }
 
     fun play(lesson: LessonEntity, track: String = "guided") = viewModelScope.launch {
+        val current = playerConnection.state.value
+        if (current.lessonId != null) progressRepository.savePosition(current.lessonId, current.track, current.positionMs)
         val file = courseRepository.trackFile(lesson.id, track)
         if (file == null) {
             _uiState.update { it.copy(message = "Download this lesson first") }
             return@launch
         }
-        playerConnection.play(lesson.id, track, file.toURI().toString(), lesson.title)
+        val startPosition = progressRepository.positionMs(lesson.id, track)
+        val trackLabel = ModeInfo.all.firstOrNull { it.id == track }?.label
+            ?: if (track == "practice") "Luyện nghe" else "Học có hướng dẫn"
+        playerConnection.play(lesson.id, track, file.toURI().toString(), lesson.title, trackLabel)
+        if (startPosition > 0) playerConnection.seekTo(startPosition)
     }
 
     fun switchTrack(track: String) = viewModelScope.launch {
@@ -221,7 +235,7 @@ class PlayerViewModel @Inject constructor(
                 ?: TranscriptViewMode.PINYIN_ONLY
             val chineseOnly = settingsRepository.chineseOnlyEnabled(lessonId, "guided") && track != "practice"
             val vi = settingsRepository.vietnameseEnabled() && !chineseOnly
-            if (track != "practice") playerConnection.switchTrack(if (chineseOnly) "guided_zh" else "guided")
+            if (track == "guided" || track == "guided_zh") playerConnection.switchTrack(if (chineseOnly) "guided_zh" else "guided")
             _uiState.update {
                 it.copy(
                     transcript = TranscriptUiState(
@@ -247,6 +261,19 @@ class PlayerViewModel @Inject constructor(
         val items: com.hanziflow.shared.Items?,
     )
 
+    private fun saveProgress(playback: com.hanziflow.playback.PlaybackState) {
+        val lessonId = playback.lessonId ?: return
+        if (playback.durationMs <= 0 && playback.positionMs == 0L) return
+        val ended = playback.durationMs > 0 && playback.positionMs >= playback.durationMs
+        val position = if (ended) 0L else playback.positionMs
+        val previous = lastSavedProgress
+        if (previous?.first == lessonId && previous.second == playback.track &&
+            !ended && kotlin.math.abs(previous.third - position) < 1_000
+        ) return
+        lastSavedProgress = Triple(lessonId, playback.track, position)
+        viewModelScope.launch { progressRepository.savePosition(lessonId, playback.track, position) }
+    }
+
     private fun ensureLessonMeta(lessonId: String) {
         if (_uiState.value.lessonId == lessonId && _uiState.value.lessonTitle != null) return
         practiceLookupJob?.cancel()
@@ -264,5 +291,10 @@ class PlayerViewModel @Inject constructor(
             val chineseOnlyDownloaded = courseRepository.trackFile(lessonId, "guided_zh") != null
             _uiState.update { it.copy(lessonTitle = title, practiceAvailable = tracks?.practice != null, chineseOnlyAvailable = chineseOnlyDownloaded) }
         }
+    }
+
+    private object NoOpProgressRepository : ProgressRepository {
+        override suspend fun positionMs(lessonId: String, track: String) = 0L
+        override suspend fun savePosition(lessonId: String, track: String, positionMs: Long) = Unit
     }
 }

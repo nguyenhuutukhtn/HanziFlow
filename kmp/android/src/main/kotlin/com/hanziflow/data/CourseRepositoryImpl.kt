@@ -21,9 +21,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
-internal fun androidCatalogLessons(lessons: List<CatalogLesson>): List<CatalogLesson> =
-    // modes_v1: Android support comes later
-    lessons.filter { it.format == "linear_v1" }
+internal fun androidCatalogLessons(lessons: List<CatalogLesson>): List<CatalogLesson> = lessons
 
 class CourseRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,

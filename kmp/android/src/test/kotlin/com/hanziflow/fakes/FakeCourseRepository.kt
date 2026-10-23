@@ -19,6 +19,7 @@ class FakeCourseRepository : CourseRepository {
 
     var trackFiles: Map<Pair<String, String>, File> = emptyMap()
     var timelineFiles: Map<Pair<String, String>, File> = emptyMap()
+    val timelineFileCalls = mutableListOf<Pair<String, String>>()
     var referenceFiles: Map<String, File> = emptyMap()
     var itemsFiles: Map<String, File> = emptyMap()
     var charactersFiles: Map<String, File> = emptyMap()
@@ -37,7 +38,10 @@ class FakeCourseRepository : CourseRepository {
     override suspend fun delete(id: String) { deleteCalls += id }
 
     override suspend fun trackFile(lessonId: String, track: String): File? = trackFiles[lessonId to track]
-    override suspend fun timelineFile(lessonId: String, track: String): File? = timelineFiles[lessonId to track]
+    override suspend fun timelineFile(lessonId: String, track: String): File? {
+        timelineFileCalls += lessonId to track
+        return timelineFiles[lessonId to track]
+    }
     override suspend fun referenceFile(lessonId: String): File? = referenceFiles[lessonId]
     override suspend fun itemsFile(lessonId: String): File? = itemsFiles[lessonId]
     override suspend fun charactersFile(lessonId: String): File? = charactersFiles[lessonId]
