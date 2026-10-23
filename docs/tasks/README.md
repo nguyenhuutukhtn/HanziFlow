@@ -42,6 +42,7 @@ Then: update STATUS.md + a token_log.md row, report with the AGENTS.md template,
 - **API/facade for another client (W1a-fix):** list in the brief the existing consumer's call sites to mirror (e.g. Android `TranscriptPanel.kt:107-225`) and require every field/iteration they use; a facade that passes its own tests can still miss what the next task needs.
 - **DOM events in jsdom (W2c-fix):** `fireEvent.scroll` passes on any element, even one that never scrolls in a browser. For scroll/resize/focus behaviour the brief names the real target (e.g. "the page scrolls: listen on `window`") and the test dispatches on that target.
 - **Negative probes (W2d-fix):** a "break X → Verify prints FAIL …X…" check must be satisfiable only by the real error text. Forbid hard-coded messages that contain the expected keyword (W2d-fix's smoke printed "Tooltip provider error" for any missing element); PM re-runs the probe at review.
+- **Pipeline commands (M3: `generate` crashed on a speaker label the unit tests never hit):** Verify runs the real CLI path on the real lesson files, not only the functions underneath. For `generate`: `.venv/bin/python3 scripts/fake_generate.py lessons/<files>` (fake TTS, scratch dirs, no cost) must print `ok fake generate`.
 - Device check order for features that need downloaded data: confirm the data is uploaded (`curl` the public URL, HTTP 200) before blaming the app.
 
 ## Agent choice (cheapest that fits)

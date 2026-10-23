@@ -8,7 +8,10 @@ from .lesson_schema import Lesson, Segment
 
 
 def _entry(segment: Segment, *, show_translation: bool, show_hanzi: bool) -> list[str]:
-    labels = {"anna": "Anna", "li_ming": "Li Ming", "coach": "Coach", "coach_zh": "Narrator"}
+    labels = {
+        "anna": "Anna", "li_ming": "Li Ming", "wang_fang": "Wang Fang", "chen_dong": "Chen Dong",
+        "coach": "Coach", "coach_zh": "Narrator",
+    }
     lines: list[str] = []
     if segment.turns:
         ordered_speakers = list(dict.fromkeys(turn.speaker for turn in segment.turns))
