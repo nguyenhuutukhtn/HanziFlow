@@ -3,6 +3,21 @@ import { catalogLesson, contentUrl, fetchJson, fetchText } from "./content";
 import { json, shared, type Cue, type Section, type Session, type Track } from "./facade";
 import type { ViewMode } from "./settings";
 
+const savedTrack = (lessonId: string) => {
+  try {
+    return localStorage.getItem(`hanziflow-track:${lessonId}`);
+  } catch {
+    return null;
+  }
+};
+
+const firstTrack = (catalog: string, lessonId: string) => {
+  const lesson = catalogLesson(catalog, lessonId);
+  const names = lesson ? Object.keys(lesson.tracks) : [];
+  const saved = savedTrack(lessonId);
+  return saved && names.includes(saved) ? saved : (names[0] ?? "guided");
+};
+
 type PlayerState = {
   session?: Session;
   track: string;
@@ -44,7 +59,7 @@ export function PlayerProvider({
   children: ReactNode;
 }) {
   const audio = useRef<HTMLAudioElement>(null);
-  const [track, setTrack] = useState("guided");
+  const [track, setTrack] = useState(() => firstTrack(catalog, lessonId));
   const [session, setSession] = useState<Session>();
   const [timeline, setTimeline] = useState("");
   const [position, setPosition] = useState(0);
@@ -55,7 +70,7 @@ export function PlayerProvider({
   const [vietnamese, setVietnamese] = useState(true);
   useEffect(() => {
     const lesson = catalogLesson(catalog, lessonId);
-    if (!lesson) return;
+    if (!lesson || !lesson.tracks[track]) return;
     void Promise.all([
       fetchText(`${lesson.base_url}${lesson.tracks[track].timeline.file}`),
       fetchJson<string | object>(`${lesson.base_url}${lesson.files.reference.file}`),
@@ -112,7 +127,17 @@ export function PlayerProvider({
     const time = audio.current?.currentTime ?? 0;
     fetchText(session.timelinePath(name)!).then((text) => {
       setTrack(name);
-      seek(shared()!.com.hanziflow.shared.web.TrackSwitchJs.positionFor(old, text, time * 1000));
+      const lesson = catalogLesson(catalog, lessonId);
+      const modeTracks = lesson && !lesson.tracks.guided;
+      const nextPosition = modeTracks
+        ? 0
+        : shared()!.com.hanziflow.shared.web.TrackSwitchJs.positionFor(old, text, time * 1000);
+      seek(nextPosition);
+      try {
+        localStorage.setItem(`hanziflow-track:${lessonId}`, name);
+      } catch {
+        // Storage is optional (private browsing and embedded webviews can reject it).
+      }
     });
   };
   const value: PlayerState = {
