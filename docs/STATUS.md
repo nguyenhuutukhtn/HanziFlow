@@ -78,7 +78,7 @@ Last updated: 2026-10-23 (W3b done; Wave 5 paused for user re-prioritization) ·
 
 ## Next (in order)
 
-**Now: user re-ranks priorities after W3b; [Wave 5](tasks/WAVE-5.md) (Android lesson 2, A1–A3 briefed) remains paused until then. Pending user checks: W3b main + PiP follow, W3a PiP, M5 web (after `upload`).**
+**Now: [Wave 5](tasks/WAVE-5.md) (re-scoped 2026-10-23) — learn lesson 2 on the phone: A1 contract gaps → A2 mode picker lite → A3 Nghe/Phản xạ/Nói player → A4 "Lặp ×2". Lesson 2 v1 is uploaded. Pending user checks: W3b follow (main + PiP), W3a PiP, M5 web.**
 
 **Top priority today (user, 2026-10-22, after one day of using the app): W1 — a web player in Chrome on Mac and Linux that stays on top**
 for listening while reading the text at work. The learner today follows by ear plus rough pinyin and
