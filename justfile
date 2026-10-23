@@ -28,6 +28,12 @@ web-build:
 web-deploy:
     bash scripts/web_deploy.sh
 
+# Mirror publish/ to Supabase: dry-run first, then asks before uploading. Run `just app` first when the catalog format changed.
+upload:
+    .venv/bin/mandarin-course upload --dry-run
+    @read -p "Upload for real? [y/N] " ok && [ "$ok" = "y" ]
+    .venv/bin/mandarin-course upload
+
 # One lesson, start to finish: dry-run -> generate (asks before paid TTS) -> publish -> upload.
 lesson ID:
     bash scripts/lesson.sh {{ID}}
