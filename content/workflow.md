@@ -145,6 +145,7 @@ ONLY the lines named in block/fix findings (keep refs), list each change as
 Read 01_brief.md ("Modes"), 03_core.md, 05_story.md v2. Write 09_modes.md with four
 sections, line format as before, every Chinese line counted:
 - Hiểu: story once in Chinese with Vietnamese meaning, gloss of each Core word.
+  Vietnamese lines (`coach_vi`) contain no Chinese characters: the Vietnamese voice cannot pronounce them. The Chinese word is its own `narrator` row right before; the Vietnamese line says "từ này" / "từ vừa nghe" or uses Hán-Việt (user, 2026-10-23).
   The only mode with Vietnamese.
 - Nghe: the story + 3–4 retellings, each changing one detail (person, place, thing,
   number, a flipped fact). Chinese only, narration included.
