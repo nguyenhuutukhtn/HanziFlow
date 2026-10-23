@@ -68,8 +68,11 @@ worker looping through review → fix → review burns more than a stronger one 
   before reporting. It updates STATUS/token_log as usual, including its quota delta (see token_log).
 - **Checkpoints:** at the end of the wave, and **immediately after** any task that changes a contract
   or schema, or that a later task builds on (S1's contract error sank S2: never batch past one).
-- **Checkpoint review:** for each task, read its report, propose a `task-review` on a cheap model
-  (user OK first), run `check.sh` once for all of them, then read only verdict flags + risk hunks.
+- **Checkpoint review = cheap reviewer first, PM last (user, 2026-10-23: "PM tự tin quá").** At every
+  checkpoint PM launches `task-review` on a Haiku subagent (standing OK, no need to ask) for each task,
+  **including code PM wrote or fixed itself** — PM's own edits never get committed on PM's word alone
+  (M3: PM's review missed a `generate` crash on a speaker label). Then PM runs `check.sh` once and reads
+  only verdict flags + risk hunks + anything the reviewer could not run.
   Write one fix brief per failing task (escalated a tier). Commit per task, exact paths.
 - **Model quality** = per-task quota delta (% of plan, not tokens: tokens don't compare across
   models) + fix rounds + escaped bugs (found after commit, charged back to the original row).

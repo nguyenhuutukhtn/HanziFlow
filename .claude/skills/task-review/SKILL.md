@@ -18,8 +18,9 @@ You check another agent's finished task so the PM doesn't have to read the diff.
    - paid API calls (TTS, LLM) outside a dry-run path;
    - secret-looking values (`sk-`, `eyJ`, `service_role`, `KEY=` with a value);
    - contract/schema files (`*schema*`, contract fixtures, migrations), timing/threading code.
-6. If the task produced data (JSON, CSV, generated content): print 5 **random** records (not ones named in Acceptance), one compact line each, for the PM to eyeball. Don't judge their correctness beyond obvious emptiness or placeholders (`?`, `？`, `TODO`, blank).
-7. Compare the agent's report with what you saw: any claim (counts, "passed", "none") not backed by your output.
+6. **Unexercised paths:** for every new value added to a `Literal`/enum/set/map key (e.g. a new speaker, track or variant), grep the repo for a sibling value that already existed (e.g. `"li_ming"`, `"practice"`) and list each file:line where the siblings appear but the new value does not — a lookup there will crash or silently skip (M3: `transcript.py` labels lacked `wang_fang`). Also name any CLI command the task changed that its Verify never runs end to end on real files (for `generate`: `scripts/fake_generate.py`).
+7. If the task produced data (JSON, CSV, generated content): print 5 **random** records (not ones named in Acceptance), one compact line each, for the PM to eyeball. Don't judge their correctness beyond obvious emptiness or placeholders (`?`, `？`, `TODO`, blank).
+8. Compare the agent's report with what you saw: any claim (counts, "passed", "none") not backed by your output.
 
 ## Output (≤ 12 lines, nothing else)
 
@@ -29,6 +30,7 @@ Verify: <exit code(s)>; <key value lines, shortened>
 Checks: <ok/FAIL per step on one line>
 Scope: <unexpected or out-of-scope files, or "clean">
 Risk: <flagged areas with file:line, or "none">
+Unexercised: <file:line missing a new value / commands never run end to end, or "none">
 Samples: <up to 5 lines, or "n/a">
 Report mismatch: <claims not backed by output, or "none">
 ```
