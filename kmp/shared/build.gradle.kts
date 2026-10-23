@@ -11,6 +11,9 @@ val fixtureFiles = listOf(
     "strokes_v2_subset.json",
     "timeline_guided.json",
     "timeline_guided_zh.json",
+    "catalog_modes.json",
+    "reference_modes.json",
+    "timeline_noi.json",
 )
 val generatedFixtureDir = layout.buildDirectory.dir("generated/fixtureTest/kotlin")
 val generateFixtureData = tasks.register("generateFixtureData") {

@@ -29,7 +29,10 @@ def _entry(segment: Segment, *, show_translation: bool, show_hanzi: bool) -> lis
 
 
 def render_transcript(lesson: Lesson, *, full_reference: bool = False, show_hanzi: bool = False) -> str:
-    if lesson.variant == "guided":
+    if lesson.format == "modes_v1":
+        label = {"hieu": "Hiểu", "nghe": "Nghe", "phan_xa": "Phản xạ", "noi": "Nói"}[lesson.variant]
+        title = f"{label} reference" if full_reference else f"{label} transcript"
+    elif lesson.variant == "guided":
         title = "Guided reference" if full_reference else "Guided transcript"
     elif lesson.variant == "practice":
         title = "Listening reference" if full_reference else "Listening transcript"
@@ -61,7 +64,10 @@ def render_transcript(lesson: Lesson, *, full_reference: bool = False, show_hanz
 
 def write_transcripts(lesson: Lesson, output_dir: Path) -> tuple[Path, Path]:
     output_dir.mkdir(parents=True, exist_ok=True)
-    if lesson.variant == "practice":
+    if lesson.format == "modes_v1":
+        practice = output_dir / f"transcript_{lesson.variant}.md"
+        reference = output_dir / f"transcript_full_{lesson.variant}.md"
+    elif lesson.variant == "practice":
         practice = output_dir / "transcript_practice.md"
         reference = output_dir / "transcript_full_practice.md"
     else:

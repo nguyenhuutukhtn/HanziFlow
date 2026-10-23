@@ -19,6 +19,7 @@ from mandarin_course.publish import (
     render_publish_report,
     sentence_item_id,
     tokenize_mandarin,
+    tones_from_pinyin,
     word_item_id,
 )
 from mandarin_course.tts import cache_key, voice_ids_for
@@ -61,6 +62,23 @@ def test_tokenizer_aligns_words_names_and_punctuation():
 def test_tokenizer_reports_bad_alignment():
     with pytest.raises(ValueError, match="does not align"):
         tokenize_mandarin("这是外卖。", "zhè shì kāfēi.")
+
+
+def test_tokenizer_aligns_latin_literals_without_tones():
+    assert tokenize_mandarin("A座在B座旁边。", "A zuò zài B zuò pángbiān.") == [
+        {"hanzi": "A", "pinyin": "A"}, {"hanzi": "座", "pinyin": "zuò"}, {"hanzi": "在", "pinyin": "zài"},
+        {"hanzi": "B", "pinyin": "B"}, {"hanzi": "座", "pinyin": "zuò"}, {"hanzi": "旁边", "pinyin": "pángbiān"}, {"hanzi": "。"},
+    ]
+    assert tones_from_pinyin("A座", "A zuò") == [4]
+
+
+def test_tokenizer_aligns_erhua_at_end_and_inside_a_word():
+    assert tokenize_mandarin("你在哪儿？", "nǐ zài nǎr?")[2] == {"hanzi": "哪儿", "pinyin": "nǎr"}
+    assert tokenize_mandarin("我一点儿也不饿。", "wǒ yìdiǎnr yě bù è.")[1] == {"hanzi": "一点儿", "pinyin": "yìdiǎnr"}
+    assert tones_from_pinyin("哪儿", "nǎr") == [3, 5]
+    assert tones_from_pinyin("一点儿", "yìdiǎnr") == [4, 3, 5]
+    assert tones_from_pinyin("儿子", "ér zi") == [2, 5]
+    assert tones_from_pinyin("儿子", "érzi") == [2, 5]
 
 
 def test_dialogue_turns_become_individual_reference_lines(lesson_data):

@@ -1,4 +1,4 @@
-from mandarin_course.transcript import render_transcript
+from mandarin_course.transcript import render_transcript, write_transcripts
 from mandarin_course.lesson_schema import DialogueTurn
 
 
@@ -35,3 +35,11 @@ def test_transcript_labels_dialogue_speakers(lesson):
     })
     changed = lesson.model_copy(update={"segments": [dialogue]})
     assert "Speakers: Anna ↔ Li Ming" in render_transcript(changed)
+
+
+def test_modes_transcripts_are_named_per_mode(tmp_path, lesson):
+    mode = lesson.model_copy(update={"format": "modes_v1", "variant": "noi"})
+    transcript, reference = write_transcripts(mode, tmp_path)
+    assert transcript.name == "transcript_noi.md"
+    assert reference.name == "transcript_full_noi.md"
+    assert "# Test lesson — Nói transcript" in transcript.read_text()

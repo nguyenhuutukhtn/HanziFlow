@@ -42,6 +42,20 @@ class ContractParsingTest {
     }
 
     @Test
+    fun parsesRealModesV1Package() {
+        val lesson = CourseJson.catalog(fixtureText("catalog_modes.json")).lessons.single()
+        val reference = CourseJson.reference(fixtureText("reference_modes.json"))
+        val timeline = CourseJson.timeline(fixtureText("timeline_noi.json"))
+        val noi = assertNotNull(reference.tracks.forName("noi"))
+
+        assertEquals("modes_v1", lesson.format)
+        assertEquals(listOf("hieu", "nghe", "phan_xa", "noi"), lesson.tracks.names)
+        assertEquals(43, noi.size)
+        assertEquals(121, assertNotNull(reference.tracks.forName("phan_xa")).size)
+        assertTrue(timeline.cues.all { cue -> cue.lineId in noi.map { it.id } })
+    }
+
+    @Test
     fun parsesPublishedReferenceItemsAndTimeline() {
         val reference = CourseJson.reference(fixtureText("reference.json"))
         val items = CourseJson.items(fixtureText("items.json"))

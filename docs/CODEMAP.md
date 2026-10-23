@@ -19,12 +19,13 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `generate_plan.py` [82] — Cache/cost plan for a lesson's TTS segments: `generate --dry-run` and bundle import.
 - `lesson_schema.py` [115] — Validated, content-driven lesson schema.
 - `logs.py` [14] — Shared helper: write full detail behind a short CLI summary (docs/workflow.md).
-- `publish.py` [20] — Public publishing API; implementation is split into focused modules.
+- `publish.py` [32] — Public publishing API; implementation is split into focused modules.
 - `publish_core.py` [299]
+- `publish_modes.py` [150] — Publishing support for the four-track ``modes_v1`` lesson format.
 - `publish_render.py` [39]
-- `publish_support.py` [123]
+- `publish_support.py` [141]
 - `publish_timeline.py` [204]
-- `publish_tokens.py` [171]
+- `publish_tokens.py` [202]
 - `review.py` [27] — Small, transparent spaced-repetition policy.
 - `storage.py` [60] — SQLite progress store. Ratings are learner supplied; no automatic scoring.
 - `story/__init__.py` [7] — Story source (`lessons/src/*.story.md`) -> guided + practice lesson JSON.
@@ -37,7 +38,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `story/parser.py` [143] — Parse a lesson story source (`lessons/src/lesson_XXX.story.md`) into blocks.
 - `story/report.py` [46] — Short build-lesson output: ≤ 20 lines, errors with source line numbers.
 - `story/rows.py` [149] — Export and import row-scoped story-source revisions.
-- `transcript.py` [69] — Learner-facing Markdown transcripts.
+- `transcript.py` [78] — Learner-facing Markdown transcripts.
 - `tts.py` [247] — ElevenLabs TTS adapter and deterministic audio cache.
 - `upload.py` [197] — Upload published lesson packages to Supabase Storage.
 - `upload_storage.py` [199] — HTTP and Storage REST helpers for the lesson uploader.
@@ -47,6 +48,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 
 - `build_radicals.py` [62] — Build the radical metadata from a pinned UCD skeleton and authored names.
 - `codemap.py` [100] — Regenerate docs/CODEMAP.md: one line per source file, so agents open only what they need.
+- `fake_generate.py` [54] — Run the real `generate` path on lesson files with a fake TTS, in scratch dirs.
 
 ## Python tests (`tests/`)
 
@@ -63,13 +65,14 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `test_lesson_schema.py` [113]
 - `test_m3_modes.py` [99]
 - `test_metrics_rows.py` [88]
-- `test_publish.py` [419] ⚠
+- `test_publish.py` [434] ⚠
 - `test_publish_guided_zh.py` [28]
+- `test_publish_modes.py` [84]
 - `test_review.py` [18]
 - `test_storage.py` [12]
 - `test_story_builder.py` [78]
 - `test_stroke_pack.py` [27]
-- `test_transcript.py` [37]
+- `test_transcript.py` [45]
 - `test_tts.py` [130]
 - `test_upload.py` [298] — Upload tests use httpx.MockTransport: no network, no real Supabase project.
 - `test_upload_pruning.py` [125] — Upload retry and retention tests.
@@ -101,7 +104,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 ## KMP shared (tests) (`kmp/shared/src/commonTest/`)
 
 - `kotlin/com/hanziflow/shared/CharacterContractTest.kt` [46] — CharacterContractTest
-- `kotlin/com/hanziflow/shared/ContractParsingTest.kt` [89] — ContractParsingTest
+- `kotlin/com/hanziflow/shared/ContractParsingTest.kt` [103] — ContractParsingTest
 - `kotlin/com/hanziflow/shared/testgen/GoldenVectorTest.kt` [44] — GoldenVectorTest — Golden vectors: TestGenerator.generate() against the real lesson_001 items.json
 - `kotlin/com/hanziflow/shared/testgen/InvariantsTest.kt` [108] — InvariantsTest — Splits the real lesson_001 item bank into a synthetic "earlier" lesson and a
 - `kotlin/com/hanziflow/shared/testgen/TestSessionTest.kt` [89] — TestSessionTest

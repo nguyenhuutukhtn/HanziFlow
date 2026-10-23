@@ -42,6 +42,24 @@ def _matches_catalog_entry(package: Path, entry: dict[str, Any] | None) -> bool:
         return False
     tracks = entry.get("tracks", {})
     files = entry.get("files", {})
+    if entry.get("format") == "modes_v1":
+        expected_modes = ("hieu", "nghe", "phan_xa", "noi")
+        if set(tracks) != set(expected_modes):
+            return False
+        checks = [
+            (package / filename, files.get(name))
+            for name, filename in (("manifest", "lesson.json"), ("reference", "reference.json"), ("items", "items.json"), ("characters", "characters.json"))
+        ]
+        for mode in expected_modes:
+            track = tracks[mode]
+            checks.extend([(package / f"{mode}.mp3", track), (package / f"timeline_{mode}.json", track.get("timeline"))])
+        for path, old in checks:
+            if old is None or not path.is_file():
+                return False
+            digest = _digest(path)
+            if digest["sha256"] != old.get("sha256") or digest["bytes"] != old.get("bytes"):
+                return False
+        return True
     checks: list[tuple[Path, dict[str, Any] | None]] = [
         (package / "lesson.json", files.get("manifest")),
         (package / "reference.json", files.get("reference")),
@@ -75,12 +93,12 @@ def _matches_catalog_entry(package: Path, entry: dict[str, Any] | None) -> bool:
     return True
 
 
-def _json_bytes(value: Any) -> bytes:
-    return (json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")
+def _json_bytes(value: Any, *, sort_keys: bool = True) -> bytes:
+    return (json.dumps(value, ensure_ascii=False, indent=2, sort_keys=sort_keys) + "\n").encode("utf-8")
 
 
-def _write_json(path: Path, value: Any) -> None:
-    path.write_bytes(_json_bytes(value))
+def _write_json(path: Path, value: Any, *, sort_keys: bool = True) -> None:
+    path.write_bytes(_json_bytes(value, sort_keys=sort_keys))
 
 
 def _digest(path: Path) -> dict[str, Any]:

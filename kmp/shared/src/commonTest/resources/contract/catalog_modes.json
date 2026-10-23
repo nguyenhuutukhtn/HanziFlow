@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "catalog_version": 14,
+  "lessons": [
+    {
+      "id": "lesson_002",
+      "version": 1,
+      "order": 2,
+      "format": "modes_v1",
+      "title": "你在哪儿？",
+      "level": "absolute_beginner",
+      "base_url": "lessons/lesson_002/v1/",
+      "tracks": {
+        "hieu": {
+          "file": "hieu.mp3",
+          "bytes": 4317979,
+          "sha256": "2df0906935957f0effb35f4d409cd21a751f1d89eff6f652b7f1de2e9700e79e",
+          "duration_ms": 539689,
+          "timeline": {
+            "file": "timeline_hieu.json",
+            "bytes": 21547,
+            "sha256": "3c81a14a9e1536226f5467effabd4522ccb432105536b2ec53bf57a9356f99eb"
+          }
+        },
+        "nghe": {
+          "file": "nghe.mp3",
+          "bytes": 2487527,
+          "sha256": "678db452e9b5fe15f63cf0e5108949eca0e2090da6f8936fdf196b6a265341a2",
+          "duration_ms": 310875,
+          "timeline": {
+            "file": "timeline_nghe.json",
+            "bytes": 12068,
+            "sha256": "faefa61c69ddfb4f247175e1a2956855d1de9558353b15c2190731fb38e2558e"
+          }
+        },
+        "phan_xa": {
+          "file": "phan_xa.mp3",
+          "bytes": 3656140,
+          "sha256": "b9ddce2c641702de4f3297d5462d04cb9effd108825dcd3b2946ffcb833020c3",
+          "duration_ms": 456957,
+          "timeline": {
+            "file": "timeline_phan_xa.json",
+            "bytes": 21874,
+            "sha256": "b1a98253120af829bef37622e80b3276163ee8df213acf74522250f4d311b52e"
+          }
+        },
+        "noi": {
+          "file": "noi.mp3",
+          "bytes": 2765678,
+          "sha256": "e103ddb2d349fbab53a37d9322e23409105915388ed082c580a81bfb15464276",
+          "duration_ms": 345633,
+          "timeline": {
+            "file": "timeline_noi.json",
+            "bytes": 7673,
+            "sha256": "f3534e1c742594c0a2f80248064c6974a5759517dcc1afffc5e38a1db4c829ac"
+          }
+        }
+      },
+      "files": {
+        "manifest": {
+          "file": "lesson.json",
+          "bytes": 333,
+          "sha256": "2477e60f9b090a9796d015fbb221e24a453d2030b250ed3fbf7e723abaf07720"
+        },
+        "reference": {
+          "file": "reference.json",
+          "bytes": 346796,
+          "sha256": "4384197d032784d749f99fbc27d715e397d8b14546a08ddf9fb915e8c7533b76"
+        },
+        "items": {
+          "file": "items.json",
+          "bytes": 124,
+          "sha256": "7492c97de5b4d7bc8da8a8270afc6d5c379fa8e6b38179bd8543cee65c26a277"
+        },
+        "characters": {
+          "file": "characters.json",
+          "bytes": 6152,
+          "sha256": "d99285c84b4865fa10f81d30b0d0c8baeb41444fcab01b80a6bebc59eca52d81"
+        }
+      }
+    }
+  ]
+}
