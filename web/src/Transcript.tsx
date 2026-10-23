@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent, type MouseEvent } from "react";
 import type { Cue, CuePlace, RenderLine, Session } from "./facade";
 import { json } from "./facade";
 
@@ -13,8 +13,8 @@ type Props = {
   onCopy?: (text: string) => void;
   onPrevious?: () => void;
   onNext?: () => void;
+  compact?: boolean;
 };
-const selected = () => Boolean(window.getSelection?.()?.toString());
 let reportedMissingCuePlaceJson = false;
 
 export function Transcript({
@@ -28,9 +28,11 @@ export function Transcript({
   onCopy,
   onPrevious,
   onNext,
+  compact = false,
 }: Props) {
   const [follow, setFollow] = useState(true);
   const [outOfView, setOutOfView] = useState(false);
+  const [peekedToken, setPeekedToken] = useState<string>();
   const programmed = useRef(false);
   const programmedTimer = useRef<number>();
   const activeRef = useRef<HTMLDivElement | null>(null);
@@ -45,6 +47,9 @@ export function Transcript({
   const anchorIndex = place ? (place.speaking >= 0 ? place.speaking : place.last) : -1;
   const activeId = place?.speaking != null && place.speaking >= 0 ? cues[place.speaking]?.line_id : undefined;
   const anchorId = anchorIndex >= 0 ? cues[anchorIndex]?.line_id : undefined;
+  const pinyinEnabled = view === "HANZI_WITH_PINYIN";
+  const selected = () =>
+    Boolean(activeRef.current?.ownerDocument.getSelection?.()?.toString() ?? window.getSelection?.()?.toString());
   const finishProgrammaticScroll = () => {
     programmed.current = false;
     if (programmedTimer.current) window.clearTimeout(programmedTimer.current);
@@ -63,6 +68,10 @@ export function Transcript({
   useEffect(() => {
     if (follow && activeRef.current) returnToActive();
   }, [anchorId]);
+  useEffect(() => setPeekedToken(undefined), [anchorId]);
+  useEffect(() => {
+    if (pinyinEnabled) setPeekedToken(undefined);
+  }, [pinyinEnabled]);
   useEffect(() => {
     const target = activeRef.current;
     if (!target || follow || typeof IntersectionObserver === "undefined") return;
@@ -71,15 +80,18 @@ export function Transcript({
     return () => observer.disconnect();
   }, [anchorId, follow]);
   useEffect(() => {
-    window.addEventListener("scroll", stopFollowing);
-    window.addEventListener("wheel", stopFollowing);
-    window.addEventListener("touchmove", stopFollowing);
-    window.addEventListener("scrollend", finishProgrammaticScroll);
+    // Capture on the document: PiP scrolls an inner element, and its scroll events do not bubble to window.
+    const doc = activeRef.current?.ownerDocument ?? document;
+    const targets = [doc, doc.defaultView ?? window];
+    targets.forEach((target) => target.addEventListener("scroll", stopFollowing, true));
+    targets.forEach((target) => target.addEventListener("wheel", stopFollowing, true));
+    targets.forEach((target) => target.addEventListener("touchmove", stopFollowing, true));
+    targets.forEach((target) => target.addEventListener("scrollend", finishProgrammaticScroll, true));
     return () => {
-      window.removeEventListener("scroll", stopFollowing);
-      window.removeEventListener("wheel", stopFollowing);
-      window.removeEventListener("touchmove", stopFollowing);
-      window.removeEventListener("scrollend", finishProgrammaticScroll);
+      targets.forEach((target) => target.removeEventListener("scroll", stopFollowing, true));
+      targets.forEach((target) => target.removeEventListener("wheel", stopFollowing, true));
+      targets.forEach((target) => target.removeEventListener("touchmove", stopFollowing, true));
+      targets.forEach((target) => target.removeEventListener("scrollend", finishProgrammaticScroll, true));
       if (programmedTimer.current) window.clearTimeout(programmedTimer.current);
     };
   });
@@ -90,7 +102,7 @@ export function Transcript({
     }
   };
   return (
-    <div className="transcript-wrap">
+    <div className={`transcript-wrap${compact ? " compact-transcript" : ""}`}>
       <ol className="transcript" aria-label="Bản chép bài học">
         {ids.map((id) => {
           const line = json<RenderLine>(session.lineJson(id, view, showVietnamese, positionMs));
@@ -118,7 +130,8 @@ export function Transcript({
               onSeek(target);
             }
           };
-          if (line.language === "vi-VN")
+          if (line.language === "vi-VN") {
+            if (!showVietnamese) return null;
             return (
               <li key={id}>
                 <div className="coach-line" lang="vi-VN">
@@ -126,6 +139,7 @@ export function Transcript({
                 </div>
               </li>
             );
+          }
           return (
             <li key={id}>
               <div
@@ -149,26 +163,46 @@ export function Transcript({
                     {line.showHanzi && (
                       <span className="hanzi">
                         {line.tokens?.length
-                          ? line.tokens.map((token, index) => (
-                              <span
-                                className="character"
-                                role="button"
-                                tabIndex={0}
-                                key={`${token.hanzi}-${index}`}
-                                onClick={(event) => {
-                                  event.stopPropagation();
-                                  if (!selected()) onCharacter?.(token.hanzi);
-                                }}
-                                onKeyDown={(event) => event.key === "Enter" && onCharacter?.(token.hanzi)}
-                              >
-                                {token.hanzi}
-                              </span>
-                            ))
+                          ? line.tokens.map((token, index) => {
+                              const tokenId = `${id}-${index}`;
+                              const showPinyin =
+                                Boolean(token.pinyin) && ((compact && pinyinEnabled) || peekedToken === tokenId);
+                              const openCharacter = (event: MouseEvent | KeyboardEvent) => {
+                                event.stopPropagation();
+                                if (event.currentTarget.ownerDocument.getSelection?.()?.toString()) return;
+                                if (!pinyinEnabled && token.pinyin && peekedToken !== tokenId) {
+                                  setPeekedToken(tokenId);
+                                  return;
+                                }
+                                onCharacter?.(token.hanzi);
+                              };
+                              return (
+                                <span
+                                  className="character"
+                                  role="button"
+                                  tabIndex={0}
+                                  key={tokenId}
+                                  onClick={openCharacter}
+                                  onKeyDown={(event) => event.key === "Enter" && openCharacter(event)}
+                                >
+                                  {compact || showPinyin ? (
+                                    <ruby>
+                                      {token.hanzi}
+                                      {showPinyin && <rt>{token.pinyin}</rt>}
+                                    </ruby>
+                                  ) : (
+                                    token.hanzi
+                                  )}
+                                </span>
+                              );
+                            })
                           : line.text}
                       </span>
                     )}
                     {line.showPinyinLine && line.pinyin && <span className="pinyin">{line.pinyin}</span>}
-                    {line.showTranslation && line.translation && <span className="meaning">{line.translation}</span>}
+                    {showVietnamese && line.showTranslation && line.translation && (
+                      <span className="meaning">{line.translation}</span>
+                    )}
                   </>
                 )}
               </div>

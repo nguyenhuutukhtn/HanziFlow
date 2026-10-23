@@ -1,21 +1,17 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { ChevronLeft, ChevronRight, Pause, Play, RotateCcw } from "lucide-react";
+import { CharacterCard } from "../components/CharacterCard";
+import { Button } from "../components/ui/button";
 import { PortalContainerProvider } from "../components/ui/portal-container";
-import { json, type Cue, type CuePlace } from "../facade";
 import { usePlayer } from "../player-context";
 import { isPlayerShortcutTarget } from "../screens/Player";
+import type { ViewMode } from "../settings";
+import { Transcript } from "../Transcript";
 
 export function PipPlayer({ win }: { win: Window }) {
   const player = usePlayer();
-  const place = player.session ? json<CuePlace>(player.session.cuePlaceJson(player.position)) : null;
-  const index = place && (place.speaking >= 0 ? place.speaking : place.last);
-  const cue = index != null && index >= 0 && player.session ? json<Cue>(player.session.cueJson(index)) : null;
-  const next = place && place.next >= 0 && player.session ? json<Cue>(player.session.cueJson(place.next)) : null;
-  const line =
-    cue && player.session
-      ? json<{ text: string; pinyin: string | null; translation: string | null }>(
-          player.session.lineJson(cue.line_id, player.view, player.vietnamese, player.position),
-        )
-      : null;
+  const [char, setChar] = useState<string>();
+  const pinyinOn = player.view === "HANZI_WITH_PINYIN";
   useEffect(() => {
     const key = (event: KeyboardEvent) => {
       if (isPlayerShortcutTarget(event)) return;
@@ -46,22 +42,52 @@ export function PipPlayer({ win }: { win: Window }) {
       <section className="floating-player">
         <div className="float-top">
           <span>{player.playing ? "ĐANG PHÁT" : "TẠM DỪNG"}</span>
+          <strong>{player.session?.lessonTitle()}</strong>
         </div>
-        <div className="float-text">
-          {place?.speaking === -1 && <small>vừa đọc</small>}
-          <strong>{line?.text ?? "…"}</strong>
-          {line?.pinyin && <span>{line.pinyin}</span>}
-          {player.vietnamese && line?.translation && <small>{line.translation}</small>}
-          {next && place?.speaking === -1 && <small>Tiếp theo</small>}
+        <div className="float-text" aria-label="Bản chép trong cửa sổ nổi">
+          {player.session && (
+            <Transcript
+              session={player.session}
+              track={player.track}
+              positionMs={player.position}
+              view={player.view}
+              showVietnamese={false}
+              onSeek={player.seek}
+              onCharacter={setChar}
+              compact
+            />
+          )}
         </div>
         <div className="float-controls">
-          <button onClick={player.previous}>‹</button>
-          <button className="float-play" onClick={player.toggle}>
-            {player.playing ? "Tạm dừng" : "Nghe tiếp"}
-          </button>
-          <button onClick={player.next}>›</button>
-          <button onClick={player.replay}>Nghe lại câu</button>
+          <Button onClick={player.previous} aria-label="Câu trước">
+            <ChevronLeft aria-hidden />
+          </Button>
+          <Button className="float-play" onClick={player.toggle} aria-label={player.playing ? "Tạm dừng" : "Nghe tiếp"}>
+            {player.playing ? <Pause aria-hidden /> : <Play aria-hidden />}
+          </Button>
+          <Button onClick={player.next} aria-label="Câu sau">
+            <ChevronRight aria-hidden />
+          </Button>
+          <Button onClick={player.replay} aria-label="Nghe lại câu">
+            <RotateCcw aria-hidden />
+          </Button>
+          <Button
+            aria-label="Hiển thị pinyin"
+            aria-pressed={pinyinOn}
+            onClick={() => player.setView((pinyinOn ? "HANZI_ONLY" : "HANZI_WITH_PINYIN") as ViewMode)}
+          >
+            拼
+          </Button>
         </div>
+        {char && player.session && (
+          <CharacterCard
+            session={player.session}
+            char={char}
+            close={() => setChar(undefined)}
+            select={setChar}
+            copy={(text) => void navigator.clipboard?.writeText(text)}
+          />
+        )}
       </section>
     </PortalContainerProvider>
   );

@@ -44,6 +44,10 @@ function PlayerScreen({ onBack }: { onBack: () => void }) {
     ).documentPictureInPicture;
     if (!api) return;
     const win = await api.requestWindow({ width: 360, height: 200 });
+    // The PiP document starts empty: give it the app's stylesheets (Vite <style> in dev, <link> in build).
+    document
+      .querySelectorAll('style, link[rel="stylesheet"]')
+      .forEach((node) => win.document.head.append(node.cloneNode(true)));
     win.addEventListener("pagehide", () => setPip(undefined), { once: true });
     setPip(win);
   };

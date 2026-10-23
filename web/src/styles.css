@@ -543,6 +543,8 @@ select:focus-visible,
 }
 .floating-player {
   display: flex;
+  box-sizing: border-box;
+  height: 100vh;
   min-height: 200px;
   flex-direction: column;
   padding: 13px 16px;
@@ -551,48 +553,80 @@ select:focus-visible,
   background: var(--surface);
   font-family: var(--font-body);
   color: var(--text);
+  overflow: hidden;
 }
 .float-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-1);
   color: var(--muted);
   font-size: var(--text-caption);
   font-weight: 800;
   letter-spacing: 1px;
 }
+.float-top strong {
+  overflow: hidden;
+  color: var(--text);
+  font-size: var(--text-secondary);
+  letter-spacing: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .float-text {
   flex: 1;
+  min-height: 0;
   padding: 11px 0;
-  overflow: auto;
-}
-.float-text strong,
-.float-text span,
-.float-text small {
-  display: block;
-}
-.float-text strong {
-  font-family: var(--font-hanzi);
-  font-size: clamp(20px, calc(var(--hanzi-size) * 0.8), 30px);
-}
-.float-text small {
-  color: var(--muted);
-  font-size: var(--text-secondary);
+  overflow: hidden auto;
 }
 .float-controls {
   display: flex;
   flex: none;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  padding-top: 10px;
+  gap: clamp(4px, 2vw, 12px);
+  padding-top: clamp(6px, 2vw, 10px);
   border-top: 1px solid var(--border);
 }
 .float-controls button {
-  padding: 7px;
-  border-radius: var(--radius-control);
+  min-height: clamp(28px, 9vw, 36px);
+  padding: 4px clamp(8px, 3vw, 12px);
   background: var(--surface-soft);
+}
+.float-controls svg {
+  width: clamp(14px, 4.5vw, 18px);
+  height: clamp(14px, 4.5vw, 18px);
 }
 .float-controls .float-play {
   background: var(--accent);
   color: var(--color-content-on-accent);
+}
+.compact-transcript .transcript {
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-1);
+}
+.compact-transcript .hanzi {
+  overflow-wrap: anywhere;
+}
+.floating-player .return-current {
+  --return-pill-bottom: 64px;
+}
+.compact-transcript .line {
+  padding: var(--space-1) var(--space-2);
+}
+.compact-transcript .hanzi {
+  /* PiP width (vw) caps the Settings size, so a small window shrinks the text. */
+  font-size: clamp(16px, 6vw, var(--hanzi-size));
+  line-height: 1.9;
+}
+.compact-transcript ruby {
+  margin-inline-end: 0.2em;
+}
+.compact-transcript rt {
+  color: var(--accent);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
 }
 .player-layout {
   display: grid;
