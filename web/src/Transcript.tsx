@@ -17,6 +17,36 @@ type Props = {
 };
 let reportedMissingCuePlaceJson = false;
 
+type ProgrammaticTarget = { current: () => number; target: number };
+
+const scrollToVisibleCenter = (target: HTMLElement): ProgrammaticTarget | undefined => {
+  const doc = target.ownerDocument;
+  const targetRect = target.getBoundingClientRect();
+  if (targetRect.height === 0) {
+    target.scrollIntoView?.({ block: "center", behavior: "smooth" });
+    return;
+  }
+  const scroller = target.closest<HTMLElement>(".float-text");
+  if (scroller) {
+    const scrollerRect = scroller.getBoundingClientRect();
+    const top = scroller.scrollTop + targetRect.top - scrollerRect.top - (scrollerRect.height - targetRect.height) / 2;
+    scroller.scrollTo({ top, behavior: "smooth" });
+    return { current: () => scroller.scrollTop, target: top };
+  }
+
+  const win = doc.defaultView ?? window;
+  const playerBar = doc.querySelector<HTMLElement>(".player-bar");
+  const playerBarRect = playerBar?.getBoundingClientRect();
+  const visibleBottom =
+    playerBarRect && playerBarRect.top < win.innerHeight && playerBarRect.bottom > 0
+      ? Math.max(0, playerBarRect.top)
+      : win.innerHeight;
+  const targetCenter = win.scrollY + targetRect.top + targetRect.height / 2;
+  const top = targetCenter - visibleBottom / 2;
+  win.scrollTo({ top, behavior: "smooth" });
+  return { current: () => win.scrollY, target: top };
+};
+
 export function Transcript({
   session,
   track,
@@ -34,7 +64,9 @@ export function Transcript({
   const [outOfView, setOutOfView] = useState(false);
   const [peekedToken, setPeekedToken] = useState<string>();
   const programmed = useRef(false);
+  const programmedTarget = useRef<ProgrammaticTarget>();
   const programmedTimer = useRef<number>();
+  useEffect(() => () => window.clearTimeout(programmedTimer.current), []);
   const activeRef = useRef<HTMLDivElement | null>(null);
   const cues = Array.from({ length: session.cueCount() }, (_, i) => json<Cue>(session.cueJson(i)));
   const cuePlaceJson = (session as Partial<Session>).cuePlaceJson;
@@ -50,20 +82,17 @@ export function Transcript({
   const pinyinEnabled = view === "HANZI_WITH_PINYIN";
   const selected = () =>
     Boolean(activeRef.current?.ownerDocument.getSelection?.()?.toString() ?? window.getSelection?.()?.toString());
-  const finishProgrammaticScroll = () => {
-    programmed.current = false;
-    if (programmedTimer.current) window.clearTimeout(programmedTimer.current);
-  };
   const returnToActive = () => {
     programmed.current = true;
     setFollow(true);
     setOutOfView(false);
-    const target = activeRef.current as
-      | (HTMLDivElement & { scrollIntoView?: (options: ScrollIntoViewOptions) => void })
-      | null;
-    target?.scrollIntoView?.({ block: "center", behavior: "smooth" });
-    if (programmedTimer.current) window.clearTimeout(programmedTimer.current);
-    programmedTimer.current = window.setTimeout(finishProgrammaticScroll, 1000);
+    if (activeRef.current) programmedTarget.current = scrollToVisibleCenter(activeRef.current);
+    // Fallback when scrollend never fires (older Safari) or the target is out of scroll range.
+    window.clearTimeout(programmedTimer.current);
+    programmedTimer.current = window.setTimeout(() => {
+      programmed.current = false;
+      programmedTarget.current = undefined;
+    }, 1500);
   };
   useEffect(() => {
     if (follow && activeRef.current) returnToActive();
@@ -80,29 +109,54 @@ export function Transcript({
     return () => observer.disconnect();
   }, [anchorId, follow]);
   useEffect(() => {
-    // Capture on the document: PiP scrolls an inner element, and its scroll events do not bubble to window.
     const doc = activeRef.current?.ownerDocument ?? document;
     const targets = [doc, doc.defaultView ?? window];
-    targets.forEach((target) => target.addEventListener("scroll", stopFollowing, true));
+    targets.forEach((target) => target.addEventListener("scroll", stopFollowingOnScroll, true));
     targets.forEach((target) => target.addEventListener("wheel", stopFollowing, true));
     targets.forEach((target) => target.addEventListener("touchmove", stopFollowing, true));
     targets.forEach((target) => target.addEventListener("scrollend", finishProgrammaticScroll, true));
+    doc.addEventListener("keydown", stopFollowingOnScrollKey);
+    doc.addEventListener("pointerdown", stopFollowingOnScrollbar, true);
     return () => {
-      targets.forEach((target) => target.removeEventListener("scroll", stopFollowing, true));
+      targets.forEach((target) => target.removeEventListener("scroll", stopFollowingOnScroll, true));
       targets.forEach((target) => target.removeEventListener("wheel", stopFollowing, true));
       targets.forEach((target) => target.removeEventListener("touchmove", stopFollowing, true));
       targets.forEach((target) => target.removeEventListener("scrollend", finishProgrammaticScroll, true));
-      if (programmedTimer.current) window.clearTimeout(programmedTimer.current);
+      doc.removeEventListener("keydown", stopFollowingOnScrollKey);
+      doc.removeEventListener("pointerdown", stopFollowingOnScrollbar, true);
     };
   });
   const stopFollowing = () => {
-    if (!programmed.current) {
-      setFollow(false);
-      setOutOfView(true);
+    setFollow(false);
+    setOutOfView(true);
+  };
+  const stopFollowingOnScroll = () => {
+    if (!programmed.current) stopFollowing();
+  };
+  const finishProgrammaticScroll = () => {
+    const destination = programmedTarget.current;
+    if (!destination || Math.abs(destination.current() - destination.target) <= 2) {
+      programmed.current = false;
+      programmedTarget.current = undefined;
+    }
+  };
+  const stopFollowingOnScrollKey = (event: globalThis.KeyboardEvent) => {
+    const target = event.target as HTMLElement | null;
+    if (target?.closest("input, textarea, select, [contenteditable='true'], [role='slider']")) return;
+    if (["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End"].includes(event.key)) stopFollowing();
+  };
+  const stopFollowingOnScrollbar = (event: PointerEvent) => {
+    const doc = activeRef.current?.ownerDocument ?? document;
+    const scroller = activeRef.current?.closest<HTMLElement>(".float-text");
+    if (scroller) {
+      const rect = scroller.getBoundingClientRect();
+      if (scroller.scrollHeight > scroller.clientHeight && event.clientX >= rect.right - 16) stopFollowing();
+    } else if (event.clientX >= doc.documentElement.clientWidth) {
+      stopFollowing();
     }
   };
   return (
-    <div className={`transcript-wrap${compact ? " compact-transcript" : ""}`}>
+    <div className={`transcript-wrap${compact ? " compact-transcript" : ""}`} data-follow={follow ? "on" : "off"}>
       <ol className="transcript" aria-label="Bản chép bài học">
         {ids.map((id) => {
           const line = json<RenderLine>(session.lineJson(id, view, showVietnamese, positionMs));

@@ -393,6 +393,10 @@ select:focus-visible,
 .transcript-wrap {
   position: relative;
 }
+.player-page .transcript-wrap {
+  /* Let the final cue reach the center above the sticky player controls. */
+  padding-bottom: calc(50vh + 160px);
+}
 .transcript {
   display: grid;
   gap: 8px;
@@ -604,6 +608,8 @@ select:focus-visible,
 .compact-transcript .transcript {
   grid-template-columns: minmax(0, 1fr);
   gap: var(--space-1);
+  /* The PiP scroller also needs room to center its final cue. */
+  padding-bottom: 50vh;
 }
 .compact-transcript .hanzi {
   overflow-wrap: anywhere;
