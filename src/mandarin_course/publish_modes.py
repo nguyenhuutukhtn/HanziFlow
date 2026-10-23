@@ -18,6 +18,23 @@ from .story.ledger import chars_taught_before
 MODES = ("hieu", "nghe", "phan_xa", "noi")
 
 
+def _mode_gaps(timeline: dict, lesson: Lesson) -> list[dict]:
+    """Expose authored response/repetition pauses using measured cue boundaries."""
+    segments = {segment.id: segment for segment in lesson.segments}
+    cues = timeline["cues"]
+    gaps = []
+    for index, cue in enumerate(cues):
+        kind = segments[cue["line_id"]].gap
+        if kind:
+            gaps.append({
+                "start_ms": cue["end_ms"],
+                "end_ms": cues[index + 1]["start_ms"] if index + 1 < len(cues) else timeline["duration_ms"],
+                "kind": kind,
+                "after_line_id": cue["line_id"],
+            })
+    return gaps
+
+
 def _mode_lessons(lesson_path: Path) -> dict[str, Lesson]:
     """Load and validate the complete sibling set for one modes lesson."""
     first = load_lesson(lesson_path)
@@ -84,6 +101,7 @@ def publish_modes_lesson(lesson_path: Path, settings: Settings, out: Path, force
                 raise PublishError(f"Pinyin alignment failed for segment(s): {', '.join(sorted(set(failures)))}")
             raw = _load_and_validate_timeline(timeline_path_for(source), lessons[mode], mode, lines[mode])
             timelines[mode] = _enrich_timeline(raw, lessons[mode], mode, trial_version)
+            timelines[mode]["gaps"] = _mode_gaps(timelines[mode], lessons[mode])
             _write_json(package / f"timeline_{mode}.json", timelines[mode])
 
         metadata = {

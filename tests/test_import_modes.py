@@ -25,12 +25,16 @@ def test_real_modes_counts_and_samples():
     }
     segments = {s["id"]: s for lesson in lessons.values() for s in lesson["segments"]}
     assert segments["phan_xa_q2"]["pause_after_ms"] == 3420
+    assert segments["phan_xa_q2"]["gap"] == "answer"
     assert segments["phan_xa_q25"]["pause_after_ms"] == 5680
     assert segments["noi_s2"]["pause_after_ms"] == 2260
+    assert segments["noi_s2"]["gap"] == "repeat"
     assert segments["noi_s43"]["pause_after_ms"] == 6460
     assert segments["hieu_h1"]["speaker"] == "coach"
     assert segments["hieu_h4"]["speaker"] == "coach_zh"
     assert segments["nghe_l3"]["speaker"] == "wang_fang"
+    assert all("gap" not in segment for segment in lessons["hieu"]["segments"])
+    assert all("gap" not in segment for segment in lessons["nghe"]["segments"])
 
 
 def test_import_is_deterministic():

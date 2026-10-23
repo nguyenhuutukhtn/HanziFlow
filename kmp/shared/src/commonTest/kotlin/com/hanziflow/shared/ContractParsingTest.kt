@@ -43,7 +43,7 @@ class ContractParsingTest {
 
     @Test
     fun parsesRealModesV1Package() {
-        val lesson = CourseJson.catalog(fixtureText("catalog_modes.json")).lessons.single()
+        val lesson = CourseJson.catalog(fixtureText("catalog_modes.json")).lessons.single { it.id == "lesson_002" }
         val reference = CourseJson.reference(fixtureText("reference_modes.json"))
         val timeline = CourseJson.timeline(fixtureText("timeline_noi.json"))
         val noi = assertNotNull(reference.tracks.forName("noi"))
@@ -53,6 +53,8 @@ class ContractParsingTest {
         assertEquals(43, noi.size)
         assertEquals(121, assertNotNull(reference.tracks.forName("phan_xa")).size)
         assertTrue(timeline.cues.all { cue -> cue.lineId in noi.map { it.id } })
+        assertEquals(42, timeline.gaps.size)
+        assertTrue(timeline.gaps.all { it.kind == "repeat" })
     }
 
     @Test
@@ -97,6 +99,19 @@ class ContractParsingTest {
         assertEquals(0L, timeline.sections.first().startMs)
         assertEquals(timeline.durationMs, timeline.sections.last().endMs)
         timeline.sections.zipWithNext { earlier, later -> assertEquals(earlier.endMs, later.startMs) }
+    }
+
+    @Test
+    fun parsesModeAnswerGapsAndDefaultsMissingGapsToEmpty() {
+        val timeline = CourseJson.timeline(fixtureText("timeline_phan_xa.json"))
+        assertEquals(40, timeline.gaps.size)
+        assertTrue(timeline.gaps.all { it.kind == "answer" })
+        assertEquals(TimelineGap(3874, 7294, "answer", "phan_xa_q2"), timeline.gaps.first())
+
+        val oldTimeline = CourseJson.timeline(
+            """{"schema_version":1,"lesson_id":"lesson_001","lesson_version":1,"track":"guided","duration_ms":1,"cues":[]}""",
+        )
+        assertEquals(emptyList(), oldTimeline.gaps)
     }
 }
 

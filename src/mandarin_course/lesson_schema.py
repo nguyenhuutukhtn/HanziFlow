@@ -47,6 +47,7 @@ class Segment(BaseModel):
     repetitions: int = Field(default=1, ge=1, le=10)
     pause_before_ms: int = Field(default=0, ge=0, le=30_000)
     pause_after_ms: int = Field(default=0, ge=0, le=30_000)
+    gap: Literal["answer", "repeat"] | None = None
     voice_settings: VoiceSettings = Field(default_factory=VoiceSettings)
     playback_speed: float = Field(default=1.0, ge=0.75, le=1.25)
     turns: list[DialogueTurn] = Field(default_factory=list)

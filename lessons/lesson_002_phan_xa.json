@@ -38,7 +38,8 @@
       "text": "王芳今天来开会吗？",
       "pause_after_ms": 3420,
       "pinyin": "Wáng Fāng jīntiān lái kāihuì ma?",
-      "translation": "Hôm nay Vương Phương đến họp phải không?"
+      "translation": "Hôm nay Vương Phương đến họp phải không?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q2_a",
@@ -71,7 +72,8 @@
       "text": "王芳在八楼吗？",
       "pause_after_ms": 3840,
       "pinyin": "Wáng Fāng zài bā lóu ma?",
-      "translation": "Vương Phương ở tầng tám phải không?"
+      "translation": "Vương Phương ở tầng tám phải không?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q3_a",
@@ -104,7 +106,8 @@
       "text": "陈东在八楼吗？",
       "pause_after_ms": 3420,
       "pinyin": "Chén Dōng zài bā lóu ma?",
-      "translation": "Trần Đông ở tầng tám phải không?"
+      "translation": "Trần Đông ở tầng tám phải không?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q4_a",
@@ -137,7 +140,8 @@
       "text": "王芳有卡吗？",
       "pause_after_ms": 3840,
       "pinyin": "Wáng Fāng yǒu kǎ ma?",
-      "translation": "Vương Phương có thẻ không?"
+      "translation": "Vương Phương có thẻ không?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q5_a",
@@ -170,7 +174,8 @@
       "text": "王芳进不去吗？",
       "pause_after_ms": 3420,
       "pinyin": "Wáng Fāng jìn bu qù ma?",
-      "translation": "Vương Phương không vào được phải không?"
+      "translation": "Vương Phương không vào được phải không?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q6_a",
@@ -203,7 +208,8 @@
       "text": "陈东马上下楼吗？",
       "pause_after_ms": 3420,
       "pinyin": "Chén Dōng mǎshàng xià lóu ma?",
-      "translation": "Trần Đông xuống lầu ngay phải không?"
+      "translation": "Trần Đông xuống lầu ngay phải không?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q7_a",
@@ -236,7 +242,8 @@
       "text": "陈东下楼接王芳吗？",
       "pause_after_ms": 3420,
       "pinyin": "Chén Dōng xià lóu jiē Wáng Fāng ma?",
-      "translation": "Trần Đông xuống đón Vương Phương phải không?"
+      "translation": "Trần Đông xuống đón Vương Phương phải không?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q8_a",
@@ -269,7 +276,8 @@
       "text": "陈东在大厅找王芳吗？",
       "pause_after_ms": 3420,
       "pinyin": "Chén Dōng zài dàtīng zhǎo Wáng Fāng ma?",
-      "translation": "Trần Đông tìm Vương Phương ở sảnh phải không?"
+      "translation": "Trần Đông tìm Vương Phương ở sảnh phải không?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q9_a",
@@ -302,7 +310,8 @@
       "text": "陈东看见王芳没有？",
       "pause_after_ms": 3840,
       "pinyin": "Chén Dōng kànjiàn Wáng Fāng méiyǒu?",
-      "translation": "Trần Đông có thấy Vương Phương không?"
+      "translation": "Trần Đông có thấy Vương Phương không?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q10_a",
@@ -335,7 +344,8 @@
       "text": "王芳旁边有咖啡店吗？",
       "pause_after_ms": 3420,
       "pinyin": "Wáng Fāng pángbiān yǒu kāfēidiàn ma?",
-      "translation": "Cạnh Vương Phương có quán cà phê không?"
+      "translation": "Cạnh Vương Phương có quán cà phê không?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q11_a",
@@ -368,7 +378,8 @@
       "text": "A座旁边有咖啡店吗？",
       "pause_after_ms": 3840,
       "pinyin": "A zuò pángbiān yǒu kāfēidiàn ma?",
-      "translation": "Cạnh tòa A có quán cà phê không?"
+      "translation": "Cạnh tòa A có quán cà phê không?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q12_a",
@@ -401,7 +412,8 @@
       "text": "王芳是不是在A座？",
       "pause_after_ms": 4840,
       "pinyin": "Wáng Fāng shì bu shì zài A zuò?",
-      "translation": "Có phải Vương Phương ở tòa A không?"
+      "translation": "Có phải Vương Phương ở tòa A không?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q13_a",
@@ -434,7 +446,8 @@
       "text": "王芳是不是以为她在A座？",
       "pause_after_ms": 4420,
       "pinyin": "Wáng Fāng shì bu shì yǐwéi tā zài A zuò?",
-      "translation": "Có phải Vương Phương tưởng mình ở tòa A không?"
+      "translation": "Có phải Vương Phương tưởng mình ở tòa A không?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q14_a",
@@ -467,7 +480,8 @@
       "text": "A座是不是在B座对面？",
       "pause_after_ms": 4420,
       "pinyin": "A zuò shì bu shì zài B zuò duìmiàn?",
-      "translation": "Có phải tòa A đối diện tòa B không?"
+      "translation": "Có phải tòa A đối diện tòa B không?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q15_a",
@@ -500,7 +514,8 @@
       "text": "王芳马上过来吗？",
       "pause_after_ms": 3420,
       "pinyin": "Wáng Fāng mǎshàng guòlái ma?",
-      "translation": "Vương Phương sang ngay phải không?"
+      "translation": "Vương Phương sang ngay phải không?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q16_a",
@@ -533,7 +548,8 @@
       "text": "陈东在门口等王芳吗？",
       "pause_after_ms": 3420,
       "pinyin": "Chén Dōng zài ménkǒu děng Wáng Fāng ma?",
-      "translation": "Trần Đông đợi Vương Phương ở cửa phải không?"
+      "translation": "Trần Đông đợi Vương Phương ở cửa phải không?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q17_a",
@@ -566,7 +582,8 @@
       "text": "王芳走到B座门口吗？",
       "pause_after_ms": 3840,
       "pinyin": "Wáng Fāng zǒu dào B zuò ménkǒu ma?",
-      "translation": "Vương Phương đi đến cửa tòa B phải không?"
+      "translation": "Vương Phương đi đến cửa tòa B phải không?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q18_a",
@@ -599,7 +616,8 @@
       "text": "最后，王芳和陈东在哪儿？",
       "pause_after_ms": 5260,
       "pinyin": "Zuìhòu, Wáng Fāng hé Chén Dōng zài nǎr?",
-      "translation": "Cuối cùng, Vương Phương và Trần Đông ở đâu?"
+      "translation": "Cuối cùng, Vương Phương và Trần Đông ở đâu?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q19_a",
@@ -632,7 +650,8 @@
       "text": "他们一起进去开会吗？",
       "pause_after_ms": 3420,
       "pinyin": "Tāmen yìqǐ jìnqù kāihuì ma?",
-      "translation": "Họ cùng vào họp phải không?"
+      "translation": "Họ cùng vào họp phải không?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q20_a",
@@ -665,7 +684,8 @@
       "text": "王芳在楼下还是八楼？",
       "pause_after_ms": 4840,
       "pinyin": "Wáng Fāng zài lóu xià háishi bā lóu?",
-      "translation": "Vương Phương ở dưới tòa nhà hay tầng tám?"
+      "translation": "Vương Phương ở dưới tòa nhà hay tầng tám?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q21_a",
@@ -698,7 +718,8 @@
       "text": "陈东在八楼还是楼下？",
       "pause_after_ms": 4840,
       "pinyin": "Chén Dōng zài bā lóu háishi lóu xià?",
-      "translation": "Trần Đông ở tầng tám hay dưới tòa nhà?"
+      "translation": "Trần Đông ở tầng tám hay dưới tòa nhà?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q22_a",
@@ -731,7 +752,8 @@
       "text": "王芳有卡还是没有卡？",
       "pause_after_ms": 5260,
       "pinyin": "Wáng Fāng yǒu kǎ háishi méiyǒu kǎ?",
-      "translation": "Vương Phương có thẻ hay không có thẻ?"
+      "translation": "Vương Phương có thẻ hay không có thẻ?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q23_a",
@@ -764,7 +786,8 @@
       "text": "陈东在大厅还是门口找王芳？",
       "pause_after_ms": 4840,
       "pinyin": "Chén Dōng zài dàtīng háishi ménkǒu zhǎo Wáng Fāng?",
-      "translation": "Trần Đông tìm Vương Phương ở sảnh hay ở cửa?"
+      "translation": "Trần Đông tìm Vương Phương ở sảnh hay ở cửa?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q24_a",
@@ -797,7 +820,8 @@
       "text": "咖啡店在王芳旁边还是陈东旁边？",
       "pause_after_ms": 5680,
       "pinyin": "Kāfēidiàn zài Wáng Fāng pángbiān háishi Chén Dōng pángbiān?",
-      "translation": "Quán cà phê cạnh Vương Phương hay cạnh Trần Đông?"
+      "translation": "Quán cà phê cạnh Vương Phương hay cạnh Trần Đông?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q25_a",
@@ -830,7 +854,8 @@
       "text": "王芳在A座还是B座？",
       "pause_after_ms": 4420,
       "pinyin": "Wáng Fāng zài A zuò háishi B zuò?",
-      "translation": "Vương Phương ở tòa A hay tòa B?"
+      "translation": "Vương Phương ở tòa A hay tòa B?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q26_a",
@@ -863,7 +888,8 @@
       "text": "A座在B座旁边还是对面？",
       "pause_after_ms": 4840,
       "pinyin": "A zuò zài B zuò pángbiān háishi duìmiàn?",
-      "translation": "Tòa A ở cạnh hay đối diện tòa B?"
+      "translation": "Tòa A ở cạnh hay đối diện tòa B?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q27_a",
@@ -896,7 +922,8 @@
       "text": "王芳走到A座还是B座？",
       "pause_after_ms": 4420,
       "pinyin": "Wáng Fāng zǒu dào A zuò háishi B zuò?",
-      "translation": "Vương Phương đi đến tòa A hay tòa B?"
+      "translation": "Vương Phương đi đến tòa A hay tòa B?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q28_a",
@@ -929,7 +956,8 @@
       "text": "谁今天来开会？",
       "pause_after_ms": 4840,
       "pinyin": "Shuí jīntiān lái kāihuì?",
-      "translation": "Hôm nay ai đến họp?"
+      "translation": "Hôm nay ai đến họp?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q29_a",
@@ -962,7 +990,8 @@
       "text": "谁在八楼？",
       "pause_after_ms": 4840,
       "pinyin": "Shuí zài bā lóu?",
-      "translation": "Ai ở tầng tám?"
+      "translation": "Ai ở tầng tám?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q30_a",
@@ -995,7 +1024,8 @@
       "text": "谁没有卡？",
       "pause_after_ms": 4840,
       "pinyin": "Shuí méiyǒu kǎ?",
-      "translation": "Ai không có thẻ?"
+      "translation": "Ai không có thẻ?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q31_a",
@@ -1028,7 +1058,8 @@
       "text": "谁下楼接王芳？",
       "pause_after_ms": 4840,
       "pinyin": "Shuí xià lóu jiē Wáng Fāng?",
-      "translation": "Ai xuống lầu đón Vương Phương?"
+      "translation": "Ai xuống lầu đón Vương Phương?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q32_a",
@@ -1061,7 +1092,8 @@
       "text": "谁在大厅找王芳？",
       "pause_after_ms": 4840,
       "pinyin": "Shuí zài dàtīng zhǎo Wáng Fāng?",
-      "translation": "Ai tìm Vương Phương ở sảnh?"
+      "translation": "Ai tìm Vương Phương ở sảnh?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q33_a",
@@ -1094,7 +1126,8 @@
       "text": "谁以为她在A座？",
       "pause_after_ms": 4840,
       "pinyin": "Shuí yǐwéi tā zài A zuò?",
-      "translation": "Ai tưởng mình ở tòa A?"
+      "translation": "Ai tưởng mình ở tòa A?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q34_a",
@@ -1127,7 +1160,8 @@
       "text": "王芳在哪儿？",
       "pause_after_ms": 4420,
       "pinyin": "Wáng Fāng zài nǎr?",
-      "translation": "Vương Phương đang ở đâu?"
+      "translation": "Vương Phương đang ở đâu?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q35_a",
@@ -1160,7 +1194,8 @@
       "text": "陈东在哪儿？",
       "pause_after_ms": 4840,
       "pinyin": "Chén Dōng zài nǎr?",
-      "translation": "Trần Đông đang ở đâu?"
+      "translation": "Trần Đông đang ở đâu?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q36_a",
@@ -1193,7 +1228,8 @@
       "text": "王芳旁边有什么？",
       "pause_after_ms": 5260,
       "pinyin": "Wáng Fāng pángbiān yǒu shénme?",
-      "translation": "Bên cạnh Vương Phương có gì?"
+      "translation": "Bên cạnh Vương Phương có gì?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q37_a",
@@ -1226,7 +1262,8 @@
       "text": "陈东在哪个楼找王芳？",
       "pause_after_ms": 4420,
       "pinyin": "Chén Dōng zài nǎ ge lóu zhǎo Wáng Fāng?",
-      "translation": "Trần Đông tìm Vương Phương ở tòa nào?"
+      "translation": "Trần Đông tìm Vương Phương ở tòa nào?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q38_a",
@@ -1259,7 +1296,8 @@
       "text": "王芳知道她在B座吗？",
       "pause_after_ms": 4260,
       "pinyin": "Wáng Fāng zhīdào tā zài B zuò ma?",
-      "translation": "Vương Phương có biết mình ở tòa B không?"
+      "translation": "Vương Phương có biết mình ở tòa B không?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q39_a",
@@ -1292,7 +1330,8 @@
       "text": "陈东在几楼？",
       "pause_after_ms": 4840,
       "pinyin": "Chén Dōng zài jǐ lóu?",
-      "translation": "Trần Đông ở tầng mấy?"
+      "translation": "Trần Đông ở tầng mấy?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q40_a",
@@ -1325,7 +1364,8 @@
       "text": "王芳和陈东是不是同事？",
       "pause_after_ms": 4420,
       "pinyin": "Wáng Fāng hé Chén Dōng shì bu shì tóngshì?",
-      "translation": "Vương Phương và Trần Đông có phải đồng nghiệp không?"
+      "translation": "Vương Phương và Trần Đông có phải đồng nghiệp không?",
+      "gap": "answer"
     },
     {
       "id": "phan_xa_q41_a",

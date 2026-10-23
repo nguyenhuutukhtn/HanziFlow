@@ -211,6 +211,14 @@ data class TimelineSection(
 )
 
 @Serializable
+data class TimelineGap(
+    @SerialName("start_ms") val startMs: Long,
+    @SerialName("end_ms") val endMs: Long,
+    val kind: String,
+    @SerialName("after_line_id") val afterLineId: String,
+)
+
+@Serializable
 data class Timeline(
     @SerialName("schema_version") val schemaVersion: Int,
     @SerialName("lesson_id") val lessonId: String,
@@ -219,6 +227,7 @@ data class Timeline(
     @SerialName("duration_ms") val durationMs: Long,
     val cues: List<TimelineCue>,
     val sections: List<TimelineSection> = emptyList(),
+    val gaps: List<TimelineGap> = emptyList(),
 )
 
 object CourseJson {

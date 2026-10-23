@@ -2,7 +2,7 @@
 
 Read this first in a new session instead of past chat history. Keep it short; update it at the end of every task.
 
-Last updated: 2026-10-23 (W3b done; Wave 5 paused for user re-prioritization) · branch `main` (app-publish-pipeline merged + deleted 2026-10-23)
+Last updated: 2026-10-23 (A1 done; Wave 5 continues with A2) · branch `main` (app-publish-pipeline merged + deleted 2026-10-23)
 
 ## Working rules
 
@@ -13,6 +13,8 @@ Last updated: 2026-10-23 (W3b done; Wave 5 paused for user re-prioritization) ·
 - Every task (code or content) logs its token use in [token_log.md](token_log.md); review the log periodically to cut the most expensive steps.
 
 ## Done
+
+- **A1:** lesson-mode gap rows now persist as typed `answer`/`repeat` metadata without affecting TTS cache keys. Modes publishing turns them into measured top-level timeline gaps; lesson 2 is locally published as v2 (Hiểu/Nghe: 0, Phản xạ: 40 answer, Nói: 42 repeat; first answer gap is `phan_xa_q2`, 3874–7294 ms). Shared `Timeline` parses old timelines with an empty gap list and ships ordered Vietnamese mode guidance. Contract fixtures/docs are refreshed from v2. Checkpoint 2026-10-23: Haiku task-review needs-PM (Kotlin never compiled); PM fixed ContractParsingTest `.single()` on the 2-lesson real catalog fixture; `check.sh` all green (ContractParsingTest 7/7, ModeInfoTest 1/1). Not uploaded.
 
 - **W3b:** Web auto-follow now centers the active line in the transcript area left visible above the sticky player controls, and PiP scrolls its own transcript container. Programmatic scrolls preserve follow; wheel/touch/scroll keys/scrollbar input opt out. Real lesson-1 Playwright checks pass five cues at 1280×800 and 390×844 (all offsets within ±10%, follow on); PiP offset is covered in jsdom because headless Chrome cannot open Document PiP. User main-window/PiP check pending. PM checkpoint (2026-10-23): Haiku review + `check.sh` green outside the sandbox; PM added a 1.5 s fallback that clears the programmatic-scroll flag if `scrollend` never fires or the target is out of range.
 
@@ -78,7 +80,7 @@ Last updated: 2026-10-23 (W3b done; Wave 5 paused for user re-prioritization) ·
 
 ## Next (in order)
 
-**Now: [Wave 5](tasks/WAVE-5.md) (re-scoped 2026-10-23) — learn lesson 2 on the phone: A1 contract gaps → A2 mode picker lite → A3 Nghe/Phản xạ/Nói player → A4 "Lặp ×2". Lesson 2 v1 is uploaded. Pending user checks: W3b follow (main + PiP), W3a PiP, M5 web.**
+**Now: [Wave 5](tasks/WAVE-5.md) (re-scoped 2026-10-23) — learn lesson 2 on the phone: A1 contract gaps ✅ → A2 mode picker lite → A3 Nghe/Phản xạ/Nói player → A4 "Lặp ×2". Lesson 2 v1 is uploaded; local v2 is not uploaded. Pending user checks: W3b follow (main + PiP), W3a PiP, M5 web.**
 
 **Top priority today (user, 2026-10-22, after one day of using the app): W1 — a web player in Chrome on Mac and Linux that stays on top**
 for listening while reading the text at work. The learner today follows by ear plus rough pinyin and

@@ -13,6 +13,7 @@ val fixtureFiles = listOf(
     "timeline_guided_zh.json",
     "catalog_modes.json",
     "reference_modes.json",
+    "timeline_phan_xa.json",
     "timeline_noi.json",
 )
 val generatedFixtureDir = layout.buildDirectory.dir("generated/fixtureTest/kotlin")

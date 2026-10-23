@@ -35,7 +35,7 @@ def _write_modes_fixture(tmp_path: Path) -> tuple[Path, Settings]:
     lessons.mkdir(); cache.mkdir(); (output / "lesson_002").mkdir(parents=True)
     for index, mode in enumerate(publish_modes.MODES):
         segments = [
-            {"id": f"{mode}_wang", "activity": mode, "type": "narration", "language": "zh-CN", "speaker": "wang_fang", "text": "你好。", "pinyin": "nǐ hǎo.", "translation": "Xin chào."},
+            {"id": f"{mode}_wang", "activity": mode, "type": "narration", "language": "zh-CN", "speaker": "wang_fang", "text": "你好。", "pinyin": "nǐ hǎo.", "translation": "Xin chào.", **({"gap": "answer"} if mode == "phan_xa" else {"gap": "repeat"} if mode == "noi" else {})},
             {"id": f"{mode}_chen", "activity": mode, "type": "prompt", "language": "zh-CN", "speaker": "chen_dong", "text": "再见。", "pinyin": "zài jiàn.", "translation": "Tạm biệt."},
         ]
         data = {"lesson_id": "lesson_002", "title": "Modes fixture", "level": "absolute_beginner", "target_duration_minutes": 5,
@@ -70,6 +70,14 @@ def test_publish_modes_package_and_versioning(tmp_path):
     reference = json.loads((first.package_dir / "reference.json").read_text())
     assert list(reference["tracks"]) == list(publish_modes.MODES)
     assert json.loads((first.package_dir / "items.json").read_text())["words"] == []
+    assert json.loads((first.package_dir / "timeline_hieu.json").read_text())["gaps"] == []
+    assert json.loads((first.package_dir / "timeline_nghe.json").read_text())["gaps"] == []
+    assert json.loads((first.package_dir / "timeline_phan_xa.json").read_text())["gaps"] == [{
+        "start_ms": 40, "end_ms": 40, "kind": "answer", "after_line_id": "phan_xa_wang",
+    }]
+    assert json.loads((first.package_dir / "timeline_noi.json").read_text())["gaps"] == [{
+        "start_ms": 40, "end_ms": 40, "kind": "repeat", "after_line_id": "noi_wang",
+    }]
     assert publish_lesson(lesson_path, settings, out).published is False
 
     audio = settings.output_dir / "lesson_002" / "lesson_002_noi.mp3"

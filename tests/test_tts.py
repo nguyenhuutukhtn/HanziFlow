@@ -44,6 +44,12 @@ def test_cache_key_changes_with_text(tmp_path, lesson):
     assert cache_key(segment, "voice", "model", "mp3") != cache_key(changed, "voice", "model", "mp3")
 
 
+def test_cache_key_ignores_gap_metadata(lesson):
+    segment = lesson.segments[0]
+    gapped = segment.model_copy(update={"gap": "answer"})
+    assert cache_key(segment, "voice", "model", "mp3") == cache_key(gapped, "voice", "model", "mp3")
+
+
 def test_tts_failure_does_not_create_success_file(tmp_path, lesson, voices_registry):
     cached = CachedTTS(BrokenTTS(), settings(tmp_path, voices_registry))
     with pytest.raises(TTSError, match="network"):

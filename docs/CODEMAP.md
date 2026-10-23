@@ -17,11 +17,11 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `cli.py` [317] ⚠ — Command-line interface for validation, generation, transcripts and reviews.
 - `config.py` [53] — Environment-backed configuration without exposing secrets.
 - `generate_plan.py` [82] — Cache/cost plan for a lesson's TTS segments: `generate --dry-run` and bundle import.
-- `lesson_schema.py` [115] — Validated, content-driven lesson schema.
+- `lesson_schema.py` [116] — Validated, content-driven lesson schema.
 - `logs.py` [14] — Shared helper: write full detail behind a short CLI summary (docs/workflow.md).
 - `publish.py` [32] — Public publishing API; implementation is split into focused modules.
 - `publish_core.py` [299]
-- `publish_modes.py` [150] — Publishing support for the four-track ``modes_v1`` lesson format.
+- `publish_modes.py` [168] — Publishing support for the four-track ``modes_v1`` lesson format.
 - `publish_render.py` [39]
 - `publish_support.py` [141]
 - `publish_timeline.py` [204]
@@ -34,7 +34,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `story/bundle.py` [213] — Export/import lesson story-source bundles (docs/workflow.md "Content loop").
 - `story/ledger.py` [163] — Lesson ledger: what lessons before N taught (words, characters, patterns, premise, bible).
 - `story/metrics.py` [139] — Advisory lesson metrics for the authoring loop.
-- `story/modes.py` [134] — Import the four lesson-2 listening/speaking modes.
+- `story/modes.py` [136] — Import the four lesson-2 listening/speaking modes.
 - `story/parser.py` [143] — Parse a lesson story source (`lessons/src/lesson_XXX.story.md`) into blocks.
 - `story/report.py` [46] — Short build-lesson output: ≤ 20 lines, errors with source line numbers.
 - `story/rows.py` [149] — Export and import row-scoped story-source revisions.
@@ -59,7 +59,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `test_bundle.py` [78]
 - `test_characters.py` [127]
 - `test_cli.py` [31]
-- `test_import_modes.py` [40]
+- `test_import_modes.py` [44]
 - `test_ledger.py` [88]
 - `test_lesson_001_story.py` [114]
 - `test_lesson_schema.py` [113]
@@ -67,13 +67,13 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `test_metrics_rows.py` [88]
 - `test_publish.py` [437] ⚠
 - `test_publish_guided_zh.py` [28]
-- `test_publish_modes.py` [84]
+- `test_publish_modes.py` [92]
 - `test_review.py` [18]
 - `test_storage.py` [12]
 - `test_story_builder.py` [78]
 - `test_stroke_pack.py` [27]
 - `test_transcript.py` [45]
-- `test_tts.py` [130]
+- `test_tts.py` [136]
 - `test_upload.py` [298] — Upload tests use httpx.MockTransport: no network, no real Supabase project.
 - `test_upload_pruning.py` [125] — Upload retry and retention tests.
 
@@ -84,9 +84,10 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 
 ## KMP shared (main) (`kmp/shared/src/commonMain/`)
 
-- `kotlin/com/hanziflow/shared/Models.kt` [243] — Clip, Track, Tracks, TracksSerializer — Track by its published name; null if absent.
+- `kotlin/com/hanziflow/shared/Models.kt` [252] — Clip, Track, Tracks, TracksSerializer — Track by its published name; null if absent.
 - `kotlin/com/hanziflow/shared/characters/Characters.kt` [51] — LessonCharacters, CharacterEntry, ComponentEntry, CharacterIndex
 - `kotlin/com/hanziflow/shared/characters/StrokeData.kt` [9] — StrokeEntry
+- `kotlin/com/hanziflow/shared/modes/ModeInfo.kt` [12] — Mode, ModeInfo
 - `kotlin/com/hanziflow/shared/testgen/GenerationContext.kt` [275] — TaggedWord, TaggedSentence, TaggedQa, Spec — One candidate (item, question-type) source the generator can draw a question from.
 - `kotlin/com/hanziflow/shared/testgen/Phonetics.kt` [89] — toneless, confusableKey, applyTone, capitalizeLike — Tone-mark variants for each base vowel, index 0 = no mark (tone 5 / neutral).
 - `kotlin/com/hanziflow/shared/testgen/Prng.kt` [87] — Rng — Deterministic, cross-platform PRNG (SplitMix32-style xorshift on Int).
@@ -104,7 +105,8 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 ## KMP shared (tests) (`kmp/shared/src/commonTest/`)
 
 - `kotlin/com/hanziflow/shared/CharacterContractTest.kt` [46] — CharacterContractTest
-- `kotlin/com/hanziflow/shared/ContractParsingTest.kt` [103] — ContractParsingTest
+- `kotlin/com/hanziflow/shared/ContractParsingTest.kt` [118] — ContractParsingTest
+- `kotlin/com/hanziflow/shared/modes/ModeInfoTest.kt` [21] — ModeInfoTest
 - `kotlin/com/hanziflow/shared/testgen/GoldenVectorTest.kt` [44] — GoldenVectorTest — Golden vectors: TestGenerator.generate() against the real lesson_001 items.json
 - `kotlin/com/hanziflow/shared/testgen/InvariantsTest.kt` [108] — InvariantsTest — Splits the real lesson_001 item bank into a synthetic "earlier" lesson and a
 - `kotlin/com/hanziflow/shared/testgen/TestSessionTest.kt` [89] — TestSessionTest

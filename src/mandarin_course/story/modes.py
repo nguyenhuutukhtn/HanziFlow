@@ -102,8 +102,10 @@ def build_mode(mode: str, rows: list[Row]) -> tuple[list[dict], int]:
                 if next_row is None or next_row.speaker == "gap":
                     raise _error(row.line, "answer gap must be followed by an answer")
                 segments[-1]["pause_after_ms"] = _answer_pause(segments[-1]["text"], next_row.text)
+                segments[-1]["gap"] = "answer"
             elif mode == "noi":
                 segments[-1]["pause_after_ms"] = _repeat_pause(segments[-1]["text"])
+                segments[-1]["gap"] = "repeat"
             continue
         segments.append(_segment(mode, row))
     return segments, gaps

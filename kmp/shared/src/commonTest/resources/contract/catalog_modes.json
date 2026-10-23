@@ -1,15 +1,68 @@
 {
-  "schema_version": 1,
-  "catalog_version": 14,
+  "catalog_version": 15,
   "lessons": [
     {
+      "base_url": "lessons/lesson_001/v7/",
+      "files": {
+        "characters": {
+          "bytes": 51510,
+          "file": "characters.json",
+          "sha256": "53bd2019ecbdf386606a00a4d21b5d147f9508abc31c77a34485ee726827684b"
+        },
+        "items": {
+          "bytes": 240606,
+          "file": "items.json",
+          "sha256": "5a6bce491e71684093dfdf1e1a4363295e1fc66773d2ebe5ce8c1f0c520826bf"
+        },
+        "manifest": {
+          "bytes": 484,
+          "file": "lesson.json",
+          "sha256": "7adf4a660e15ebc2a6a357f2e23f483f64e908e5e417ca4283fc078b82985762"
+        },
+        "reference": {
+          "bytes": 683488,
+          "file": "reference.json",
+          "sha256": "3d8d591cf8f7ad1bef821dd1c12af2660e992a2ad1bacd7db9c4daeeb1bc2470"
+        }
+      },
+      "id": "lesson_001",
+      "level": "absolute_beginner",
+      "order": 1,
+      "title": "Đồ ăn mang về của đồng nghiệp",
+      "tracks": {
+        "guided": {
+          "bytes": 21073963,
+          "duration_ms": 2634182,
+          "file": "guided.mp3",
+          "sha256": "cc5996d5a51d7fc2744f5f5e412dc624cb7666c0ba32c42d998511639e5612db",
+          "timeline": {
+            "bytes": 144000,
+            "file": "timeline_guided.json",
+            "sha256": "5a3a0687b2014c83e3e40c6207c895ff05db04ded2f747655490923a91284315"
+          }
+        },
+        "guided_zh": {
+          "bytes": 18839553,
+          "duration_ms": 2354883,
+          "file": "guided_zh.mp3",
+          "sha256": "3a9f1821f0af74e6208061e87e1b005ad64947c9f17fe49cad69cd2c5969337e",
+          "timeline": {
+            "bytes": 110124,
+            "file": "timeline_guided_zh.json",
+            "sha256": "445dcfd6cd4c791b22f80c186607e2f467180303caa7fa0c810d6550bd890184"
+          }
+        }
+      },
+      "version": 7
+    },
+    {
       "id": "lesson_002",
-      "version": 1,
+      "version": 2,
       "order": 2,
       "format": "modes_v1",
       "title": "你在哪儿？",
       "level": "absolute_beginner",
-      "base_url": "lessons/lesson_002/v1/",
+      "base_url": "lessons/lesson_002/v2/",
       "tracks": {
         "hieu": {
           "file": "hieu.mp3",
@@ -18,8 +71,8 @@
           "duration_ms": 539689,
           "timeline": {
             "file": "timeline_hieu.json",
-            "bytes": 21547,
-            "sha256": "3c81a14a9e1536226f5467effabd4522ccb432105536b2ec53bf57a9356f99eb"
+            "bytes": 21561,
+            "sha256": "b02eb07656c43be51c8225cd4c6cb6ae576b1ba5b8763704c57c5f7eea108dcf"
           }
         },
         "nghe": {
@@ -29,8 +82,8 @@
           "duration_ms": 310875,
           "timeline": {
             "file": "timeline_nghe.json",
-            "bytes": 12068,
-            "sha256": "faefa61c69ddfb4f247175e1a2956855d1de9558353b15c2190731fb38e2558e"
+            "bytes": 12082,
+            "sha256": "cd655b08cc79b64296485a69fc73835d34d073bf6347477b5f2e3632b2049a60"
           }
         },
         "phan_xa": {
@@ -40,8 +93,8 @@
           "duration_ms": 456957,
           "timeline": {
             "file": "timeline_phan_xa.json",
-            "bytes": 21874,
-            "sha256": "b1a98253120af829bef37622e80b3276163ee8df213acf74522250f4d311b52e"
+            "bytes": 26821,
+            "sha256": "1ac8d068008d020f8a5fe5005460d72f673f2a5d6a465e9920b01155c2d5d9a2"
           }
         },
         "noi": {
@@ -51,8 +104,8 @@
           "duration_ms": 345633,
           "timeline": {
             "file": "timeline_noi.json",
-            "bytes": 7673,
-            "sha256": "f3534e1c742594c0a2f80248064c6974a5759517dcc1afffc5e38a1db4c829ac"
+            "bytes": 12686,
+            "sha256": "c7966a3ae8f6d578ef5785b5226a8a8272c6032d0dd771f3bcc6350796628c67"
           }
         }
       },
@@ -60,7 +113,7 @@
         "manifest": {
           "file": "lesson.json",
           "bytes": 333,
-          "sha256": "2477e60f9b090a9796d015fbb221e24a453d2030b250ed3fbf7e723abaf07720"
+          "sha256": "984f72e0e3aeedaa9bde1c430d424c3d27a790f2f1c29494a807f8aa6d9d0cbf"
         },
         "reference": {
           "file": "reference.json",
@@ -70,7 +123,7 @@
         "items": {
           "file": "items.json",
           "bytes": 124,
-          "sha256": "7492c97de5b4d7bc8da8a8270afc6d5c379fa8e6b38179bd8543cee65c26a277"
+          "sha256": "6cc1c43b386c1da51b6bf55c2dc2123d3dd13c6438e5d3206734d41785259109"
         },
         "characters": {
           "file": "characters.json",
@@ -79,5 +132,15 @@
         }
       }
     }
-  ]
+  ],
+  "schema_version": 1,
+  "stroke_pack": {
+    "version": 2,
+    "files": {
+      "strokes.json": {
+        "sha256": "b9df2a7caeb2e54b83cc13fb97272461cde082acb3af9ea75bffbca5879e68fb",
+        "bytes": 300852
+      }
+    }
+  }
 }

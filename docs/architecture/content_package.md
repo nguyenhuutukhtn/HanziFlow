@@ -55,6 +55,8 @@ keys under its `tracks` object.
 For `modes_v1`, `items.json` is present with an empty item list. `characters.json`
 may omit characters without Vietnamese data; publish reports those omissions as a
 warning. Clients display the four mode tracks in the order listed above.
+Mode tracks also use the shared mode metadata (`id`, Vietnamese `label`, and
+`whenToUse` guidance) in that same order.
 
 ### catalog.json
 
@@ -169,6 +171,11 @@ Each published audio track has a timeline, `timeline_<track>.json`, listed in `c
   Character times must be divided by the segment's `playback_speed`.
 - **Cue metadata:** each cue also carries `language` (`zh-CN` / `vi-VN`), `type` (segment type) and `section_id`, so clients never re-derive them from `reference.json` for playback decisions (Chinese-only mode, section replay).
 - **Sections:** a top-level `sections` list, one entry per run of consecutive segments with the same `activity`: `{ "id", "title" (the activity label, e.g. "Nghe chuyện"), "start_ms", "end_ms" }`, contiguous and covering the whole track. Section boundaries include the silences inside the run.
+- **Mode gaps:** `modes_v1` timelines always include a top-level `gaps` list.
+  Each authored answer or repeat pause is `{ "start_ms", "end_ms", "kind":
+  "answer"|"repeat", "after_line_id" }`; boundaries are measured from the
+  preceding cue's end to the next cue's start (or `duration_ms` for the final
+  cue). Other timeline formats omit `gaps`; clients treat it as an empty list.
 
 ```json
 {
