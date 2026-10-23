@@ -19,7 +19,7 @@ class ContractParsingTest {
         assertEquals(300852L, catalog.strokePack.files.getValue("strokes.json").bytes)
         assertEquals("lesson_001", lesson.id)
         assertNull(lesson.tracks.practice)
-        assertEquals("timeline_guided.json", lesson.tracks.guided.timeline.file)
+        assertEquals("timeline_guided.json", assertNotNull(lesson.tracks.guided).timeline.file)
         assertEquals("timeline_guided_zh.json", lesson.tracks.forName("guided_zh")?.timeline?.file)
         assertNull(lesson.tracks.forName("unknown"))
         assertEquals(lesson.id, manifest.id)
@@ -27,17 +27,33 @@ class ContractParsingTest {
     }
 
     @Test
+    fun parsesModesV1CatalogTracks() {
+        val catalog = CourseJson.catalog(
+            """{"schema_version":1,"catalog_version":1,"lessons":[
+              {"id":"lesson_001","version":1,"order":1,"title":"Linear","level":"beginner","base_url":"linear/","tracks":{"guided":{"file":"guided.mp3","bytes":1,"duration_ms":1,"sha256":"a","timeline":{"file":"timeline_guided.json","bytes":1,"sha256":"a"}}},"files":{"manifest":{"file":"lesson.json","bytes":1,"sha256":"a"},"reference":{"file":"reference.json","bytes":1,"sha256":"a"},"items":{"file":"items.json","bytes":1,"sha256":"a"}}},
+              {"id":"lesson_002","version":1,"order":2,"title":"Modes","level":"beginner","base_url":"modes/","format":"modes_v1","tracks":{"hieu":{"file":"hieu.mp3","bytes":1,"duration_ms":1,"sha256":"a","timeline":{"file":"timeline_hieu.json","bytes":1,"sha256":"a"}},"nghe":{"file":"nghe.mp3","bytes":1,"duration_ms":1,"sha256":"a","timeline":{"file":"timeline_nghe.json","bytes":1,"sha256":"a"}},"phan_xa":{"file":"phan_xa.mp3","bytes":1,"duration_ms":1,"sha256":"a","timeline":{"file":"timeline_phan_xa.json","bytes":1,"sha256":"a"}},"noi":{"file":"noi.mp3","bytes":1,"duration_ms":1,"sha256":"a","timeline":{"file":"timeline_noi.json","bytes":1,"sha256":"a"}}},"files":{"manifest":{"file":"lesson.json","bytes":1,"sha256":"a"},"reference":{"file":"reference.json","bytes":1,"sha256":"a"},"items":{"file":"items.json","bytes":1,"sha256":"a"}}}
+            ]}""".trimIndent(),
+        )
+        val modes = catalog.lessons[1]
+        assertEquals("modes_v1", modes.format)
+        assertEquals(listOf("hieu", "nghe", "phan_xa", "noi"), modes.tracks.names)
+        assertNull(modes.tracks.guided)
+        assertEquals("timeline_phan_xa.json", modes.tracks.forName("phan_xa")?.timeline?.file)
+    }
+
+    @Test
     fun parsesPublishedReferenceItemsAndTimeline() {
         val reference = CourseJson.reference(fixtureText("reference.json"))
         val items = CourseJson.items(fixtureText("items.json"))
         val timeline = CourseJson.timeline(fixtureText("timeline_guided.json"))
-        val guidedIds = reference.tracks.guided.mapTo(mutableSetOf()) { it.id }
+        val guided = assertNotNull(reference.tracks.guided)
+        val guidedIds = guided.mapTo(mutableSetOf()) { it.id }
 
-        assertEquals(797, reference.tracks.guided.size)
+        assertEquals(797, guided.size)
         assertEquals(797, timeline.cues.size)
         assertTrue(timeline.cues.all { cue -> cue.lineId in guidedIds })
         assertEquals(40, assertNotNull(reference.tracks.practice).size)
-        assertTrue(reference.tracks.guided.flatMap { it.tokens.orEmpty() }.any { it.pinyin == null })
+        assertTrue(guided.flatMap { it.tokens.orEmpty() }.any { it.pinyin == null })
         assertTrue(items.words.any { it.clip == null })
         assertTrue(items.sentences.all { it.activity.isNotBlank() && it.speaker.isNotBlank() })
         assertTrue(items.qa.all { it.activity.isNotBlank() && it.speaker.isNotBlank() })

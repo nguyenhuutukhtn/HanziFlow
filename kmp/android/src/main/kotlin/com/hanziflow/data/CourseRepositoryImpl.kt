@@ -21,6 +21,10 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
+internal fun androidCatalogLessons(lessons: List<CatalogLesson>): List<CatalogLesson> =
+    // modes_v1: Android support comes later
+    lessons.filter { it.format == "linear_v1" }
+
 class CourseRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     private val database: CourseDatabase,
@@ -38,7 +42,7 @@ class CourseRepositoryImpl @Inject constructor(
             response.body.string()
         }
         val catalog = CourseJson.catalog(json)
-        catalog.lessons.forEach { remote ->
+        androidCatalogLessons(catalog.lessons).forEach { remote ->
             val previous = dao.lesson(remote.id)
             // Same version but a different track set (package downloaded by an older app
             // build that didn't know a track) needs a re-download, not "DOWNLOADED".

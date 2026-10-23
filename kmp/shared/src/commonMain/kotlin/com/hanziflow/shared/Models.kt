@@ -8,6 +8,13 @@ import com.hanziflow.shared.characters.LessonCharacters
 import com.hanziflow.shared.characters.StrokeEntry
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.builtins.MapSerializer
+import kotlinx.serialization.builtins.serializer
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromJsonElement
@@ -25,19 +32,41 @@ data class Track(
     val timeline: Clip,
 )
 
-@Serializable
-data class Tracks(
-    val guided: Track,
-    val practice: Track? = null,
-    @SerialName("guided_zh") val guidedZh: Track? = null,
-) {
-    /** Track by its published name (`guided`, `guided_zh`, `practice`); null if absent or unknown. */
-    fun forName(name: String): Track? = when (name) {
-        "guided" -> guided
-        "guided_zh" -> guidedZh
-        "practice" -> practice
-        else -> null
+@Serializable(with = TracksSerializer::class)
+data class Tracks(val values: Map<String, Track>) {
+    val guided: Track? get() = forName("guided")
+    val practice: Track? get() = forName("practice")
+    val guidedZh: Track? get() = forName("guided_zh")
+    val names: List<String>
+        get() = (DISPLAY_ORDER.filter(values::containsKey) + (values.keys - DISPLAY_ORDER.toSet()).sorted())
+
+    /** Track by its published name; null if absent. */
+    fun forName(name: String): Track? = values[name]
+
+    private companion object {
+        val DISPLAY_ORDER = listOf("hieu", "nghe", "phan_xa", "noi", "guided", "guided_zh", "practice")
     }
+}
+
+object TracksSerializer : KSerializer<Tracks> {
+    private val delegate = MapSerializer(String.serializer(), Track.serializer())
+    override val descriptor: SerialDescriptor = delegate.descriptor
+    override fun serialize(encoder: Encoder, value: Tracks) = encoder.encodeSerializableValue(delegate, value.values)
+    override fun deserialize(decoder: Decoder): Tracks = Tracks(decoder.decodeSerializableValue(delegate))
+}
+
+@Serializable(with = ReferenceTracksSerializer::class)
+data class ReferenceTracks(val values: Map<String, List<ReferenceLine>>) {
+    val guided: List<ReferenceLine>? get() = forName("guided")
+    val practice: List<ReferenceLine>? get() = forName("practice")
+    fun forName(name: String): List<ReferenceLine>? = values[name]
+}
+
+object ReferenceTracksSerializer : KSerializer<ReferenceTracks> {
+    private val delegate = MapSerializer(String.serializer(), ListSerializer(ReferenceLine.serializer()))
+    override val descriptor: SerialDescriptor = delegate.descriptor
+    override fun serialize(encoder: Encoder, value: ReferenceTracks) = encoder.encodeSerializableValue(delegate, value.values)
+    override fun deserialize(decoder: Decoder): ReferenceTracks = ReferenceTracks(decoder.decodeSerializableValue(delegate))
 }
 
 @Serializable
@@ -57,6 +86,7 @@ data class CatalogLesson(
     val title: String,
     val level: String,
     @SerialName("base_url") val baseUrl: String,
+    val format: String = "linear_v1",
     val tracks: Tracks,
     val files: PackageFiles,
 )
@@ -97,12 +127,6 @@ data class ReferenceLine(
     val pinyin: String? = null,
     val translation: String? = null,
     val tokens: List<Token>? = null,
-)
-
-@Serializable
-data class ReferenceTracks(
-    val guided: List<ReferenceLine>,
-    val practice: List<ReferenceLine>? = null,
 )
 
 @Serializable

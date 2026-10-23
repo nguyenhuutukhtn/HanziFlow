@@ -25,6 +25,14 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
+internal fun trackArtifacts(lesson: CatalogLesson): List<Clip> = buildList {
+    lesson.tracks.names.forEach { name ->
+        val track = checkNotNull(lesson.tracks.forName(name))
+        add(Clip(track.file, track.bytes, track.sha256))
+        add(track.timeline)
+    }
+}
+
 @HiltWorker
 class LessonDownloadWorker @AssistedInject constructor(
     @Assisted context: Context,
@@ -48,16 +56,7 @@ class LessonDownloadWorker @AssistedInject constructor(
             stage.mkdirs()
 
             val initial = buildList {
-                add(lesson.tracks.guided.asClip())
-                add(lesson.tracks.guided.timeline)
-                lesson.tracks.guidedZh?.let {
-                    add(it.asClip())
-                    add(it.timeline)
-                }
-                lesson.tracks.practice?.let {
-                    add(it.asClip())
-                    add(it.timeline)
-                }
+                addAll(trackArtifacts(lesson))
                 add(lesson.files.manifest)
                 add(lesson.files.reference)
                 add(lesson.files.items)
@@ -140,8 +139,6 @@ class LessonDownloadWorker @AssistedInject constructor(
         }
         return digest.digest().joinToString("") { "%02x".format(it) }
     }
-
-    private fun Track.asClip() = Clip(file, bytes, sha256)
 
     companion object { const val LESSON_ID = "lesson_id" }
 }

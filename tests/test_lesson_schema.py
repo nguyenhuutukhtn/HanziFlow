@@ -65,3 +65,49 @@ def test_coach_zh_rejects_non_mandarin(lesson_data):
     invalid["segments"][0]["translation"] = None
     with pytest.raises(ValidationError, match="coach_zh"):
         Lesson.model_validate(invalid)
+
+
+def test_modes_v1_lesson_accepts_mode_variant_new_speakers_and_gender_override(lesson_data):
+    valid = deepcopy(lesson_data)
+    valid.update(format="modes_v1", variant="hieu", voice_genders={"coach_zh": "female"})
+    valid["segments"][0]["speaker"] = "wang_fang"
+    valid["segments"].extend(
+        [
+            {**deepcopy(valid["segments"][0]), "id": "chen_dong", "speaker": "chen_dong"},
+            {**deepcopy(valid["segments"][0]), "id": "coach_zh", "speaker": "coach_zh"},
+            {
+                **deepcopy(valid["segments"][0]),
+                "id": "coach_vi",
+                "speaker": "coach",
+                "language": "vi-VN",
+                "pinyin": None,
+                "translation": None,
+            },
+        ]
+    )
+    assert Lesson.model_validate(valid).format == "modes_v1"
+
+
+@pytest.mark.parametrize(
+    ("format", "variant"),
+    [("modes_v1", "guided"), ("linear_v1", "noi")],
+)
+def test_lesson_format_rejects_wrong_variant(lesson_data, format, variant):
+    invalid = deepcopy(lesson_data)
+    invalid.update(format=format, variant=variant)
+    with pytest.raises(ValidationError, match="variant"):
+        Lesson.model_validate(invalid)
+
+
+def test_wang_fang_must_speak_mandarin(lesson_data):
+    invalid = deepcopy(lesson_data)
+    invalid["segments"][0].update(speaker="wang_fang", language="vi-VN", pinyin=None, translation=None)
+    with pytest.raises(ValidationError, match="Wang Fang"):
+        Lesson.model_validate(invalid)
+
+
+def test_voice_gender_must_name_a_lesson_speaker(lesson_data):
+    invalid = deepcopy(lesson_data)
+    invalid["voice_genders"] = {"bob": "female"}
+    with pytest.raises(ValidationError, match="voice_genders"):
+        Lesson.model_validate(invalid)

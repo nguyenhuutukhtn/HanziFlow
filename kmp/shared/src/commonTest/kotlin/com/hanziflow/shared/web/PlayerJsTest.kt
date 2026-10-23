@@ -24,6 +24,17 @@ class PlayerJsTest {
     )
 
     @Test
+    fun exposesModesTracksInTheirDisplayOrder() {
+        val catalog = """{"schema_version":1,"catalog_version":1,"lessons":[{"id":"lesson_002","version":1,"order":2,"title":"Modes","level":"beginner","base_url":"modes/","format":"modes_v1","tracks":{"hieu":{"file":"hieu.mp3","bytes":1,"duration_ms":1,"sha256":"a","timeline":{"file":"timeline_hieu.json","bytes":1,"sha256":"a"}},"nghe":{"file":"nghe.mp3","bytes":1,"duration_ms":1,"sha256":"a","timeline":{"file":"timeline_nghe.json","bytes":1,"sha256":"a"}},"phan_xa":{"file":"phan_xa.mp3","bytes":1,"duration_ms":1,"sha256":"a","timeline":{"file":"timeline_phan_xa.json","bytes":1,"sha256":"a"}},"noi":{"file":"noi.mp3","bytes":1,"duration_ms":1,"sha256":"a","timeline":{"file":"timeline_noi.json","bytes":1,"sha256":"a"}}},"files":{"manifest":{"file":"lesson.json","bytes":1,"sha256":"a"},"reference":{"file":"reference.json","bytes":1,"sha256":"a"},"items":{"file":"items.json","bytes":1,"sha256":"a"}}}]}"""
+        val reference = """{"tracks":{"hieu":[],"nghe":[],"phan_xa":[],"noi":[]}}"""
+        val modes = LessonSessionJs(catalog, "lesson_002", "{\"schema_version\":1,\"lesson_id\":\"lesson_002\",\"lesson_version\":1,\"track\":\"hieu\",\"duration_ms\":0,\"cues\":[]}", reference)
+        assertEquals(
+            """[{"name":"hieu","display_name":"Hiểu"},{"name":"nghe","display_name":"Nghe"},{"name":"phan_xa","display_name":"Phản xạ"},{"name":"noi","display_name":"Nói"}]""",
+            modes.tracksJson(),
+        )
+    }
+
+    @Test
     fun exposesCatalogPathsAndCueNavigation() {
         val lessons = CourseJson.codec.parseToJsonElement(CatalogJs.lessonsJson(fixtureText("catalog.json"))).jsonArray
         assertEquals(1, lessons.size)
@@ -53,8 +64,8 @@ class PlayerJsTest {
         val reference = CourseJson.reference(fixtureText("reference.json"))
         val guidedIds = CourseJson.codec.parseToJsonElement(session.linesJson("guided")).jsonArray
             .map { it.jsonPrimitive.content }
-        assertEquals(reference.tracks.guided.size, guidedIds.size)
-        assertEquals(reference.tracks.guided.first().id, guidedIds.first())
+        assertEquals(assertNotNull(reference.tracks.guided).size, guidedIds.size)
+        assertEquals(assertNotNull(reference.tracks.guided).first().id, guidedIds.first())
 
         val practice = LessonSessionJs(
             catalogJson = fixtureText("catalog.json"),
@@ -81,7 +92,7 @@ class PlayerJsTest {
     @Test
     fun exposesTranscriptRenderingAndCharacters() {
         val reference = CourseJson.reference(fixtureText("reference.json"))
-        val line = reference.tracks.guided.first { it.language == "zh-CN" && !it.tokens.isNullOrEmpty() }
+        val line = assertNotNull(reference.tracks.guided).first { it.language == "zh-CN" && !it.tokens.isNullOrEmpty() }
         val rendered = CourseJson.codec.parseToJsonElement(
             assertNotNull(session.lineJson(line.id, "HANZI_WITH_PINYIN", true, 0.0)),
         ).jsonObject

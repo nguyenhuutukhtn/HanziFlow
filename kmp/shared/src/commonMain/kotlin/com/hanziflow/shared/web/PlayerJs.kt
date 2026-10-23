@@ -81,9 +81,14 @@ class LessonSessionJs(
 
     fun tracksJson(): String = CourseJson.codec.encodeToString(
         buildList {
-            add(TrackJson("guided", "Học có hướng dẫn"))
-            if (lesson.tracks.guidedZh != null) add(TrackJson("guided_zh", "Chỉ tiếng Trung"))
-            if (lesson.tracks.practice != null) add(TrackJson("practice", "Luyện nghe"))
+            if (lesson.format == "modes_v1") {
+                val labels = mapOf("hieu" to "Hiểu", "nghe" to "Nghe", "phan_xa" to "Phản xạ", "noi" to "Nói")
+                lesson.tracks.names.filter(labels::containsKey).forEach { add(TrackJson(it, labels.getValue(it))) }
+            } else {
+                if (lesson.tracks.guided != null) add(TrackJson("guided", "Học có hướng dẫn"))
+                if (lesson.tracks.guidedZh != null) add(TrackJson("guided_zh", "Chỉ tiếng Trung"))
+                if (lesson.tracks.practice != null) add(TrackJson("practice", "Luyện nghe"))
+            }
         },
     )
 
@@ -165,11 +170,7 @@ class LessonSessionJs(
 
     private fun path(file: String): String = lesson.baseUrl.trimEnd('/') + "/" + file
 
-    private fun linesFor(track: String) = when (track) {
-        "guided", "guided_zh" -> referenceTracks.guided
-        "practice" -> referenceTracks.practice.orEmpty()
-        else -> emptyList()
-    }
+    private fun linesFor(track: String) = if (track == "guided_zh") referenceTracks.guided.orEmpty() else referenceTracks.forName(track).orEmpty()
 }
 
 /** JS entry point for the small library-list payload needed before opening a lesson. */

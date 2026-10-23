@@ -68,11 +68,11 @@ class PlayerViewModelTest {
             itemsFiles = mapOf(lessonId to items)
             catalogLessons = mapOf(
                 lessonId to CatalogLesson(
-                    lessonId, 1, 1, "Lesson", "A1", "",
-                    Tracks(
-                        Track("guided.mp3", 1, 5_000, "", Clip("timeline_guided.json", 1, "")),
-                        guidedZh = Track("guided_zh.mp3", 1, 4_000, "", Clip("timeline_guided_zh.json", 1, "")),
-                    ),
+                    lessonId, 1, 1, "Lesson", "A1", "", "linear_v1",
+                    Tracks(mapOf(
+                        "guided" to Track("guided.mp3", 1, 5_000, "", Clip("timeline_guided.json", 1, "")),
+                        "guided_zh" to Track("guided_zh.mp3", 1, 4_000, "", Clip("timeline_guided_zh.json", 1, "")),
+                    )),
                     PackageFiles(Clip("lesson.json", 1, ""), Clip("reference.json", 1, ""), Clip("items.json", 1, "")),
                 ),
             )

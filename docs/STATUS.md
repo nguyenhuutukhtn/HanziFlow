@@ -2,7 +2,7 @@
 
 Read this first in a new session instead of past chat history. Keep it short; update it at the end of every task.
 
-Last updated: 2026-10-22 (Wave 1 W1a–W1c done, user tested OK; UI redesign pending) · branch `app-publish-pipeline` (not merged to `main`)
+Last updated: 2026-10-23 (M1 lesson-format contract complete) · branch `app-publish-pipeline` (not merged to `main`)
 
 ## Working rules
 
@@ -13,6 +13,8 @@ Last updated: 2026-10-22 (Wave 1 W1a–W1c done, user tested OK; UI redesign pen
 - Every task (code or content) logs its token use in [token_log.md](token_log.md); review the log periodically to cut the most expensive steps.
 
 ## Done
+
+- **M1:** lesson schema and package readers now support format-defaulted `linear_v1` and map-backed `modes_v1` tracks (`hieu`, `nghe`, `phan_xa`, `noi`). Android deliberately filters modes lessons until its UI support arrives, while its downloader handles every published track. Python, shared facade/parser, and Android mapping/download contract tests pass; M4 will provide the first real modes publish fixture.
 
 - **Wave 2 checkpoint (PM, 2026-10-22):** W2d-fix verified (19/19, `ok smoke`, check.sh green). PM re-ran the Tooltip negative probe and removed a hard-coded "Tooltip provider error" message from `smoke.mjs` that could fake it; the real error is caught. User device check: PiP controls OK, but the view is raw one-line text → [Wave 3](tasks/WAVE-3.md) W3a.
 
@@ -65,7 +67,7 @@ Last updated: 2026-10-22 (Wave 1 W1a–W1c done, user tested OK; UI redesign pen
 
 ## Next (in order)
 
-**Now: [Wave 3](tasks/WAVE-3.md) — W3a PiP learning view (whole transcript, `拼` toggle, tap to peek pinyin, no Vietnamese in PiP), then S3 + Android redesign (briefs at the W3a checkpoint).**
+**Now: [Wave 4](tasks/WAVE-4.md) — `modes_v1` for lesson 2 (M1 contract first, PM checkpoint after M1, M3, M4). W3a PiP device checkpoint still pending in parallel; S3 + Android redesign after.**
 
 **Top priority today (user, 2026-10-22, after one day of using the app): W1 — a web player in Chrome on Mac and Linux that stays on top**
 for listening while reading the text at work. The learner today follows by ear plus rough pinyin and
@@ -125,17 +127,17 @@ tap-a-character → card. **Planned as [Wave 1](tasks/WAVE-1.md): W1a ✅ (share
 4. Known follow-ups: test question type balancing (C2: cloze dominates); merge multi-character names in tokenizer + vocab (A3: 李明 split into 李/明). `upload` re-uploads an unchanged catalog.json every run (skip when remote sha256 matches). Split `publish.py` (714) / `upload.py` (406) before extending them again.
 
 ## Open decisions (user)
-- **Desktop native (2026-10-22):** not needed — Chrome PWA covers Mac + Linux (PiP, media keys, offline cache). If PiP limits bite (closes with tab, needs a click; no global hotkeys), wrap the web app with Tauri (one codebase for Mac/Linux/Windows), not Swift + a Linux app. Swift Mac only alongside an iOS app.
-- **Audio bandwidth (2026-10-22):** web streams ~21 MB/listen (lesson 1: 44 min, mono 64 kbps) from Supabase free tier — fine for personal use. Plan: after the UI redesign, a web offline-cache task (Service Worker + Cache Storage, serve Range from cache) = download once per lesson version, like native. At commercial launch move audio to Cloudflare R2 (zero egress; only `VITE_CONTENT_BASE_URL` changes). Opus 32 kbps only if bandwidth becomes a real problem (pipeline + contract change).
 
 - **Lesson 2 = mode-based, content first (user, 2026-10-22):** four modes picked by situation — Hiểu (only mode with Vietnamese), Nghe, Phản xạ, Nói (Chinese only, narration included). Lesson 2 steps up from lesson 1 (phrases as the unit, longer sentences). Content is made chat-by-chat with any AI per [content/workflow.md](../content/workflow.md) (steps, prompts, vocabulary balance tiers/bands, ≤ 50 new chars); files in `content/lesson_002/` (00 known pack + 01 brief done). **Content ready for the listening build (2026-10-22):** topic = phone call, wrong building (王芳 female / 陈东 male, new voices; narrator female this lesson); `03_core.md` script (ChatGPT, reviewed) + `09_modes.md` four modes (Codex, PM naturalness pass; script check: only allowed chars, no 了, vi only in Hiểu). Hán tự (step 10) and final review deferred. **Next (coding): convert `09_modes.md` → story.md/lesson JSON** — needs mode activity names, gap rows → answer pauses, speakers wang_fang/chen_dong + per-lesson narrator gender in `voice_registry.py`. App side (mode tracks/switcher, story.md conversion) decided later. Planned small tool: a counting script for exposure bands over `content/` markdown (AI counts are estimates).
 - **Lesson format types (user, 2026-10-22):** each lesson declares a format type; a new lesson picks a type instead of redesigning. `linear_v1` = lesson 1 (one long guided track + guided_zh + practice). `modes_v1` = lesson 2 (four mode tracks Hiểu / Nghe / Phản xạ / Nói, content in `content/lesson_<id>/09_modes.md` row format). Pipeline and app branch on the type; old lessons keep theirs.
-- **Code needed for `modes_v1` (lesson 2), to brief in the next PM session:**
+- **Code needed for `modes_v1` (lesson 2) — briefed as [Wave 4](tasks/WAVE-4.md) M1–M5 (2026-10-22):**
   1. Contract: `format` field in lesson.json + catalog entry (missing = `linear_v1`); tracks per mode (e.g. `hieu`, `nghe`, `phan_xa`, `noi`) listed in the catalog. Contract change → checkpoint after.
   2. Pipeline import: `09_modes.md` rows → lesson JSON (story.md or direct); `gap` rows → answer/repeat pauses (length from the previous line, like P3 recall gaps); sections = `<Mode> · <part>`; Vietnamese column kept as transcript translation in zh-only modes.
   3. Voices: speakers `wang_fang` (female), `chen_dong` (male); per-lesson role→gender override (narrator `coach_zh` female in lesson 2) in `voice_registry.py`; Vietnamese `coach_vi` voice for Hiểu.
   4. `publish` builds one track + timeline per mode; dry-run count before any paid TTS.
   5. Web player: mode switcher for `modes_v1` lessons (Android later); `linear_v1` UI unchanged.
+- **Desktop native (2026-10-22):** not needed — Chrome PWA covers Mac + Linux (PiP, media keys, offline cache). If PiP limits bite (closes with tab, needs a click; no global hotkeys), wrap the web app with Tauri (one codebase for Mac/Linux/Windows), not Swift + a Linux app. Swift Mac only alongside an iOS app.
+- **Audio bandwidth (2026-10-22):** web streams ~21 MB/listen (lesson 1: 44 min, mono 64 kbps) from Supabase free tier — fine for personal use. Plan: after the UI redesign, a web offline-cache task (Service Worker + Cache Storage, serve Range from cache) = download once per lesson version, like native. At commercial launch move audio to Cloudflare R2 (zero egress; only `VITE_CONTENT_BASE_URL` changes). Opus 32 kbps only if bandwidth becomes a real problem (pipeline + contract change).
 - **UI/UX redesign for commercial quality (2026-10-22):** web + Android look unprofessional. User proposes Vercel v0. PM advice: v0 designs from a prompt with mock data shaped like the facade JSON (not repo access); output = design tokens + screen references, then worker briefs port to web (Vite/React) and Compose. User chose: prompt → v0 (bright education feel, 3 themes Sáng/Giấy/Tối, bright default). Prompt in `docs/ui/v0_prompt.md`. v0 round 1 (https://mandarin-ear.vercel.app/, reviewed from the bundle against `docs/ui/v0_review_checklist.md`): themes, view modes, transcript flags, speed, character card content OK; missing floating mini player, keyboard shortcuts, seek section markers, "Mới" badge; card hard-coded instead of driven by `Character` props; track/loop buttons static. v0 closed after round 3 (user approved the style; export in `docs/ui/v0_export/`). Port planned as [Wave 2](tasks/WAVE-2.md) (W2a–W2d, web only; Android = Wave 3). `docs/ui/v0_export/` is local-only (gitignored), a design reference until W2b writes `docs/ui/design_system.md`; delete it once the product UI is stable.
 
 - Character learning feature: design finalized 2026-10-21 in [architecture/characters.md](architecture/characters.md). C0/C1/C2 done. C3 (per-char/word pronunciation) and C4 ("Từ trong bài" jump target) are backlog candidates needing research/clarification before a brief — see "Next".

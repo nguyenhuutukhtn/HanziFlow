@@ -17,7 +17,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `cli.py` [299] — Command-line interface for validation, generation, transcripts and reviews.
 - `config.py` [53] — Environment-backed configuration without exposing secrets.
 - `generate_plan.py` [82] — Cache/cost plan for a lesson's TTS segments: `generate --dry-run` and bundle import.
-- `lesson_schema.py` [105] — Validated, content-driven lesson schema.
+- `lesson_schema.py` [115] — Validated, content-driven lesson schema.
 - `logs.py` [14] — Shared helper: write full detail behind a short CLI summary (docs/workflow.md).
 - `publish.py` [20] — Public publishing API; implementation is split into focused modules.
 - `publish_core.py` [299]
@@ -58,7 +58,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `test_cli.py` [31]
 - `test_ledger.py` [88]
 - `test_lesson_001_story.py` [114]
-- `test_lesson_schema.py` [67]
+- `test_lesson_schema.py` [113]
 - `test_metrics_rows.py` [88]
 - `test_publish.py` [419] ⚠
 - `test_publish_guided_zh.py` [28]
@@ -78,7 +78,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 
 ## KMP shared (main) (`kmp/shared/src/commonMain/`)
 
-- `kotlin/com/hanziflow/shared/Models.kt` [219] — Clip, Track, Tracks, PackageFiles — Track by its published name (`guided`, `guided_zh`, `practice`); null if absent or unknown.
+- `kotlin/com/hanziflow/shared/Models.kt` [243] — Clip, Track, Tracks, TracksSerializer — Track by its published name; null if absent.
 - `kotlin/com/hanziflow/shared/characters/Characters.kt` [51] — LessonCharacters, CharacterEntry, ComponentEntry, CharacterIndex
 - `kotlin/com/hanziflow/shared/characters/StrokeData.kt` [9] — StrokeEntry
 - `kotlin/com/hanziflow/shared/testgen/GenerationContext.kt` [275] — TaggedWord, TaggedSentence, TaggedQa, Spec — One candidate (item, question-type) source the generator can draw a question from.
@@ -93,12 +93,12 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `kotlin/com/hanziflow/shared/transcript/TrackSwitch.kt` [29] — TrackSwitch — Maps a position between two timelines that share the same published line ids.
 - `kotlin/com/hanziflow/shared/transcript/TranscriptCues.kt` [81] — TranscriptCues — Pure cue-lookup logic over a track's timeline cues (assumed sorted ascending by
 - `kotlin/com/hanziflow/shared/transcript/TranscriptRendering.kt` [117] — TranscriptViewMode, TokenRenderDecision, LineRenderDecision, TranscriptRendering — One dataset, several views, switched instantly. Vietnamese is an independent toggle.
-- `kotlin/com/hanziflow/shared/web/PlayerJs.kt` [200] — TrackJson, TokenJson, LineJson, CharacterJson — Small JS-facing facade for one lesson's player data and transcript rules.
+- `kotlin/com/hanziflow/shared/web/PlayerJs.kt` [201] — TrackJson, TokenJson, LineJson, CharacterJson — Small JS-facing facade for one lesson's player data and transcript rules.
 
 ## KMP shared (tests) (`kmp/shared/src/commonTest/`)
 
 - `kotlin/com/hanziflow/shared/CharacterContractTest.kt` [46] — CharacterContractTest
-- `kotlin/com/hanziflow/shared/ContractParsingTest.kt` [73] — ContractParsingTest
+- `kotlin/com/hanziflow/shared/ContractParsingTest.kt` [89] — ContractParsingTest
 - `kotlin/com/hanziflow/shared/testgen/GoldenVectorTest.kt` [44] — GoldenVectorTest — Golden vectors: TestGenerator.generate() against the real lesson_001 items.json
 - `kotlin/com/hanziflow/shared/testgen/InvariantsTest.kt` [108] — InvariantsTest — Splits the real lesson_001 item bank into a synthetic "earlier" lesson and a
 - `kotlin/com/hanziflow/shared/testgen/TestSessionTest.kt` [89] — TestSessionTest
@@ -107,7 +107,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `kotlin/com/hanziflow/shared/transcript/TrackSwitchTest.kt` [108] — TrackSwitchTest
 - `kotlin/com/hanziflow/shared/transcript/TranscriptCuesTest.kt` [131] — TranscriptCuesTest
 - `kotlin/com/hanziflow/shared/transcript/TranscriptRenderingTest.kt` [135] — TranscriptRenderingTest
-- `kotlin/com/hanziflow/shared/web/PlayerJsTest.kt` [111] — PlayerJsTest
+- `kotlin/com/hanziflow/shared/web/PlayerJsTest.kt` [122] — PlayerJsTest
 
 ## Android app (main) (`kmp/android/src/main/`)
 
@@ -115,13 +115,13 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `kotlin/com/hanziflow/MainActivity.kt` [90] — MainActivity — Thin composition root: wires the activity-scoped screen ViewModels (via Hilt) to
 - `kotlin/com/hanziflow/data/CourseDatabase.kt` [93] — LessonEntity, SettingEntity, PlaybackEntity, CourseDao
 - `kotlin/com/hanziflow/data/CourseRepository.kt` [33] — CourseRepository — Course catalog, downloads, and the downloaded lesson package file store.
-- `kotlin/com/hanziflow/data/CourseRepositoryImpl.kt` [182] — CourseRepositoryImpl
+- `kotlin/com/hanziflow/data/CourseRepositoryImpl.kt` [186] — CourseRepositoryImpl
 - `kotlin/com/hanziflow/data/ProgressRepository.kt` [12] — ProgressRepository, ProgressRepositoryImpl — Placeholder for progress sync (lesson_progress / test_attempts) work (D2).
 - `kotlin/com/hanziflow/data/SettingsRepository.kt` [76] — SettingsRepository, SettingsRepositoryImpl — Simple key/value app settings (catalog base URL, transcript view, Vietnamese toggle, theme).
 - `kotlin/com/hanziflow/di/AppModule.kt` [28] — AppModule — Room DB / DAO and the shared OkHttp client: the only places this app talks to disk/network directly.
 - `kotlin/com/hanziflow/di/PlaybackModule.kt` [22] — PlaybackModule — [PlayerConnection] wraps the single [androidx.media3.session.MediaController] the UI
 - `kotlin/com/hanziflow/di/RepositoryModule.kt` [29] — RepositoryModule
-- `kotlin/com/hanziflow/download/LessonDownloadWorker.kt` [147] — LessonDownloadWorker
+- `kotlin/com/hanziflow/download/LessonDownloadWorker.kt` [144] — LessonDownloadWorker
 - `kotlin/com/hanziflow/playback/CueSeekPlayer.kt` [49] — CueSeekPlayer — Makes next/previous available on the session (notification, lock screen, media
 - `kotlin/com/hanziflow/playback/CueSkipper.kt` [51] — CueSkipper — Headset / transport cue navigation and section lookups, driven from the timeline
 - `kotlin/com/hanziflow/playback/LoopController.kt` [57] — LoopController — Owns the single active loop (line or section) and the position-check logic that
@@ -162,6 +162,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 
 - `kotlin/com/hanziflow/architecture/LayeringTest.kt` [86] — LayeringTest — Enforces the dependency rules from docs/app_architecture.md "Code architecture (Android)",
 - `kotlin/com/hanziflow/data/CourseRepositoryTest.kt` [25] — CourseRepositoryTest
+- `kotlin/com/hanziflow/data/M1ContractTest.kt` [34] — M1ContractTest
 - `kotlin/com/hanziflow/fakes/FakeCourseRepository.kt` [50] — FakeCourseRepository — In-memory [CourseRepository] fake: no Room/OkHttp/WorkManager, just recorded calls and canned returns.
 - `kotlin/com/hanziflow/fakes/FakePlayerConnection.kt` [75] — FakePlayerConnection — Lets a ViewModel test drive the service's published state without Media3 or a device.
 - `kotlin/com/hanziflow/fakes/FakeSettingsRepository.kt` [35] — FakeSettingsRepository

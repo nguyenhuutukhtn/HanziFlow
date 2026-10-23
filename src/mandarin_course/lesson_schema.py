@@ -9,7 +9,7 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 Language = Literal["zh-CN", "en-US", "vi-VN"]
-Speaker = Literal["anna", "li_ming", "coach", "coach_zh"]
+Speaker = Literal["anna", "li_ming", "wang_fang", "chen_dong", "coach", "coach_zh"]
 SegmentType = Literal[
     "narration", "dialogue", "pattern", "prompt", "model_answer", "context", "review"
 ]
@@ -58,8 +58,8 @@ class Segment(BaseModel):
     def require_mandarin_learning_fields(self) -> "Segment":
         if self.language == "zh-CN" and (not self.pinyin or not self.translation):
             raise ValueError("Mandarin segments require pinyin and translation")
-        if self.speaker in {"anna", "li_ming"} and self.language != "zh-CN":
-            raise ValueError("Anna and Li Ming must use Mandarin segments")
+        if self.speaker in {"anna", "li_ming", "wang_fang", "chen_dong"} and self.language != "zh-CN":
+            raise ValueError("Anna, Li Ming, Wang Fang and Chen Dong must use Mandarin segments")
         if self.speaker == "coach" and self.language not in {"en-US", "vi-VN"}:
             raise ValueError("coach must use an English or Vietnamese segment")
         if self.speaker == "coach_zh" and self.language != "zh-CN":
@@ -90,13 +90,23 @@ class Lesson(BaseModel):
     coach_phrases_reduced: list[str] = Field(default_factory=list)
     segments: list[Segment] = Field(min_length=1)
     version: int = Field(default=1, ge=1)
-    variant: Literal["guided", "practice"] | None = None
+    format: Literal["linear_v1", "modes_v1"] = "linear_v1"
+    variant: Literal["guided", "practice", "hieu", "nghe", "phan_xa", "noi"] | None = None
+    voice_genders: dict[str, Literal["female", "male"]] = Field(default_factory=dict)
 
     @model_validator(mode="after")
     def unique_segment_ids(self) -> "Lesson":
         ids = [segment.id for segment in self.segments]
         if len(ids) != len(set(ids)):
             raise ValueError("segment IDs must be unique")
+        modes = {"hieu", "nghe", "phan_xa", "noi"}
+        if self.format == "modes_v1" and self.variant not in modes:
+            raise ValueError("modes_v1 lessons require a mode variant")
+        if self.format == "linear_v1" and self.variant not in {None, "guided", "practice"}:
+            raise ValueError("linear_v1 lessons allow only guided or practice variants")
+        speakers = {"anna", "li_ming", "wang_fang", "chen_dong", "coach", "coach_zh"}
+        if unknown := set(self.voice_genders) - speakers:
+            raise ValueError(f"voice_genders has unknown speakers: {sorted(unknown)}")
         return self
 
 

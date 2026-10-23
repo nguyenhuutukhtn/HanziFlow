@@ -211,7 +211,7 @@ class PlayerViewModel @Inject constructor(
                 val referenceFile = courseRepository.referenceFile(lessonId) ?: return@withContext null
                 val timelineFile = courseRepository.timelineFile(lessonId, track) ?: return@withContext null
                 val reference = CourseJson.reference(referenceFile.readText())
-                val lines = if (track == "practice") reference.tracks.practice.orEmpty() else reference.tracks.guided
+                val lines = if (track == "guided_zh") reference.tracks.guided.orEmpty() else reference.tracks.forName(track).orEmpty()
                 val timeline = CourseJson.timeline(timelineFile.readText())
                 val items = courseRepository.itemsFile(lessonId)?.let { CourseJson.items(it.readText()) }
                 Loaded(lines, timeline.cues, timeline.sections, items)

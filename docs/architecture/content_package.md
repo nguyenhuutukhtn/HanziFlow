@@ -41,6 +41,21 @@ Vocabulary is authored separately in `lessons/<lesson_id>_vocab.json` with
 `words` array containing `hanzi`, `pinyin`, and `meaning_vi`; publish validates this
 sidecar before packaging.
 
+### Lesson formats
+
+Each catalog lesson entry has a `format`; an absent value means `linear_v1`.
+`tracks` is an object keyed by track name, and `reference.json` uses those same
+keys under its `tracks` object.
+
+- `linear_v1` requires `guided`, with optional `guided_zh` and `practice`.
+- `modes_v1` requires all four tracks: `hieu` ("Hiểu"), `nghe` ("Nghe"),
+  `phan_xa` ("Phản xạ"), and `noi` ("Nói"). Each has `<mode>.mp3` and
+  `timeline_<mode>.json`.
+
+For `modes_v1`, `items.json` is present with an empty item list. `characters.json`
+may omit characters without Vietnamese data; publish reports those omissions as a
+warning. Clients display the four mode tracks in the order listed above.
+
 ### catalog.json
 
 The only file a client checks to discover new or updated content. Every downloadable artifact carries byte size and SHA-256 so Android can detect incomplete or corrupt downloads.
@@ -54,6 +69,7 @@ The only file a client checks to discover new or updated content. Every download
       "id": "lesson_001",
       "version": 2,
       "order": 1,
+      "format": "linear_v1",
       "title": "...",
       "level": "absolute_beginner",
       "base_url": "lessons/lesson_001/v2/",
