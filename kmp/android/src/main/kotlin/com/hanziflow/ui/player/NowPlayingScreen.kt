@@ -92,7 +92,11 @@ fun NowPlayingScreen(
             onOpenCharacters = { characterListOpen = true },
         )
         if (state.lessonFormat == "modes_v1" && state.track == "nghe") {
-            NgheModeControls(onReveal = onRevealNgheCue, modifier = Modifier.padding(horizontal = Spacing.md))
+            NgheModeControls(
+                transcriptVisible = state.ngheTranscriptVisible,
+                onReveal = onRevealNgheCue,
+                modifier = Modifier.padding(horizontal = Spacing.md),
+            )
         } else {
             TranscriptViewSwitcher(
                 viewMode = state.transcript.viewMode,
@@ -153,7 +157,11 @@ fun NowPlayingScreen(
                     cues = state.transcript.cues,
                     items = state.transcript.items,
                     positionMs = state.positionMs,
-                    viewMode = state.transcript.viewMode,
+                    viewMode = if (state.lessonFormat == "modes_v1" && state.track == "nghe") {
+                        TranscriptViewMode.HANZI_WITH_PINYIN
+                    } else {
+                        state.transcript.viewMode
+                    },
                     showVietnamese = state.transcript.showVietnamese,
                     loopedLineId = state.transcript.loopedLineId,
                     onSeek = onSeekLine,

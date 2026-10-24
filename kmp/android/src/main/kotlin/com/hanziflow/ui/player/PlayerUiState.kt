@@ -29,6 +29,7 @@ data class PlayerUiState(
     val lessonFormat: String = "linear_v1",
     val activeGap: GapState? = null,
     val repeatEachEnabled: Boolean = false,
+    val ngheTranscriptVisible: Boolean = false,
     val transcript: TranscriptUiState = TranscriptUiState(),
     val characterIndex: CharacterIndex? = null,
     val strokePack: StrokePack? = null,

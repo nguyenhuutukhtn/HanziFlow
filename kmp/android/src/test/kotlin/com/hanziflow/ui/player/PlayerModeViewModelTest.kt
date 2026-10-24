@@ -64,22 +64,18 @@ class PlayerModeViewModelTest {
 
     private fun ngheRepository(): FakeCourseRepository {
         val repository = modeRepository("phan_xa")
-        val reference = File.createTempFile("reference_nghe", ".json").apply {
-            writeText(
-                """{"tracks":{"nghe":[
-                    {"id":"nghe_l1","type":"line","language":"zh-CN","speaker":"narrator","text":"第一句","pinyin":"dì yī jù"},
-                    {"id":"nghe_l2","type":"line","language":"zh-CN","speaker":"narrator","text":"第二句","pinyin":"dì èr jù"}
-                ]}}""".trimIndent(),
-            )
-        }
+        val reference = File(fixtureRoot, "reference_modes.json")
+        val ngheLines = CourseJson.reference(reference.readText()).tracks.forName("nghe").orEmpty()
+        val cues = ngheLines.take(5).mapIndexed { index, line ->
+            """{"line_id":"${line.id}","start_ms":${index * 2000},"end_ms":${index * 2000 + 1500}}"""
+        }.joinToString(",")
         val timeline = File.createTempFile("timeline_nghe", ".json").apply {
             writeText(
-                """{"schema_version":1,"lesson_id":"lesson_002","lesson_version":2,"track":"nghe","duration_ms":5000,
-                    "cues":[{"line_id":"nghe_l1","start_ms":1000,"end_ms":2000},{"line_id":"nghe_l2","start_ms":3000,"end_ms":4000}]}""",
+                """{"schema_version":1,"lesson_id":"lesson_002","lesson_version":2,"track":"nghe","duration_ms":10000,"cues":[$cues]}""",
             )
         }
         repository.referenceFiles = mapOf("lesson_002" to reference)
-        repository.timelineFiles = mapOf(("lesson_002" to "nghe") to timeline)
+        repository.timelineFiles = repository.timelineFiles + (("lesson_002" to "nghe") to timeline)
         return repository
     }
 
@@ -122,20 +118,43 @@ class PlayerModeViewModelTest {
     }
 
     @Test
-    fun `nghe opens hidden reveals only current cue then clears at next cue`() = runTest(dispatcher) {
+    fun `nghe toggles the whole transcript and keeps it visible across cues`() = runTest(dispatcher) {
+        val repository = ngheRepository().apply {
+            trackFiles = mapOf(("lesson_002" to "nghe") to File.createTempFile("nghe", ".mp3"))
+        }
         val connection = FakePlayerConnection()
-        val viewModel = viewModel(ngheRepository(), connection)
+        val viewModel = viewModel(repository, connection)
 
-        connection.emit(PlaybackState(connected = true, playing = true, lessonId = "lesson_002", track = "nghe", positionMs = 1_500))
+        connection.emit(PlaybackState(connected = true, playing = true, lessonId = "lesson_002", track = "nghe", positionMs = 500))
         advanceUntilIdle()
         assertTrue(viewModel.uiState.value.transcript.lines.isEmpty())
 
         viewModel.revealCurrentNgheCue()
-        assertEquals(listOf("nghe_l1"), viewModel.uiState.value.transcript.lines.map { it.id })
+        val allLineIds = CourseJson.reference(File(fixtureRoot, "reference_modes.json").readText())
+            .tracks.forName("nghe").orEmpty().map { it.id }
+        assertEquals(allLineIds, viewModel.uiState.value.transcript.lines.map { it.id })
+        assertTrue(viewModel.uiState.value.ngheTranscriptVisible)
 
-        connection.emit(connection.state.value.copy(positionMs = 3_500))
+        connection.emit(connection.state.value.copy(positionMs = 7_000))
+        advanceUntilIdle()
+        assertEquals(allLineIds, viewModel.uiState.value.transcript.lines.map { it.id })
+
+        viewModel.play(repository.lessonsFlow.value.single(), "nghe")
         advanceUntilIdle()
         assertTrue(viewModel.uiState.value.transcript.lines.isEmpty())
+
+        viewModel.revealCurrentNgheCue()
+        assertEquals(allLineIds, viewModel.uiState.value.transcript.lines.map { it.id })
+        viewModel.revealCurrentNgheCue()
+        assertTrue(viewModel.uiState.value.transcript.lines.isEmpty())
+
+        viewModel.revealCurrentNgheCue()
+        connection.emit(connection.state.value.copy(track = "phan_xa", positionMs = 0))
+        advanceUntilIdle()
+        connection.emit(connection.state.value.copy(track = "nghe", positionMs = 500))
+        advanceUntilIdle()
+        assertTrue(viewModel.uiState.value.transcript.lines.isEmpty())
+        assertFalse(viewModel.uiState.value.ngheTranscriptVisible)
     }
 
     @Test

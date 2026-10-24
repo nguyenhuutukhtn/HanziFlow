@@ -2,9 +2,12 @@ package com.hanziflow.ui
 
 import android.app.Application
 import androidx.compose.ui.test.junit4.createComposeRule
+import com.hanziflow.shared.CourseJson
+import com.hanziflow.shared.Items
 import com.hanziflow.shared.modes.GapState
 import com.hanziflow.shared.transcript.TranscriptViewMode
 import com.hanziflow.ui.player.PlayerUiState
+import java.io.File
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -18,6 +21,10 @@ import org.robolectric.annotation.GraphicsMode
 class ModePlayerScreenshotTest {
     @get:Rule
     val compose = createComposeRule()
+
+    private val fixtureRoot = File("../shared/src/commonTest/resources/contract")
+    private val hieuLines = CourseJson.reference(File(fixtureRoot, "reference_modes.json").readText())
+        .tracks.forName("hieu").orEmpty()
 
     private fun modeState(track: String, gap: GapState? = null): PlayerUiState =
         nowPlayingState(TranscriptViewMode.HANZI_WITH_PINYIN).copy(
@@ -61,10 +68,26 @@ class ModePlayerScreenshotTest {
     }
 
     @Test fun nghe_revealed_dark() = compose.captureScreen("mode_nghe_revealed_dark") {
-        NowPlayingFrame(modeState("nghe").let { it.copy(transcript = it.transcript.copy(lines = sampleLines.take(1))) })
+        NowPlayingFrame(modeState("nghe").let { it.copy(ngheTranscriptVisible = true, transcript = it.transcript.copy(lines = sampleLines.take(1))) })
     }
 
     @Test fun nghe_revealed_light() = compose.captureScreen("mode_nghe_revealed_light") {
-        NowPlayingFrame(modeState("nghe").let { it.copy(transcript = it.transcript.copy(lines = sampleLines.take(1))) }, false)
+        NowPlayingFrame(modeState("nghe").let { it.copy(ngheTranscriptVisible = true, transcript = it.transcript.copy(lines = sampleLines.take(1))) }, false)
     }
+
+    @Test fun hieu_transcript_dark() = compose.captureScreen("mode_hieu_transcript_dark") {
+        NowPlayingFrame(hieuState())
+    }
+
+    @Test fun hieu_transcript_light() = compose.captureScreen("mode_hieu_transcript_light") {
+        NowPlayingFrame(hieuState(), false)
+    }
+
+    private fun hieuState() = modeState("hieu").copy(
+        lessonTitle = "你在哪儿？",
+        transcript = modeState("hieu").transcript.copy(
+            lines = hieuLines,
+            items = Items(schemaVersion = 1, lessonId = "lesson_002", lessonVersion = 2),
+        ),
+    )
 }

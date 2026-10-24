@@ -39,14 +39,16 @@ fun ModeGapControls(gap: GapState, onPause: () -> Unit, modifier: Modifier = Mod
 }
 
 @Composable
-fun NgheModeControls(onReveal: () -> Unit, modifier: Modifier = Modifier) {
+fun NgheModeControls(transcriptVisible: Boolean, onReveal: () -> Unit, modifier: Modifier = Modifier) {
     Surface(modifier = modifier, color = MaterialTheme.colorScheme.surface) {
         androidx.compose.foundation.layout.Row(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text("Nghe thuần", style = MaterialTheme.typography.titleSmall)
-            Button(onClick = onReveal) { Text("Hiện câu") }
+            Button(onClick = onReveal) {
+                Text(if (transcriptVisible) "Ẩn transcript" else "Hiện transcript")
+            }
         }
     }
 }

@@ -47,7 +47,6 @@ class PlayerViewModel @Inject constructor(
     private val progressSaver = PlaybackProgressSaver(progressRepository, viewModelScope)
     internal var backgroundDispatcher: CoroutineDispatcher = Dispatchers.IO
     private var loadedTranscript: LoadedTranscript? = null
-    private var ngheRevealCueStartMs: Long? = null
     init {
         viewModelScope.launch {
             courseRepository.lessons.collect {
@@ -59,7 +58,8 @@ class PlayerViewModel @Inject constructor(
         viewModelScope.launch {
             playerConnection.state.collect { playback ->
                 _uiState.update { state ->
-                    applyModePresentation(state.copy(
+                    val lessonState = state.forPlaybackLesson(playback.lessonId)
+                    applyModePresentation(lessonState.copy(
                         connected = playback.connected,
                         playing = playback.playing,
                         lessonId = playback.lessonId,
@@ -84,7 +84,6 @@ class PlayerViewModel @Inject constructor(
             }
         }
     }
-
     fun play(lesson: LessonEntity, track: String = "guided") = viewModelScope.launch {
         val current = playerConnection.state.value
         if (current.lessonId != null) progressRepository.savePosition(current.lessonId, current.track, current.positionMs)
@@ -93,24 +92,22 @@ class PlayerViewModel @Inject constructor(
             _uiState.update { it.copy(message = "Download this lesson first") }
             return@launch
         }
+        if (track == "nghe") _uiState.update { applyModePresentation(it.copy(ngheTranscriptVisible = false), it.positionMs) }
         val startPosition = progressRepository.positionMs(lesson.id, track)
         val trackLabel = ModeInfo.all.firstOrNull { it.id == track }?.label
             ?: if (track == "practice") "Luyện nghe" else "Học có hướng dẫn"
         playerConnection.play(lesson.id, track, file.toURI().toString(), lesson.title, trackLabel)
         if (startPosition > 0) playerConnection.seekTo(startPosition)
     }
-
     fun switchTrack(track: String) = viewModelScope.launch {
         val id = _uiState.value.lessonId ?: return@launch
         val lesson = lessons.value.firstOrNull { it.id == id } ?: return@launch
         play(lesson, track)
     }
-
     fun toggle() = playerConnection.toggle()
     fun pauseForGap() {
         if (_uiState.value.activeGap != null && _uiState.value.playing) playerConnection.pause()
     }
-
     fun toggleRepeatEach() {
         val state = _uiState.value
         if (state.lessonFormat != "modes_v1" || state.track !in setOf("noi", "phan_xa")) return
@@ -122,9 +119,9 @@ class PlayerViewModel @Inject constructor(
     fun revealCurrentNgheCue() {
         val state = _uiState.value
         if (state.lessonFormat != "modes_v1" || state.track != "nghe") return
-        val cue = loadedTranscript?.timeline?.cues?.let { TranscriptCues.activeCue(it, state.positionMs) } ?: return
-        ngheRevealCueStartMs = cue.startMs
-        _uiState.update { applyModePresentation(it, it.positionMs) }
+        _uiState.update {
+            applyModePresentation(it.copy(ngheTranscriptVisible = !it.ngheTranscriptVisible), it.positionMs)
+        }
     }
     fun seekBack() = playerConnection.seekBack()
     fun seekForward() = playerConnection.seekForward()
@@ -231,8 +228,9 @@ class PlayerViewModel @Inject constructor(
         if (current.lessonId == lessonId && current.track == track) return
         transcriptLoadJob?.cancel()
         loadedTranscript = null
-        ngheRevealCueStartMs = null
-        _uiState.update { it.copy(transcript = TranscriptUiState(lessonId = lessonId, track = track)) }
+        _uiState.update {
+            it.copy(ngheTranscriptVisible = false, transcript = TranscriptUiState(lessonId = lessonId, track = track))
+        }
         transcriptLoadJob = viewModelScope.launch {
             val loaded = withContext(backgroundDispatcher) { courseRepository.loadTranscript(lessonId, track) } ?: return@launch
             val savedView = settingsRepository.transcriptView(track)
@@ -267,9 +265,8 @@ class PlayerViewModel @Inject constructor(
     private fun applyModePresentation(state: PlayerUiState, positionMs: Long): PlayerUiState {
         val loaded = loadedTranscript ?: return state.copy(activeGap = null)
         val presentation = modePresentation(
-            state.lessonFormat, state.track, loaded.timeline, loaded.lines, positionMs, ngheRevealCueStartMs,
+            state.lessonFormat, state.track, loaded.timeline, loaded.lines, positionMs, state.ngheTranscriptVisible,
         )
-        ngheRevealCueStartMs = presentation.ngheRevealCueStartMs
         return state.copy(
             activeGap = presentation.activeGap,
             transcript = state.transcript.copy(lines = presentation.lines),
@@ -285,7 +282,7 @@ class PlayerViewModel @Inject constructor(
             val tracks = catalogLesson?.tracks
             val chineseOnlyDownloaded = courseRepository.trackFile(lessonId, "guided_zh") != null
             _uiState.update { state ->
-                applyModePresentation(
+                if (state.lessonId != lessonId) state else applyModePresentation(
                     state.copy(
                         lessonTitle = title,
                         lessonFormat = catalogLesson?.format ?: "linear_v1",

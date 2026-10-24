@@ -52,19 +52,17 @@ class ModePlayerUiTest {
 
     @Test
     fun `nghe shows pure-listening reveal action instead of transcript controls`() {
-        compose.setContent {
-            NowPlayingFrame(
-                nowPlayingState(TranscriptViewMode.PINYIN_ONLY, lines = emptyList()).copy(
-                    lessonId = "lesson_002",
-                    track = "nghe",
-                    lessonFormat = "modes_v1",
-                ),
-            )
-        }
+        var state by mutableStateOf(nowPlayingState(TranscriptViewMode.PINYIN_ONLY, lines = emptyList()).copy(
+            lessonId = "lesson_002", track = "nghe", lessonFormat = "modes_v1",
+        ))
+        compose.setContent { NowPlayingFrame(state) }
 
         compose.onNodeWithText("Nghe thuần").assertExists()
-        compose.onNodeWithText("Hiện câu").assertExists()
+        compose.onNodeWithText("Hiện transcript").assertExists()
         compose.onNodeWithText("Pinyin").assertDoesNotExist()
+
+        compose.runOnIdle { state = state.copy(ngheTranscriptVisible = true) }
+        compose.onNodeWithText("Ẩn transcript").assertExists()
     }
 
     @Test

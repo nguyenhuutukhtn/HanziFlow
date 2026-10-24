@@ -161,16 +161,17 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `kotlin/com/hanziflow/ui/modes/ModePickerViewModel.kt` [33] — ModePickerViewModel
 - `kotlin/com/hanziflow/ui/navigation/AppShell.kt` [235] — Routes, Tab — Bottom-nav destinations; Review and Settings are G2b/G2c placeholders in this pass.
 - `kotlin/com/hanziflow/ui/player/LookupSheet.kt` [59] — LookupSheet
-- `kotlin/com/hanziflow/ui/player/ModeGapControls.kt` [62] — ModeGapControls, NgheModeControls, RepeatEachChip
+- `kotlin/com/hanziflow/ui/player/ModeGapControls.kt` [64] — ModeGapControls, NgheModeControls, RepeatEachChip
 - `kotlin/com/hanziflow/ui/player/NowPlayingPreview.kt` [41] — previewLine, NowPlayingPreview
-- `kotlin/com/hanziflow/ui/player/NowPlayingScreen.kt` [263] — NowPlayingScreen, NowPlayingHeader — Full-screen Now Playing route. Stateless; [PlayerViewModel] owns all command logic.
+- `kotlin/com/hanziflow/ui/player/NowPlayingScreen.kt` [271] — NowPlayingScreen, NowPlayingHeader — Full-screen Now Playing route. Stateless; [PlayerViewModel] owns all command logic.
 - `kotlin/com/hanziflow/ui/player/PlaybackProgressSaver.kt` [30] — PlaybackProgressSaver, NoOpProgressRepository
-- `kotlin/com/hanziflow/ui/player/PlayerModePresentation.kt` [41] — ModePresentation
+- `kotlin/com/hanziflow/ui/player/PlayerLessonMeta.kt` [13] — PlayerUiState.forPlaybackLesson — Clears metadata that only belongs to the previously playing lesson.
+- `kotlin/com/hanziflow/ui/player/PlayerModePresentation.kt` [32] — ModePresentation
 - `kotlin/com/hanziflow/ui/player/PlayerTranscriptLoader.kt` [37] — LoadedTranscript
-- `kotlin/com/hanziflow/ui/player/PlayerUiState.kt` [50] — PlayerUiState, TranscriptUiState
-- `kotlin/com/hanziflow/ui/player/PlayerViewModel.kt` [300] — PlayerViewModel
+- `kotlin/com/hanziflow/ui/player/PlayerUiState.kt` [51] — PlayerUiState, TranscriptUiState
+- `kotlin/com/hanziflow/ui/player/PlayerViewModel.kt` [297] — PlayerViewModel
 - `kotlin/com/hanziflow/ui/player/SectionControls.kt` [128] — SectionRow, SectionLoopChip, SectionListSheet — "▤ <section title> · n/N ▾" on the left (opens the section list), "↻ Lặp phần này"
-- `kotlin/com/hanziflow/ui/player/TranscriptPanel.kt` [293] — TranscriptPanel, TranscriptLineRow, TokenRow, TokenCell — One-dataset, several-views karaoke transcript. Pure rendering decisions come from
+- `kotlin/com/hanziflow/ui/player/TranscriptPanel.kt` [300] — TranscriptPanel, TranscriptLineRow, TokenRow, TokenCell — One-dataset, several-views karaoke transcript. Pure rendering decisions come from
 - `kotlin/com/hanziflow/ui/player/TranscriptViewSwitcher.kt` [24] — TranscriptViewSwitcher
 - `kotlin/com/hanziflow/ui/player/TransportSection.kt` [201] — TransportSection, SeekBar, formatTime — Track switch, seek bar, speed chips and primary transport controls. Split out of NowPlayingScreen (line budget).
 - `kotlin/com/hanziflow/ui/review/ReviewScreen.kt` [44] — ReviewScreen, ReviewScreenPreview — G2c placeholder: test flow + attempt history land here. Copy is the final Vietnamese copy.
@@ -191,10 +192,11 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `kotlin/com/hanziflow/fakes/FakeSettingsRepository.kt` [43] — FakeSettingsRepository
 - `kotlin/com/hanziflow/playback/LoopControllerRepeatTest.kt` [60] — LoopControllerRepeatTest
 - `kotlin/com/hanziflow/playback/LoopPublisherTest.kt` [74] — LoopPublisherTest
-- `kotlin/com/hanziflow/ui/ModePlayerScreenshotTest.kt` [70] — ModePlayerScreenshotTest
-- `kotlin/com/hanziflow/ui/PlayerUiTest.kt` [218] — PlayerUiTest
+- `kotlin/com/hanziflow/ui/ModePlayerScreenshotTest.kt` [93] — ModePlayerScreenshotTest
+- `kotlin/com/hanziflow/ui/PlayerUiTest.kt` [216] — PlayerUiTest
 - `kotlin/com/hanziflow/ui/ScreenshotFixtures.kt` [223] — ComposeContentTestRule.captureScreen, MiniPlayerFrame, NowPlayingFrame, nowPlayingState — Fake-state fixtures shared by the Roborazzi screenshot tests (kept out of the test files for the line budget).
 - `kotlin/com/hanziflow/ui/SectionReplayScreenshotTest.kt` [44] — SectionReplayScreenshotTest — Section replay / Chinese-only visuals; split out of [UiScreenshotTest] for the line budget.
+- `kotlin/com/hanziflow/ui/TranscriptInteractionTest.kt` [96] — TranscriptInteractionTest
 - `kotlin/com/hanziflow/ui/UiScreenshotTest.kt` [82] — UiScreenshotTest — Fake-state visuals, recorded into kmp/android/build/outputs/roborazzi until the
 - `kotlin/com/hanziflow/ui/characters/StrokePathTest.kt` [27] — StrokePathTest
 - `kotlin/com/hanziflow/ui/library/LibraryViewModelTest.kt` [77] — LibraryViewModelTest
@@ -202,6 +204,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `kotlin/com/hanziflow/ui/modes/ModePickerScreenshotTest.kt` [35] — ModePickerScreenshotTest
 - `kotlin/com/hanziflow/ui/modes/ModePickerViewModelTest.kt` [43] — ModePickerViewModelTest
 - `kotlin/com/hanziflow/ui/navigation/AppShellTest.kt` [154] — AppShellTest
-- `kotlin/com/hanziflow/ui/player/ModePlayerUiTest.kt` [91] — ModePlayerUiTest
-- `kotlin/com/hanziflow/ui/player/PlayerModeViewModelTest.kt` [161] — PlayerModeViewModelTest
+- `kotlin/com/hanziflow/ui/player/ModePlayerUiTest.kt` [89] — ModePlayerUiTest
+- `kotlin/com/hanziflow/ui/player/PlayerLessonMetaTest.kt` [57] — PlayerLessonMetaTest
+- `kotlin/com/hanziflow/ui/player/PlayerModeViewModelTest.kt` [180] — PlayerModeViewModelTest
 - `kotlin/com/hanziflow/ui/player/PlayerViewModelTest.kt` [300] — PlayerViewModelTest — Blocks the real test thread (not virtual time) until [lines] load from the fake repository's IO.

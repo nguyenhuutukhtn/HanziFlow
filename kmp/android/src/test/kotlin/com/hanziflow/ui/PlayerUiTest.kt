@@ -85,7 +85,6 @@ class PlayerUiTest {
         compose.onNodeWithTag(MiniPlayerOpenTestTag).performClick()
         compose.onNodeWithTag(NowPlayingTestTag).assertExists()
     }
-
     @Test
     fun `model_answer is a placeholder before its cue`() {
         val answer = ReferenceLine(
@@ -149,7 +148,6 @@ class PlayerUiTest {
         compose.onNodeWithText("Đến lượt bạn — nói trước khi nghe").assertExists()
         compose.onNodeWithText("这是安娜的外卖。").assertDoesNotExist()
     }
-
     @Test
     fun `lookup chips open a character and then its component`() {
         val index = CharacterIndex(

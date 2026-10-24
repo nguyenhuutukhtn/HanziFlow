@@ -2,7 +2,7 @@
 
 Read this first in a new session instead of past chat history. Keep it short; update it at the end of every task.
 
-Last updated: 2026-10-24 (A4 verified; Wave 5 ready for PM + device checkpoint) · branch `main` (app-publish-pipeline merged + deleted 2026-10-23)
+Last updated: 2026-10-24 (B1 verified; device check pending) · branch `main` (app-publish-pipeline merged + deleted 2026-10-23)
 
 ## Working rules
 
@@ -14,9 +14,11 @@ Last updated: 2026-10-24 (A4 verified; Wave 5 ready for PM + device checkpoint) 
 
 ## Done
 
+- **B1:** Android player metadata now resets/reloads per lesson, so lesson 1 ↔ lesson 2 switches keep the correct title and availability flags. Lesson-2 modes render source Hanzi when `items.json` has no words. Nghe starts hidden and now toggles the full Hanzi+pinyin transcript persistently across cue changes, including after reopening the track. Long-pressing any visible transcript line copies only its Hanzi with “Đã sao chép”; hidden Nghe/Phản xạ content remains unavailable. Real lesson-2 fixture tests, Hiểu light/dark captures, 43 focused Player/Transcript tests, and full `scripts/check.sh` pass; device check pending.
+
 - **A4:** Nói and Phản xạ now offer a persisted per-lesson/track “Lặp ×2” chip. The playback service repeats each cue together with its following answer/repeat gap once, keeps working screen-off, resets the pass after seeks/headset navigation, and temporarily yields to manual line/section loops before resuming. Real Nói repeat-unit coverage, controller fake ticks, persistence/visibility tests, and Nói chip-on light/dark Roborazzi states pass; full `scripts/check.sh`, lint, and debug assembly are green. Wave 5 is ready for its PM checkpoint and user device check.
 
-- **A3:** Android mode playback now keys behavior only to `modes_v1`: Nghe opens as “Nghe thuần”, reveals only the current cue on demand, then hides it at the next cue; Phản xạ hides unstarted cues and shows a tick-driven answer-gap countdown; Nói shows the same controls for repeat gaps without filtering its transcript. “Cần thêm thời gian” performs an explicit pause. Real gap fixtures, ViewModel/Compose tests, all shared/Android tests, lint, assemble, and eight light/dark Roborazzi states pass. `scripts/check.sh` remains stopped by the unrelated web smoke's repeated 5 s `networkidle` timeout after 34/34 web tests and a successful web build.
+- **A3:** Android mode playback now keys behavior only to `modes_v1`: Nghe opens as “Nghe thuần” (its original per-cue reveal was superseded by B1's full-transcript toggle); Phản xạ hides unstarted cues and shows a tick-driven answer-gap countdown; Nói shows the same controls for repeat gaps without filtering its transcript. “Cần thêm thời gian” performs an explicit pause. Real gap fixtures, ViewModel/Compose tests, all shared/Android tests, lint, assemble, and eight light/dark Roborazzi states pass.
 
 - **A2:** Android now keeps `modes_v1` lessons in the catalog, routes lesson 2 to a shared-`ModeInfo` picker (Hiểu / Nghe / Phản xạ / Nói with real track durations), resumes local position independently per lesson+track, clears a completed track's position, and sends the mode name to Now Playing, mini-player, and MediaSession metadata. Real-fixture ViewModel, progress, navigation, player-path, Compose, and light/dark Roborazzi coverage pass; picker goldens were recorded with `just approve-screens`. Full `scripts/check.sh` passes.
 
