@@ -129,50 +129,6 @@ fun TranscriptPanel(
     }
 }
 
-/**
- * Vietnamese chips + Vietnamese-meaning switch; shared by the panel and Now Playing
- * chrome. [vietnameseEnabled] and [trailingSwitch] let Now Playing add the
- * Chinese-only switch to the same row without this file owning that logic.
- */
-@Composable
-fun TranscriptViewSwitcher(
-    viewMode: TranscriptViewMode,
-    showVietnamese: Boolean,
-    onViewModeChange: (TranscriptViewMode) -> Unit,
-    onVietnameseToggle: (Boolean) -> Unit,
-    modifier: Modifier = Modifier,
-    vietnameseEnabled: Boolean = true,
-    trailingSwitch: @Composable () -> Unit = {},
-) {
-    Column(modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp)) {
-        Row(
-            modifier = Modifier.horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(6.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            listOf(
-                TranscriptViewMode.HIDDEN to R.string.view_hidden,
-                TranscriptViewMode.PINYIN_ONLY to R.string.view_pinyin,
-                TranscriptViewMode.HANZI_WITH_PINYIN to R.string.view_hanzi_pinyin,
-                TranscriptViewMode.HANZI_ONLY to R.string.view_hanzi_only,
-            ).forEach { (mode, label) ->
-                FilterChip(
-                    selected = viewMode == mode,
-                    onClick = { onViewModeChange(mode) },
-                    label = { Text(stringResource(label)) },
-                    colors = appFilterChipColors(),
-                )
-            }
-        }
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text(stringResource(R.string.vietnamese_switch), style = MaterialTheme.typography.labelMedium)
-                Switch(checked = showVietnamese, onCheckedChange = onVietnameseToggle, enabled = vietnameseEnabled)
-            }
-            trailingSwitch()
-        }
-    }
-}
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

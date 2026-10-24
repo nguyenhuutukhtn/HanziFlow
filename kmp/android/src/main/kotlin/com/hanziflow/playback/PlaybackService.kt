@@ -24,6 +24,7 @@ import com.hanziflow.data.CourseRepository
 import com.hanziflow.data.SettingsRepository
 import com.hanziflow.shared.CourseJson
 import com.hanziflow.shared.TimelineSection
+import com.hanziflow.shared.modes.repeatUnits
 import com.hanziflow.shared.transcript.TrackSwitch
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -88,7 +89,7 @@ class PlaybackService : MediaSessionService() {
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession = session
 
     private fun publishState() {
-        session.setSessionExtras(PlaybackExtras.build(loopController.current))
+        session.setSessionExtras(PlaybackExtras.build(loopController.current, loopController.repeatEachEnabled))
         session.setCustomLayout(PlaybackExtras.customLayout(loopController.current))
     }
 
@@ -105,6 +106,7 @@ class PlaybackService : MediaSessionService() {
                 .add(SessionCommand(PlaybackContract.COMMAND_SECTION_NEXT, Bundle.EMPTY))
                 .add(SessionCommand(PlaybackContract.COMMAND_CLEAR_LOOP, Bundle.EMPTY))
                 .add(SessionCommand(PlaybackContract.COMMAND_SWITCH_TRACK, Bundle.EMPTY))
+                .add(SessionCommand(PlaybackContract.COMMAND_REPEAT_EACH, Bundle.EMPTY))
                 .build()
             return MediaSession.ConnectionResult.AcceptedResultBuilder(session)
                 .setAvailableSessionCommands(sessionCommands)
@@ -155,10 +157,13 @@ class PlaybackService : MediaSessionService() {
                 }
                 PlaybackContract.COMMAND_SECTION_NEXT -> coordinator.nextSectionNow()
                 PlaybackContract.COMMAND_CLEAR_LOOP -> {
-                    loopController.clear()
+                    loopController.clearManualLoop(player.currentPosition)
                     publishState()
                 }
                 PlaybackContract.COMMAND_SWITCH_TRACK -> switchTrack(args.getString(PlaybackContract.EXTRA_TRACK).orEmpty())
+                PlaybackContract.COMMAND_REPEAT_EACH -> setRepeatEach(
+                    args.getBoolean(PlaybackContract.EXTRA_REPEAT_EACH_ENABLED),
+                )
             }
             return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
         }
@@ -179,6 +184,21 @@ class PlaybackService : MediaSessionService() {
                 }.onSuccess(result::set).onFailure(result::setException)
             }
             return result
+        }
+    }
+
+    private fun setRepeatEach(enabled: Boolean) {
+        if (!enabled) {
+            loopController.disableRepeatEach()
+            publishState()
+            return
+        }
+        scope.launch {
+            val parts = player.currentMediaItem?.mediaId?.split('|', limit = 2).orEmpty()
+            if (parts.size != 2) return@launch
+            val timelineFile = courseRepository.timelineFile(parts[0], parts[1]) ?: return@launch
+            loopController.startRepeatEach(repeatUnits(CourseJson.timeline(timelineFile.readText())), player.currentPosition)
+            publishState()
         }
     }
 

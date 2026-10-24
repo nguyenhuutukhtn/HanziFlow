@@ -89,6 +89,9 @@ fun HanziFlowApp(
         onSeekToSection = playerViewModel::seekToSection,
         onCharacter = playerViewModel::lookupCharacter,
         onDismissCharacter = playerViewModel::dismissCharacter,
+        onPauseForGap = playerViewModel::pauseForGap,
+        onRevealNgheCue = playerViewModel::revealCurrentNgheCue,
+        onToggleRepeatEach = playerViewModel::toggleRepeatEach,
         modePickerState = modePickerState,
         onOpenModePicker = { lesson -> modePickerViewModel.load(lesson.id) },
         onPlayMode = { lessonId, track ->

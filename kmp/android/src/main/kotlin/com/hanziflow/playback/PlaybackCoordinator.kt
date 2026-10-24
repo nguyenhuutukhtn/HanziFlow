@@ -66,7 +66,7 @@ class PlaybackCoordinator(
             if (ignoreNextSeekDiscontinuity) {
                 ignoreNextSeekDiscontinuity = false
             } else {
-                loopController.clear()
+                loopController.onSeek(newPosition.positionMs)
                 onStateChanged()
             }
         }

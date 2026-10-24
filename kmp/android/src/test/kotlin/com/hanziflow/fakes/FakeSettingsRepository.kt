@@ -9,6 +9,7 @@ class FakeSettingsRepository(
 ) : SettingsRepository {
     private val transcriptViews = mutableMapOf<String, String>()
     private val chineseOnly = mutableMapOf<String, Boolean>()
+    private val repeatEach = mutableMapOf<String, Boolean>()
     val setBaseUrlCalls = mutableListOf<String>()
 
     override suspend fun baseUrl(): String = baseUrl
@@ -31,5 +32,12 @@ class FakeSettingsRepository(
 
     override suspend fun setChineseOnlyEnabled(lessonId: String, track: String, enabled: Boolean) {
         chineseOnly[SettingsRepository.chineseOnlyKey(lessonId, track)] = enabled
+    }
+
+    override suspend fun repeatEachEnabled(lessonId: String, track: String): Boolean =
+        repeatEach[SettingsRepository.repeatEachKey(lessonId, track)] ?: false
+
+    override suspend fun setRepeatEachEnabled(lessonId: String, track: String, enabled: Boolean) {
+        repeatEach[SettingsRepository.repeatEachKey(lessonId, track)] = enabled
     }
 }

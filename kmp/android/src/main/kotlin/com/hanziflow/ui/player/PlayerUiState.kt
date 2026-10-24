@@ -9,6 +9,7 @@ import com.hanziflow.shared.WordItem
 import com.hanziflow.shared.transcript.TranscriptViewMode
 import com.hanziflow.shared.characters.CharacterIndex
 import com.hanziflow.shared.characters.StrokePack
+import com.hanziflow.shared.modes.GapState
 
 data class PlayerUiState(
     val connected: Boolean = false,
@@ -25,6 +26,9 @@ data class PlayerUiState(
     val message: String? = null,
     val sectionLoop: SectionLoopInfo? = null,
     val chineseOnly: Boolean = false,
+    val lessonFormat: String = "linear_v1",
+    val activeGap: GapState? = null,
+    val repeatEachEnabled: Boolean = false,
     val transcript: TranscriptUiState = TranscriptUiState(),
     val characterIndex: CharacterIndex? = null,
     val strokePack: StrokePack? = null,

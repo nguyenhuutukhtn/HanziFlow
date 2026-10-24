@@ -11,6 +11,7 @@ data class PlaybackState(
     val speed: Float = 1f,
     val loopedLineId: String? = null,
     val sectionLoop: SectionLoopInfo? = null,
+    val repeatEachEnabled: Boolean = false,
 )
 
 data class SectionLoopInfo(

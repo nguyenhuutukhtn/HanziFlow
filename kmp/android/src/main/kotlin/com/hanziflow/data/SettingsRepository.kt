@@ -17,6 +17,8 @@ interface SettingsRepository {
     /** Per lesson+track, default off (manual only; never auto-on for a lesson's first listen). */
     suspend fun chineseOnlyEnabled(lessonId: String, track: String): Boolean
     suspend fun setChineseOnlyEnabled(lessonId: String, track: String, enabled: Boolean)
+    suspend fun repeatEachEnabled(lessonId: String, track: String): Boolean
+    suspend fun setRepeatEachEnabled(lessonId: String, track: String, enabled: Boolean)
 
     companion object {
         /**
@@ -28,6 +30,7 @@ interface SettingsRepository {
         const val DEFAULT_DARK_THEME = true
         fun transcriptViewKey(track: String) = "transcript_view_$track"
         fun chineseOnlyKey(lessonId: String, track: String) = "chinese_only_${lessonId}_$track"
+        fun repeatEachKey(lessonId: String, track: String) = "repeat_each_${lessonId}_$track"
     }
 }
 
@@ -67,6 +70,12 @@ class SettingsRepositoryImpl @Inject constructor(private val database: CourseDat
 
     override suspend fun setChineseOnlyEnabled(lessonId: String, track: String, enabled: Boolean) =
         dao.putSetting(SettingEntity(SettingsRepository.chineseOnlyKey(lessonId, track), enabled.toString()))
+
+    override suspend fun repeatEachEnabled(lessonId: String, track: String): Boolean =
+        dao.setting(SettingsRepository.repeatEachKey(lessonId, track))?.toBooleanStrictOrNull() ?: false
+
+    override suspend fun setRepeatEachEnabled(lessonId: String, track: String, enabled: Boolean) =
+        dao.putSetting(SettingEntity(SettingsRepository.repeatEachKey(lessonId, track), enabled.toString()))
 
     companion object {
         const val BASE_URL = "catalog_base_url"

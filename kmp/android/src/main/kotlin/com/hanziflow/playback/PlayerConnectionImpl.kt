@@ -83,6 +83,8 @@ class PlayerConnectionImpl @Inject constructor(
         controller?.let { if (it.isPlaying) it.pause() else it.play() }
     }
 
+    override fun pause() { controller?.pause() }
+
     override fun seekBack() { controller?.seekBack() }
     override fun seekForward() { controller?.seekForward() }
     override fun seekTo(positionMs: Long) { controller?.seekTo(positionMs) }
@@ -117,6 +119,9 @@ class PlayerConnectionImpl @Inject constructor(
 
     override fun switchTrack(track: String) =
         sendCommand(PlaybackContract.COMMAND_SWITCH_TRACK, bundleOf(PlaybackContract.EXTRA_TRACK to track))
+
+    override fun setRepeatEach(enabled: Boolean) =
+        sendCommand(PlaybackContract.COMMAND_REPEAT_EACH, bundleOf(PlaybackContract.EXTRA_REPEAT_EACH_ENABLED to enabled))
 
     override fun playClip(uri: String) {
         controller?.pause()
@@ -159,6 +164,7 @@ class PlayerConnectionImpl @Inject constructor(
                     stopAfterPass = extras.getBoolean(PlaybackContract.EXTRA_LOOP_SECTION_STOP_AFTER_PASS),
                 )
             },
+            repeatEachEnabled = extras.getBoolean(PlaybackContract.EXTRA_REPEAT_EACH_ENABLED),
         )
     }
 }

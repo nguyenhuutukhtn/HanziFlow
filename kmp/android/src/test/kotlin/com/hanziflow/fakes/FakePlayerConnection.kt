@@ -13,6 +13,7 @@ class FakePlayerConnection : PlayerConnection {
 
     val playCalls = mutableListOf<List<String>>()
     var toggleCalls = 0
+    var pauseCalls = 0
     var seekBackCalls = 0
     var seekForwardCalls = 0
     val seekToCalls = mutableListOf<Long>()
@@ -24,6 +25,7 @@ class FakePlayerConnection : PlayerConnection {
     var clearLoopCalls = 0
     val switchTrackCalls = mutableListOf<String>()
     val playClipCalls = mutableListOf<String>()
+    val repeatEachCalls = mutableListOf<Boolean>()
 
     fun emit(state: PlaybackState) { _state.value = state }
 
@@ -33,6 +35,7 @@ class FakePlayerConnection : PlayerConnection {
     }
 
     override fun toggle() { toggleCalls++ }
+    override fun pause() { pauseCalls++ }
     override fun seekBack() { seekBackCalls++ }
     override fun seekForward() { seekForwardCalls++ }
     override fun seekTo(positionMs: Long) { seekToCalls += positionMs }
@@ -69,6 +72,11 @@ class FakePlayerConnection : PlayerConnection {
     override fun switchTrack(track: String) {
         switchTrackCalls += track
         _state.value = _state.value.copy(track = track)
+    }
+
+    override fun setRepeatEach(enabled: Boolean) {
+        repeatEachCalls += enabled
+        _state.value = _state.value.copy(repeatEachEnabled = enabled)
     }
 
     override fun playClip(uri: String) { playClipCalls += uri }

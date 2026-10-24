@@ -12,6 +12,8 @@ sealed interface LoopState {
         val pass: Int,
         val stopAfterPass: Boolean,
     ) : LoopState
+
+    data class RepeatEach(val unitIndex: Int, val pass: Int) : LoopState
 }
 
 /**
@@ -33,6 +35,14 @@ class LoopPublisher {
 
     fun updateSection(transform: (LoopState.Section) -> LoopState.Section) {
         (current as? LoopState.Section)?.let { current = transform(it) }
+    }
+
+    fun startRepeatEach(unitIndex: Int, pass: Int = 1) {
+        current = LoopState.RepeatEach(unitIndex, pass)
+    }
+
+    fun updateRepeatEach(transform: (LoopState.RepeatEach) -> LoopState.RepeatEach) {
+        (current as? LoopState.RepeatEach)?.let { current = transform(it) }
     }
 
     fun clear() {

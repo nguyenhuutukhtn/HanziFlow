@@ -30,13 +30,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hanziflow.R
-import com.hanziflow.shared.ReferenceLine
 import com.hanziflow.shared.transcript.SectionNavigation
 import com.hanziflow.shared.transcript.TranscriptViewMode
-import com.hanziflow.ui.theme.HanziFlowTheme
 import com.hanziflow.ui.theme.Spacing
 import androidx.compose.material3.ExperimentalMaterial3Api
 import com.hanziflow.ui.characters.CharacterCard
@@ -77,6 +74,9 @@ fun NowPlayingScreen(
     onSeekToSection: (String) -> Unit = {},
     onCharacter: (String) -> Unit = {},
     onDismissCharacter: () -> Unit = {},
+    onPauseForGap: () -> Unit = {},
+    onRevealNgheCue: () -> Unit = {},
+    onToggleRepeatEach: () -> Unit = {},
 ) {
     var sectionSheetOpen by remember { mutableStateOf(false) }
     var characterListOpen by remember { mutableStateOf(false) }
@@ -91,30 +91,41 @@ fun NowPlayingScreen(
             showCharacters = state.characterIndex != null,
             onOpenCharacters = { characterListOpen = true },
         )
-        TranscriptViewSwitcher(
-            viewMode = state.transcript.viewMode,
-            showVietnamese = state.transcript.showVietnamese,
-            onViewModeChange = onViewModeChange,
-            onVietnameseToggle = onVietnameseToggle,
-            vietnameseEnabled = !state.chineseOnly,
-            trailingSwitch = {
-                val chineseOnlySupported = state.chineseOnlyAvailable && state.track != "practice"
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text(stringResource(R.string.chinese_only_switch), style = MaterialTheme.typography.labelMedium)
-                    Switch(
-                        checked = state.chineseOnly,
-                        onCheckedChange = onChineseOnlyToggle,
-                        enabled = chineseOnlySupported,
-                    )
-                }
-            },
-        )
+        if (state.lessonFormat == "modes_v1" && state.track == "nghe") {
+            NgheModeControls(onReveal = onRevealNgheCue, modifier = Modifier.padding(horizontal = Spacing.md))
+        } else {
+            TranscriptViewSwitcher(
+                viewMode = state.transcript.viewMode,
+                showVietnamese = state.transcript.showVietnamese,
+                onViewModeChange = onViewModeChange,
+                onVietnameseToggle = onVietnameseToggle,
+                vietnameseEnabled = !state.chineseOnly,
+                trailingSwitch = {
+                    val chineseOnlySupported = state.chineseOnlyAvailable && state.track != "practice"
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Text(stringResource(R.string.chinese_only_switch), style = MaterialTheme.typography.labelMedium)
+                        Switch(
+                            checked = state.chineseOnly,
+                            onCheckedChange = onChineseOnlyToggle,
+                            enabled = chineseOnlySupported,
+                        )
+                    }
+                },
+            )
+        }
         SectionRow(
             sections = state.transcript.sections,
             positionMs = state.positionMs,
             onOpenSectionList = { sectionSheetOpen = true },
             onLoopSection = onLoopSection,
         )
+        if (state.lessonFormat == "modes_v1" && state.track in setOf("noi", "phan_xa")) {
+            RepeatEachChip(
+                enabled = state.repeatEachEnabled,
+                onToggle = onToggleRepeatEach,
+                modifier = Modifier.padding(horizontal = Spacing.md),
+            )
+        }
         when {
             state.sectionLoop != null -> SectionLoopChip(
                 sectionLoop = state.sectionLoop,
@@ -152,6 +163,13 @@ fun NowPlayingScreen(
                     onVietnameseToggle = onVietnameseToggle,
                     showSwitcher = false,
                     modifier = Modifier.fillMaxSize(),
+                )
+            }
+            state.activeGap?.let { gap ->
+                ModeGapControls(
+                    gap = gap,
+                    onPause = onPauseForGap,
+                    modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = Spacing.sm),
                 )
             }
         }
@@ -241,60 +259,5 @@ private fun NowPlayingHeader(title: String, onCollapse: () -> Unit, showCharacte
                 )
             }
         }
-    }
-}
-private fun fakeLine(id: String, text: String, pinyin: String, translation: String) = ReferenceLine(
-    id = id,
-    type = "line",
-    language = "zh",
-    speaker = "coach_zh",
-    text = text,
-    pinyin = pinyin,
-    translation = translation,
-)
-
-@Preview(showBackground = true)
-@Composable
-private fun NowPlayingPreview() {
-    HanziFlowTheme {
-        NowPlayingScreen(
-            state = PlayerUiState(
-                connected = true,
-                playing = true,
-                lessonId = "lesson_001",
-                lessonTitle = "Đồ ăn mang về của đồng nghiệp",
-                track = "guided",
-                practiceAvailable = false,
-                positionMs = 42_000,
-                durationMs = 204_889,
-                speed = 1f,
-                transcript = TranscriptUiState(
-                    lessonId = "lesson_001",
-                    track = "guided",
-                    lines = listOf(
-                        fakeLine("r1", "你好", "nǐ hǎo", "Xin chào"),
-                        fakeLine("r2", "我叫安娜。你呢？", "wǒ jiào ānnà. nǐ ne?", "Tôi tên là Anna. Bạn thì?"),
-                        fakeLine("r3", "很高兴认识你。", "hěn gāoxìng rènshi nǐ.", "Rất vui được gặp bạn."),
-                    ),
-                    viewMode = TranscriptViewMode.HANZI_WITH_PINYIN,
-                    showVietnamese = true,
-                ),
-            ),
-            onCollapse = {},
-            onSwitchTrack = {},
-            onSeekTo = {},
-            onSeekBack = {},
-            onToggle = {},
-            onSeekForward = {},
-            onSpeed = {},
-            onCancelLoop = {},
-            onSeekLine = {},
-            onToggleLoop = {},
-            onLookup = {},
-            onViewModeChange = {},
-            onVietnameseToggle = {},
-            onPlayLookupClip = {},
-            onDismissLookup = {},
-        )
     }
 }

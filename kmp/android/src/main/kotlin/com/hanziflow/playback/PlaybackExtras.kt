@@ -6,8 +6,9 @@ import androidx.media3.session.SessionCommand
 
 /** Builds the session extras / custom layout [PlaybackService] publishes; split out to keep it under the line budget. */
 object PlaybackExtras {
-    fun build(loop: LoopState?): Bundle {
+    fun build(loop: LoopState?, repeatEachEnabled: Boolean = loop is LoopState.RepeatEach): Bundle {
         val extras = Bundle()
+        extras.putBoolean(PlaybackContract.EXTRA_REPEAT_EACH_ENABLED, repeatEachEnabled)
         when (loop) {
             is LoopState.Line -> {
                 extras.putString(PlaybackContract.EXTRA_LOOP_LINE_ID, loop.lineId)
@@ -20,13 +21,14 @@ object PlaybackExtras {
                 extras.putInt(PlaybackContract.EXTRA_LOOP_SECTION_PASS, loop.pass)
                 extras.putBoolean(PlaybackContract.EXTRA_LOOP_SECTION_STOP_AFTER_PASS, loop.stopAfterPass)
             }
+            is LoopState.RepeatEach -> extras.putBoolean(PlaybackContract.EXTRA_REPEAT_EACH_ENABLED, true)
             null -> Unit
         }
         return extras
     }
 
     fun customLayout(loop: LoopState?): List<CommandButton> =
-        if (loop == null) {
+        if (loop == null || loop is LoopState.RepeatEach) {
             emptyList()
         } else {
             listOf(

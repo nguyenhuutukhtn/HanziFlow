@@ -12,6 +12,7 @@ interface PlayerConnection {
 
     fun play(lessonId: String, track: String, uri: String, title: String, trackLabel: String)
     fun toggle()
+    fun pause()
     fun seekBack()
     fun seekForward()
     fun seekTo(positionMs: Long)
@@ -22,6 +23,7 @@ interface PlayerConnection {
     fun nextSection()
     fun clearLoop()
     fun switchTrack(track: String)
+    fun setRepeatEach(enabled: Boolean)
 
     /** Plays a short word/sentence clip (lookup) on a side player, pausing main playback. */
     fun playClip(uri: String)

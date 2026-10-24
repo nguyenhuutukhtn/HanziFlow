@@ -17,17 +17,16 @@ import com.hanziflow.shared.modes.ModeInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.coroutines.withTimeoutOrNull
 
 @HiltViewModel
 class PlayerViewModel @Inject constructor(
@@ -36,21 +35,20 @@ class PlayerViewModel @Inject constructor(
     private val progressRepository: ProgressRepository,
     private val playerConnection: PlayerConnection,
 ) : ViewModel() {
-    constructor(courseRepository: CourseRepository, settingsRepository: SettingsRepository, playerConnection: PlayerConnection) :
-        this(courseRepository, settingsRepository, NoOpProgressRepository, playerConnection)
+    constructor(courseRepository: CourseRepository, settingsRepository: SettingsRepository, playerConnection: PlayerConnection) : this(courseRepository, settingsRepository, NoOpProgressRepository, playerConnection)
 
     private val _uiState = MutableStateFlow(PlayerUiState())
     val uiState: StateFlow<PlayerUiState> = _uiState.asStateFlow()
 
-    private val lessons = courseRepository.lessons
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+    private val lessons = courseRepository.lessons.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     private var transcriptLoadJob: Job? = null
     private var practiceLookupJob: Job? = null
-    private var lastSavedProgress: Triple<String, String, Long>? = null
+    private val progressSaver = PlaybackProgressSaver(progressRepository, viewModelScope)
+    internal var backgroundDispatcher: CoroutineDispatcher = Dispatchers.IO
+    private var loadedTranscript: LoadedTranscript? = null
+    private var ngheRevealCueStartMs: Long? = null
     init {
-        // A (re-)download finishing changes which tracks are on disk; re-check
-        // instead of keeping the value computed when the lesson was opened.
         viewModelScope.launch {
             courseRepository.lessons.collect {
                 val id = _uiState.value.lessonId ?: return@collect
@@ -60,8 +58,8 @@ class PlayerViewModel @Inject constructor(
         }
         viewModelScope.launch {
             playerConnection.state.collect { playback ->
-                _uiState.update {
-                    it.copy(
+                _uiState.update { state ->
+                    applyModePresentation(state.copy(
                         connected = playback.connected,
                         playing = playback.playing,
                         lessonId = playback.lessonId,
@@ -71,11 +69,12 @@ class PlayerViewModel @Inject constructor(
                         durationMs = playback.durationMs,
                         speed = playback.speed,
                         sectionLoop = playback.sectionLoop,
+                        repeatEachEnabled = playback.repeatEachEnabled,
                         chineseOnly = playback.track == "guided_zh",
-                        transcript = it.transcript.copy(loopedLineId = playback.loopedLineId),
-                    )
+                        transcript = state.transcript.copy(loopedLineId = playback.loopedLineId),
+                    ), playback.positionMs)
                 }
-                saveProgress(playback)
+                progressSaver.save(playback)
                 val id = playback.lessonId
                 if (id != null) {
                     ensureTranscriptLoaded(id, playback.track)
@@ -108,6 +107,25 @@ class PlayerViewModel @Inject constructor(
     }
 
     fun toggle() = playerConnection.toggle()
+    fun pauseForGap() {
+        if (_uiState.value.activeGap != null && _uiState.value.playing) playerConnection.pause()
+    }
+
+    fun toggleRepeatEach() {
+        val state = _uiState.value
+        if (state.lessonFormat != "modes_v1" || state.track !in setOf("noi", "phan_xa")) return
+        val enabled = !state.repeatEachEnabled
+        playerConnection.setRepeatEach(enabled)
+        viewModelScope.launch { settingsRepository.setRepeatEachEnabled(state.lessonId ?: return@launch, state.track, enabled) }
+    }
+
+    fun revealCurrentNgheCue() {
+        val state = _uiState.value
+        if (state.lessonFormat != "modes_v1" || state.track != "nghe") return
+        val cue = loadedTranscript?.timeline?.cues?.let { TranscriptCues.activeCue(it, state.positionMs) } ?: return
+        ngheRevealCueStartMs = cue.startMs
+        _uiState.update { applyModePresentation(it, it.positionMs) }
+    }
     fun seekBack() = playerConnection.seekBack()
     fun seekForward() = playerConnection.seekForward()
     fun seekTo(position: Long) = playerConnection.seekTo(position)
@@ -119,17 +137,11 @@ class PlayerViewModel @Inject constructor(
         seekTo(target)
     }
 
-    /** Section bottom sheet row tap: seek to that section's start and close the sheet (UI-side). */
     fun seekToSection(sectionId: String) {
         val target = SectionNavigation.sectionStart(_uiState.value.transcript.sections, sectionId) ?: return
         seekTo(target)
     }
 
-    /**
-     * Mini-player "Nghe lại câu": one-shot seek to the start of the line whose cue
-     * contains the current position. No timeline (or a gap between cues) is a no-op,
-     * never a seek to 0, so a paused/not-loaded player can't jump the lesson.
-     */
     fun replayCurrentLine() {
         val transcript = _uiState.value.transcript
         if (transcript.lessonId == null || transcript.lessonId != _uiState.value.lessonId) return
@@ -152,7 +164,6 @@ class PlayerViewModel @Inject constructor(
 
     fun cancelLoop() = playerConnection.clearLoop()
 
-    /** "Lặp phần này" for the section currently playing. */
     fun loopCurrentSection() {
         val section = currentSection() ?: return
         playerConnection.loopSection(section.id, section.title, section.startMs, section.endMs)
@@ -219,82 +230,71 @@ class PlayerViewModel @Inject constructor(
         val current = _uiState.value.transcript
         if (current.lessonId == lessonId && current.track == track) return
         transcriptLoadJob?.cancel()
+        loadedTranscript = null
+        ngheRevealCueStartMs = null
         _uiState.update { it.copy(transcript = TranscriptUiState(lessonId = lessonId, track = track)) }
         transcriptLoadJob = viewModelScope.launch {
-            val loaded = withContext(Dispatchers.IO) {
-                val referenceFile = courseRepository.referenceFile(lessonId) ?: return@withContext null
-                val timelineFile = courseRepository.timelineFile(lessonId, track) ?: return@withContext null
-                val reference = CourseJson.reference(referenceFile.readText())
-                val lines = if (track == "guided_zh") reference.tracks.guided.orEmpty() else reference.tracks.forName(track).orEmpty()
-                val timeline = CourseJson.timeline(timelineFile.readText())
-                val items = courseRepository.itemsFile(lessonId)?.let { CourseJson.items(it.readText()) }
-                Loaded(lines, timeline.cues, timeline.sections, items)
-            } ?: return@launch
+            val loaded = withContext(backgroundDispatcher) { courseRepository.loadTranscript(lessonId, track) } ?: return@launch
             val savedView = settingsRepository.transcriptView(track)
                 ?.let { runCatching { TranscriptViewMode.valueOf(it) }.getOrNull() }
                 ?: TranscriptViewMode.PINYIN_ONLY
             val chineseOnly = settingsRepository.chineseOnlyEnabled(lessonId, "guided") && track != "practice"
             val vi = settingsRepository.vietnameseEnabled() && !chineseOnly
+            val repeatEachEnabled = loaded.lessonFormat == "modes_v1" && track in setOf("noi", "phan_xa") &&
+                settingsRepository.repeatEachEnabled(lessonId, track)
             if (track == "guided" || track == "guided_zh") playerConnection.switchTrack(if (chineseOnly) "guided_zh" else "guided")
-            _uiState.update {
-                it.copy(
+            loadedTranscript = loaded
+            _uiState.update { state ->
+                applyModePresentation(state.copy(
+                    lessonFormat = loaded.lessonFormat,
                     transcript = TranscriptUiState(
                         lessonId = lessonId,
                         track = track,
                         lines = loaded.lines,
-                        cues = loaded.cues,
-                        sections = loaded.sections,
+                        cues = loaded.timeline.cues,
+                        sections = loaded.timeline.sections,
                         items = loaded.items,
                         viewMode = savedView,
                         showVietnamese = vi,
-                        loopedLineId = it.transcript.loopedLineId,
+                        loopedLineId = state.transcript.loopedLineId,
                     ),
-                )
+                ), state.positionMs)
             }
+            playerConnection.setRepeatEach(repeatEachEnabled)
         }
     }
 
-    private data class Loaded(
-        val lines: List<com.hanziflow.shared.ReferenceLine>,
-        val cues: List<com.hanziflow.shared.TimelineCue>,
-        val sections: List<TimelineSection>,
-        val items: com.hanziflow.shared.Items?,
-    )
-
-    private fun saveProgress(playback: com.hanziflow.playback.PlaybackState) {
-        val lessonId = playback.lessonId ?: return
-        if (playback.durationMs <= 0 && playback.positionMs == 0L) return
-        val ended = playback.durationMs > 0 && playback.positionMs >= playback.durationMs
-        val position = if (ended) 0L else playback.positionMs
-        val previous = lastSavedProgress
-        if (previous?.first == lessonId && previous.second == playback.track &&
-            !ended && kotlin.math.abs(previous.third - position) < 1_000
-        ) return
-        lastSavedProgress = Triple(lessonId, playback.track, position)
-        viewModelScope.launch { progressRepository.savePosition(lessonId, playback.track, position) }
+    private fun applyModePresentation(state: PlayerUiState, positionMs: Long): PlayerUiState {
+        val loaded = loadedTranscript ?: return state.copy(activeGap = null)
+        val presentation = modePresentation(
+            state.lessonFormat, state.track, loaded.timeline, loaded.lines, positionMs, ngheRevealCueStartMs,
+        )
+        ngheRevealCueStartMs = presentation.ngheRevealCueStartMs
+        return state.copy(
+            activeGap = presentation.activeGap,
+            transcript = state.transcript.copy(lines = presentation.lines),
+        )
     }
 
     private fun ensureLessonMeta(lessonId: String) {
         if (_uiState.value.lessonId == lessonId && _uiState.value.lessonTitle != null) return
         practiceLookupJob?.cancel()
         practiceLookupJob = viewModelScope.launch {
-            // The playback state can arrive before Room's first lessons emission
-            // (restored session on cold start), and a paused player emits no further
-            // state changes. Wait for the lesson row instead of leaving the id as title.
-            val title = lessons.value.firstOrNull { it.id == lessonId }?.title
-                ?: withTimeoutOrNull(2_000) {
-                    lessons.first { list -> list.any { it.id == lessonId } }
-                        .first { it.id == lessonId }
-                        .title
-                }
-            val tracks = courseRepository.catalogLesson(lessonId)?.tracks
+            val title = lessonTitle(lessons, lessonId)
+            val catalogLesson = courseRepository.catalogLesson(lessonId)
+            val tracks = catalogLesson?.tracks
             val chineseOnlyDownloaded = courseRepository.trackFile(lessonId, "guided_zh") != null
-            _uiState.update { it.copy(lessonTitle = title, practiceAvailable = tracks?.practice != null, chineseOnlyAvailable = chineseOnlyDownloaded) }
+            _uiState.update { state ->
+                applyModePresentation(
+                    state.copy(
+                        lessonTitle = title,
+                        lessonFormat = catalogLesson?.format ?: "linear_v1",
+                        practiceAvailable = tracks?.practice != null,
+                        chineseOnlyAvailable = chineseOnlyDownloaded,
+                    ),
+                    state.positionMs,
+                )
+            }
         }
-    }
-
-    private object NoOpProgressRepository : ProgressRepository {
-        override suspend fun positionMs(lessonId: String, track: String) = 0L
-        override suspend fun savePosition(lessonId: String, track: String, positionMs: Long) = Unit
     }
 }

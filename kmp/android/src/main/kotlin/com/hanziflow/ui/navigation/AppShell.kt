@@ -95,6 +95,9 @@ fun AppShell(
     onSeekToSection: (String) -> Unit = {},
     onCharacter: (String) -> Unit = {},
     onDismissCharacter: () -> Unit = {},
+    onPauseForGap: () -> Unit = {},
+    onRevealNgheCue: () -> Unit = {},
+    onToggleRepeatEach: () -> Unit = {},
     modePickerState: ModePickerUiState = ModePickerUiState(),
     onOpenModePicker: (LessonEntity) -> Unit = {},
     onPlayMode: (String, String) -> Unit = { _, _ -> },
@@ -222,6 +225,9 @@ fun AppShell(
                     onSeekToSection = onSeekToSection,
                     onCharacter = onCharacter,
                     onDismissCharacter = onDismissCharacter,
+                    onPauseForGap = onPauseForGap,
+                    onRevealNgheCue = onRevealNgheCue,
+                    onToggleRepeatEach = onToggleRepeatEach,
                 )
             }
         }

@@ -15,6 +15,7 @@ import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -97,7 +98,7 @@ class PlayerViewModelTest {
         val connection = FakePlayerConnection()
         val viewModel = PlayerViewModel(repository, FakeSettingsRepository(), connection)
         connection.emit(PlaybackState(connected = true, lessonId = "lesson_001"))
-        Thread.sleep(50)
+        advanceUntilIdle()
         assertNull(viewModel.uiState.value.characterIndex)
     }
 
@@ -177,7 +178,7 @@ class PlayerViewModelTest {
 
         connection.emit(PlaybackState(connected = true, lessonId = "lesson_001", track = "guided", positionMs = 1_500))
         // Give ensureTranscriptLoaded a moment to publish the (empty) transcript state.
-        Thread.sleep(50)
+        advanceUntilIdle()
 
         viewModel.replayCurrentLine()
         assertEquals(emptyList<Long>(), connection.seekToCalls)
@@ -235,14 +236,14 @@ class PlayerViewModelTest {
 
         repository.trackFiles = mapOf("lesson_002" to "noi" to tempJson("noi", "audio"))
         viewModel.play(lesson, "noi")
-        Thread.sleep(50)
+        advanceUntilIdle()
 
         assertEquals("noi", connection.playCalls.single()[1])
         assertEquals(listOf(12_000L), connection.seekToCalls)
         assertEquals(listOf("lesson_002" to "noi"), repository.timelineFileCalls)
 
         connection.emit(connection.state.value.copy(positionMs = 5_000, durationMs = 5_000))
-        Thread.sleep(50)
+        advanceUntilIdle()
         assertEquals(0L, progress.stored("lesson_002", "noi"))
     }
 
@@ -255,13 +256,13 @@ class PlayerViewModelTest {
 
         connection.emit(PlaybackState(connected = true, lessonId = "lesson_001", track = "guided", positionMs = 0))
         awaitTranscriptLoaded(viewModel)
-        Thread.sleep(50)
+        advanceUntilIdle()
 
         viewModel.setChineseOnly(true)
 
         assertEquals(listOf("guided", "guided_zh"), connection.switchTrackCalls)
         assertEquals(false, viewModel.uiState.value.transcript.showVietnamese)
-        Thread.sleep(50)
+        advanceUntilIdle()
         assertEquals(true, settings.chineseOnlyEnabled("lesson_001", "guided"))
     }
 

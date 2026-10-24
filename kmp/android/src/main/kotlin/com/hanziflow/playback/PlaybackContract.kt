@@ -13,6 +13,7 @@ object PlaybackContract {
     const val COMMAND_SECTION_NEXT = "com.hanziflow.SECTION_NEXT"
     const val COMMAND_CLEAR_LOOP = "com.hanziflow.CLEAR_LOOP"
     const val COMMAND_SWITCH_TRACK = "com.hanziflow.SWITCH_TRACK"
+    const val COMMAND_REPEAT_EACH = "com.hanziflow.REPEAT_EACH"
 
     const val EXTRA_LINE_ID = "line_id"
     const val EXTRA_START_MS = "start_ms"
@@ -23,6 +24,7 @@ object PlaybackContract {
     const val EXTRA_LOOP_SECTION_TITLE = "loop_section_title"
     const val EXTRA_LOOP_SECTION_PASS = "loop_section_pass"
     const val EXTRA_LOOP_SECTION_STOP_AFTER_PASS = "loop_section_stop_after_pass"
+    const val EXTRA_REPEAT_EACH_ENABLED = "repeat_each_enabled"
     const val EXTRA_TRACK = "track"
 
     /** Display names only; persisted ids stay `guided` / `practice`. Used by UI and the lock screen. */

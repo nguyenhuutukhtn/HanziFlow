@@ -2,7 +2,7 @@
 
 Read this first in a new session instead of past chat history. Keep it short; update it at the end of every task.
 
-Last updated: 2026-10-23 (A2 verified; Wave 5 continues with A3) · branch `main` (app-publish-pipeline merged + deleted 2026-10-23)
+Last updated: 2026-10-24 (A4 verified; Wave 5 ready for PM + device checkpoint) · branch `main` (app-publish-pipeline merged + deleted 2026-10-23)
 
 ## Working rules
 
@@ -13,6 +13,10 @@ Last updated: 2026-10-23 (A2 verified; Wave 5 continues with A3) · branch `main
 - Every task (code or content) logs its token use in [token_log.md](token_log.md); review the log periodically to cut the most expensive steps.
 
 ## Done
+
+- **A4:** Nói and Phản xạ now offer a persisted per-lesson/track “Lặp ×2” chip. The playback service repeats each cue together with its following answer/repeat gap once, keeps working screen-off, resets the pass after seeks/headset navigation, and temporarily yields to manual line/section loops before resuming. Real Nói repeat-unit coverage, controller fake ticks, persistence/visibility tests, and Nói chip-on light/dark Roborazzi states pass; full `scripts/check.sh`, lint, and debug assembly are green. Wave 5 is ready for its PM checkpoint and user device check.
+
+- **A3:** Android mode playback now keys behavior only to `modes_v1`: Nghe opens as “Nghe thuần”, reveals only the current cue on demand, then hides it at the next cue; Phản xạ hides unstarted cues and shows a tick-driven answer-gap countdown; Nói shows the same controls for repeat gaps without filtering its transcript. “Cần thêm thời gian” performs an explicit pause. Real gap fixtures, ViewModel/Compose tests, all shared/Android tests, lint, assemble, and eight light/dark Roborazzi states pass. `scripts/check.sh` remains stopped by the unrelated web smoke's repeated 5 s `networkidle` timeout after 34/34 web tests and a successful web build.
 
 - **A2:** Android now keeps `modes_v1` lessons in the catalog, routes lesson 2 to a shared-`ModeInfo` picker (Hiểu / Nghe / Phản xạ / Nói with real track durations), resumes local position independently per lesson+track, clears a completed track's position, and sends the mode name to Now Playing, mini-player, and MediaSession metadata. Real-fixture ViewModel, progress, navigation, player-path, Compose, and light/dark Roborazzi coverage pass; picker goldens were recorded with `just approve-screens`. Full `scripts/check.sh` passes.
 
@@ -82,7 +86,7 @@ Last updated: 2026-10-23 (A2 verified; Wave 5 continues with A3) · branch `main
 
 ## Next (in order)
 
-**Now: [Wave 5](tasks/WAVE-5.md) (re-scoped 2026-10-23) — learn lesson 2 on the phone: A1 contract gaps ✅ → A2 mode picker lite ✅ → A3 Nghe/Phản xạ/Nói player → A4 "Lặp ×2". Lesson 2 v1 is uploaded; local v2 is not uploaded. Pending user checks: W3b follow (main + PiP), W3a PiP, M5 web.**
+**Now: [Wave 5](tasks/WAVE-5.md) (re-scoped 2026-10-23) — A1 contract gaps ✅ → A2 mode picker lite ✅ → A3 mode player ✅ → A4 "Lặp ×2" ✅. Next: PM checkpoint, then user checks A3/A4 on a phone after lesson 2 v2 is uploaded. Other pending checks: W3b follow (main + PiP), W3a PiP, M5 web.**
 
 **Top priority today (user, 2026-10-22, after one day of using the app): W1 — a web player in Chrome on Mac and Linux that stays on top**
 for listening while reading the text at work. The learner today follows by ear plus rough pinyin and
