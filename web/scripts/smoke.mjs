@@ -47,7 +47,7 @@ try {
   page.on("console", (message) => {
     if (message.type() === "error") errors.push(`${message.text()} (${message.location().url})`);
   });
-  await page.goto(url, { waitUntil: "networkidle" });
+  await page.goto(url, { waitUntil: "networkidle", timeout: 20000 });
   await page.getByRole("button", { name: /Bài/ }).first().click();
   try {
     await page.locator(".section-marker").first().click();
