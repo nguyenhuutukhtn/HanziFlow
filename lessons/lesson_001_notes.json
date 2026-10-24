@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "lesson_id": "lesson_001",
+  "status": "draft",
+  "patterns": [
+    {
+      "id": "p_zhe_shi",
+      "pattern": "这是 + đồ vật",
+      "explain_vi": "这是 nghĩa là \"đây là\". Nói 这是 rồi thêm tên đồ vật để giới thiệu nó.",
+      "examples": [
+        {
+          "hanzi": "这是外卖。",
+          "pinyin": "zhè shì wàimài.",
+          "meaning_vi": "Đây là đồ ăn mang về."
+        },
+        {
+          "hanzi": "这是同事的外卖。",
+          "pinyin": "zhè shì tóngshì de wàimài.",
+          "meaning_vi": "Đây là đồ ăn mang về của đồng nghiệp."
+        }
+      ]
+    },
+    {
+      "id": "p_zhe_shi_de_ma",
+      "pattern": "这是……的吗？",
+      "explain_vi": "Thêm 吗 vào cuối câu để biến câu thành câu hỏi có/không. 这是 X 的吗 là \"Đây là của X phải không?\".",
+      "examples": [
+        {
+          "hanzi": "这是李明的吗？",
+          "pinyin": "zhè shì Lǐ Míng de ma?",
+          "meaning_vi": "Đây là của Lý Minh phải không?"
+        },
+        {
+          "hanzi": "这是外卖吗？",
+          "pinyin": "zhè shì wàimài ma?",
+          "meaning_vi": "Đây là đồ ăn mang về phải không?"
+        }
+      ]
+    },
+    {
+      "id": "p_bu_shi",
+      "pattern": "不是。",
+      "explain_vi": "不是 nghĩa là \"không phải\". Dùng để trả lời \"không\" cho câu hỏi có 是. 不 đứng trước 是.",
+      "examples": [
+        {
+          "hanzi": "不是。",
+          "pinyin": "bú shì.",
+          "meaning_vi": "Không phải."
+        },
+        {
+          "hanzi": "这不是安娜的桌子。",
+          "pinyin": "zhè bú shì Ānnà de zhuōzi.",
+          "meaning_vi": "Đây không phải bàn của Anna."
+        }
+      ]
+    },
+    {
+      "id": "p_de_possess",
+      "pattern": "这是同事的。",
+      "explain_vi": "的 nghĩa là \"của\". Chủ sở hữu + 的 = \"của ai đó\". Khi cả hai bên đã biết đồ vật là gì, có thể bỏ tên đồ vật, chỉ nói \"của ai\".",
+      "examples": [
+        {
+          "hanzi": "这是同事的。",
+          "pinyin": "zhè shì tóngshì de.",
+          "meaning_vi": "Đây là của đồng nghiệp."
+        },
+        {
+          "hanzi": "不是安娜的。不是李明的。",
+          "pinyin": "bú shì Ānnà de. bú shì Lǐ Míng de.",
+          "meaning_vi": "Không phải của Anna. Không phải của Lý Minh."
+        }
+      ]
+    },
+    {
+      "id": "p_zhe_shi_shei_de",
+      "pattern": "这是谁的？",
+      "explain_vi": "谁 là \"ai\", 谁的 là \"của ai\". Dùng khi muốn hỏi đồ vật này thuộc về ai.",
+      "examples": [
+        {
+          "hanzi": "这是谁的？",
+          "pinyin": "zhè shì shuí de?",
+          "meaning_vi": "Đây là của ai?"
+        },
+        {
+          "hanzi": "安娜和李明不知道是谁的。",
+          "pinyin": "Ānnà hé Lǐ Míng bù zhīdào shì shuí de.",
+          "meaning_vi": "Anna và Lý Minh không biết của ai."
+        }
+      ]
+    },
+    {
+      "id": "p_haishi",
+      "pattern": "……还是……？",
+      "explain_vi": "还是 nghĩa là \"hay là\". Nói hai lựa chọn, nối bằng 还是, người nghe chọn một. Cấu trúc: A 还是 B？",
+      "examples": [
+        {
+          "hanzi": "这是李明的还是同事的？",
+          "pinyin": "zhè shì Lǐ Míng de háishi tóngshì de?",
+          "meaning_vi": "Của Lý Minh hay của đồng nghiệp?"
+        },
+        {
+          "hanzi": "这是安娜的外卖还是李明的外卖？",
+          "pinyin": "zhè shì Ānnà de wàimài háishi Lǐ Míng de wàimài?",
+          "meaning_vi": "Đồ ăn mang về của Anna hay của Lý Minh?"
+        }
+      ]
+    },
+    {
+      "id": "p_shang_you_mingzi",
+      "pattern": "袋子上有……的名字。",
+      "explain_vi": "上 là \"trên\", 有 là \"có\", 名字 là \"tên\". Câu này nghĩa là \"Trên túi có tên của ...\". Mẫu: nơi chốn + 上 + 有 + vật.",
+      "examples": [
+        {
+          "hanzi": "袋子上有同事的名字。",
+          "pinyin": "dàizi shàng yǒu tóngshì de míngzi.",
+          "meaning_vi": "Trên túi có tên đồng nghiệp."
+        },
+        {
+          "hanzi": "袋子上有李明的名字还是同事的名字？",
+          "pinyin": "dàizi shàng yǒu Lǐ Míng de míngzi háishi tóngshì de míngzi?",
+          "meaning_vi": "Trên túi có tên Lý Minh hay tên đồng nghiệp?"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "q_shei_de",
+      "hanzi": "这是谁的？",
+      "pinyin": "zhè shì shuí de?",
+      "meaning_vi": "Đây là của ai?",
+      "how_to_answer_vi": "Trả lời bằng tên người + 的. Thay 谁 bằng người đó: 这是同事的.",
+      "examples": [
+        {
+          "hanzi": "这是同事的。",
+          "pinyin": "zhè shì tóngshì de.",
+          "meaning_vi": "Đây là của đồng nghiệp."
+        },
+        {
+          "hanzi": "这是同事的外卖。",
+          "pinyin": "zhè shì tóngshì de wàimài.",
+          "meaning_vi": "Đây là đồ ăn mang về của đồng nghiệp."
+        }
+      ]
+    },
+    {
+      "id": "q_ma",
+      "hanzi": "这是李明的吗？",
+      "pinyin": "zhè shì Lǐ Míng de ma?",
+      "meaning_vi": "Đây là của Lý Minh phải không?",
+      "how_to_answer_vi": "Câu hỏi có 吗 chỉ cần trả lời \"là\" hoặc \"không phải\". Nói 是 hoặc 不是.",
+      "examples": [
+        {
+          "hanzi": "不是。",
+          "pinyin": "bú shì.",
+          "meaning_vi": "Không phải."
+        },
+        {
+          "hanzi": "不是安娜的。不是李明的。",
+          "pinyin": "bú shì Ānnà de. bú shì Lǐ Míng de.",
+          "meaning_vi": "Không phải của Anna. Không phải của Lý Minh."
+        }
+      ]
+    },
+    {
+      "id": "q_haishi",
+      "hanzi": "这是李明的还是同事的？",
+      "pinyin": "zhè shì Lǐ Míng de háishi tóngshì de?",
+      "meaning_vi": "Của Lý Minh hay của đồng nghiệp?",
+      "how_to_answer_vi": "Chọn một trong hai và nói lại phần đó. Ví dụ: 同事的 hoặc 这是同事的.",
+      "examples": [
+        {
+          "hanzi": "这是同事的。",
+          "pinyin": "zhè shì tóngshì de.",
+          "meaning_vi": "Đây là của đồng nghiệp."
+        }
+      ]
+    }
+  ]
+}
