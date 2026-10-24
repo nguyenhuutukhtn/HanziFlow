@@ -20,7 +20,7 @@ Run B1 → B2 one at a time, then call PM (B2 content review).
 Device check (user, after B4): `just upload` (lesson 1 new version + lesson 2 v3; dry-run first), `just app`, then:
 1. Lesson 1 → lesson 2: header shows "你在哪儿？".
 2. Lesson 2 picker: 5 cards, "Từ vựng" second; it plays only Chinese, full transcript.
-3. Nghe "Hiện câu": hanzi + pinyin of the current line.
+3. Nghe: "Hiện transcript" shows the whole transcript (hanzi + pinyin) and it stays until "Ẩn transcript".
 4. Long-press a line → "Đã sao chép"; paste in a translator: hanzi only.
 5. Lesson 2 Hiểu: tap a word → meaning sheet.
 6. "Ghi chú" (player header and mode picker): Mẫu câu / Câu hỏi / Từ vựng read well; audio keeps playing.
