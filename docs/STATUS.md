@@ -86,7 +86,7 @@ Last updated: 2026-10-24 (A4 verified; Wave 5 ready for PM + device checkpoint) 
 
 ## Next (in order)
 
-**Now: [Wave 6](tasks/WAVE-6.md) (2026-10-24, from the Wave 5 device check) — B1 title/hanzi/long-press copy → B2 lesson 2 vocab + text notes → B3 publish words + notes.json → B4 "Ghi chú" screen. Wave 5 closed: A2 `872b051`, A3+A4 `0cae6b7` (PM checkpoint passed; lesson 2 device issues moved to Wave 6). Other pending checks: W3b follow (main + PiP), W3a PiP, M5 web.**
+**Now: [Wave 6](tasks/WAVE-6.md) (2026-10-24, from the Wave 5 device check) — B1 title/hanzi/long-press copy → B2 lesson 2 vocab + text notes → B5 "Từ vựng" 5th mode script (Chinese only) → B6 5th mode code + dry-run → user paid generate → B3 publish → B4 "Ghi chú" screen. Wave 5 closed: A2 `872b051`, A3+A4 `0cae6b7` (PM checkpoint passed; lesson 2 device issues moved to Wave 6). Other pending checks: W3b follow (main + PiP), W3a PiP, M5 web.**
 
 **Top priority today (user, 2026-10-22, after one day of using the app): W1 — a web player in Chrome on Mac and Linux that stays on top**
 for listening while reading the text at work. The learner today follows by ear plus rough pinyin and
