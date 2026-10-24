@@ -19,9 +19,9 @@
           "meaning_vi": "Tôi ở sảnh."
         },
         {
-          "hanzi": "陈东在八楼。",
-          "pinyin": "Chén Dōng zài bā lóu.",
-          "meaning_vi": "Trần Đông ở tầng tám."
+          "hanzi": "一开始，陈东在八楼。",
+          "pinyin": "yì kāishǐ, Chén Dōng zài bā lóu.",
+          "meaning_vi": "Lúc đầu, Trần Đông ở tầng tám."
         }
       ]
     },
@@ -45,7 +45,7 @@
     {
       "id": "p_v_bu_qu",
       "pattern": "V 不去 / V 不见",
-      "explain_vi": "Động từ + 不 + 去/见 nghĩa là \"không thể làm được\". 进不去 là không vào được, 看不见 là không nhìn thấy được. Khác với 不 đứng riêng trước động từ.",
+      "explain_vi": "Động từ + 不 + 去/见 nghĩa là \"không thể làm được\". 进去 là đi từ ngoài vào trong; 进不去 là muốn vào mà không vào được (ví dụ không có thẻ). 看不见 là không nhìn thấy được. Khác với 不 đứng riêng trước động từ.",
       "examples": [
         {
           "hanzi": "进不去。",
@@ -79,9 +79,9 @@
           "meaning_vi": "Tôi ở sảnh."
         },
         {
-          "hanzi": "王芳在B座门口。",
-          "pinyin": "Wáng Fāng zài B zuò ménkǒu.",
-          "meaning_vi": "Vương Phương ở cửa tòa B."
+          "hanzi": "一开始，王芳在B座门口。",
+          "pinyin": "yì kāishǐ, Wáng Fāng zài B zuò ménkǒu.",
+          "meaning_vi": "Lúc đầu, Vương Phương ở cửa tòa B."
         }
       ]
     },
@@ -112,9 +112,9 @@
       "how_to_answer_vi": "是不是 là \"có phải không\". Trả lời 是 (phải) hoặc 不是 (không phải), rồi nói thêm sự thật.",
       "examples": [
         {
-          "hanzi": "不是。王芳以为她在A座，她在B座。",
-          "pinyin": "bú shì. Wáng Fāng yǐwéi tā zài A zuò, tā zài B zuò.",
-          "meaning_vi": "Không phải. Vương Phương tưởng mình ở tòa A, cô ấy ở tòa B."
+          "hanzi": "不是，王芳在B座。",
+          "pinyin": "bú shì, Wáng Fāng zài B zuò.",
+          "meaning_vi": "Không phải, Vương Phương ở tòa B."
         },
         {
           "hanzi": "是。陈东在A座。",
@@ -125,9 +125,9 @@
     },
     {
       "id": "q_haishi",
-      "hanzi": "王芳在楼下还是八楼？",
-      "pinyin": "Wáng Fāng zài lóu xià háishi bā lóu?",
-      "meaning_vi": "Vương Phương ở dưới tòa nhà hay tầng tám?",
+      "hanzi": "一开始，王芳在楼下还是八楼？",
+      "pinyin": "yì kāishǐ, Wáng Fāng zài lóu xià háishi bā lóu?",
+      "meaning_vi": "Lúc đầu, Vương Phương ở dưới tòa nhà hay tầng tám?",
       "how_to_answer_vi": "还是 là \"hay là\". Chọn một trong hai và nói lại phần đã chọn.",
       "examples": [
         {
@@ -147,7 +147,7 @@
       "hanzi": "王芳旁边有什么？",
       "pinyin": "Wáng Fāng pángbiān yǒu shénme?",
       "meaning_vi": "Bên cạnh Vương Phương có gì?",
-      "how_to_answer_vi": "什么 là \"gì\". Trả lời bằng tên vật: nói thẳng từ đó, hoặc nói cả câu.",
+      "how_to_answer_vi": "什么 là \"gì\", hỏi về đồ vật, sự việc (hỏi về người thì dùng 谁). Trả lời bằng tên vật: nói thẳng từ đó, hoặc nói cả câu.",
       "examples": [
         {
           "hanzi": "咖啡店。",
@@ -163,10 +163,10 @@
     },
     {
       "id": "q_shei",
-      "hanzi": "谁在八楼？",
-      "pinyin": "shuí zài bā lóu?",
-      "meaning_vi": "Ai ở tầng tám?",
-      "how_to_answer_vi": "谁 là \"ai\". Trả lời bằng tên người: nói thẳng tên, hoặc nói cả câu.",
+      "hanzi": "一开始，谁在八楼？",
+      "pinyin": "yì kāishǐ, shuí zài bā lóu?",
+      "meaning_vi": "Lúc đầu, ai ở tầng tám?",
+      "how_to_answer_vi": "谁 là \"ai\", hỏi về người (hỏi về đồ vật thì dùng 什么). Trả lời bằng tên người: nói thẳng tên, hoặc nói cả câu.",
       "examples": [
         {
           "hanzi": "陈东。",
@@ -182,10 +182,10 @@
     },
     {
       "id": "q_na_ge",
-      "hanzi": "陈东在哪个楼找王芳？",
-      "pinyin": "Chén Dōng zài nǎ ge lóu zhǎo Wáng Fāng?",
-      "meaning_vi": "Trần Đông tìm Vương Phương ở tòa nào?",
-      "how_to_answer_vi": "哪个 là \"cái nào, ... nào\". Trả lời bằng cách nói rõ tòa/cửa nào.",
+      "hanzi": "后来，陈东在哪座楼找王芳？",
+      "pinyin": "hòulái, Chén Dōng zài nǎ zuò lóu zhǎo Wáng Fāng?",
+      "meaning_vi": "Về sau, Trần Đông tìm Vương Phương ở tòa nào?",
+      "how_to_answer_vi": "哪个 / 哪座 dùng để hỏi cái nào trong vài đồ vật hoặc vài nơi (tòa nào, cửa nào). Trả lời bằng cách nói rõ tòa hoặc cửa nào.",
       "examples": [
         {
           "hanzi": "陈东在A座大厅找王芳。",
@@ -196,15 +196,15 @@
     },
     {
       "id": "q_ji_lou",
-      "hanzi": "陈东在几楼？",
-      "pinyin": "Chén Dōng zài jǐ lóu?",
-      "meaning_vi": "Trần Đông ở tầng mấy?",
+      "hanzi": "一开始，陈东在几楼？",
+      "pinyin": "yì kāishǐ, Chén Dōng zài jǐ lóu?",
+      "meaning_vi": "Lúc đầu, Trần Đông ở tầng mấy?",
       "how_to_answer_vi": "几楼 là \"tầng mấy\". Trả lời bằng số + 楼, ví dụ 八楼.",
       "examples": [
         {
-          "hanzi": "陈东在八楼。",
-          "pinyin": "Chén Dōng zài bā lóu.",
-          "meaning_vi": "Trần Đông ở tầng tám."
+          "hanzi": "一开始，陈东在八楼。",
+          "pinyin": "yì kāishǐ, Chén Dōng zài bā lóu.",
+          "meaning_vi": "Lúc đầu, Trần Đông ở tầng tám."
         }
       ]
     },
@@ -212,9 +212,14 @@
       "id": "q_zenme_ban",
       "hanzi": "怎么办？",
       "pinyin": "zěnme bàn?",
-      "meaning_vi": "Làm sao đây?",
-      "how_to_answer_vi": "怎么办 là \"làm sao đây\". Người kia thường trả lời bằng lời khuyên hoặc việc nên làm.",
+      "meaning_vi": "Tôi nên làm thế nào?",
+      "how_to_answer_vi": "怎么办 là \"tôi nên làm thế nào\", dùng khi gặp khó khăn. Người kia trả lời bằng cách giải quyết, ví dụ: 别急，你等一下，我下楼接你。",
       "examples": [
+        {
+          "hanzi": "别急，你等一下，我下楼接你。",
+          "pinyin": "bié jí, nǐ děng yíxià, wǒ xià lóu jiē nǐ.",
+          "meaning_vi": "Đừng vội, bạn đợi một chút, tôi xuống đón bạn."
+        },
         {
           "hanzi": "你马上过来，我在门口等你。",
           "pinyin": "nǐ mǎshàng guòlái, wǒ zài ménkǒu děng nǐ.",

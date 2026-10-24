@@ -482,7 +482,7 @@
       "type": "narration",
       "language": "vi-VN",
       "speaker": "coach",
-      "text": "门口 là ngay cửa; 进不去 là không vào được.",
+      "text": "门口 là chỗ ngay trước cửa, nơi ra vào; 进不去 là không vào được.",
       "pause_after_ms": 1000
     },
     {
@@ -491,10 +491,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "八楼。陈东在八楼。",
+      "text": "八楼。一开始，陈东在八楼。",
       "pause_after_ms": 1000,
-      "pinyin": "Bā lóu. Chén Dōng zài bā lóu.",
-      "translation": "Tầng tám. Trần Đông ở tầng tám."
+      "pinyin": "Bā lóu. Yì kāishǐ, Chén Dōng zài bā lóu.",
+      "translation": "Tầng tám. Lúc đầu, Trần Đông ở tầng tám."
     },
     {
       "id": "hieu_h49",
@@ -502,7 +502,7 @@
       "type": "narration",
       "language": "vi-VN",
       "speaker": "coach",
-      "text": "八楼 là tầng tám.",
+      "text": "八楼 là tầng tám; 一开始 là lúc đầu.",
       "pause_after_ms": 1000
     },
     {
@@ -542,7 +542,7 @@
       "type": "narration",
       "language": "vi-VN",
       "speaker": "coach",
-      "text": "楼下 là phía dưới tòa nhà hoặc tầng dưới.",
+      "text": "楼下 là phía dưới (so với chỗ đang nói tới, ở đây là dưới tầng tám); không phải lúc nào cũng là tầng một.",
       "pause_after_ms": 1000
     },
     {
@@ -722,7 +722,7 @@
       "type": "narration",
       "language": "vi-VN",
       "speaker": "coach",
-      "text": "哪个 nghĩa là cái nào; ở đây là cửa nào.",
+      "text": "哪个 dùng để hỏi cái nào trong vài đồ vật hoặc vài nơi; ở đây là cửa nào.",
       "pause_after_ms": 1000
     },
     {
@@ -782,7 +782,7 @@
       "type": "narration",
       "language": "vi-VN",
       "speaker": "coach",
-      "text": "什么 nghĩa là gì.",
+      "text": "什么 hỏi về đồ vật, sự việc; hỏi về người thì dùng 谁.",
       "pause_after_ms": 1000
     },
     {
@@ -862,7 +862,7 @@
       "type": "narration",
       "language": "vi-VN",
       "speaker": "coach",
-      "text": "以为 là cứ tưởng một điều là đúng.",
+      "text": "以为 là cứ tưởng một điều là đúng, nhưng thực tế khác.",
       "pause_after_ms": 1000
     },
     {
@@ -882,7 +882,7 @@
       "type": "narration",
       "language": "vi-VN",
       "speaker": "coach",
-      "text": "怎么办 là làm sao đây, dùng khi cần một cách giải quyết.",
+      "text": "怎么办 nghĩa là: tôi nên làm gì bây giờ? Dùng khi cần một cách giải quyết.",
       "pause_after_ms": 1000
     },
     {
@@ -1002,7 +1002,7 @@
       "type": "narration",
       "language": "vi-VN",
       "speaker": "coach",
-      "text": "进去 là đi vào, hướng rời xa người nói.",
+      "text": "进去 là đi từ ngoài vào trong; 进不去 là muốn vào mà không vào được.",
       "pause_after_ms": 1000
     },
     {

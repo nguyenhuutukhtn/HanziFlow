@@ -16,7 +16,7 @@
   "format": "modes_v1",
   "variant": "phan_xa",
   "version": 1,
-  "target_duration_minutes": 7,
+  "target_duration_minutes": 8,
   "segments": [
     {
       "id": "phan_xa_q1",
@@ -103,10 +103,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "陈东在八楼吗？",
+      "text": "一开始，陈东在八楼吗？",
       "pause_after_ms": 3420,
-      "pinyin": "Chén Dōng zài bā lóu ma?",
-      "translation": "Trần Đông ở tầng tám phải không?",
+      "pinyin": "Yì kāishǐ, Chén Dōng zài bā lóu ma?",
+      "translation": "Lúc đầu, Trần Đông ở tầng tám phải không?",
       "gap": "answer"
     },
     {
@@ -126,10 +126,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "在，陈东在八楼。",
+      "text": "在，一开始陈东在八楼。",
       "pause_after_ms": 1000,
-      "pinyin": "Zài, Chén Dōng zài bā lóu.",
-      "translation": "Có, Trần Đông ở tầng tám."
+      "pinyin": "Zài, yì kāishǐ Chén Dōng zài bā lóu.",
+      "translation": "Có, lúc đầu Trần Đông ở tầng tám."
     },
     {
       "id": "phan_xa_q5",
@@ -273,10 +273,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "陈东在大厅找王芳吗？",
+      "text": "后来，陈东在大厅找王芳吗？",
       "pause_after_ms": 3420,
-      "pinyin": "Chén Dōng zài dàtīng zhǎo Wáng Fāng ma?",
-      "translation": "Trần Đông tìm Vương Phương ở sảnh phải không?",
+      "pinyin": "Hòulái, Chén Dōng zài dàtīng zhǎo Wáng Fāng ma?",
+      "translation": "Về sau, Trần Đông tìm Vương Phương ở sảnh phải không?",
       "gap": "answer"
     },
     {
@@ -296,10 +296,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "对，陈东在大厅找王芳。",
+      "text": "对，后来陈东在大厅找王芳。",
       "pause_after_ms": 1000,
-      "pinyin": "Duì, Chén Dōng zài dàtīng zhǎo Wáng Fāng.",
-      "translation": "Đúng, Trần Đông tìm Vương Phương ở sảnh."
+      "pinyin": "Duì, hòulái Chén Dōng zài dàtīng zhǎo Wáng Fāng.",
+      "translation": "Đúng, về sau Trần Đông tìm Vương Phương ở sảnh."
     },
     {
       "id": "phan_xa_q10",
@@ -307,10 +307,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "陈东看见王芳没有？",
+      "text": "后来，陈东看见王芳没有？",
       "pause_after_ms": 3840,
-      "pinyin": "Chén Dōng kànjiàn Wáng Fāng méiyǒu?",
-      "translation": "Trần Đông có thấy Vương Phương không?",
+      "pinyin": "Hòulái, Chén Dōng kànjiàn Wáng Fāng méiyǒu?",
+      "translation": "Về sau, Trần Đông có thấy Vương Phương không?",
       "gap": "answer"
     },
     {
@@ -330,10 +330,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "陈东在大厅没看见王芳。",
+      "text": "后来陈东在大厅没看见王芳。",
       "pause_after_ms": 1000,
-      "pinyin": "Chén Dōng zài dàtīng méi kànjiàn Wáng Fāng.",
-      "translation": "Trần Đông không thấy Vương Phương ở sảnh."
+      "pinyin": "Hòulái Chén Dōng zài dàtīng méi kànjiàn Wáng Fāng.",
+      "translation": "Về sau Trần Đông không thấy Vương Phương ở sảnh."
     },
     {
       "id": "phan_xa_q11",
@@ -341,10 +341,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "王芳旁边有咖啡店吗？",
+      "text": "一开始，王芳旁边有咖啡店吗？",
       "pause_after_ms": 3420,
-      "pinyin": "Wáng Fāng pángbiān yǒu kāfēidiàn ma?",
-      "translation": "Cạnh Vương Phương có quán cà phê không?",
+      "pinyin": "Yì kāishǐ, Wáng Fāng pángbiān yǒu kāfēidiàn ma?",
+      "translation": "Lúc đầu, cạnh Vương Phương có quán cà phê không?",
       "gap": "answer"
     },
     {
@@ -409,10 +409,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "王芳是不是在A座？",
+      "text": "一开始，王芳是不是在A座？",
       "pause_after_ms": 4840,
-      "pinyin": "Wáng Fāng shì bu shì zài A zuò?",
-      "translation": "Có phải Vương Phương ở tòa A không?",
+      "pinyin": "Yì kāishǐ, Wáng Fāng shì bu shì zài A zuò?",
+      "translation": "Lúc đầu, có phải Vương Phương ở tòa A không?",
       "gap": "answer"
     },
     {
@@ -432,10 +432,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "王芳不在A座，她在B座。",
+      "text": "不是，王芳在B座。",
       "pause_after_ms": 1000,
-      "pinyin": "Wáng Fāng bú zài A zuò, tā zài B zuò.",
-      "translation": "Vương Phương không ở toà A, cô ấy ở toà B."
+      "pinyin": "Bú shì, Wáng Fāng zài B zuò.",
+      "translation": "Không phải, Vương Phương ở tòa B."
     },
     {
       "id": "phan_xa_q14",
@@ -579,10 +579,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "王芳走到B座门口吗？",
-      "pause_after_ms": 3840,
-      "pinyin": "Wáng Fāng zǒu dào B zuò ménkǒu ma?",
-      "translation": "Vương Phương đi đến cửa tòa B phải không?",
+      "text": "王芳走到A座门口吗？",
+      "pause_after_ms": 3420,
+      "pinyin": "Wáng Fāng zǒu dào A zuò ménkǒu ma?",
+      "translation": "Vương Phương đi đến cửa tòa A phải không?",
       "gap": "answer"
     },
     {
@@ -591,10 +591,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "不是。",
+      "text": "对。",
       "pause_after_ms": 1000,
-      "pinyin": "Bú shì.",
-      "translation": "Không phải."
+      "pinyin": "Duì.",
+      "translation": "Đúng."
     },
     {
       "id": "phan_xa_q18_b",
@@ -602,10 +602,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "不是，王芳走到A座门口。",
+      "text": "对，王芳走到A座门口。",
       "pause_after_ms": 1000,
-      "pinyin": "Bú shì, Wáng Fāng zǒu dào A zuò ménkǒu.",
-      "translation": "Không, Vương Phương đi đến cửa tòa A."
+      "pinyin": "Duì, Wáng Fāng zǒu dào A zuò ménkǒu.",
+      "translation": "Đúng, Vương Phương đi đến cửa tòa A."
     },
     {
       "id": "phan_xa_q19",
@@ -628,7 +628,7 @@
       "text": "A座门口。",
       "pause_after_ms": 1000,
       "pinyin": "A zuò ménkǒu.",
-      "translation": "Cửa toà A."
+      "translation": "Cửa tòa A."
     },
     {
       "id": "phan_xa_q19_b",
@@ -639,7 +639,7 @@
       "text": "最后，他们在A座门口。",
       "pause_after_ms": 1000,
       "pinyin": "Zuìhòu, tāmen zài A zuò ménkǒu.",
-      "translation": "Cuối cùng, họ ở cửa toà A."
+      "translation": "Cuối cùng, họ ở cửa tòa A."
     },
     {
       "id": "phan_xa_q20",
@@ -681,10 +681,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "王芳在楼下还是八楼？",
+      "text": "一开始，王芳在楼下还是八楼？",
       "pause_after_ms": 4840,
-      "pinyin": "Wáng Fāng zài lóu xià háishi bā lóu?",
-      "translation": "Vương Phương ở dưới tòa nhà hay tầng tám?",
+      "pinyin": "Yì kāishǐ, Wáng Fāng zài lóu xià háishi bā lóu?",
+      "translation": "Lúc đầu, Vương Phương ở dưới tòa nhà hay tầng tám?",
       "gap": "answer"
     },
     {
@@ -715,10 +715,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "陈东在八楼还是楼下？",
+      "text": "一开始，陈东在八楼还是楼下？",
       "pause_after_ms": 4840,
-      "pinyin": "Chén Dōng zài bā lóu háishi lóu xià?",
-      "translation": "Trần Đông ở tầng tám hay dưới tòa nhà?",
+      "pinyin": "Yì kāishǐ, Chén Dōng zài bā lóu háishi lóu xià?",
+      "translation": "Lúc đầu, Trần Đông ở tầng tám hay dưới tòa nhà?",
       "gap": "answer"
     },
     {
@@ -738,10 +738,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "陈东在八楼。",
+      "text": "一开始，陈东在八楼。",
       "pause_after_ms": 1000,
-      "pinyin": "Chén Dōng zài bā lóu.",
-      "translation": "Trần Đông ở tầng tám."
+      "pinyin": "Yì kāishǐ, Chén Dōng zài bā lóu.",
+      "translation": "Lúc đầu, Trần Đông ở tầng tám."
     },
     {
       "id": "phan_xa_q23",
@@ -783,10 +783,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "陈东在大厅还是门口找王芳？",
+      "text": "后来，陈东在大厅还是门口找王芳？",
       "pause_after_ms": 4840,
-      "pinyin": "Chén Dōng zài dàtīng háishi ménkǒu zhǎo Wáng Fāng?",
-      "translation": "Trần Đông tìm Vương Phương ở sảnh hay ở cửa?",
+      "pinyin": "Hòulái, Chén Dōng zài dàtīng háishi ménkǒu zhǎo Wáng Fāng?",
+      "translation": "Về sau, Trần Đông tìm Vương Phương ở sảnh hay ở cửa?",
       "gap": "answer"
     },
     {
@@ -806,10 +806,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "陈东在大厅找王芳。",
+      "text": "后来，陈东在大厅找王芳。",
       "pause_after_ms": 1000,
-      "pinyin": "Chén Dōng zài dàtīng zhǎo Wáng Fāng.",
-      "translation": "Trần Đông tìm Vương Phương ở sảnh."
+      "pinyin": "Hòulái, Chén Dōng zài dàtīng zhǎo Wáng Fāng.",
+      "translation": "Về sau, Trần Đông tìm Vương Phương ở sảnh."
     },
     {
       "id": "phan_xa_q25",
@@ -817,10 +817,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "咖啡店在王芳旁边还是陈东旁边？",
+      "text": "一开始，咖啡店在王芳旁边还是陈东旁边？",
       "pause_after_ms": 5680,
-      "pinyin": "Kāfēidiàn zài Wáng Fāng pángbiān háishi Chén Dōng pángbiān?",
-      "translation": "Quán cà phê cạnh Vương Phương hay cạnh Trần Đông?",
+      "pinyin": "Yì kāishǐ, kāfēidiàn zài Wáng Fāng pángbiān háishi Chén Dōng pángbiān?",
+      "translation": "Lúc đầu, quán cà phê cạnh Vương Phương hay cạnh Trần Đông?",
       "gap": "answer"
     },
     {
@@ -851,10 +851,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "王芳在A座还是B座？",
+      "text": "一开始，王芳在A座还是B座？",
       "pause_after_ms": 4420,
-      "pinyin": "Wáng Fāng zài A zuò háishi B zuò?",
-      "translation": "Vương Phương ở tòa A hay tòa B?",
+      "pinyin": "Yì kāishǐ, Wáng Fāng zài A zuò háishi B zuò?",
+      "translation": "Lúc đầu, Vương Phương ở tòa A hay tòa B?",
       "gap": "answer"
     },
     {
@@ -953,10 +953,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "谁今天来开会？",
+      "text": "谁在门口，进不去？",
       "pause_after_ms": 4840,
-      "pinyin": "Shuí jīntiān lái kāihuì?",
-      "translation": "Hôm nay ai đến họp?",
+      "pinyin": "Shuí zài ménkǒu, jìn bu qù?",
+      "translation": "Ai ở cửa mà không vào được?",
       "gap": "answer"
     },
     {
@@ -976,10 +976,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "王芳今天来开会。",
+      "text": "王芳在门口，进不去。",
       "pause_after_ms": 1000,
-      "pinyin": "Wáng Fāng jīntiān lái kāihuì.",
-      "translation": "Hôm nay Vương Phương đến họp."
+      "pinyin": "Wáng Fāng zài ménkǒu, jìn bu qù.",
+      "translation": "Vương Phương ở cửa, không vào được."
     },
     {
       "id": "phan_xa_q30",
@@ -987,10 +987,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "谁在八楼？",
+      "text": "一开始，谁在八楼？",
       "pause_after_ms": 4840,
-      "pinyin": "Shuí zài bā lóu?",
-      "translation": "Ai ở tầng tám?",
+      "pinyin": "Yì kāishǐ, shuí zài bā lóu?",
+      "translation": "Lúc đầu, ai ở tầng tám?",
       "gap": "answer"
     },
     {
@@ -1010,10 +1010,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "陈东在八楼。",
+      "text": "一开始，陈东在八楼。",
       "pause_after_ms": 1000,
-      "pinyin": "Chén Dōng zài bā lóu.",
-      "translation": "Trần Đông ở tầng tám."
+      "pinyin": "Yì kāishǐ, Chén Dōng zài bā lóu.",
+      "translation": "Lúc đầu, Trần Đông ở tầng tám."
     },
     {
       "id": "phan_xa_q31",
@@ -1089,10 +1089,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "谁在大厅找王芳？",
+      "text": "后来，谁在大厅找王芳？",
       "pause_after_ms": 4840,
-      "pinyin": "Shuí zài dàtīng zhǎo Wáng Fāng?",
-      "translation": "Ai tìm Vương Phương ở sảnh?",
+      "pinyin": "Hòulái, shuí zài dàtīng zhǎo Wáng Fāng?",
+      "translation": "Về sau, ai tìm Vương Phương ở sảnh?",
       "gap": "answer"
     },
     {
@@ -1112,10 +1112,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "陈东在大厅找王芳。",
+      "text": "后来，陈东在大厅找王芳。",
       "pause_after_ms": 1000,
-      "pinyin": "Chén Dōng zài dàtīng zhǎo Wáng Fāng.",
-      "translation": "Trần Đông tìm Vương Phương ở sảnh."
+      "pinyin": "Hòulái, Chén Dōng zài dàtīng zhǎo Wáng Fāng.",
+      "translation": "Về sau, Trần Đông tìm Vương Phương ở sảnh."
     },
     {
       "id": "phan_xa_q34",
@@ -1123,10 +1123,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "谁以为她在A座？",
+      "text": "谁以为自己在A座，其实在B座？",
       "pause_after_ms": 4840,
-      "pinyin": "Shuí yǐwéi tā zài A zuò?",
-      "translation": "Ai tưởng mình ở tòa A?",
+      "pinyin": "Shuí yǐwéi zìjǐ zài A zuò, qíshí zài B zuò?",
+      "translation": "Ai tưởng mình ở tòa A, thật ra ở tòa B?",
       "gap": "answer"
     },
     {
@@ -1146,10 +1146,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "王芳以为她在A座。",
+      "text": "王芳以为自己在A座，其实她在B座。",
       "pause_after_ms": 1000,
-      "pinyin": "Wáng Fāng yǐwéi tā zài A zuò.",
-      "translation": "Vương Phương tưởng mình ở tòa A."
+      "pinyin": "Wáng Fāng yǐwéi zìjǐ zài A zuò, qíshí tā zài B zuò.",
+      "translation": "Vương Phương tưởng mình ở tòa A, thật ra cô ở tòa B."
     },
     {
       "id": "phan_xa_q35",
@@ -1157,10 +1157,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "王芳在哪儿？",
+      "text": "一开始，王芳在哪儿？",
       "pause_after_ms": 4420,
-      "pinyin": "Wáng Fāng zài nǎr?",
-      "translation": "Vương Phương đang ở đâu?",
+      "pinyin": "Yì kāishǐ, Wáng Fāng zài nǎr?",
+      "translation": "Lúc đầu, Vương Phương ở đâu?",
       "gap": "answer"
     },
     {
@@ -1191,10 +1191,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "陈东在哪儿？",
+      "text": "一开始，陈东在哪儿？",
       "pause_after_ms": 4840,
-      "pinyin": "Chén Dōng zài nǎr?",
-      "translation": "Trần Đông đang ở đâu?",
+      "pinyin": "Yì kāishǐ, Chén Dōng zài nǎr?",
+      "translation": "Lúc đầu, Trần Đông ở đâu?",
       "gap": "answer"
     },
     {
@@ -1214,10 +1214,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "陈东在八楼。",
+      "text": "陈东在A座八楼。",
       "pause_after_ms": 1000,
-      "pinyin": "Chén Dōng zài bā lóu.",
-      "translation": "Trần Đông ở tầng tám."
+      "pinyin": "Chén Dōng zài A zuò bā lóu.",
+      "translation": "Trần Đông ở tầng tám tòa A."
     },
     {
       "id": "phan_xa_q37",
@@ -1225,10 +1225,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "王芳旁边有什么？",
+      "text": "一开始，王芳旁边有什么？",
       "pause_after_ms": 5260,
-      "pinyin": "Wáng Fāng pángbiān yǒu shénme?",
-      "translation": "Bên cạnh Vương Phương có gì?",
+      "pinyin": "Yì kāishǐ, Wáng Fāng pángbiān yǒu shénme?",
+      "translation": "Lúc đầu, bên cạnh Vương Phương có gì?",
       "gap": "answer"
     },
     {
@@ -1259,10 +1259,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "陈东在哪个楼找王芳？",
+      "text": "后来，陈东在哪座楼找王芳？",
       "pause_after_ms": 4420,
-      "pinyin": "Chén Dōng zài nǎ ge lóu zhǎo Wáng Fāng?",
-      "translation": "Trần Đông tìm Vương Phương ở tòa nào?",
+      "pinyin": "Hòulái, Chén Dōng zài nǎ zuò lóu zhǎo Wáng Fāng?",
+      "translation": "Về sau, Trần Đông tìm Vương Phương ở tòa nào?",
       "gap": "answer"
     },
     {
@@ -1293,10 +1293,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "王芳知道她在B座吗？",
+      "text": "一开始，王芳知道自己在B座吗？",
       "pause_after_ms": 4260,
-      "pinyin": "Wáng Fāng zhīdào tā zài B zuò ma?",
-      "translation": "Vương Phương có biết mình ở tòa B không?",
+      "pinyin": "Yì kāishǐ, Wáng Fāng zhīdào zìjǐ zài B zuò ma?",
+      "translation": "Lúc đầu, Vương Phương có biết mình ở tòa B không?",
       "gap": "answer"
     },
     {
@@ -1316,10 +1316,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "王芳不知道，她以为她在A座。",
+      "text": "不知道，她以为自己在A座。",
       "pause_after_ms": 1000,
-      "pinyin": "Wáng Fāng bù zhīdào, tā yǐwéi tā zài A zuò.",
-      "translation": "Vương Phương không biết; cô tưởng mình ở tòa A."
+      "pinyin": "Bù zhīdào, tā yǐwéi zìjǐ zài A zuò.",
+      "translation": "Không biết, cô tưởng mình ở tòa A."
     },
     {
       "id": "phan_xa_q40",
@@ -1327,10 +1327,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "陈东在几楼？",
+      "text": "一开始，陈东在几楼？",
       "pause_after_ms": 4840,
-      "pinyin": "Chén Dōng zài jǐ lóu?",
-      "translation": "Trần Đông ở tầng mấy?",
+      "pinyin": "Yì kāishǐ, Chén Dōng zài jǐ lóu?",
+      "translation": "Lúc đầu, Trần Đông ở tầng mấy?",
       "gap": "answer"
     },
     {
@@ -1350,10 +1350,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "陈东在八楼。",
+      "text": "一开始，陈东在八楼。",
       "pause_after_ms": 1000,
-      "pinyin": "Chén Dōng zài bā lóu.",
-      "translation": "Trần Đông ở tầng tám."
+      "pinyin": "Yì kāishǐ, Chén Dōng zài bā lóu.",
+      "translation": "Lúc đầu, Trần Đông ở tầng tám."
     },
     {
       "id": "phan_xa_q41",

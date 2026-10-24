@@ -16,7 +16,7 @@
   "format": "modes_v1",
   "variant": "nghe",
   "version": 1,
-  "target_duration_minutes": 5,
+  "target_duration_minutes": 6,
   "segments": [
     {
       "id": "nghe_l1",
@@ -239,6 +239,17 @@
       "translation": "Thấy cô rồi! Được, chúng ta cùng vào họp."
     },
     {
+      "id": "nghe_l20a",
+      "activity": "Nghe",
+      "type": "narration",
+      "language": "zh-CN",
+      "speaker": "coach_zh",
+      "text": "好，我再讲一遍这个故事。",
+      "pause_after_ms": 1000,
+      "pinyin": "Hǎo, wǒ zài jiǎng yí biàn zhè ge gùshi.",
+      "translation": "Được, tôi kể lại câu chuyện này một lần."
+    },
+    {
       "id": "nghe_l21",
       "activity": "Nghe",
       "type": "narration",
@@ -255,10 +266,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "陈东在八楼。他下楼接王芳，在大厅找她。",
+      "text": "一开始，陈东在八楼。他下楼接王芳，后来在大厅找她。",
       "pause_after_ms": 1000,
-      "pinyin": "Chén Dōng zài bā lóu. Tā xià lóu jiē Wáng Fāng, zài dàtīng zhǎo tā.",
-      "translation": "Trần Đông ở tầng tám. Anh xuống đón và tìm cô ở sảnh."
+      "pinyin": "Yì kāishǐ, Chén Dōng zài bā lóu. Tā xià lóu jiē Wáng Fāng, hòulái zài dàtīng zhǎo tā.",
+      "translation": "Lúc đầu Trần Đông ở tầng tám. Anh xuống đón Vương Phương, rồi tìm cô ở sảnh."
     },
     {
       "id": "nghe_l23",
@@ -277,10 +288,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "王芳以为她在A座。她在B座。",
+      "text": "一开始，王芳以为她在A座。其实她在B座。",
       "pause_after_ms": 1000,
-      "pinyin": "Wáng Fāng yǐwéi tā zài A zuò. Tā zài B zuò.",
-      "translation": "Vương Phương tưởng ở tòa A. Thật ra cô ở tòa B."
+      "pinyin": "Yì kāishǐ, Wáng Fāng yǐwéi tā zài A zuò. Qíshí tā zài B zuò.",
+      "translation": "Lúc đầu Vương Phương tưởng mình ở tòa A. Thật ra cô ở tòa B."
     },
     {
       "id": "nghe_l25",
@@ -299,10 +310,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "这次，陈东在楼下。",
+      "text": "第二个故事。有一个地方不一样。这次，陈东在楼下。",
       "pause_after_ms": 1000,
-      "pinyin": "Zhè cì, Chén Dōng zài lóu xià.",
-      "translation": "Lần này, Trần Đông ở dưới tòa nhà."
+      "pinyin": "Dì èr ge gùshi. Yǒu yí ge dìfang bù yíyàng. Zhè cì, Chén Dōng zài lóu xià.",
+      "translation": "Câu chuyện thứ hai. Có một chỗ khác. Lần này, Trần Đông ở dưới tòa nhà."
     },
     {
       "id": "nghe_l27",
@@ -365,10 +376,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "这次，王芳有卡。",
+      "text": "第三个故事。有一个地方不一样。这次，王芳有卡。",
       "pause_after_ms": 1000,
-      "pinyin": "Zhè cì, Wáng Fāng yǒu kǎ.",
-      "translation": "Lần này, Vương Phương có thẻ."
+      "pinyin": "Dì sān ge gùshi. Yǒu yí ge dìfang bù yíyàng. Zhè cì, Wáng Fāng yǒu kǎ.",
+      "translation": "Câu chuyện thứ ba. Có một chỗ khác. Lần này, Vương Phương có thẻ."
     },
     {
       "id": "nghe_l33",
@@ -387,10 +398,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "她有卡。这不是A座的卡，她还是进不去。",
+      "text": "她有卡。可是这是A座的卡，她在B座，进不去。",
       "pause_after_ms": 1000,
-      "pinyin": "Tā yǒu kǎ. Zhè bú shì A zuò de kǎ, tā háishi jìn bu qù.",
-      "translation": "Cô có thẻ. Đây không phải thẻ của tòa A nên cô vẫn không vào được."
+      "pinyin": "Tā yǒu kǎ. Kěshì zhè shì A zuò de kǎ, tā zài B zuò, jìn bu qù.",
+      "translation": "Cô có thẻ. Nhưng đây là thẻ của tòa A, cô ở tòa B nên không vào được."
     },
     {
       "id": "nghe_l35",
@@ -398,10 +409,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "她问陈东在哪儿。陈东下楼，在大厅找她。",
+      "text": "她问陈东在哪儿。陈东下楼，在A座大厅找她。",
       "pause_after_ms": 1000,
-      "pinyin": "Tā wèn Chén Dōng zài nǎr. Chén Dōng xià lóu, zài dàtīng zhǎo tā.",
-      "translation": "Cô hỏi Trần Đông ở đâu. Anh xuống lầu tìm cô ở sảnh."
+      "pinyin": "Tā wèn Chén Dōng zài nǎr. Chén Dōng xià lóu, zài A zuò dàtīng zhǎo tā.",
+      "translation": "Cô hỏi Trần Đông ở đâu. Anh xuống lầu, tìm cô ở sảnh tòa A."
     },
     {
       "id": "nghe_l36",
@@ -431,10 +442,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "这次，咖啡店在A座旁边。",
+      "text": "第四个故事。有一个地方不一样。这次，咖啡店在A座旁边，不在B座旁边。",
       "pause_after_ms": 1000,
-      "pinyin": "Zhè cì, kāfēidiàn zài A zuò pángbiān.",
-      "translation": "Lần này, quán cà phê ở cạnh tòa A."
+      "pinyin": "Dì sì ge gùshi. Yǒu yí ge dìfang bù yíyàng. Zhè cì, kāfēidiàn zài A zuò pángbiān, bú zài B zuò pángbiān.",
+      "translation": "Câu chuyện thứ tư. Có một chỗ khác. Lần này, quán cà phê ở cạnh tòa A, không ở cạnh tòa B."
     },
     {
       "id": "nghe_l39",
@@ -464,10 +475,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "王芳说她旁边有咖啡店。A座旁边也有咖啡店。",
+      "text": "王芳说她旁边有咖啡店。A座旁边有咖啡店，所以她在A座。",
       "pause_after_ms": 1000,
-      "pinyin": "Wáng Fāng shuō tā pángbiān yǒu kāfēidiàn. A zuò pángbiān yě yǒu kāfēidiàn.",
-      "translation": "Vương Phương nói cạnh cô có quán cà phê. Cạnh tòa A cũng có quán cà phê."
+      "pinyin": "Wáng Fāng shuō tā pángbiān yǒu kāfēidiàn. A zuò pángbiān yǒu kāfēidiàn, suǒyǐ tā zài A zuò.",
+      "translation": "Vương Phương nói cạnh cô có quán cà phê. Cạnh tòa A có quán cà phê nên cô ở tòa A."
     },
     {
       "id": "nghe_l42",
@@ -486,10 +497,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "这次，陈东在B座，王芳在A座。",
+      "text": "第五个故事。有一个地方不一样。这次，陈东在B座，王芳在A座。",
       "pause_after_ms": 1000,
-      "pinyin": "Zhè cì, Chén Dōng zài B zuò, Wáng Fāng zài A zuò.",
-      "translation": "Lần này, Trần Đông ở tòa B, Vương Phương ở tòa A."
+      "pinyin": "Dì wǔ ge gùshi. Yǒu yí ge dìfang bù yíyàng. Zhè cì, Chén Dōng zài B zuò, Wáng Fāng zài A zuò.",
+      "translation": "Câu chuyện thứ năm. Có một chỗ khác. Lần này, Trần Đông ở tòa B, Vương Phương ở tòa A."
     },
     {
       "id": "nghe_l44",
@@ -530,10 +541,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "王芳知道陈东在B座。陈东马上走到A座接她。",
+      "text": "王芳知道陈东在B座，因为咖啡店在B座旁边。陈东马上走到A座接她。",
       "pause_after_ms": 1000,
-      "pinyin": "Wáng Fāng zhīdào Chén Dōng zài B zuò. Chén Dōng mǎshàng zǒu dào A zuò jiē tā.",
-      "translation": "Vương Phương biết Trần Đông ở tòa B. Anh đi ngay sang tòa A đón cô."
+      "pinyin": "Wáng Fāng zhīdào Chén Dōng zài B zuò, yīnwèi kāfēidiàn zài B zuò pángbiān. Chén Dōng mǎshàng zǒu dào A zuò jiē tā.",
+      "translation": "Vương Phương biết Trần Đông ở tòa B vì quán cà phê ở cạnh tòa B. Anh đi ngay sang tòa A đón cô."
     },
     {
       "id": "nghe_l48",
@@ -552,10 +563,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "再听一遍。",
+      "text": "现在再听一遍原来的故事。",
       "pause_after_ms": 1000,
-      "pinyin": "Zài tīng yí biàn.",
-      "translation": "Nghe lại một lượt."
+      "pinyin": "Xiànzài zài tīng yí biàn yuánlái de gùshi.",
+      "translation": "Bây giờ nghe lại một lượt câu chuyện ban đầu."
     },
     {
       "id": "nghe_l50",

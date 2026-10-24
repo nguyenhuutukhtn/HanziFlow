@@ -15,7 +15,7 @@
     {"hanzi": "座", "pinyin": "zuò", "meaning_vi": "tòa (nhà), tòa A / tòa B"},
     {"hanzi": "楼", "pinyin": "lóu", "meaning_vi": "tòa nhà, tầng"},
     {"hanzi": "的", "pinyin": "de", "meaning_vi": "của"},
-    {"hanzi": "门口", "pinyin": "ménkǒu", "meaning_vi": "cửa ra vào"},
+    {"hanzi": "门口", "pinyin": "ménkǒu", "meaning_vi": "chỗ trước cửa, nơi ra vào"},
     {"hanzi": "进", "pinyin": "jìn", "meaning_vi": "vào"},
     {"hanzi": "不", "pinyin": "bù", "meaning_vi": "không"},
     {"hanzi": "去", "pinyin": "qù", "meaning_vi": "đi (ra xa chỗ người nói)"},
@@ -90,6 +90,21 @@
     {"hanzi": "说", "pinyin": "shuō", "meaning_vi": "nói"},
     {"hanzi": "也", "pinyin": "yě", "meaning_vi": "cũng"},
     {"hanzi": "再", "pinyin": "zài", "meaning_vi": "lại, nữa"},
-    {"hanzi": "遍", "pinyin": "biàn", "meaning_vi": "lượt, lần (nghe một lượt)"}
+    {"hanzi": "遍", "pinyin": "biàn", "meaning_vi": "lượt, lần (nghe một lượt)"},
+    {"hanzi": "一开始", "pinyin": "yì kāishǐ", "meaning_vi": "lúc đầu"},
+    {"hanzi": "后来", "pinyin": "hòulái", "meaning_vi": "về sau"},
+    {"hanzi": "其实", "pinyin": "qíshí", "meaning_vi": "thật ra"},
+    {"hanzi": "自己", "pinyin": "zìjǐ", "meaning_vi": "bản thân, mình"},
+    {"hanzi": "可是", "pinyin": "kěshì", "meaning_vi": "nhưng"},
+    {"hanzi": "所以", "pinyin": "suǒyǐ", "meaning_vi": "cho nên"},
+    {"hanzi": "因为", "pinyin": "yīnwèi", "meaning_vi": "bởi vì"},
+    {"hanzi": "讨论", "pinyin": "tǎolùn", "meaning_vi": "bàn bạc, thảo luận"},
+    {"hanzi": "工作", "pinyin": "gōngzuò", "meaning_vi": "công việc"},
+    {"hanzi": "立刻", "pinyin": "lìkè", "meaning_vi": "lập tức"},
+    {"hanzi": "第", "pinyin": "dì", "meaning_vi": "thứ (số thứ tự)"},
+    {"hanzi": "地方", "pinyin": "dìfang", "meaning_vi": "nơi, chỗ"},
+    {"hanzi": "不一样", "pinyin": "bù yíyàng", "meaning_vi": "khác nhau"},
+    {"hanzi": "原来", "pinyin": "yuánlái", "meaning_vi": "ban đầu, vốn"},
+    {"hanzi": "讲", "pinyin": "jiǎng", "meaning_vi": "kể, nói"}
   ]
 }

@@ -21,7 +21,7 @@ def test_real_modes_counts_and_samples():
         for mode in ("hieu", "tu_vung", "nghe", "phan_xa", "noi")
     }
     assert {mode: len(lesson["segments"]) for mode, lesson in lessons.items()} == {
-        "hieu": 122, "tu_vung": 156, "nghe": 68, "phan_xa": 121, "noi": 43
+        "hieu": 122, "tu_vung": 157, "nghe": 69, "phan_xa": 121, "noi": 43
     }
     tu_vung = lessons["tu_vung"]["segments"]
     assert not any(s["language"] == "vi-VN" for s in tu_vung)
