@@ -69,7 +69,8 @@ def _hanzi_syllables(text: str) -> list[str]:
 
 
 def _pinyin_words(pinyin: str) -> list[str]:
-    return _PINYIN_WORD.findall(pinyin)
+    # A colon closing a word ("shì: wǒ") is punctuation; only "u:" (nu:3 = nü) belongs to the word.
+    return [word[:-1] if word.endswith(":") and not word.endswith(("u:", "U:")) else word for word in _PINYIN_WORD.findall(pinyin)]
 
 
 def tokenize_mandarin(text: str, pinyin: str, item_ids: dict[str, str] | None = None) -> list[dict[str, str]]:

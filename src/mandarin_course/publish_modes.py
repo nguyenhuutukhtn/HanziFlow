@@ -11,8 +11,12 @@ from .audio_builder import timeline_path_for
 from .characters import CharacterLoaders, resolve_lesson_characters
 from .config import Settings
 from .lesson_schema import Lesson, load_lesson
-from .publish_support import PublishReport, _artifact, _catalog_entry, _matches_catalog_entry, _write_json
+from .publish_notes import load_notes, notes_body
+from .publish_support import (
+    PublishReport, _artifact, _cache_path, _catalog_entry, _make_clip, _matches_catalog_entry, _write_json,
+)
 from .publish_timeline import PublishError, _enrich_timeline, _load_and_validate_timeline, _reference_lines
+from .publish_tokens import _strip_punctuation, load_vocab, tones_from_pinyin, word_item_id
 from .story.ledger import chars_taught_before
 
 MODES = ("hieu", "tu_vung", "nghe", "phan_xa", "noi")
@@ -79,6 +83,11 @@ def publish_modes_lesson(lesson_path: Path, settings: Settings, out: Path, force
     omitted = [entry for entry in characters["characters"] if not entry.get("han_viet") or not entry.get("vi_meaning")]
     characters["characters"] = [entry for entry in characters["characters"] if entry not in omitted]
 
+    vocab_path = lesson_path.parent / f"{lesson.lesson_id}_vocab.json"
+    vocab = load_vocab(vocab_path, lesson.lesson_id) if vocab_path.is_file() else None
+    item_ids = {word.hanzi: word_item_id(word.hanzi, word.pinyin) for word in vocab.words} if vocab else {}
+    notes = load_notes(lesson_path.parent / f"{lesson.lesson_id}_notes.json", lesson.lesson_id)
+
     catalog_path = out / "catalog.json"
     previous_entry = _catalog_entry(catalog_path, lesson.lesson_id)
     current_version = int(previous_entry["version"]) if previous_entry else 0
@@ -96,13 +105,57 @@ def publish_modes_lesson(lesson_path: Path, settings: Settings, out: Path, force
             source = sources[mode]
             shutil.copyfile(source, package / f"{mode}.mp3")
             failures: list[str] = []
-            lines[mode] = _reference_lines(lessons[mode], {}, failures)
+            lines[mode] = _reference_lines(lessons[mode], item_ids, failures)
             if failures:
                 raise PublishError(f"Pinyin alignment failed for segment(s): {', '.join(sorted(set(failures)))}")
             raw = _load_and_validate_timeline(timeline_path_for(source), lessons[mode], mode, lines[mode])
             timelines[mode] = _enrich_timeline(raw, lessons[mode], mode, trial_version)
             timelines[mode]["gaps"] = _mode_gaps(timelines[mode], lessons[mode])
             _write_json(package / f"timeline_{mode}.json", timelines[mode])
+
+        words: list[dict] = []
+        words_with: list[str] = []
+        words_without: list[str] = []
+        if vocab is not None:
+            clips_dir = package / "clips"
+            clips_dir.mkdir()
+            clip_by_source: dict[Path, dict] = {}
+            clip_by_text: dict[str, dict] = {}
+            vocab_hanzi = {word.hanzi for word in vocab.words}
+            for mode in MODES:
+                for segment in lessons[mode].segments:
+                    if segment.turns or segment.language != "zh-CN":
+                        continue
+                    text = _strip_punctuation(segment.text)
+                    if text in clip_by_text or text not in vocab_hanzi:
+                        continue
+                    source = _cache_path(segment, lessons[mode], settings)
+                    if source is None:
+                        continue
+                    if source not in clip_by_source:
+                        clip_by_source[source] = _make_clip(source, clips_dir)
+                    clip_by_text[text] = clip_by_source[source]
+            for vocab_word in vocab.words:
+                word = {
+                    "id": word_item_id(vocab_word.hanzi, vocab_word.pinyin),
+                    "hanzi": vocab_word.hanzi, "pinyin": vocab_word.pinyin,
+                    "tones": tones_from_pinyin(vocab_word.hanzi, vocab_word.pinyin),
+                    "meaning_vi": vocab_word.meaning_vi,
+                }
+                if vocab_word.hanzi in clip_by_text:
+                    word["clip"] = clip_by_text[vocab_word.hanzi]
+                    words_with.append(vocab_word.hanzi)
+                else:
+                    words_without.append(vocab_word.hanzi)
+                words.append(word)
+
+        def write_derived(version: int) -> None:
+            _write_json(package / "items.json", {
+                "schema_version": 1, "lesson_id": lesson.lesson_id, "lesson_version": version,
+                "words": words, "sentences": [], "qa": [],
+            })
+            if notes is not None:
+                _write_json(package / "notes.json", {"schema_version": 1, "lesson_id": lesson.lesson_id, "lesson_version": version, **notes_body(notes)})
 
         metadata = {
             "id": lesson.lesson_id, "title": lesson.title, "level": lesson.level,
@@ -111,25 +164,19 @@ def publish_modes_lesson(lesson_path: Path, settings: Settings, out: Path, force
         }
         _write_json(package / "lesson.json", metadata)
         _write_json(package / "reference.json", {"tracks": lines}, sort_keys=False)
-        _write_json(package / "items.json", {
-            "schema_version": 1, "lesson_id": lesson.lesson_id, "lesson_version": trial_version,
-            "words": [], "sentences": [], "qa": [],
-        })
+        write_derived(trial_version)
         _write_json(package / "characters.json", characters)
 
         if not force and _matches_catalog_entry(package, previous_entry):
             existing = lessons_dir / f"v{current_version}"
             files = [(path.relative_to(existing).as_posix(), path.stat().st_size) for path in sorted(existing.rglob("*")) if path.is_file()]
-            return PublishReport(existing, files, sum(size for _, size in files), [], [], [], [], False, current_version, False, warnings)
+            return PublishReport(existing, files, sum(size for _, size in files), words_with, words_without, [], [], False, current_version, False, warnings)
 
         final_version = current_version + 1 if current_version else 1
         if final_version != trial_version:
             metadata["version"] = final_version
             _write_json(package / "lesson.json", metadata)
-            _write_json(package / "items.json", {
-                "schema_version": 1, "lesson_id": lesson.lesson_id, "lesson_version": final_version,
-                "words": [], "sentences": [], "qa": [],
-            })
+            write_derived(final_version)
             for mode in MODES:
                 timelines[mode]["lesson_version"] = final_version
                 _write_json(package / f"timeline_{mode}.json", timelines[mode])
@@ -153,6 +200,8 @@ def publish_modes_lesson(lesson_path: Path, settings: Settings, out: Path, force
             ("manifest", "lesson.json"), ("reference", "reference.json"), ("items", "items.json"), ("characters", "characters.json"),
         )},
     }
+    if (destination / "notes.json").is_file():
+        catalog_entry["files"]["notes"] = _artifact(destination / "notes.json", "notes.json")
     catalog = json.loads(catalog_path.read_text(encoding="utf-8")) if catalog_path.is_file() else {"schema_version": 1, "catalog_version": 1, "lessons": []}
     previous_lessons = catalog.get("lessons", [])
     catalog["lessons"] = sorted(
@@ -165,4 +214,4 @@ def publish_modes_lesson(lesson_path: Path, settings: Settings, out: Path, force
     _write_json(out / ".catalog.json.tmp", catalog, sort_keys=False)
     (out / ".catalog.json.tmp").replace(catalog_path)
     files = [(path.relative_to(destination).as_posix(), path.stat().st_size) for path in sorted(destination.rglob("*")) if path.is_file()]
-    return PublishReport(destination, files, sum(size for _, size in files), [], [], [], [], False, final_version, True, warnings)
+    return PublishReport(destination, files, sum(size for _, size in files), words_with, words_without, [], [], False, final_version, True, warnings)

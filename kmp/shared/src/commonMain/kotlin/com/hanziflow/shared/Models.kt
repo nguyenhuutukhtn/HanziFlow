@@ -70,7 +70,7 @@ object ReferenceTracksSerializer : KSerializer<ReferenceTracks> {
 }
 
 @Serializable
-data class PackageFiles(val manifest: Clip, val reference: Clip, val items: Clip, val characters: Clip? = null)
+data class PackageFiles(val manifest: Clip, val reference: Clip, val items: Clip, val characters: Clip? = null, val notes: Clip? = null)
 
 @Serializable
 data class StrokePackRef(val version: Int, val files: Map<String, StrokePackFile>)
@@ -172,6 +172,37 @@ data class QaItem(
 )
 
 @Serializable
+data class NoteExample(val hanzi: String, val pinyin: String, @SerialName("meaning_vi") val meaningVi: String)
+
+@Serializable
+data class NotePattern(
+    val id: String,
+    val pattern: String,
+    @SerialName("explain_vi") val explainVi: String,
+    val examples: List<NoteExample> = emptyList(),
+)
+
+@Serializable
+data class NoteQuestion(
+    val id: String,
+    val hanzi: String,
+    val pinyin: String,
+    @SerialName("meaning_vi") val meaningVi: String,
+    @SerialName("how_to_answer_vi") val howToAnswerVi: String,
+    val examples: List<NoteExample> = emptyList(),
+)
+
+/** Optional `notes.json`: written explanations of the lesson's patterns and question forms. */
+@Serializable
+data class LessonNotes(
+    @SerialName("schema_version") val schemaVersion: Int,
+    @SerialName("lesson_id") val lessonId: String,
+    @SerialName("lesson_version") val lessonVersion: Int,
+    val patterns: List<NotePattern> = emptyList(),
+    val questions: List<NoteQuestion> = emptyList(),
+)
+
+@Serializable
 data class Items(
     @SerialName("schema_version") val schemaVersion: Int,
     @SerialName("lesson_id") val lessonId: String,
@@ -236,6 +267,7 @@ object CourseJson {
     fun lesson(value: String): LessonManifest = codec.decodeFromString(value)
     fun reference(value: String): Reference = codec.decodeFromString(value)
     fun items(value: String): Items = codec.decodeFromString(value)
+    fun notes(value: String): LessonNotes = codec.decodeFromString(value)
     fun timeline(value: String): Timeline = codec.decodeFromString(value)
     fun characters(value: String): LessonCharacters = codec.decodeFromString(value)
     fun strokePack(value: String): com.hanziflow.shared.characters.StrokePack =

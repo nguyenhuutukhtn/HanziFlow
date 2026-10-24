@@ -1,0 +1,913 @@
+{
+  "lesson_id": "lesson_002",
+  "lesson_version": 3,
+  "qa": [],
+  "schema_version": 1,
+  "sentences": [],
+  "words": [
+    {
+      "hanzi": "王",
+      "id": "w_王_wang2",
+      "meaning_vi": "họ Vương",
+      "pinyin": "Wáng",
+      "tones": [
+        2
+      ]
+    },
+    {
+      "hanzi": "芳",
+      "id": "w_芳_fang1",
+      "meaning_vi": "Phương (tên Vương Phương)",
+      "pinyin": "Fāng",
+      "tones": [
+        1
+      ]
+    },
+    {
+      "hanzi": "今天",
+      "id": "w_今天_jin1tian1",
+      "meaning_vi": "hôm nay",
+      "pinyin": "jīntiān",
+      "tones": [
+        1,
+        1
+      ]
+    },
+    {
+      "clip": {
+        "bytes": 6915,
+        "file": "clips/b8bae4f1aa3c3bf13a533befd1b9a198db8ebf2f018fe97f210d470bf035e875.mp3",
+        "sha256": "b8bae4f1aa3c3bf13a533befd1b9a198db8ebf2f018fe97f210d470bf035e875"
+      },
+      "hanzi": "来",
+      "id": "w_来_lai2",
+      "meaning_vi": "đến",
+      "pinyin": "lái",
+      "tones": [
+        2
+      ]
+    },
+    {
+      "hanzi": "开会",
+      "id": "w_开会_kai1hui4",
+      "meaning_vi": "họp",
+      "pinyin": "kāihuì",
+      "tones": [
+        1,
+        4
+      ]
+    },
+    {
+      "hanzi": "大家",
+      "id": "w_大家_da4jia1",
+      "meaning_vi": "mọi người",
+      "pinyin": "dàjiā",
+      "tones": [
+        4,
+        1
+      ]
+    },
+    {
+      "hanzi": "她",
+      "id": "w_她_ta1",
+      "meaning_vi": "cô ấy",
+      "pinyin": "tā",
+      "tones": [
+        1
+      ]
+    },
+    {
+      "clip": {
+        "bytes": 6915,
+        "file": "clips/4b90e2fafda297e76e7a92fe4ab84a4c095027975803606d245e29253618ab7c.mp3",
+        "sha256": "4b90e2fafda297e76e7a92fe4ab84a4c095027975803606d245e29253618ab7c"
+      },
+      "hanzi": "在",
+      "id": "w_在_zai4",
+      "meaning_vi": "ở, đang ở",
+      "pinyin": "zài",
+      "tones": [
+        4
+      ]
+    },
+    {
+      "hanzi": "一",
+      "id": "w_一_yi1",
+      "meaning_vi": "một",
+      "pinyin": "yī",
+      "tones": [
+        1
+      ]
+    },
+    {
+      "clip": {
+        "bytes": 8169,
+        "file": "clips/be5f2d66f223ff04765e66536152d184e57a6545a387d1d0ba61751dfdabba5a.mp3",
+        "sha256": "be5f2d66f223ff04765e66536152d184e57a6545a387d1d0ba61751dfdabba5a"
+      },
+      "hanzi": "座",
+      "id": "w_座_zuo4",
+      "meaning_vi": "tòa (nhà), tòa A / tòa B",
+      "pinyin": "zuò",
+      "tones": [
+        4
+      ]
+    },
+    {
+      "hanzi": "楼",
+      "id": "w_楼_lou2",
+      "meaning_vi": "tòa nhà, tầng",
+      "pinyin": "lóu",
+      "tones": [
+        2
+      ]
+    },
+    {
+      "hanzi": "的",
+      "id": "w_的_de5",
+      "meaning_vi": "của",
+      "pinyin": "de",
+      "tones": [
+        5
+      ]
+    },
+    {
+      "clip": {
+        "bytes": 8169,
+        "file": "clips/819e19cb2d9fc5f0fab5c87531e923372195756cffe6143ff5e300703b482b55.mp3",
+        "sha256": "819e19cb2d9fc5f0fab5c87531e923372195756cffe6143ff5e300703b482b55"
+      },
+      "hanzi": "门口",
+      "id": "w_门口_men2kou3",
+      "meaning_vi": "cửa ra vào",
+      "pinyin": "ménkǒu",
+      "tones": [
+        2,
+        3
+      ]
+    },
+    {
+      "hanzi": "进",
+      "id": "w_进_jin4",
+      "meaning_vi": "vào",
+      "pinyin": "jìn",
+      "tones": [
+        4
+      ]
+    },
+    {
+      "hanzi": "不",
+      "id": "w_不_bu4",
+      "meaning_vi": "không",
+      "pinyin": "bù",
+      "tones": [
+        4
+      ]
+    },
+    {
+      "hanzi": "去",
+      "id": "w_去_qu4",
+      "meaning_vi": "đi (ra xa chỗ người nói)",
+      "pinyin": "qù",
+      "tones": [
+        4
+      ]
+    },
+    {
+      "hanzi": "喂",
+      "id": "w_喂_wei2",
+      "meaning_vi": "a lô",
+      "pinyin": "wéi",
+      "tones": [
+        2
+      ]
+    },
+    {
+      "hanzi": "陈",
+      "id": "w_陈_chen2",
+      "meaning_vi": "họ Trần",
+      "pinyin": "Chén",
+      "tones": [
+        2
+      ]
+    },
+    {
+      "hanzi": "东",
+      "id": "w_东_dong1",
+      "meaning_vi": "Đông (tên Trần Đông)",
+      "pinyin": "Dōng",
+      "tones": [
+        1
+      ]
+    },
+    {
+      "hanzi": "你",
+      "id": "w_你_ni3",
+      "meaning_vi": "bạn, anh, cô",
+      "pinyin": "nǐ",
+      "tones": [
+        3
+      ]
+    },
+    {
+      "hanzi": "八",
+      "id": "w_八_ba1",
+      "meaning_vi": "tám",
+      "pinyin": "bā",
+      "tones": [
+        1
+      ]
+    },
+    {
+      "hanzi": "吗",
+      "id": "w_吗_ma5",
+      "meaning_vi": "không, phải không (cuối câu hỏi)",
+      "pinyin": "ma",
+      "tones": [
+        5
+      ]
+    },
+    {
+      "clip": {
+        "bytes": 6288,
+        "file": "clips/b6985e421b03c5de7a70770993e2ab13122daf656ea1446894478054fccdb37f.mp3",
+        "sha256": "b6985e421b03c5de7a70770993e2ab13122daf656ea1446894478054fccdb37f"
+      },
+      "hanzi": "对",
+      "id": "w_对_dui4",
+      "meaning_vi": "đúng",
+      "pinyin": "duì",
+      "tones": [
+        4
+      ]
+    },
+    {
+      "hanzi": "我",
+      "id": "w_我_wo3",
+      "meaning_vi": "tôi",
+      "pinyin": "wǒ",
+      "tones": [
+        3
+      ]
+    },
+    {
+      "clip": {
+        "bytes": 7542,
+        "file": "clips/faef2af4951a171d2c074ad7c7ca45ceb16bab795bcff5d7775f829ce799d0f0.mp3",
+        "sha256": "faef2af4951a171d2c074ad7c7ca45ceb16bab795bcff5d7775f829ce799d0f0"
+      },
+      "hanzi": "哪儿",
+      "id": "w_哪儿_na3er5",
+      "meaning_vi": "ở đâu",
+      "pinyin": "nǎr",
+      "tones": [
+        3,
+        5
+      ]
+    },
+    {
+      "hanzi": "下",
+      "id": "w_下_xia4",
+      "meaning_vi": "xuống",
+      "pinyin": "xià",
+      "tones": [
+        4
+      ]
+    },
+    {
+      "hanzi": "这里",
+      "id": "w_这里_zhe4li3",
+      "meaning_vi": "ở đây",
+      "pinyin": "zhèlǐ",
+      "tones": [
+        4,
+        3
+      ]
+    },
+    {
+      "clip": {
+        "bytes": 8169,
+        "file": "clips/a6e69ed045634c3b25b0b51b61cce7513c6f01bbdfafba715296559ed84fcec7.mp3",
+        "sha256": "a6e69ed045634c3b25b0b51b61cce7513c6f01bbdfafba715296559ed84fcec7"
+      },
+      "hanzi": "没有",
+      "id": "w_没有_mei2you3",
+      "meaning_vi": "không có",
+      "pinyin": "méiyǒu",
+      "tones": [
+        2,
+        3
+      ]
+    },
+    {
+      "hanzi": "卡",
+      "id": "w_卡_ka3",
+      "meaning_vi": "thẻ (vào cửa)",
+      "pinyin": "kǎ",
+      "tones": [
+        3
+      ]
+    },
+    {
+      "hanzi": "好",
+      "id": "w_好_hao3",
+      "meaning_vi": "được, tốt",
+      "pinyin": "hǎo",
+      "tones": [
+        3
+      ]
+    },
+    {
+      "hanzi": "等",
+      "id": "w_等_deng3",
+      "meaning_vi": "đợi",
+      "pinyin": "děng",
+      "tones": [
+        3
+      ]
+    },
+    {
+      "hanzi": "一下",
+      "id": "w_一下_yi2xia4",
+      "meaning_vi": "một chút",
+      "pinyin": "yíxià",
+      "tones": [
+        2,
+        4
+      ]
+    },
+    {
+      "hanzi": "马上",
+      "id": "w_马上_ma3shang4",
+      "meaning_vi": "ngay, ngay lập tức",
+      "pinyin": "mǎshàng",
+      "tones": [
+        3,
+        4
+      ]
+    },
+    {
+      "hanzi": "接",
+      "id": "w_接_jie1",
+      "meaning_vi": "đón",
+      "pinyin": "jiē",
+      "tones": [
+        1
+      ]
+    },
+    {
+      "hanzi": "从",
+      "id": "w_从_cong2",
+      "meaning_vi": "từ",
+      "pinyin": "cóng",
+      "tones": [
+        2
+      ]
+    },
+    {
+      "hanzi": "下来",
+      "id": "w_下来_xia4lai2",
+      "meaning_vi": "đi xuống (về phía người nói)",
+      "pinyin": "xiàlái",
+      "tones": [
+        4,
+        2
+      ]
+    },
+    {
+      "clip": {
+        "bytes": 8169,
+        "file": "clips/537332903367f867b33ba5ed457896587dcf25e23ffe89c75a17ab764e501395.mp3",
+        "sha256": "537332903367f867b33ba5ed457896587dcf25e23ffe89c75a17ab764e501395"
+      },
+      "hanzi": "大厅",
+      "id": "w_大厅_da4ting1",
+      "meaning_vi": "sảnh",
+      "pinyin": "dàtīng",
+      "tones": [
+        4,
+        1
+      ]
+    },
+    {
+      "hanzi": "找",
+      "id": "w_找_zhao3",
+      "meaning_vi": "tìm",
+      "pinyin": "zhǎo",
+      "tones": [
+        3
+      ]
+    },
+    {
+      "hanzi": "哪",
+      "id": "w_哪_na3",
+      "meaning_vi": "nào",
+      "pinyin": "nǎ",
+      "tones": [
+        3
+      ]
+    },
+    {
+      "hanzi": "个",
+      "id": "w_个_ge5",
+      "meaning_vi": "cái (từ đếm)",
+      "pinyin": "ge",
+      "tones": [
+        5
+      ]
+    },
+    {
+      "hanzi": "啊",
+      "id": "w_啊_a5",
+      "meaning_vi": "à, mà (làm mềm câu)",
+      "pinyin": "a",
+      "tones": [
+        5
+      ]
+    },
+    {
+      "hanzi": "能",
+      "id": "w_能_neng2",
+      "meaning_vi": "có thể",
+      "pinyin": "néng",
+      "tones": [
+        2
+      ]
+    },
+    {
+      "clip": {
+        "bytes": 8169,
+        "file": "clips/5d9b04d5af9582676bba0541084be1f390215fb09f3a013d937a3d8447a118dd.mp3",
+        "sha256": "5d9b04d5af9582676bba0541084be1f390215fb09f3a013d937a3d8447a118dd"
+      },
+      "hanzi": "看见",
+      "id": "w_看见_kan4jian4",
+      "meaning_vi": "nhìn thấy",
+      "pinyin": "kànjiàn",
+      "tones": [
+        4,
+        4
+      ]
+    },
+    {
+      "hanzi": "看",
+      "id": "w_看_kan4",
+      "meaning_vi": "nhìn",
+      "pinyin": "kàn",
+      "tones": [
+        4
+      ]
+    },
+    {
+      "hanzi": "见",
+      "id": "w_见_jian4",
+      "meaning_vi": "thấy (đi sau 看)",
+      "pinyin": "jiàn",
+      "tones": [
+        4
+      ]
+    },
+    {
+      "clip": {
+        "bytes": 8169,
+        "file": "clips/85750155182d2594e275815aa26f38fa7b987cacf592b94226b448164ee2832d.mp3",
+        "sha256": "85750155182d2594e275815aa26f38fa7b987cacf592b94226b448164ee2832d"
+      },
+      "hanzi": "旁边",
+      "id": "w_旁边_pang2bian1",
+      "meaning_vi": "bên cạnh",
+      "pinyin": "pángbiān",
+      "tones": [
+        2,
+        1
+      ]
+    },
+    {
+      "clip": {
+        "bytes": 7542,
+        "file": "clips/f1b16d6e28235996170935b3f2f786036815596a366b99b6d592755d8e906715.mp3",
+        "sha256": "f1b16d6e28235996170935b3f2f786036815596a366b99b6d592755d8e906715"
+      },
+      "hanzi": "有",
+      "id": "w_有_you3",
+      "meaning_vi": "có",
+      "pinyin": "yǒu",
+      "tones": [
+        3
+      ]
+    },
+    {
+      "hanzi": "什么",
+      "id": "w_什么_shen2me5",
+      "meaning_vi": "gì",
+      "pinyin": "shénme",
+      "tones": [
+        2,
+        5
+      ]
+    },
+    {
+      "hanzi": "家",
+      "id": "w_家_jia1",
+      "meaning_vi": "quán, tiệm (từ đếm cho cửa hàng)",
+      "pinyin": "jiā",
+      "tones": [
+        1
+      ]
+    },
+    {
+      "clip": {
+        "bytes": 8796,
+        "file": "clips/f7f269572bfd95e58c5eb4f6f300321c5d783a8f9a9cd6d93cfd124afb69a7d4.mp3",
+        "sha256": "f7f269572bfd95e58c5eb4f6f300321c5d783a8f9a9cd6d93cfd124afb69a7d4"
+      },
+      "hanzi": "咖啡店",
+      "id": "w_咖啡店_ka1fei1dian4",
+      "meaning_vi": "quán cà phê",
+      "pinyin": "kāfēidiàn",
+      "tones": [
+        1,
+        1,
+        4
+      ]
+    },
+    {
+      "hanzi": "看看",
+      "id": "w_看看_kan4kan5",
+      "meaning_vi": "nhìn thử",
+      "pinyin": "kànkan",
+      "tones": [
+        4,
+        5
+      ]
+    },
+    {
+      "clip": {
+        "bytes": 6915,
+        "file": "clips/718a3cfeefe9dfdad7714875e4a9f7ef2bbe323342213cdf37cc872b5f106d2a.mp3",
+        "sha256": "718a3cfeefe9dfdad7714875e4a9f7ef2bbe323342213cdf37cc872b5f106d2a"
+      },
+      "hanzi": "是",
+      "id": "w_是_shi4",
+      "meaning_vi": "là, phải",
+      "pinyin": "shì",
+      "tones": [
+        4
+      ]
+    },
+    {
+      "clip": {
+        "bytes": 8169,
+        "file": "clips/549a8da4dee8b03bac3d9688ca2b4037de70318eb2a5c3cae31d6c5287c87eba.mp3",
+        "sha256": "549a8da4dee8b03bac3d9688ca2b4037de70318eb2a5c3cae31d6c5287c87eba"
+      },
+      "hanzi": "以为",
+      "id": "w_以为_yi3wei2",
+      "meaning_vi": "cứ tưởng",
+      "pinyin": "yǐwéi",
+      "tones": [
+        3,
+        2
+      ]
+    },
+    {
+      "hanzi": "怎么",
+      "id": "w_怎么_zen3me5",
+      "meaning_vi": "thế nào, làm sao",
+      "pinyin": "zěnme",
+      "tones": [
+        3,
+        5
+      ]
+    },
+    {
+      "hanzi": "办",
+      "id": "w_办_ban4",
+      "meaning_vi": "làm, xử lý",
+      "pinyin": "bàn",
+      "tones": [
+        4
+      ]
+    },
+    {
+      "hanzi": "别",
+      "id": "w_别_bie2",
+      "meaning_vi": "đừng",
+      "pinyin": "bié",
+      "tones": [
+        2
+      ]
+    },
+    {
+      "hanzi": "急",
+      "id": "w_急_ji2",
+      "meaning_vi": "vội, sốt ruột",
+      "pinyin": "jí",
+      "tones": [
+        2
+      ]
+    },
+    {
+      "clip": {
+        "bytes": 7542,
+        "file": "clips/5209959dfef1dbb2031acc8ae744ed040a66c6fb5907d4ae83b7b1c97362ec04.mp3",
+        "sha256": "5209959dfef1dbb2031acc8ae744ed040a66c6fb5907d4ae83b7b1c97362ec04"
+      },
+      "hanzi": "对面",
+      "id": "w_对面_dui4mian4",
+      "meaning_vi": "đối diện",
+      "pinyin": "duìmiàn",
+      "tones": [
+        4,
+        4
+      ]
+    },
+    {
+      "hanzi": "过来",
+      "id": "w_过来_guo4lai2",
+      "meaning_vi": "sang (về phía người nghe / điểm đến)",
+      "pinyin": "guòlái",
+      "tones": [
+        4,
+        2
+      ]
+    },
+    {
+      "hanzi": "几",
+      "id": "w_几_ji3",
+      "meaning_vi": "mấy, vài",
+      "pinyin": "jǐ",
+      "tones": [
+        3
+      ]
+    },
+    {
+      "hanzi": "分钟",
+      "id": "w_分钟_fen1zhong1",
+      "meaning_vi": "phút",
+      "pinyin": "fēnzhōng",
+      "tones": [
+        1,
+        1
+      ]
+    },
+    {
+      "hanzi": "后",
+      "id": "w_后_hou4",
+      "meaning_vi": "sau",
+      "pinyin": "hòu",
+      "tones": [
+        4
+      ]
+    },
+    {
+      "hanzi": "走",
+      "id": "w_走_zou3",
+      "meaning_vi": "đi bộ",
+      "pinyin": "zǒu",
+      "tones": [
+        3
+      ]
+    },
+    {
+      "hanzi": "到",
+      "id": "w_到_dao4",
+      "meaning_vi": "đến nơi",
+      "pinyin": "dào",
+      "tones": [
+        4
+      ]
+    },
+    {
+      "hanzi": "了",
+      "id": "w_了_le5",
+      "meaning_vi": "rồi",
+      "pinyin": "le",
+      "tones": [
+        5
+      ]
+    },
+    {
+      "hanzi": "我们",
+      "id": "w_我们_wo3men5",
+      "meaning_vi": "chúng ta",
+      "pinyin": "wǒmen",
+      "tones": [
+        3,
+        5
+      ]
+    },
+    {
+      "hanzi": "一起",
+      "id": "w_一起_yi4qi3",
+      "meaning_vi": "cùng nhau",
+      "pinyin": "yìqǐ",
+      "tones": [
+        4,
+        3
+      ]
+    },
+    {
+      "clip": {
+        "bytes": 7542,
+        "file": "clips/5721301d1c2399dbe35e200a64db136bb8fe25da2135b1adff6c7c16bfd88bad.mp3",
+        "sha256": "5721301d1c2399dbe35e200a64db136bb8fe25da2135b1adff6c7c16bfd88bad"
+      },
+      "hanzi": "进去",
+      "id": "w_进去_jin4qu4",
+      "meaning_vi": "đi vào",
+      "pinyin": "jìnqù",
+      "tones": [
+        4,
+        4
+      ]
+    },
+    {
+      "hanzi": "没",
+      "id": "w_没_mei2",
+      "meaning_vi": "không, chưa (phủ định \"đã\")",
+      "pinyin": "méi",
+      "tones": [
+        2
+      ]
+    },
+    {
+      "hanzi": "回答",
+      "id": "w_回答_hui2da2",
+      "meaning_vi": "trả lời",
+      "pinyin": "huídá",
+      "tones": [
+        2,
+        2
+      ]
+    },
+    {
+      "hanzi": "最后",
+      "id": "w_最后_zui4hou4",
+      "meaning_vi": "cuối cùng",
+      "pinyin": "zuìhòu",
+      "tones": [
+        4,
+        4
+      ]
+    },
+    {
+      "hanzi": "和",
+      "id": "w_和_he2",
+      "meaning_vi": "và",
+      "pinyin": "hé",
+      "tones": [
+        2
+      ]
+    },
+    {
+      "hanzi": "他们",
+      "id": "w_他们_ta1men5",
+      "meaning_vi": "họ",
+      "pinyin": "tāmen",
+      "tones": [
+        1,
+        5
+      ]
+    },
+    {
+      "hanzi": "还是",
+      "id": "w_还是_hai2shi5",
+      "meaning_vi": "hay là; vẫn (còn)",
+      "pinyin": "háishi",
+      "tones": [
+        2,
+        5
+      ]
+    },
+    {
+      "hanzi": "谁",
+      "id": "w_谁_shui2",
+      "meaning_vi": "ai",
+      "pinyin": "shuí",
+      "tones": [
+        2
+      ]
+    },
+    {
+      "hanzi": "知道",
+      "id": "w_知道_zhi1dao4",
+      "meaning_vi": "biết",
+      "pinyin": "zhīdào",
+      "tones": [
+        1,
+        4
+      ]
+    },
+    {
+      "hanzi": "同事",
+      "id": "w_同事_tong2shi4",
+      "meaning_vi": "đồng nghiệp",
+      "pinyin": "tóngshì",
+      "tones": [
+        2,
+        4
+      ]
+    },
+    {
+      "hanzi": "听",
+      "id": "w_听_ting1",
+      "meaning_vi": "nghe",
+      "pinyin": "tīng",
+      "tones": [
+        1
+      ]
+    },
+    {
+      "hanzi": "故事",
+      "id": "w_故事_gu4shi5",
+      "meaning_vi": "câu chuyện",
+      "pinyin": "gùshi",
+      "tones": [
+        4,
+        5
+      ]
+    },
+    {
+      "hanzi": "问",
+      "id": "w_问_wen4",
+      "meaning_vi": "hỏi",
+      "pinyin": "wèn",
+      "tones": [
+        4
+      ]
+    },
+    {
+      "hanzi": "他",
+      "id": "w_他_ta1",
+      "meaning_vi": "anh ấy",
+      "pinyin": "tā",
+      "tones": [
+        1
+      ]
+    },
+    {
+      "hanzi": "跟",
+      "id": "w_跟_gen1",
+      "meaning_vi": "cùng, với",
+      "pinyin": "gēn",
+      "tones": [
+        1
+      ]
+    },
+    {
+      "hanzi": "这",
+      "id": "w_这_zhe4",
+      "meaning_vi": "này, đây",
+      "pinyin": "zhè",
+      "tones": [
+        4
+      ]
+    },
+    {
+      "hanzi": "次",
+      "id": "w_次_ci4",
+      "meaning_vi": "lần",
+      "pinyin": "cì",
+      "tones": [
+        4
+      ]
+    },
+    {
+      "hanzi": "说",
+      "id": "w_说_shuo1",
+      "meaning_vi": "nói",
+      "pinyin": "shuō",
+      "tones": [
+        1
+      ]
+    },
+    {
+      "hanzi": "也",
+      "id": "w_也_ye3",
+      "meaning_vi": "cũng",
+      "pinyin": "yě",
+      "tones": [
+        3
+      ]
+    },
+    {
+      "hanzi": "再",
+      "id": "w_再_zai4",
+      "meaning_vi": "lại, nữa",
+      "pinyin": "zài",
+      "tones": [
+        4
+      ]
+    },
+    {
+      "hanzi": "遍",
+      "id": "w_遍_bian4",
+      "meaning_vi": "lượt, lần (nghe một lượt)",
+      "pinyin": "biàn",
+      "tones": [
+        4
+      ]
+    }
+  ]
+}

@@ -1,8 +1,8 @@
 {
-  "catalog_version": 15,
+  "catalog_version": 20,
   "lessons": [
     {
-      "base_url": "lessons/lesson_001/v7/",
+      "base_url": "lessons/lesson_001/v8/",
       "files": {
         "characters": {
           "bytes": 51510,
@@ -12,12 +12,17 @@
         "items": {
           "bytes": 240606,
           "file": "items.json",
-          "sha256": "5a6bce491e71684093dfdf1e1a4363295e1fc66773d2ebe5ce8c1f0c520826bf"
+          "sha256": "048b2d1499e46988ce46d060589489320d931b59d9c85c6ddd1f1ea3ce0d0eb7"
         },
         "manifest": {
           "bytes": 484,
           "file": "lesson.json",
-          "sha256": "7adf4a660e15ebc2a6a357f2e23f483f64e908e5e417ca4283fc078b82985762"
+          "sha256": "08e4bae8d70b1284c2d5693ba34832b9bd1c7d4916dab1254c037d4950eb6ee9"
+        },
+        "notes": {
+          "bytes": 6599,
+          "file": "notes.json",
+          "sha256": "cd3ab3f0ed4e273c852104161992e594021ec50fe382a0ae3b5dfc4ed1e22656"
         },
         "reference": {
           "bytes": 683488,
@@ -38,7 +43,7 @@
           "timeline": {
             "bytes": 144000,
             "file": "timeline_guided.json",
-            "sha256": "5a3a0687b2014c83e3e40c6207c895ff05db04ded2f747655490923a91284315"
+            "sha256": "fed9416ccc3aba463444f212752f0075e7172949cf2df3aacbfe3aa8c0427b33"
           }
         },
         "guided_zh": {
@@ -49,20 +54,20 @@
           "timeline": {
             "bytes": 110124,
             "file": "timeline_guided_zh.json",
-            "sha256": "445dcfd6cd4c791b22f80c186607e2f467180303caa7fa0c810d6550bd890184"
+            "sha256": "32bcf09522d7e54a537416734dee8f378d671779cabd4e8cef9dbc63204af027"
           }
         }
       },
-      "version": 7
+      "version": 8
     },
     {
       "id": "lesson_002",
-      "version": 2,
+      "version": 3,
       "order": 2,
       "format": "modes_v1",
       "title": "你在哪儿？",
       "level": "absolute_beginner",
-      "base_url": "lessons/lesson_002/v2/",
+      "base_url": "lessons/lesson_002/v3/",
       "tracks": {
         "hieu": {
           "file": "hieu.mp3",
@@ -72,7 +77,18 @@
           "timeline": {
             "file": "timeline_hieu.json",
             "bytes": 21561,
-            "sha256": "b02eb07656c43be51c8225cd4c6cb6ae576b1ba5b8763704c57c5f7eea108dcf"
+            "sha256": "38fd8eb72a968a23ec51d3e111c2d06e740607eef244767018bed1a890fc8e61"
+          }
+        },
+        "tu_vung": {
+          "file": "tu_vung.mp3",
+          "bytes": 4635628,
+          "sha256": "5bd456b2aa8f5a0bddeb0f1736119a3b202813b648765a77be376030d88cf209",
+          "duration_ms": 579381,
+          "timeline": {
+            "file": "timeline_tu_vung.json",
+            "bytes": 31495,
+            "sha256": "882bf9a1747e779ed010128a7dc14a1d9e74530c6d4a0097689cd9493af4c08b"
           }
         },
         "nghe": {
@@ -83,7 +99,7 @@
           "timeline": {
             "file": "timeline_nghe.json",
             "bytes": 12082,
-            "sha256": "cd655b08cc79b64296485a69fc73835d34d073bf6347477b5f2e3632b2049a60"
+            "sha256": "4d0283509afb01a120566c2fc0c90a59d89e426a26f4660b2b9a331365a5f570"
           }
         },
         "phan_xa": {
@@ -94,7 +110,7 @@
           "timeline": {
             "file": "timeline_phan_xa.json",
             "bytes": 26821,
-            "sha256": "1ac8d068008d020f8a5fe5005460d72f673f2a5d6a465e9920b01155c2d5d9a2"
+            "sha256": "bfd7a9b1a1617aa4b7fde41b5b5dd340cb24a0d99805fadecd794cd452a8bddb"
           }
         },
         "noi": {
@@ -105,7 +121,7 @@
           "timeline": {
             "file": "timeline_noi.json",
             "bytes": 12686,
-            "sha256": "c7966a3ae8f6d578ef5785b5226a8a8272c6032d0dd771f3bcc6350796628c67"
+            "sha256": "a73f5cbf5c0314635d3edf41f22c2b66dec5874bb46e3bf0dcea3654d73bd40f"
           }
         }
       },
@@ -113,34 +129,39 @@
         "manifest": {
           "file": "lesson.json",
           "bytes": 333,
-          "sha256": "984f72e0e3aeedaa9bde1c430d424c3d27a790f2f1c29494a807f8aa6d9d0cbf"
+          "sha256": "eae51780f87ff15b4745558871822b6d1971a62659654a95da9c91fb22d84140"
         },
         "reference": {
           "file": "reference.json",
-          "bytes": 346796,
-          "sha256": "4384197d032784d749f99fbc27d715e397d8b14546a08ddf9fb915e8c7533b76"
+          "bytes": 615890,
+          "sha256": "e5d5e62f6640d3bbc681db8bda40e0677a52c15ad95c09a2661c26d7a10fae71"
         },
         "items": {
           "file": "items.json",
-          "bytes": 124,
-          "sha256": "6cc1c43b386c1da51b6bf55c2dc2123d3dd13c6438e5d3206734d41785259109"
+          "bytes": 18295,
+          "sha256": "4eaf37d084542bf3e1ebca9ff412b67ea4eb6f536edcc9a8a260a09e8d58161b"
         },
         "characters": {
           "file": "characters.json",
-          "bytes": 6152,
-          "sha256": "d99285c84b4865fa10f81d30b0d0c8baeb41444fcab01b80a6bebc59eca52d81"
+          "bytes": 6932,
+          "sha256": "152d6bcf93523b9fbd0220b8dd39b11f70353e2487959a3acdda63001527977a"
+        },
+        "notes": {
+          "file": "notes.json",
+          "bytes": 8229,
+          "sha256": "eecb9459b05fa5b8ea4d2acd689d97ea945c2c3ada746165bcf6d2cb6bb33a86"
         }
       }
     }
   ],
   "schema_version": 1,
   "stroke_pack": {
-    "version": 2,
     "files": {
       "strokes.json": {
-        "sha256": "b9df2a7caeb2e54b83cc13fb97272461cde082acb3af9ea75bffbca5879e68fb",
-        "bytes": 300852
+        "bytes": 300852,
+        "sha256": "b9df2a7caeb2e54b83cc13fb97272461cde082acb3af9ea75bffbca5879e68fb"
       }
-    }
+    },
+    "version": 2
   }
 }

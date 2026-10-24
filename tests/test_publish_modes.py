@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 from dataclasses import asdict
 from pathlib import Path
@@ -90,3 +91,45 @@ def test_publish_modes_names_missing_audio(tmp_path):
     (settings.output_dir / "lesson_002" / "lesson_002_nghe.mp3").unlink()
     with pytest.raises(PublishError, match="lesson_002_nghe.mp3"):
         publish_lesson(lesson_path, settings, tmp_path / "published")
+
+
+LESSONS = Path(__file__).resolve().parents[1] / "lessons"
+
+
+def test_modes_publish_words_and_notes_then_drops_notes_without_source(tmp_path):
+    lesson_path, settings = _write_modes_fixture(tmp_path)
+    vocab = {"schema_version": 1, "lesson_id": "lesson_002", "status": "draft", "words": [
+        {"hanzi": "你好", "pinyin": "nǐ hǎo", "meaning_vi": "xin chào"}, {"hanzi": "再见", "pinyin": "zài jiàn", "meaning_vi": "tạm biệt"}]}
+    (lesson_path.parent / "lesson_002_vocab.json").write_text(json.dumps(vocab, ensure_ascii=False), encoding="utf-8")
+    shutil.copyfile(LESSONS / "lesson_002_notes.json", lesson_path.parent / "lesson_002_notes.json")
+    out = tmp_path / "published"
+    report = publish_lesson(lesson_path, settings, out)
+    items = json.loads((report.package_dir / "items.json").read_text(encoding="utf-8"))
+    assert [(w["hanzi"], w["tones"]) for w in items["words"]] == [("你好", [3, 3]), ("再见", [4, 4])]
+    assert all(w["id"] and w["pinyin"] and w["meaning_vi"] for w in items["words"])
+    notes = json.loads((report.package_dir / "notes.json").read_text(encoding="utf-8"))
+    assert notes["lesson_version"] == 1 and notes["patterns"] and notes["questions"]
+    entry = json.loads((out / "catalog.json").read_text(encoding="utf-8"))["lessons"][0]
+    assert entry["files"]["notes"]["file"] == "notes.json"
+    assert entry["files"]["notes"]["bytes"] == (report.package_dir / "notes.json").stat().st_size
+    assert publish_lesson(lesson_path, settings, out).published is False
+    (lesson_path.parent / "lesson_002_notes.json").unlink()
+    again = publish_lesson(lesson_path, settings, out)
+    assert again.published and again.version == 2 and not (again.package_dir / "notes.json").exists()
+    assert "notes" not in json.loads((out / "catalog.json").read_text(encoding="utf-8"))["lessons"][0]["files"]
+
+
+def test_real_lesson_2_reference_tokens_carry_vocab_item_ids():
+    from mandarin_course.lesson_schema import load_lesson
+    from mandarin_course.publish_timeline import _reference_lines
+    from mandarin_course.publish_tokens import load_vocab, word_item_id
+
+    vocab = load_vocab(LESSONS / "lesson_002_vocab.json", "lesson_002")
+    ids = {w.hanzi: word_item_id(w.hanzi, w.pinyin) for w in vocab.words}
+    failures: list[str] = []
+    tokens = [t for mode in publish_modes.MODES
+              for line in _reference_lines(load_lesson(LESSONS / f"lesson_002_{mode}.json"), ids, failures)
+              for t in line.get("tokens") or []]
+    assert not failures
+    assert any(t["hanzi"] == "门口" and t.get("item_id") == ids["门口"] for t in tokens)
+    assert all(t["item_id"] == ids[t["hanzi"]] for t in tokens if "item_id" in t)

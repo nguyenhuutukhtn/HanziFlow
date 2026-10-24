@@ -13,6 +13,7 @@ from .publish_support import (
     PublishReport, _artifact, _cache_path, _catalog_entry, _make_clip,
     _matches_catalog_entry, _write_json,
 )
+from .publish_notes import load_notes, notes_body
 from .publish_timeline import PublishError, _enrich_timeline, _load_and_validate_timeline, _reference_lines
 from .publish_tokens import _strip_punctuation, load_vocab, sentence_item_id, tokenize_mandarin, tones_from_pinyin, word_item_id
 from .story.ledger import chars_taught_before
@@ -44,6 +45,7 @@ def publish_lesson(lesson_path: Path, settings: Settings, out: Path, force: bool
     practice_present = bool(practice and practice_source.is_file())
     vocab = load_vocab(lesson_path.parent / f"{lesson.lesson_id}_vocab.json", lesson.lesson_id)
     item_ids = {word.hanzi: word_item_id(word.hanzi, word.pinyin) for word in vocab.words}
+    notes = load_notes(lesson_path.parent / f"{lesson.lesson_id}_notes.json", lesson.lesson_id)
     character_bundle = CharacterLoaders()
     missing_character_data = character_bundle.missing_sources()
     if missing_character_data:
@@ -205,6 +207,8 @@ def publish_lesson(lesson_path: Path, settings: Settings, out: Path, force: bool
             package / "characters.json",
             characters,
         )
+        if notes is not None:
+            _write_json(package / "notes.json", {"schema_version": 1, "lesson_id": lesson.lesson_id, "lesson_version": trial_version, **notes_body(notes)})
 
         if not force and _matches_catalog_entry(package, previous_entry):
             existing = lessons_dir / f"v{current_version}"
@@ -227,6 +231,8 @@ def publish_lesson(lesson_path: Path, settings: Settings, out: Path, force: bool
                 "schema_version": 1, "lesson_id": lesson.lesson_id, "lesson_version": final_version,
                 "words": words, "sentences": sentence_items, "qa": qa_items,
             })
+            if notes is not None:
+                _write_json(package / "notes.json", {"schema_version": 1, "lesson_id": lesson.lesson_id, "lesson_version": final_version, **notes_body(notes)})
             guided_enriched["lesson_version"] = final_version
             _write_json(package / "timeline_guided.json", guided_enriched)
             if guided_zh_enriched is not None:
@@ -278,6 +284,8 @@ def publish_lesson(lesson_path: Path, settings: Settings, out: Path, force: bool
             "characters": _artifact(destination / "characters.json", "characters.json"),
         },
     }
+    if (destination / "notes.json").is_file():
+        catalog_entry["files"]["notes"] = _artifact(destination / "notes.json", "notes.json")
     catalog = json.loads(catalog_path.read_text(encoding="utf-8")) if catalog_path.is_file() else {"schema_version": 1, "catalog_version": 1, "lessons": []}
     previous_lessons = catalog.get("lessons", [])
     next_lessons = sorted(

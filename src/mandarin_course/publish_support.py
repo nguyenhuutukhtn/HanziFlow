@@ -59,7 +59,7 @@ def _matches_catalog_entry(package: Path, entry: dict[str, Any] | None) -> bool:
             digest = _digest(path)
             if digest["sha256"] != old.get("sha256") or digest["bytes"] != old.get("bytes"):
                 return False
-        return True
+        return _notes_match(package, files)
     checks: list[tuple[Path, dict[str, Any] | None]] = [
         (package / "lesson.json", files.get("manifest")),
         (package / "reference.json", files.get("reference")),
@@ -90,7 +90,15 @@ def _matches_catalog_entry(package: Path, entry: dict[str, Any] | None) -> bool:
         digest = _digest(path)
         if digest["sha256"] != old.get("sha256") or digest["bytes"] != old.get("bytes"):
             return False
-    return True
+    return _notes_match(package, files)
+
+
+def _notes_match(package: Path, files: dict[str, Any]) -> bool:
+    """notes.json is optional: package and catalog entry must agree on its presence and digest."""
+    path, old = package / "notes.json", files.get("notes")
+    if not path.is_file():
+        return old is None
+    return old is not None and _digest(path) == {"bytes": old.get("bytes"), "sha256": old.get("sha256")}
 
 
 def _json_bytes(value: Any, *, sort_keys: bool = True) -> bytes:

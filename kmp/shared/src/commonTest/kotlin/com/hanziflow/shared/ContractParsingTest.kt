@@ -54,6 +54,28 @@ class ContractParsingTest {
     }
 
     @Test
+    fun parsesRealNotesAndModesWordsForBothLessons() {
+        val catalog = CourseJson.catalog(fixtureText("catalog_modes.json"))
+        val linear = CourseJson.notes(fixtureText("notes.json"))
+        val modes = CourseJson.notes(fixtureText("notes_modes.json"))
+        val modesItems = CourseJson.items(fixtureText("items_modes.json"))
+
+        assertEquals("lesson_001", linear.lessonId)
+        assertEquals(7, linear.patterns.size)
+        assertEquals("lesson_002", modes.lessonId)
+        assertEquals(3, modes.patterns.size)
+        for (notes in listOf(linear, modes)) {
+            assertTrue(notes.questions.isNotEmpty())
+            assertTrue(notes.patterns.all { it.explainVi.isNotBlank() && it.examples.isNotEmpty() })
+            assertTrue(notes.questions.all { it.howToAnswerVi.isNotBlank() && it.examples.isNotEmpty() })
+        }
+        assertEquals(listOf("notes.json", "notes.json"), catalog.lessons.map { assertNotNull(it.files.notes).file })
+        assertEquals(88, modesItems.words.size)
+        assertTrue(modesItems.words.all { it.id.isNotBlank() && it.hanzi.isNotBlank() && it.tones.isNotEmpty() && it.meaningVi.isNotBlank() })
+        // Inline catalogs in the tests above carry no notes entry and still parse (notes is optional).
+    }
+
+    @Test
     fun parsesRealModesV1Package() {
         val lesson = CourseJson.catalog(fixtureText("catalog_modes.json")).lessons.single { it.id == "lesson_002" }
         val reference = CourseJson.reference(fixtureText("reference_modes.json"))
@@ -61,7 +83,7 @@ class ContractParsingTest {
         val noi = assertNotNull(reference.tracks.forName("noi"))
 
         assertEquals("modes_v1", lesson.format)
-        assertEquals(listOf("hieu", "nghe", "phan_xa", "noi"), lesson.tracks.names)
+        assertEquals(listOf("hieu", "tu_vung", "nghe", "phan_xa", "noi"), lesson.tracks.names)
         assertEquals(43, noi.size)
         assertEquals(121, assertNotNull(reference.tracks.forName("phan_xa")).size)
         assertTrue(timeline.cues.all { cue -> cue.lineId in noi.map { it.id } })

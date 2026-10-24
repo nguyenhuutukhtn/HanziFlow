@@ -53,7 +53,9 @@ keys under its `tracks` object.
   Clients still accept an older catalog entry with only the original four. Each has `<mode>.mp3` and
   `timeline_<mode>.json`.
 
-For `modes_v1`, `items.json` is present with an empty item list. `characters.json`
+For `modes_v1`, `items.json` carries `words` (from `lessons/<id>_vocab.json`, same
+shape as lesson 1; a word has a `clip` only when the lesson has a stand-alone line
+for it) with empty `sentences` and `qa`; with no vocab sidecar the word list is empty. `characters.json`
 may omit characters without Vietnamese data; publish reports those omissions as a
 warning. Clients display the mode tracks in the order listed above.
 Mode tracks also use the shared mode metadata (`id`, Vietnamese `label`, and
@@ -85,7 +87,8 @@ The only file a client checks to discover new or updated content. Every download
       "files": {
         "manifest":  { "file": "lesson.json",    "bytes": 12400, "sha256": "..." },
         "reference": { "file": "reference.json", "bytes": 8900,  "sha256": "..." },
-        "items":     { "file": "items.json",     "bytes": 6100,  "sha256": "..." }
+        "items":     { "file": "items.json",     "bytes": 6100,  "sha256": "..." },
+        "notes":     { "file": "notes.json",     "bytes": 6600,  "sha256": "..." }
       }
     }
   ]
@@ -105,6 +108,24 @@ a timeline whose cue IDs all exist in that track's reference lines.
 Full transcript for the reference view: per line speaker, pinyin, Hanzi, Vietnamese meaning, and a **token list** (`hanzi`, `pinyin`, `item_id` if the token is a lesson item). Clients render each token as a tappable word; the lookup popup shows pinyin and meaning and plays the item clip. Segmentation is done once in the pipeline, never in the client.
 Dialogue segments with `turns` produce one reference line per turn; their pinyin
 and translation are authored on each turn so publish never has to infer a split.
+
+### notes.json (optional text notes)
+
+Validated copy of `lessons/<id>_notes.json` with `lesson_version` added; written for
+reading when a sentence was not understood. Present (and listed in the catalog as
+`files.notes`) only when the lesson has a notes source; clients treat it as optional.
+Publish fails naming the entry `id` on a missing/empty field, an entry without examples,
+or a duplicate id (`src/mandarin_course/publish_notes.py`).
+
+```json
+{
+  "schema_version": 1, "lesson_id": "lesson_002", "lesson_version": 3,
+  "patterns": [ { "id": "p_zai_place", "pattern": "在 + nơi chốn", "explain_vi": "...",
+      "examples": [ { "hanzi": "我在八楼。", "pinyin": "wǒ zài bā lóu.", "meaning_vi": "Tôi ở tầng tám." } ] } ],
+  "questions": [ { "id": "q_zai_nar", "hanzi": "你在哪儿？", "pinyin": "Nǐ zài nǎr?", "meaning_vi": "Bạn ở đâu?",
+      "how_to_answer_vi": "...", "examples": [ { "hanzi": "...", "pinyin": "...", "meaning_vi": "..." } ] } ]
+}
+```
 
 ### items.json (test item bank)
 

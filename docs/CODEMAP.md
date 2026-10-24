@@ -20,12 +20,13 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `lesson_schema.py` [116] — Validated, content-driven lesson schema.
 - `logs.py` [14] — Shared helper: write full detail behind a short CLI summary (docs/workflow.md).
 - `publish.py` [32] — Public publishing API; implementation is split into focused modules.
-- `publish_core.py` [299]
-- `publish_modes.py` [168] — Publishing support for the four-track ``modes_v1`` lesson format.
+- `publish_core.py` [307] ⚠
+- `publish_modes.py` [217] — Publishing support for the four-track ``modes_v1`` lesson format.
+- `publish_notes.py` [93] — Validation of the optional per-lesson ``lessons/<id>_notes.json`` text notes.
 - `publish_render.py` [39]
-- `publish_support.py` [141]
+- `publish_support.py` [149]
 - `publish_timeline.py` [204]
-- `publish_tokens.py` [207]
+- `publish_tokens.py` [208]
 - `review.py` [27] — Small, transparent spaced-repetition policy.
 - `storage.py` [60] — SQLite progress store. Ratings are learner supplied; no automatic scoring.
 - `story/__init__.py` [7] — Story source (`lessons/src/*.story.md`) -> guided + practice lesson JSON.
@@ -67,7 +68,8 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `test_metrics_rows.py` [88]
 - `test_publish.py` [437] ⚠
 - `test_publish_guided_zh.py` [28]
-- `test_publish_modes.py` [92]
+- `test_publish_modes.py` [135]
+- `test_publish_notes.py` [60]
 - `test_review.py` [18]
 - `test_storage.py` [12]
 - `test_story_builder.py` [78]
@@ -84,7 +86,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 
 ## KMP shared (main) (`kmp/shared/src/commonMain/`)
 
-- `kotlin/com/hanziflow/shared/Models.kt` [252] — Clip, Track, Tracks, TracksSerializer — Track by its published name; null if absent.
+- `kotlin/com/hanziflow/shared/Models.kt` [284] — Clip, Track, Tracks, TracksSerializer — Track by its published name; null if absent.
 - `kotlin/com/hanziflow/shared/characters/Characters.kt` [51] — LessonCharacters, CharacterEntry, ComponentEntry, CharacterIndex
 - `kotlin/com/hanziflow/shared/characters/StrokeData.kt` [9] — StrokeEntry
 - `kotlin/com/hanziflow/shared/modes/GapState.kt` [19] — GapState
@@ -107,7 +109,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 ## KMP shared (tests) (`kmp/shared/src/commonTest/`)
 
 - `kotlin/com/hanziflow/shared/CharacterContractTest.kt` [46] — CharacterContractTest
-- `kotlin/com/hanziflow/shared/ContractParsingTest.kt` [130] — ContractParsingTest
+- `kotlin/com/hanziflow/shared/ContractParsingTest.kt` [152] — ContractParsingTest
 - `kotlin/com/hanziflow/shared/modes/GapStateTest.kt` [26] — GapStateTest
 - `kotlin/com/hanziflow/shared/modes/ModeInfoTest.kt` [22] — ModeInfoTest
 - `kotlin/com/hanziflow/shared/modes/RepeatUnitsTest.kt` [19] — RepeatUnitsTest
@@ -202,7 +204,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `kotlin/com/hanziflow/ui/library/LibraryViewModelTest.kt` [77] — LibraryViewModelTest
 - `kotlin/com/hanziflow/ui/modes/ModePickerScreenTest.kt` [48] — ModePickerScreenTest
 - `kotlin/com/hanziflow/ui/modes/ModePickerScreenshotTest.kt` [35] — ModePickerScreenshotTest
-- `kotlin/com/hanziflow/ui/modes/ModePickerViewModelTest.kt` [57] — ModePickerViewModelTest
+- `kotlin/com/hanziflow/ui/modes/ModePickerViewModelTest.kt` [44] — ModePickerViewModelTest
 - `kotlin/com/hanziflow/ui/navigation/AppShellTest.kt` [154] — AppShellTest
 - `kotlin/com/hanziflow/ui/player/ModePlayerUiTest.kt` [89] — ModePlayerUiTest
 - `kotlin/com/hanziflow/ui/player/PlayerLessonMetaTest.kt` [57] — PlayerLessonMetaTest
