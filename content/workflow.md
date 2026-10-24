@@ -66,13 +66,14 @@ must be in exactly one tier below with its exposure band:
 | 2 | Topic: the user writes it in `01_brief.md` "Chosen topic"; brainstorm prompt below only if the user wants ideas | user (AI A optional) | 00, 01 | `01_brief.md` / `02_topics.md` |
 | 3 | Core sentences + word tiers | AI A | 00–02 | `03_core.md` |
 | 4 | Vocab review vs lesson 1 → ★ | AI B | 00, 01, 03 | `04_core_review.md` |
-| 5 | Story script | AI A | 00, 01, 03 | `05_story.md` |
+| 4b | **Fact table** (added 2026-10-24 after lesson 2 contradictions): who is where at each moment, places and how they relate, what each character believes vs reality, how the problem is solved. Every later line (story, Từ vựng, Phản xạ answers, notes) must agree with it; retold variants are listed and announced as variants | AI A | 03 | `04b_facts.md` |
+| 5 | Story script | AI A | 00, 01, 03, 04b | `05_story.md` |
 | 6 | Language review | AI B | 05 | `06_lang_review.md` |
 | 7 | Learner role-play review (+ the user reads too) | AI C | 00, 05 | `07_learner_review.md` |
 | 8 | Fix flagged lines → ★ | AI A | 05–07 | `05_story.md` (v2) |
-| 9 | Four modes | AI A (one chat per mode is fine) | 01, 03, 05 | `09_modes.md` |
+| 9 | Five modes (Hiểu, Từ vựng — Chinese-only explanations, Nghe, Phản xạ, Nói) | AI A (one chat per mode is fine) | 01, 03, 04b, 05 | `09_modes.md` |
 | 10 | Characters: Hán-Việt + meaning, two AIs independently | AI A + AI B | 03, 09 | `10_hanzi_A.md`, `10_hanzi_B.md` |
-| 11 | Final review + exposure check → ★ | AI B or D, outside reader for flagged lines | all | `11_final_review.md` |
+| 11 | Final review + exposure check → ★ — **two reviewers from different vendors, one a Chinese-native model (Qwen)**, on the full exported script (all modes), checked against `04b_facts.md`: story logic, naturalness, gloss accuracy, one answer + clear subject per question. Before any paid TTS | AI B + Qwen, outside reader for flagged lines | all | `11_final_review.md` |
 
 ## Prompts (copy into a new chat, attach the files named)
 
