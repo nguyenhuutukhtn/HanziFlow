@@ -10,12 +10,12 @@
       "examples": [
         {
           "hanzi": "我在八楼。",
-          "pinyin": "Wǒ zài bā lóu.",
+          "pinyin": "wǒ zài bā lóu.",
           "meaning_vi": "Tôi ở tầng tám."
         },
         {
           "hanzi": "我在大厅。",
-          "pinyin": "Wǒ zài dàtīng.",
+          "pinyin": "wǒ zài dàtīng.",
           "meaning_vi": "Tôi ở sảnh."
         },
         {
@@ -32,7 +32,7 @@
       "examples": [
         {
           "hanzi": "你在哪儿？",
-          "pinyin": "Nǐ zài nǎr?",
+          "pinyin": "nǐ zài nǎr?",
           "meaning_vi": "Bạn đang ở đâu?"
         },
         {
@@ -49,17 +49,17 @@
       "examples": [
         {
           "hanzi": "进不去。",
-          "pinyin": "Jìn bu qù.",
+          "pinyin": "jìn bu qù.",
           "meaning_vi": "Không vào được."
         },
         {
           "hanzi": "没有卡，进不去。",
-          "pinyin": "Méiyǒu kǎ, jìn bu qù.",
+          "pinyin": "méiyǒu kǎ, jìn bu qù.",
           "meaning_vi": "Không có thẻ, không vào được."
         },
         {
           "hanzi": "看不见。我在这里，你在哪儿？",
-          "pinyin": "Kàn bu jiàn. Wǒ zài zhèlǐ, nǐ zài nǎr?",
+          "pinyin": "kàn bu jiàn. wǒ zài zhèlǐ, nǐ zài nǎr?",
           "meaning_vi": "Không thấy. Tôi đang ở đây, cô ở đâu?"
         }
       ]
@@ -69,13 +69,13 @@
     {
       "id": "q_zai_nar",
       "hanzi": "你在哪儿？",
-      "pinyin": "Nǐ zài nǎr?",
+      "pinyin": "nǐ zài nǎr?",
       "meaning_vi": "Bạn đang ở đâu?",
       "how_to_answer_vi": "Trả lời bằng 我在 + nơi chốn. Chỉ cần đổi nơi chốn.",
       "examples": [
         {
           "hanzi": "我在大厅。",
-          "pinyin": "Wǒ zài dàtīng.",
+          "pinyin": "wǒ zài dàtīng.",
           "meaning_vi": "Tôi ở sảnh."
         },
         {
@@ -94,12 +94,12 @@
       "examples": [
         {
           "hanzi": "不在，王芳在楼下。",
-          "pinyin": "Bú zài, Wáng Fāng zài lóu xià.",
+          "pinyin": "bú zài, Wáng Fāng zài lóu xià.",
           "meaning_vi": "Không, Vương Phương ở dưới tòa nhà."
         },
         {
           "hanzi": "在，陈东在八楼。",
-          "pinyin": "Zài, Chén Dōng zài bā lóu.",
+          "pinyin": "zài, Chén Dōng zài bā lóu.",
           "meaning_vi": "Có, Trần Đông ở tầng tám."
         }
       ]
@@ -112,19 +112,14 @@
       "how_to_answer_vi": "是不是 là \"có phải không\". Trả lời 是 (phải) hoặc 不是 (không phải), rồi nói thêm sự thật.",
       "examples": [
         {
-          "hanzi": "是，王芳以为她在A座。",
-          "pinyin": "Shì, Wáng Fāng yǐwéi tā zài A zuò.",
-          "meaning_vi": "Phải, Vương Phương tưởng mình ở tòa A."
+          "hanzi": "不是。王芳以为她在A座，她在B座。",
+          "pinyin": "bú shì. Wáng Fāng yǐwéi tā zài A zuò, tā zài B zuò.",
+          "meaning_vi": "Không phải. Vương Phương tưởng mình ở tòa A, cô ấy ở tòa B."
         },
         {
-          "hanzi": "不是。",
-          "pinyin": "Bú shì.",
-          "meaning_vi": "Không phải."
-        },
-        {
-          "hanzi": "王芳不在A座，她在B座。",
-          "pinyin": "Wáng Fāng bú zài A zuò, tā zài B zuò.",
-          "meaning_vi": "Vương Phương không ở toà A, cô ấy ở toà B."
+          "hanzi": "是。陈东在A座。",
+          "pinyin": "shì. Chén Dōng zài A zuò.",
+          "meaning_vi": "Phải. Trần Đông ở tòa A."
         }
       ]
     },
@@ -156,12 +151,12 @@
       "examples": [
         {
           "hanzi": "咖啡店。",
-          "pinyin": "Kāfēidiàn.",
+          "pinyin": "kāfēidiàn.",
           "meaning_vi": "Quán cà phê."
         },
         {
           "hanzi": "我旁边有一家咖啡店。",
-          "pinyin": "Wǒ pángbiān yǒu yì jiā kāfēidiàn.",
+          "pinyin": "wǒ pángbiān yǒu yì jiā kāfēidiàn.",
           "meaning_vi": "Bên cạnh tôi có một quán cà phê."
         }
       ]
@@ -169,7 +164,7 @@
     {
       "id": "q_shei",
       "hanzi": "谁在八楼？",
-      "pinyin": "Shuí zài bā lóu?",
+      "pinyin": "shuí zài bā lóu?",
       "meaning_vi": "Ai ở tầng tám?",
       "how_to_answer_vi": "谁 là \"ai\". Trả lời bằng tên người: nói thẳng tên, hoặc nói cả câu.",
       "examples": [
@@ -216,13 +211,13 @@
     {
       "id": "q_zenme_ban",
       "hanzi": "怎么办？",
-      "pinyin": "Zěnme bàn?",
+      "pinyin": "zěnme bàn?",
       "meaning_vi": "Làm sao đây?",
       "how_to_answer_vi": "怎么办 là \"làm sao đây\". Người kia thường trả lời bằng lời khuyên hoặc việc nên làm.",
       "examples": [
         {
           "hanzi": "你马上过来，我在门口等你。",
-          "pinyin": "Nǐ mǎshàng guòlái, wǒ zài ménkǒu děng nǐ.",
+          "pinyin": "nǐ mǎshàng guòlái, wǒ zài ménkǒu děng nǐ.",
           "meaning_vi": "Bạn sang đây ngay, tôi đợi bạn ở cửa."
         }
       ]

@@ -91,10 +91,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "门口，意思是门那里。",
+      "text": "门口，意思是门的旁边。",
       "pause_after_ms": 1000,
-      "pinyin": "Ménkǒu, yì sī shì mén nàlǐ.",
-      "translation": "门口 nghĩa là chỗ ở cửa."
+      "pinyin": "Ménkǒu, yìsi shì mén de pángbiān.",
+      "translation": "门口 nghĩa là chỗ ngay cạnh cửa."
     },
     {
       "id": "tu_vung_v8",
@@ -180,10 +180,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "大厅在楼里面。大厅最大。",
+      "text": "大厅在楼里面，很大。",
       "pause_after_ms": 1000,
-      "pinyin": "Dàtīng zài lóu lǐmiàn. Dàtīng zuì dà.",
-      "translation": "Sảnh ở trong tòa nhà. Sảnh là chỗ lớn nhất."
+      "pinyin": "Dàtīng zài lóu lǐmiàn, hěn dà.",
+      "translation": "Sảnh ở trong tòa nhà, rất rộng."
     },
     {
       "id": "tu_vung_v16",
@@ -227,7 +227,7 @@
       "speaker": "coach_zh",
       "text": "楼下。",
       "pause_after_ms": 1000,
-      "pinyin": "Lóuxià.",
+      "pinyin": "Lóu xià.",
       "translation": "Dưới lầu."
     },
     {
@@ -238,8 +238,8 @@
       "speaker": "coach_zh",
       "text": "八楼，在上面。楼下，在下面。",
       "pause_after_ms": 1000,
-      "pinyin": "Bālóu, zài shàngmiàn. Lóuxià, zài xiàmiàn.",
-      "translation": "Tầng tám ở trên. 楼下 ở dưới."
+      "pinyin": "Bā lóu, zài shàngmiàn. Lóu xià, zài xiàmiàn.",
+      "translation": "Tầng tám ở phía trên. 楼下 ở phía dưới."
     },
     {
       "id": "tu_vung_v21",
@@ -255,13 +255,13 @@
     {
       "id": "tu_vung_v22",
       "activity": "Từ vựng",
-      "type": "dialogue",
+      "type": "narration",
       "language": "zh-CN",
-      "speaker": "wang_fang",
-      "text": "你在八楼，我在楼下。",
+      "speaker": "coach_zh",
+      "text": "陈东在A座八楼，王芳在B座楼下。",
       "pause_after_ms": 1000,
-      "pinyin": "Nǐ zài bā lóu, wǒ zài lóu xià.",
-      "translation": "Bạn ở tầng tám, tôi ở dưới lầu."
+      "pinyin": "Chén Dōng zài A zuò bā lóu, Wáng Fāng zài B zuò lóu xià.",
+      "translation": "Trần Đông ở tầng tám tòa A, Vương Phương ở dưới lầu tòa B."
     },
     {
       "id": "tu_vung_v23",
@@ -271,7 +271,7 @@
       "speaker": "coach_zh",
       "text": "楼下。你说。",
       "pause_after_ms": 2680,
-      "pinyin": "Lóuxià. Nǐ shuō.",
+      "pinyin": "Lóu xià. Nǐ shuō.",
       "translation": "Dưới lầu. Bạn nói.",
       "gap": "answer"
     },
@@ -392,10 +392,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "咖啡店。卖咖啡的店。",
+      "text": "咖啡店。有咖啡的店。",
       "pause_after_ms": 1000,
-      "pinyin": "Kāfēidiàn. Mài kā fēi de diàn.",
-      "translation": "Quán cà phê: quán bán cà phê."
+      "pinyin": "Kāfēidiàn. Yǒu kāfēi de diàn.",
+      "translation": "Quán cà phê: quán có cà phê."
     },
     {
       "id": "tu_vung_v35",
@@ -437,10 +437,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "我在这里，你在那里，我们面对面。",
+      "text": "我在A座，你在B座，A座在B座对面。",
       "pause_after_ms": 1000,
-      "pinyin": "Wǒ zài zhèlǐ, nǐ zài nàlǐ, wǒmen miànduìmiàn.",
-      "translation": "Tôi ở đây, bạn ở kia, hai ta đối mặt nhau."
+      "pinyin": "Wǒ zài A zuò, nǐ zài B zuò, A zuò zài B zuò duìmiàn.",
+      "translation": "Tôi ở tòa A, bạn ở tòa B, tòa A đối diện tòa B."
     },
     {
       "id": "tu_vung_v39",
@@ -448,21 +448,21 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "这座楼在那座楼对面。",
+      "text": "A座在B座对面。",
       "pause_after_ms": 1000,
-      "pinyin": "Zhè zuò lóu zài nà zuò lóu duìmiàn.",
-      "translation": "Tòa nhà này ở đối diện tòa nhà kia."
+      "pinyin": "A zuò zài B zuò duìmiàn.",
+      "translation": "Tòa A ở đối diện tòa B. (trong truyện)"
     },
     {
       "id": "tu_vung_v40",
       "activity": "Từ vựng",
-      "type": "dialogue",
+      "type": "narration",
       "language": "zh-CN",
-      "speaker": "wang_fang",
-      "text": "咖啡店在楼的对面。",
+      "speaker": "coach_zh",
+      "text": "咖啡店在B座旁边。",
       "pause_after_ms": 1000,
-      "pinyin": "Kāfēidiàn zài lóu de duìmiàn.",
-      "translation": "Quán cà phê ở đối diện tòa nhà."
+      "pinyin": "Kāfēidiàn zài B zuò pángbiān.",
+      "translation": "Quán cà phê ở cạnh tòa B. (trong truyện)"
     },
     {
       "id": "tu_vung_v41",
@@ -506,7 +506,7 @@
       "speaker": "coach_zh",
       "text": "看见，意思是：我看到了。",
       "pause_after_ms": 1000,
-      "pinyin": "Kànjiàn, yì sī shì: wǒ kàn dào le.",
+      "pinyin": "Kànjiàn, yìsi shì: wǒ kàndào le.",
       "translation": "看见 nghĩa là: tôi đã nhìn thấy."
     },
     {
@@ -593,10 +593,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "开会，意思是大家在一起说话。",
+      "text": "开会，意思是大家一起说事情。",
       "pause_after_ms": 1000,
-      "pinyin": "Kāihuì, yì sī shì dà jiā zài yìqǐ shuō huà.",
-      "translation": "开会 nghĩa là mọi người ở cùng nhau nói chuyện."
+      "pinyin": "Kāihuì, yìsi shì dàjiā yìqǐ shuō shìqing.",
+      "translation": "开会 nghĩa là mọi người cùng bàn việc."
     },
     {
       "id": "tu_vung_v53",
@@ -638,10 +638,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "等一下，意思是：你别走，我马上来。",
+      "text": "等一下，意思是：你等我。",
       "pause_after_ms": 1000,
-      "pinyin": "Děng yíxià, yì sī shì: nǐ bié zǒu, wǒ mǎshàng lái.",
-      "translation": "等一下 nghĩa là: bạn đừng đi, tôi đến ngay."
+      "pinyin": "Děng yíxià, yìsi shì: nǐ děng wǒ.",
+      "translation": "等一下 nghĩa là: bạn đợi tôi."
     },
     {
       "id": "tu_vung_v57",
@@ -660,10 +660,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "马上，意思是：一分钟后，我来。",
+      "text": "马上，意思是：很快就来。",
       "pause_after_ms": 1000,
-      "pinyin": "Mǎshàng, yì sī shì: yì fēnzhōng hòu, wǒ lái.",
-      "translation": "马上 nghĩa là: một phút nữa tôi đến."
+      "pinyin": "Mǎshàng, yìsi shì: hěn kuài jiù lái.",
+      "translation": "马上 nghĩa là: sẽ đến rất nhanh."
     },
     {
       "id": "tu_vung_v59",
@@ -673,7 +673,7 @@
       "speaker": "coach_zh",
       "text": "接你，意思是：我去找你，我们一起走。",
       "pause_after_ms": 1000,
-      "pinyin": "Jiē nǐ, yì sī shì: wǒ qù zhǎo nǐ, wǒmen yìqǐ zǒu.",
+      "pinyin": "Jiē nǐ, yìsi shì: wǒ qù zhǎo nǐ, wǒmen yìqǐ zǒu.",
       "translation": "接你 nghĩa là: tôi đi tìm bạn, rồi cùng đi."
     },
     {
@@ -716,10 +716,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "她说\"怎么办\"，他说\"别急\"。",
+      "text": "她很急，他说\"别急\"。",
       "pause_after_ms": 1000,
-      "pinyin": "Tā shuō \"zěnme bàn\", tā shuō \"bié jí\".",
-      "translation": "Cô ấy nói \"làm sao đây\", anh ấy nói \"đừng vội\"."
+      "pinyin": "Tā hěn jí, tā shuō \"bié jí\".",
+      "translation": "Cô ấy rất vội, anh ấy nói \"đừng vội\"."
     },
     {
       "id": "tu_vung_v64",
@@ -727,10 +727,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "别急，你马上过来，我在门口等你。",
+      "text": "别急，A座在B座对面。你马上过来，我在门口等你。",
       "pause_after_ms": 1000,
-      "pinyin": "Bié jí, nǐ mǎshàng guòlái, wǒ zài ménkǒu děng nǐ.",
-      "translation": "Đừng vội, bạn sang ngay đi, tôi đợi bạn ở cửa. (trong truyện)"
+      "pinyin": "Bié jí, A zuò zài B zuò duìmiàn. Nǐ mǎshàng guòlái, wǒ zài ménkǒu děng nǐ.",
+      "translation": "Đừng vội, tòa A đối diện tòa B. Bạn sang ngay đi, tôi đợi bạn ở cửa. (trong truyện)"
     },
     {
       "id": "tu_vung_v65",
@@ -783,10 +783,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "我以为我在八楼。",
+      "text": "我以为我在A座。",
       "pause_after_ms": 1000,
-      "pinyin": "Wǒ yǐwéi wǒ zài bā lóu.",
-      "translation": "Tôi tưởng mình ở tầng tám."
+      "pinyin": "Wǒ yǐwéi wǒ zài A zuò.",
+      "translation": "Tôi tưởng mình ở tòa A."
     },
     {
       "id": "tu_vung_v70",
@@ -817,10 +817,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "\"在\"，意思是：他在那里。",
+      "text": "\"在\"，意思是：我在这里。",
       "pause_after_ms": 1000,
-      "pinyin": "\"zài\", yì sī shì: tā zài nàlǐ.",
-      "translation": "在 nghĩa là: anh ấy ở đó."
+      "pinyin": "\"zài\", yìsi shì: wǒ zài zhèlǐ.",
+      "translation": "在 nghĩa là: tôi ở đây."
     },
     {
       "id": "tu_vung_v73",
@@ -828,10 +828,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "先说谁，再说\"在\"，再说哪儿。",
+      "text": "先说名字，再说\"在\"，再说门口、大厅。",
       "pause_after_ms": 1000,
-      "pinyin": "Xiān shuō shuí, zài shuō \"zài\", zài shuō nǎr.",
-      "translation": "Nói ai trước, rồi 在, rồi nói ở đâu."
+      "pinyin": "Xiān shuō míngzi, zài shuō \"zài\", zài shuō ménkǒu, dàtīng.",
+      "translation": "Nói tên trước, rồi 在, rồi nơi chốn như 门口, 大厅."
     },
     {
       "id": "tu_vung_v74",
@@ -916,10 +916,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "\"不在\"，意思是：他没有在那里。",
+      "text": "\"不在\"，意思是：他没在大厅。",
       "pause_after_ms": 1000,
-      "pinyin": "\"bú zài\", yì sī shì: tā méiyǒu zài nàlǐ.",
-      "translation": "不在 nghĩa là: anh ấy không có ở đó."
+      "pinyin": "\"bú zài\", yìsi shì: tā méi zài dàtīng.",
+      "translation": "不在 nghĩa là: anh ấy không có ở sảnh."
     },
     {
       "id": "tu_vung_v82",
@@ -974,10 +974,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "\"哪儿\"在后面，是问：他在哪儿？",
+      "text": "\"哪儿\"在句子后面，是问：他在哪儿？",
       "pause_after_ms": 1000,
-      "pinyin": "\"nǎr\"zài hòumiàn, shì wèn: tā zài nǎr?",
-      "translation": "哪儿 đứng sau thì hỏi: anh ấy ở đâu?"
+      "pinyin": "\"nǎr\" zài jùzi hòumiàn, shì wèn: tā zài nǎr?",
+      "translation": "哪儿 ở cuối câu là hỏi: anh ấy ở đâu?"
     },
     {
       "id": "tu_vung_v87",
@@ -1086,10 +1086,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "进去，是我进了门。进不去，是我没进门。",
+      "text": "进去，是我能进去。进不去，是我不能进去。",
       "pause_after_ms": 1000,
-      "pinyin": "Jìnqù, shì wǒ jìn le mén. Jìn bu qù, shì wǒ méi jìn mén.",
-      "translation": "进去: tôi đã vào cửa. 进不去: tôi chưa vào được cửa."
+      "pinyin": "Jìnqù, shì wǒ néng jìnqù. Jìn bu qù, shì wǒ bù néng jìnqù.",
+      "translation": "进去: tôi vào được. 进不去: tôi không vào được."
     },
     {
       "id": "tu_vung_v97",
@@ -1119,10 +1119,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "你在这里，我在那里，我看不见你。",
+      "text": "你在大厅，我在门口，我看不见你。",
       "pause_after_ms": 1000,
-      "pinyin": "Nǐ zài zhèlǐ, wǒ zài nàlǐ, wǒ kàn bu jiàn nǐ.",
-      "translation": "Bạn ở đây, tôi ở kia, tôi không thấy bạn."
+      "pinyin": "Nǐ zài dàtīng, wǒ zài ménkǒu, wǒ kàn bu jiàn nǐ.",
+      "translation": "Bạn ở sảnh, tôi ở cửa, tôi không thấy bạn."
     },
     {
       "id": "tu_vung_v100",
@@ -1197,10 +1197,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "\"我在楼下\"。你说：看不见。",
-      "pause_after_ms": 4780,
-      "pinyin": "\"wǒ zài lóu xià\". Nǐ shuō: kàn bu jiàn.",
-      "translation": "Tôi ở dưới lầu. Bạn nói: 看不见.",
+      "text": "\"我在B座\"。你说：看不见。",
+      "pause_after_ms": 4360,
+      "pinyin": "\"wǒ zài B zuò\". Nǐ shuō: kàn bu jiàn.",
+      "translation": "Tôi ở tòa B. Bạn nói: 看不见.",
       "gap": "answer"
     },
     {
@@ -1256,7 +1256,7 @@
       "text": "问\"哪儿\"，回答：我在大厅。",
       "pause_after_ms": 1000,
       "pinyin": "Wèn \"nǎr\", huídá: wǒ zài dàtīng.",
-      "translation": "Hỏi 哪儿 thì trả lời một nơi chốn."
+      "translation": "Hỏi 哪儿 thì trả lời: Tôi ở sảnh."
     },
     {
       "id": "tu_vung_v112",
@@ -1354,10 +1354,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "下一个问题。王芳是不是在八楼？",
+      "text": "下一个问题。王芳是不是在A座？",
       "pause_after_ms": 1000,
-      "pinyin": "Xià yí ge wèntí. Wáng Fāng shì bu shì zài bā lóu?",
-      "translation": "Câu hỏi tiếp theo. Có phải Vương Phương ở tầng tám không?"
+      "pinyin": "Xià yí ge wèntí. Wáng Fāng shì bu shì zài A zuò?",
+      "translation": "Câu hỏi tiếp theo. Có phải Vương Phương ở tòa A không?"
     },
     {
       "id": "tu_vung_v121",
@@ -1376,10 +1376,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "是，王芳在八楼。",
+      "text": "不是。王芳以为她在A座，她在B座。",
       "pause_after_ms": 1000,
-      "pinyin": "Shì, Wáng Fāng zài bā lóu.",
-      "translation": "Phải, Vương Phương ở tầng tám."
+      "pinyin": "Bú shì. Wáng Fāng yǐwéi tā zài A zuò, tā zài B zuò.",
+      "translation": "Không phải. Vương Phương tưởng mình ở tòa A, cô ấy ở tòa B."
     },
     {
       "id": "tu_vung_v123",
@@ -1387,10 +1387,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "不是。王芳不在八楼，她在楼下。",
+      "text": "是。陈东在A座。",
       "pause_after_ms": 1000,
-      "pinyin": "Bú shì. Wáng Fāng bú zài bā lóu, tā zài lóu xià.",
-      "translation": "Không phải. Vương Phương không ở tầng tám, cô ấy ở dưới lầu."
+      "pinyin": "Shì. Chén Dōng zài A zuò.",
+      "translation": "Phải. Trần Đông ở tòa A."
     },
     {
       "id": "tu_vung_v124",
@@ -1398,10 +1398,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "王芳是不是在大厅？",
-      "pause_after_ms": 4360,
-      "pinyin": "Wáng Fāng shì bu shì zài dàtīng?",
-      "translation": "Có phải Vương Phương ở sảnh không?",
+      "text": "陈东是不是在A座？",
+      "pause_after_ms": 3940,
+      "pinyin": "Chén Dōng shì bu shì zài A zuò?",
+      "translation": "Có phải Trần Đông ở tòa A không?",
       "gap": "answer"
     },
     {
@@ -1479,7 +1479,7 @@
       "speaker": "coach_zh",
       "text": "问\"什么\"，回答一个名字。",
       "pause_after_ms": 1000,
-      "pinyin": "Wèn \"shénme\", huídá yí ge míngzì.",
+      "pinyin": "Wèn \"shénme\", huídá yí ge míngzi.",
       "translation": "Hỏi 什么 thì trả lời một cái tên."
     },
     {
@@ -1535,7 +1535,7 @@
       "speaker": "coach_zh",
       "text": "问\"谁\"，回答一个名字。",
       "pause_after_ms": 1000,
-      "pinyin": "Wèn \"shuí\", huídá yí ge míngzì.",
+      "pinyin": "Wèn \"shuí\", huídá yí ge míngzi.",
       "translation": "Hỏi 谁 thì trả lời một cái tên."
     },
     {
@@ -1578,9 +1578,9 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "下一个问题。陈东在哪个楼找王芳？",
+      "text": "下一个问题。陈东在哪座楼找王芳？",
       "pause_after_ms": 1000,
-      "pinyin": "Xià yí ge wèntí. Chén Dōng zài nǎ ge lóu zhǎo Wáng Fāng?",
+      "pinyin": "Xià yí ge wèntí. Chén Dōng zài nǎ zuò lóu zhǎo Wáng Fāng?",
       "translation": "Câu hỏi tiếp theo. Trần Đông tìm Vương Phương ở tòa nào?"
     },
     {
@@ -1591,7 +1591,7 @@
       "speaker": "coach_zh",
       "text": "\"哪个\"，意思是：哪一个？",
       "pause_after_ms": 1000,
-      "pinyin": "\"nǎ ge\", yì sī shì: nǎ yí ge?",
+      "pinyin": "\"nǎ ge\", yìsi shì: nǎ yí ge?",
       "translation": "哪个 nghĩa là: cái nào?"
     },
     {
@@ -1600,10 +1600,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "陈东在大厅找王芳。",
+      "text": "陈东在A座大厅找王芳。",
       "pause_after_ms": 1000,
-      "pinyin": "Chén Dōng zài dàtīng zhǎo Wáng Fāng.",
-      "translation": "Trần Đông tìm Vương Phương ở sảnh."
+      "pinyin": "Chén Dōng zài A zuò dàtīng zhǎo Wáng Fāng.",
+      "translation": "Trần Đông tìm Vương Phương ở sảnh tòa A."
     },
     {
       "id": "tu_vung_v143",
@@ -1611,10 +1611,10 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "你在哪个门口？我在大厅门口。",
+      "text": "你在哪个门口？我在B座门口。",
       "pause_after_ms": 1000,
-      "pinyin": "Nǐ zài nǎ ge ménkǒu? Wǒ zài dàtīng ménkǒu.",
-      "translation": "Bạn ở cửa nào? Tôi ở cửa sảnh."
+      "pinyin": "Nǐ zài nǎ ge ménkǒu? Wǒ zài B zuò ménkǒu.",
+      "translation": "Bạn ở cửa nào? Tôi ở cửa tòa B."
     },
     {
       "id": "tu_vung_v144",
@@ -1622,9 +1622,9 @@
       "type": "narration",
       "language": "zh-CN",
       "speaker": "coach_zh",
-      "text": "你在哪个楼？",
+      "text": "你在哪座楼？",
       "pause_after_ms": 3100,
-      "pinyin": "Nǐ zài nǎ ge lóu?",
+      "pinyin": "Nǐ zài nǎ zuò lóu?",
       "translation": "Bạn ở tòa nào?",
       "gap": "answer"
     },
@@ -1647,7 +1647,7 @@
       "speaker": "coach_zh",
       "text": "问\"几楼\"，回答：八楼，或者一楼。",
       "pause_after_ms": 1000,
-      "pinyin": "Wèn \"jǐ lóu\", huídá: bā lóu, huòzhě yìlóu.",
+      "pinyin": "Wèn \"jǐ lóu\", huídá: bā lóu, huòzhě yì lóu.",
       "translation": "Hỏi 几楼 thì đáp: tầng tám, hoặc tầng một."
     },
     {
@@ -1669,7 +1669,7 @@
       "speaker": "coach_zh",
       "text": "王芳在一楼。",
       "pause_after_ms": 1000,
-      "pinyin": "Wáng Fāng zài yìlóu.",
+      "pinyin": "Wáng Fāng zài yì lóu.",
       "translation": "Vương Phương ở tầng một."
     },
     {
