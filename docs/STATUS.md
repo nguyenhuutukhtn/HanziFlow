@@ -14,6 +14,8 @@ Last updated: 2026-10-24 (B1 verified; device check pending) · branch `main` (a
 
 ## Done
 
+- **X2:** `com.hanziflow.ai` (AiConfig from optional `llm.*` local.properties, OpenAI-compatible OkHttp client, ExplainPrompt from APK assets `prompts/`, Room `explain_threads` v3 + `MIGRATION_2_3`, ExplainRepository, ExplainViewModel); 9 new JVM tests pass; X3 UI next. Unrelated: `tests/test_llm_compare.py::test_env_parse_and_process_override` fails when `.env` has a real key (test reads the real `.env` and its assert prints the key).
+
 - **X1:** `prompts/explain_line.md` (system + user template, 5 placeholders) and `scripts/llm_compare.py` (Gemini/Groq/DeepSeek by key presence, `--dry-run`, `--list-models`, writes `docs/reviews/llm_compare.md`) with `tests/test_llm_compare.py`; dry-run shows 5 lesson-2 lines incl. 大厅 line; no API calls made. User: create keys, set `GEMINI_MODEL`/`GROQ_MODEL`, run the compare.
 
 - **B1:** Android player metadata now resets/reloads per lesson, so lesson 1 ↔ lesson 2 switches keep the correct title and availability flags. Lesson-2 modes render source Hanzi when `items.json` has no words. Nghe starts hidden and now toggles the full Hanzi+pinyin transcript persistently across cue changes, including after reopening the track. Long-pressing any visible transcript line copies only its Hanzi with “Đã sao chép”; hidden Nghe/Phản xạ content remains unavailable. Real lesson-2 fixture tests, Hiểu light/dark captures, 43 focused Player/Transcript tests, and full `scripts/check.sh` pass; device check pending.

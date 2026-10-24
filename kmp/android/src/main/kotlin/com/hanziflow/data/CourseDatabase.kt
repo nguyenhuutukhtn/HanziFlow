@@ -39,8 +39,28 @@ data class PlaybackEntity(
     val speed: Float,
 )
 
+/** One AI explanation thread per lesson line; `messagesJson` excludes the system message. */
+@Entity(tableName = "explain_threads", primaryKeys = ["lessonId", "lineId"])
+data class ExplainThreadEntity(
+    val lessonId: String,
+    val lineId: String,
+    val hanzi: String,
+    val lessonVersion: Int,
+    val messagesJson: String,
+    val updatedAt: Long,
+)
+
 @Dao
 interface CourseDao {
+    @Query("SELECT * FROM explain_threads WHERE lessonId = :lessonId AND lineId = :lineId")
+    fun observeExplainThread(lessonId: String, lineId: String): Flow<ExplainThreadEntity?>
+
+    @Query("SELECT * FROM explain_threads WHERE lessonId = :lessonId AND lineId = :lineId")
+    suspend fun explainThread(lessonId: String, lineId: String): ExplainThreadEntity?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun putExplainThread(thread: ExplainThreadEntity)
+
     @Query("SELECT * FROM lessons ORDER BY lessonOrder")
     fun observeLessons(): Flow<List<LessonEntity>>
 
@@ -72,7 +92,7 @@ interface CourseDao {
     suspend fun putPlayback(playback: PlaybackEntity)
 }
 
-@Database(entities = [LessonEntity::class, SettingEntity::class, PlaybackEntity::class], version = 2, exportSchema = false)
+@Database(entities = [LessonEntity::class, SettingEntity::class, PlaybackEntity::class, ExplainThreadEntity::class], version = 3, exportSchema = false)
 abstract class CourseDatabase : RoomDatabase() {
     abstract fun dao(): CourseDao
 
@@ -80,8 +100,18 @@ abstract class CourseDatabase : RoomDatabase() {
         fun open(context: Context): CourseDatabase {
             val courseDir = context.filesDir.resolve("course").apply { mkdirs() }
             return Room.databaseBuilder(context, CourseDatabase::class.java, courseDir.resolve("state.db").absolutePath)
-                .addMigrations(MIGRATION_1_2)
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                 .build()
+        }
+
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `explain_threads` (`lessonId` TEXT NOT NULL, `lineId` TEXT NOT NULL, " +
+                        "`hanzi` TEXT NOT NULL, `lessonVersion` INTEGER NOT NULL, `messagesJson` TEXT NOT NULL, " +
+                        "`updatedAt` INTEGER NOT NULL, PRIMARY KEY(`lessonId`, `lineId`))",
+                )
+            }
         }
 
         private val MIGRATION_1_2 = object : Migration(1, 2) {

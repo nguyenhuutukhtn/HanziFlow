@@ -50,7 +50,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `build_radicals.py` [62] — Build the radical metadata from a pinned UCD skeleton and authored names.
 - `codemap.py` [100] — Regenerate docs/CODEMAP.md: one line per source file, so agents open only what they need.
 - `fake_generate.py` [54] — Run the real `generate` path on lesson files with a fake TTS, in scratch dirs.
-- `llm_compare.py` [249] — Send the same 5 lesson-2 lines to every configured LLM provider and write the answers side by side.
+- `llm_compare.py` [250] — Send the same 5 lesson-2 lines to every configured LLM provider and write the answers side by side.
 
 ## Python tests (`tests/`)
 
@@ -129,11 +129,18 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 
 - `kotlin/com/hanziflow/HanziFlowApplication.kt` [15] — HanziFlowApplication
 - `kotlin/com/hanziflow/MainActivity.kt` [106] — MainActivity — Thin composition root: wires the activity-scoped screen ViewModels (via Hilt) to
-- `kotlin/com/hanziflow/data/CourseDatabase.kt` [93] — LessonEntity, SettingEntity, PlaybackEntity, CourseDao
+- `kotlin/com/hanziflow/ai/AiConfig.kt` [14] — AiConfig — Optional chat-LLM settings from local.properties (via BuildConfig). The key is never logged.
+- `kotlin/com/hanziflow/ai/ChatClient.kt` [23] — ChatMessage, ChatFailure, ChatClient — One chat message. `failed` marks a user message whose request did not get an answer (kept for retry).
+- `kotlin/com/hanziflow/ai/ExplainPrompt.kt` [33] — ExplainPrompt — Renders prompts/explain_line.md (copied into assets/prompts/ at build time).
+- `kotlin/com/hanziflow/ai/ExplainRepository.kt` [135] — ExplainTarget, ExplainThread, ExplainRepository — The line to explain plus up to 2 same-track Chinese lines either side.
+- `kotlin/com/hanziflow/ai/ExplainViewModel.kt` [82] — ExplainUiState, ExplainViewModel — First explanation failed and nothing is saved; `retry()` tries again.
+- `kotlin/com/hanziflow/ai/OpenAiCompatibleClient.kt` [66] — OpenAiCompatibleClient
+- `kotlin/com/hanziflow/data/CourseDatabase.kt` [123] — LessonEntity, SettingEntity, PlaybackEntity, ExplainThreadEntity — One AI explanation thread per lesson line; `messagesJson` excludes the system message.
 - `kotlin/com/hanziflow/data/CourseRepository.kt` [34] — CourseRepository — Course catalog, downloads, and the downloaded lesson package file store.
 - `kotlin/com/hanziflow/data/CourseRepositoryImpl.kt` [191] — CourseRepositoryImpl
 - `kotlin/com/hanziflow/data/ProgressRepository.kt` [24] — ProgressRepository, ProgressRepositoryImpl — Local listening resumption. Sync and completion status remain D2 work.
 - `kotlin/com/hanziflow/data/SettingsRepository.kt` [85] — SettingsRepository, SettingsRepositoryImpl — Simple key/value app settings (catalog base URL, transcript view, Vietnamese toggle, theme).
+- `kotlin/com/hanziflow/di/AiModule.kt` [30] — AiModule
 - `kotlin/com/hanziflow/di/AppModule.kt` [28] — AppModule — Room DB / DAO and the shared OkHttp client: the only places this app talks to disk/network directly.
 - `kotlin/com/hanziflow/di/PlaybackModule.kt` [22] — PlaybackModule — [PlayerConnection] wraps the single [androidx.media3.session.MediaController] the UI
 - `kotlin/com/hanziflow/di/RepositoryModule.kt` [29] — RepositoryModule
@@ -189,6 +196,10 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 
 ## Android app (tests) (`kmp/android/src/test/`)
 
+- `kotlin/com/hanziflow/ai/ExplainPromptTest.kt` [29] — ExplainPromptTest
+- `kotlin/com/hanziflow/ai/ExplainRepositoryTest.kt` [111] — FakeChat, ExplainRepositoryTest
+- `kotlin/com/hanziflow/ai/MigrationTest.kt` [48] — MigrationTest
+- `kotlin/com/hanziflow/ai/OpenAiCompatibleClientTest.kt` [53] — OpenAiCompatibleClientTest
 - `kotlin/com/hanziflow/architecture/LayeringTest.kt` [86] — LayeringTest — Enforces the dependency rules from docs/app_architecture.md "Code architecture (Android)",
 - `kotlin/com/hanziflow/data/CourseRepositoryTest.kt` [25] — CourseRepositoryTest
 - `kotlin/com/hanziflow/data/M1ContractTest.kt` [35] — M1ContractTest

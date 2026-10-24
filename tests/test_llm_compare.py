@@ -45,6 +45,7 @@ def test_prompt_template_has_placeholders(lc):
 def test_env_parse_and_process_override(lc, tmp_path, monkeypatch):
     env_file = tmp_path / ".env"
     env_file.write_text("# comment\nGROQ_API_KEY=\"abc123\"\nGEMINI_MODEL=gemini-x\n\nEMPTY\n", encoding="utf-8")
+    monkeypatch.delenv("GROQ_API_KEY", raising=False)  # other tests load the real .env into os.environ
     monkeypatch.setenv("GEMINI_MODEL", "from-process")
     values = lc.load_env(env_file)
     assert values["GROQ_API_KEY"] == "abc123"

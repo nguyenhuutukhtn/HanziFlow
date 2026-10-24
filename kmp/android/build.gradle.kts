@@ -17,6 +17,11 @@ val supabaseUrl = localProperties.getProperty("supabase.url")
     ?.trimEnd('/')
     ?.takeIf { it.isNotEmpty() }
     ?: error("Add supabase.url=https://<project-ref>.supabase.co to kmp/local.properties")
+fun llmProp(key: String): String =
+    (localProperties.getProperty(key) ?: "").trim().replace("\\", "").replace("\"", "")
+val llmBaseUrl = llmProp("llm.base_url")
+val llmModel = llmProp("llm.model")
+val llmApiKey = llmProp("llm.api_key")
 val contentBaseUrl = "$supabaseUrl/storage/v1/object/public/course/"
 
 android {
@@ -32,6 +37,10 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "SUPABASE_URL", "\"$supabaseUrl\"")
         buildConfigField("String", "CONTENT_BASE_URL", "\"$contentBaseUrl\"")
+        // Optional AI explain config (docs/tasks/X2.md); blank means the feature is off.
+        buildConfigField("String", "LLM_BASE_URL", "\"$llmBaseUrl\"")
+        buildConfigField("String", "LLM_MODEL", "\"$llmModel\"")
+        buildConfigField("String", "LLM_API_KEY", "\"$llmApiKey\"")
     }
 
     buildTypes {
@@ -52,7 +61,15 @@ android {
     packaging.resources.excludes += "/META-INF/{AL2.0,LGPL2.1}"
 
     testOptions.unitTests.isIncludeAndroidResources = true
+    sourceSets.getByName("main").assets.srcDir(layout.buildDirectory.dir("generated/promptAssets").get().asFile)
 }
+
+// One source of truth: repo-root prompts/ is copied into the APK assets as assets/prompts/.
+val copyPromptAssets = tasks.register<Copy>("copyPromptAssets") {
+    from(rootProject.file("../prompts")) { include("*.md") }
+    into(layout.buildDirectory.dir("generated/promptAssets/prompts"))
+}
+tasks.named("preBuild") { dependsOn(copyPromptAssets) }
 
 roborazzi {
     // Until the user approves the screens, every capture stays in the git-ignored
@@ -86,6 +103,7 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.navigation.compose)
     testImplementation(libs.junit)
+    testImplementation(libs.okhttp.mockwebserver)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.konsist)
     testImplementation(platform(libs.androidx.compose.bom))
