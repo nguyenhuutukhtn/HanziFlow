@@ -82,7 +82,7 @@ class LessonSessionJs(
     fun tracksJson(): String = CourseJson.codec.encodeToString(
         buildList {
             if (lesson.format == "modes_v1") {
-                val labels = mapOf("hieu" to "Hiểu", "nghe" to "Nghe", "phan_xa" to "Phản xạ", "noi" to "Nói")
+                val labels = mapOf("hieu" to "Hiểu", "tu_vung" to "Từ vựng", "nghe" to "Nghe", "phan_xa" to "Phản xạ", "noi" to "Nói")
                 lesson.tracks.names.filter(labels::containsKey).forEach { add(TrackJson(it, labels.getValue(it))) }
             } else {
                 if (lesson.tracks.guided != null) add(TrackJson("guided", "Học có hướng dẫn"))

@@ -15,7 +15,7 @@ from .publish_support import PublishReport, _artifact, _catalog_entry, _matches_
 from .publish_timeline import PublishError, _enrich_timeline, _load_and_validate_timeline, _reference_lines
 from .story.ledger import chars_taught_before
 
-MODES = ("hieu", "nghe", "phan_xa", "noi")
+MODES = ("hieu", "tu_vung", "nghe", "phan_xa", "noi")
 
 
 def _mode_gaps(timeline: dict, lesson: Lesson) -> list[dict]:

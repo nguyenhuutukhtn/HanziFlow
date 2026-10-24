@@ -42,6 +42,18 @@ class ContractParsingTest {
     }
 
     @Test
+    fun ordersFiveModesWithTuVungSecond() {
+        fun track(name: String) = """"$name":{"file":"$name.mp3","bytes":1,"duration_ms":1,"sha256":"a","timeline":{"file":"timeline_$name.json","bytes":1,"sha256":"a"}}"""
+        val tracks = listOf("noi", "tu_vung", "phan_xa", "nghe", "hieu").joinToString(",") { track(it) }
+        val catalog = CourseJson.catalog(
+            """{"schema_version":1,"catalog_version":1,"lessons":[
+              {"id":"lesson_002","version":1,"order":2,"title":"Modes","level":"beginner","base_url":"modes/","format":"modes_v1","tracks":{$tracks},"files":{"manifest":{"file":"lesson.json","bytes":1,"sha256":"a"},"reference":{"file":"reference.json","bytes":1,"sha256":"a"},"items":{"file":"items.json","bytes":1,"sha256":"a"}}}
+            ]}""".trimIndent(),
+        )
+        assertEquals(listOf("hieu", "tu_vung", "nghe", "phan_xa", "noi"), catalog.lessons[0].tracks.names)
+    }
+
+    @Test
     fun parsesRealModesV1Package() {
         val lesson = CourseJson.catalog(fixtureText("catalog_modes.json")).lessons.single { it.id == "lesson_002" }
         val reference = CourseJson.reference(fixtureText("reference_modes.json"))

@@ -92,7 +92,7 @@ class Lesson(BaseModel):
     segments: list[Segment] = Field(min_length=1)
     version: int = Field(default=1, ge=1)
     format: Literal["linear_v1", "modes_v1"] = "linear_v1"
-    variant: Literal["guided", "practice", "hieu", "nghe", "phan_xa", "noi"] | None = None
+    variant: Literal["guided", "practice", "hieu", "tu_vung", "nghe", "phan_xa", "noi"] | None = None
     voice_genders: dict[str, Literal["female", "male"]] = Field(default_factory=dict)
 
     @model_validator(mode="after")
@@ -100,7 +100,7 @@ class Lesson(BaseModel):
         ids = [segment.id for segment in self.segments]
         if len(ids) != len(set(ids)):
             raise ValueError("segment IDs must be unique")
-        modes = {"hieu", "nghe", "phan_xa", "noi"}
+        modes = {"hieu", "tu_vung", "nghe", "phan_xa", "noi"}
         if self.format == "modes_v1" and self.variant not in modes:
             raise ValueError("modes_v1 lessons require a mode variant")
         if self.format == "linear_v1" and self.variant not in {None, "guided", "practice"}:

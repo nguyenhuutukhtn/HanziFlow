@@ -34,7 +34,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `story/bundle.py` [213] — Export/import lesson story-source bundles (docs/workflow.md "Content loop").
 - `story/ledger.py` [163] — Lesson ledger: what lessons before N taught (words, characters, patterns, premise, bible).
 - `story/metrics.py` [139] — Advisory lesson metrics for the authoring loop.
-- `story/modes.py` [136] — Import the four lesson-2 listening/speaking modes.
+- `story/modes.py` [139] — Import the five lesson-2 listening/speaking modes.
 - `story/parser.py` [143] — Parse a lesson story source (`lessons/src/lesson_XXX.story.md`) into blocks.
 - `story/report.py` [46] — Short build-lesson output: ≤ 20 lines, errors with source line numbers.
 - `story/rows.py` [149] — Export and import row-scoped story-source revisions.
@@ -59,7 +59,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `test_bundle.py` [78]
 - `test_characters.py` [127]
 - `test_cli.py` [31]
-- `test_import_modes.py` [44]
+- `test_import_modes.py` [48]
 - `test_ledger.py` [88]
 - `test_lesson_001_story.py` [114]
 - `test_lesson_schema.py` [113]
@@ -88,7 +88,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `kotlin/com/hanziflow/shared/characters/Characters.kt` [51] — LessonCharacters, CharacterEntry, ComponentEntry, CharacterIndex
 - `kotlin/com/hanziflow/shared/characters/StrokeData.kt` [9] — StrokeEntry
 - `kotlin/com/hanziflow/shared/modes/GapState.kt` [19] — GapState
-- `kotlin/com/hanziflow/shared/modes/ModeInfo.kt` [12] — Mode, ModeInfo
+- `kotlin/com/hanziflow/shared/modes/ModeInfo.kt` [13] — Mode, ModeInfo
 - `kotlin/com/hanziflow/shared/modes/RepeatUnits.kt` [13] — RepeatUnit
 - `kotlin/com/hanziflow/shared/testgen/GenerationContext.kt` [275] — TaggedWord, TaggedSentence, TaggedQa, Spec — One candidate (item, question-type) source the generator can draw a question from.
 - `kotlin/com/hanziflow/shared/testgen/Phonetics.kt` [89] — toneless, confusableKey, applyTone, capitalizeLike — Tone-mark variants for each base vowel, index 0 = no mark (tone 5 / neutral).
@@ -107,9 +107,9 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 ## KMP shared (tests) (`kmp/shared/src/commonTest/`)
 
 - `kotlin/com/hanziflow/shared/CharacterContractTest.kt` [46] — CharacterContractTest
-- `kotlin/com/hanziflow/shared/ContractParsingTest.kt` [118] — ContractParsingTest
+- `kotlin/com/hanziflow/shared/ContractParsingTest.kt` [130] — ContractParsingTest
 - `kotlin/com/hanziflow/shared/modes/GapStateTest.kt` [26] — GapStateTest
-- `kotlin/com/hanziflow/shared/modes/ModeInfoTest.kt` [21] — ModeInfoTest
+- `kotlin/com/hanziflow/shared/modes/ModeInfoTest.kt` [22] — ModeInfoTest
 - `kotlin/com/hanziflow/shared/modes/RepeatUnitsTest.kt` [19] — RepeatUnitsTest
 - `kotlin/com/hanziflow/shared/testgen/GoldenVectorTest.kt` [44] — GoldenVectorTest — Golden vectors: TestGenerator.generate() against the real lesson_001 items.json
 - `kotlin/com/hanziflow/shared/testgen/InvariantsTest.kt` [108] — InvariantsTest — Splits the real lesson_001 item bank into a synthetic "earlier" lesson and a
@@ -202,7 +202,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `kotlin/com/hanziflow/ui/library/LibraryViewModelTest.kt` [77] — LibraryViewModelTest
 - `kotlin/com/hanziflow/ui/modes/ModePickerScreenTest.kt` [48] — ModePickerScreenTest
 - `kotlin/com/hanziflow/ui/modes/ModePickerScreenshotTest.kt` [35] — ModePickerScreenshotTest
-- `kotlin/com/hanziflow/ui/modes/ModePickerViewModelTest.kt` [43] — ModePickerViewModelTest
+- `kotlin/com/hanziflow/ui/modes/ModePickerViewModelTest.kt` [57] — ModePickerViewModelTest
 - `kotlin/com/hanziflow/ui/navigation/AppShellTest.kt` [154] — AppShellTest
 - `kotlin/com/hanziflow/ui/player/ModePlayerUiTest.kt` [89] — ModePlayerUiTest
 - `kotlin/com/hanziflow/ui/player/PlayerLessonMetaTest.kt` [57] — PlayerLessonMetaTest

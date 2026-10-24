@@ -58,13 +58,13 @@ def test_publish_modes_package_and_versioning(tmp_path):
     first = publish_lesson(lesson_path, settings, out)
     assert first.published and first.version == 1
     assert {path.name for path in first.package_dir.iterdir()} == {
-        "hieu.mp3", "nghe.mp3", "phan_xa.mp3", "noi.mp3", "timeline_hieu.json", "timeline_nghe.json",
+        "hieu.mp3", "tu_vung.mp3", "nghe.mp3", "phan_xa.mp3", "noi.mp3", "timeline_hieu.json", "timeline_tu_vung.json", "timeline_nghe.json",
         "timeline_phan_xa.json", "timeline_noi.json", "lesson.json", "reference.json", "items.json", "characters.json",
     }
     catalog = json.loads((out / "catalog.json").read_text())
     entry = catalog["lessons"][0]
     assert entry["format"] == "modes_v1"
-    assert list(entry["tracks"]) == list(publish_modes.MODES)
+    assert list(entry["tracks"]) == ["hieu", "tu_vung", "nghe", "phan_xa", "noi"]
     assert "guided" not in entry["tracks"]
     assert all(track["duration_ms"] > 0 for track in entry["tracks"].values())
     reference = json.loads((first.package_dir / "reference.json").read_text())

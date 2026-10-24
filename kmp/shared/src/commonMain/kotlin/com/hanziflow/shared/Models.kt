@@ -44,7 +44,7 @@ data class Tracks(val values: Map<String, Track>) {
     fun forName(name: String): Track? = values[name]
 
     private companion object {
-        val DISPLAY_ORDER = listOf("hieu", "nghe", "phan_xa", "noi", "guided", "guided_zh", "practice")
+        val DISPLAY_ORDER = listOf("hieu", "tu_vung", "nghe", "phan_xa", "noi", "guided", "guided_zh", "practice")
     }
 }
 

@@ -1,4 +1,4 @@
-"""Import the four lesson-2 listening/speaking modes."""
+"""Import the five lesson-2 listening/speaking modes."""
 
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ from pathlib import Path
 from .blocks import LINE_PAUSE
 from .metrics import VI_SECONDS_PER_CHAR, ZH_SECONDS_PER_CHAR, _hanzi
 
-MODES = {"Hiểu": "hieu", "Nghe": "nghe", "Phản xạ": "phan_xa", "Nói": "noi"}
+MODES = {"Hiểu": "hieu", "Từ vựng": "tu_vung", "Nghe": "nghe", "Phản xạ": "phan_xa", "Nói": "noi"}
 SPEAKERS = {"narrator", "wang_fang", "chen_dong", "coach_vi", "gap"}
 WH_WORDS = "谁哪什么几还是怎么"
 
@@ -103,6 +103,9 @@ def build_mode(mode: str, rows: list[Row]) -> tuple[list[dict], int]:
                     raise _error(row.line, "answer gap must be followed by an answer")
                 segments[-1]["pause_after_ms"] = _answer_pause(segments[-1]["text"], next_row.text)
                 segments[-1]["gap"] = "answer"
+            elif mode == "tu_vung":
+                segments[-1]["pause_after_ms"] = _repeat_pause(segments[-1]["text"])
+                segments[-1]["gap"] = "answer"
             elif mode == "noi":
                 segments[-1]["pause_after_ms"] = _repeat_pause(segments[-1]["text"])
                 segments[-1]["gap"] = "repeat"
@@ -126,7 +129,7 @@ def import_modes(lesson_id: str, content_dir: Path = Path("content"), lessons_di
     meta = json.loads((content_dir / f"lesson_{lesson_id}" / "meta.json").read_text(encoding="utf-8"))
     parsed = parse_modes(source)
     results = []
-    for mode in ("hieu", "nghe", "phan_xa", "noi"):
+    for mode in ("hieu", "tu_vung", "nghe", "phan_xa", "noi"):
         segments, gaps = build_mode(mode, parsed[mode])
         lesson = {**meta, "format": "modes_v1", "variant": mode, "version": 1,
                   "target_duration_minutes": _duration_minutes(segments), "segments": segments}

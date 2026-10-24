@@ -15,7 +15,7 @@ from pathlib import Path
 
 root, lesson_id = Path(sys.argv[1]), sys.argv[2]
 total = 0
-for mode in ("hieu", "nghe", "phan_xa", "noi"):
+for mode in ("hieu", "tu_vung", "nghe", "phan_xa", "noi"):
     result = subprocess.run(
         [sys.executable, "-m", "mandarin_course.cli", "generate",
          f"lessons/lesson_{lesson_id}_{mode}.json", "--dry-run", "--json"],

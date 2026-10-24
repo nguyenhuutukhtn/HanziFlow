@@ -43,7 +43,7 @@ def _matches_catalog_entry(package: Path, entry: dict[str, Any] | None) -> bool:
     tracks = entry.get("tracks", {})
     files = entry.get("files", {})
     if entry.get("format") == "modes_v1":
-        expected_modes = ("hieu", "nghe", "phan_xa", "noi")
+        expected_modes = ("hieu", "tu_vung", "nghe", "phan_xa", "noi")
         if set(tracks) != set(expected_modes):
             return False
         checks = [

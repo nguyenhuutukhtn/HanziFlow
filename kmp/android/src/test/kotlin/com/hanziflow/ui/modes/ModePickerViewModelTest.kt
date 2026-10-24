@@ -2,6 +2,7 @@ package com.hanziflow.ui.modes
 
 import com.hanziflow.fakes.FakeCourseRepository
 import com.hanziflow.shared.CourseJson
+import com.hanziflow.shared.Tracks
 import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -39,5 +40,18 @@ class ModePickerViewModelTest {
             viewModel.uiState.value.modes.map { it.whenToUse },
         )
         assertEquals(listOf(539_689L, 310_875L, 456_957L, 345_633L), viewModel.uiState.value.modes.map { it.durationMs })
+    }
+
+    @Test
+    fun `catalog with tu_vung shows five cards in order`() = runTest {
+        val catalog = CourseJson.catalog(File("../shared/src/commonTest/resources/contract/catalog_modes.json").readText())
+        val old = catalog.lessons.single { it.id == "lesson_002" }
+        val lesson = old.copy(tracks = Tracks(old.tracks.values + ("tu_vung" to old.tracks.values.getValue("hieu"))))
+        val viewModel = ModePickerViewModel(FakeCourseRepository().apply { catalogLessons = mapOf(lesson.id to lesson) })
+
+        viewModel.load(lesson.id)
+
+        assertEquals(listOf("hieu", "tu_vung", "nghe", "phan_xa", "noi"), viewModel.uiState.value.modes.map { it.id })
+        assertEquals("Từ vựng", viewModel.uiState.value.modes[1].label)
     }
 }

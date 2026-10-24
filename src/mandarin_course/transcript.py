@@ -30,7 +30,7 @@ def _entry(segment: Segment, *, show_translation: bool, show_hanzi: bool) -> lis
 
 def render_transcript(lesson: Lesson, *, full_reference: bool = False, show_hanzi: bool = False) -> str:
     if lesson.format == "modes_v1":
-        label = {"hieu": "Hiểu", "nghe": "Nghe", "phan_xa": "Phản xạ", "noi": "Nói"}[lesson.variant]
+        label = {"hieu": "Hiểu", "tu_vung": "Từ vựng", "nghe": "Nghe", "phan_xa": "Phản xạ", "noi": "Nói"}[lesson.variant]
         title = f"{label} reference" if full_reference else f"{label} transcript"
     elif lesson.variant == "guided":
         title = "Guided reference" if full_reference else "Guided transcript"

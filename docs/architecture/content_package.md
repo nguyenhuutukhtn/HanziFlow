@@ -48,13 +48,14 @@ Each catalog lesson entry has a `format`; an absent value means `linear_v1`.
 keys under its `tracks` object.
 
 - `linear_v1` requires `guided`, with optional `guided_zh` and `practice`.
-- `modes_v1` requires all four tracks: `hieu` ("Hiểu"), `nghe` ("Nghe"),
-  `phan_xa` ("Phản xạ"), and `noi` ("Nói"). Each has `<mode>.mp3` and
+- `modes_v1` requires all five tracks, in this order: `hieu` ("Hiểu"), `tu_vung`
+  ("Từ vựng"), `nghe` ("Nghe"), `phan_xa` ("Phản xạ"), and `noi` ("Nói").
+  Clients still accept an older catalog entry with only the original four. Each has `<mode>.mp3` and
   `timeline_<mode>.json`.
 
 For `modes_v1`, `items.json` is present with an empty item list. `characters.json`
 may omit characters without Vietnamese data; publish reports those omissions as a
-warning. Clients display the four mode tracks in the order listed above.
+warning. Clients display the mode tracks in the order listed above.
 Mode tracks also use the shared mode metadata (`id`, Vietnamese `label`, and
 `whenToUse` guidance) in that same order.
 
