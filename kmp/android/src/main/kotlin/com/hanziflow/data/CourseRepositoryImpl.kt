@@ -131,6 +131,13 @@ class CourseRepositoryImpl @Inject constructor(
         return packageFile(lessonId, version, file.file)
     }
 
+    override suspend fun notesFile(lessonId: String): File? {
+        val entity = dao.lesson(lessonId) ?: return null
+        val version = entity.downloadedVersion ?: return null
+        val file = downloadedLesson(entity).files.notes ?: return null
+        return packageFile(lessonId, version, file.file)
+    }
+
     override suspend fun strokePackFile(): File? = withContext(Dispatchers.IO) {
         val request = Request.Builder().url(CourseRepository.catalogUrl(settingsRepository.baseUrl(), System.currentTimeMillis())).build()
         val catalog = client.newCall(request).execute().use { response ->

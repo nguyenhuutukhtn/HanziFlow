@@ -19,6 +19,7 @@ import com.hanziflow.ui.app.AppShellViewModel
 import com.hanziflow.ui.library.LibraryViewModel
 import com.hanziflow.ui.navigation.AppShell
 import com.hanziflow.ui.modes.ModePickerViewModel
+import com.hanziflow.ui.notes.NotesViewModel
 import com.hanziflow.ui.player.PlayerViewModel
 import com.hanziflow.ui.theme.HanziFlowTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,9 +54,11 @@ fun HanziFlowApp(
     libraryViewModel: LibraryViewModel = hiltViewModel(),
     playerViewModel: PlayerViewModel = hiltViewModel(),
     modePickerViewModel: ModePickerViewModel = hiltViewModel(),
+    notesViewModel: NotesViewModel = hiltViewModel(),
 ) {
     val libraryState by libraryViewModel.uiState.collectAsStateWithLifecycle()
     val playerState by playerViewModel.uiState.collectAsStateWithLifecycle()
+    val notesState by notesViewModel.uiState.collectAsStateWithLifecycle()
     val modePickerState by modePickerViewModel.uiState.collectAsStateWithLifecycle()
 
     AppShell(
@@ -93,6 +96,8 @@ fun HanziFlowApp(
         onRevealNgheCue = playerViewModel::revealCurrentNgheCue,
         onToggleRepeatEach = playerViewModel::toggleRepeatEach,
         modePickerState = modePickerState,
+        notesState = notesState,
+        onOpenNotes = { notesViewModel.load(it) },
         onOpenModePicker = { lesson -> modePickerViewModel.load(lesson.id) },
         onPlayMode = { lessonId, track ->
             libraryState.lessons.firstOrNull { it.id == lessonId }?.let { lesson -> playerViewModel.play(lesson, track) }

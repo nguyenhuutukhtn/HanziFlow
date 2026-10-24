@@ -4,6 +4,7 @@ data class ModePickerUiState(
     val lessonId: String? = null,
     val title: String = "",
     val modes: List<ModePickerItem> = emptyList(),
+    val notesAvailable: Boolean = false,
 )
 
 data class ModePickerItem(

@@ -16,6 +16,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Switch
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,6 +42,7 @@ import com.hanziflow.ui.characters.CharacterListSheet
 import com.hanziflow.shared.characters.CharacterEntry
 
 const val NowPlayingTestTag = "now_playing"
+const val NotesButtonTestTag = "notes_button"
 
 /**
  * Full-screen Now Playing route. Stateless; [PlayerViewModel] owns all command logic.
@@ -77,6 +79,7 @@ fun NowPlayingScreen(
     onPauseForGap: () -> Unit = {},
     onRevealNgheCue: () -> Unit = {},
     onToggleRepeatEach: () -> Unit = {},
+    onOpenNotes: () -> Unit = {},
 ) {
     var sectionSheetOpen by remember { mutableStateOf(false) }
     var characterListOpen by remember { mutableStateOf(false) }
@@ -90,6 +93,8 @@ fun NowPlayingScreen(
             onCollapse = onCollapse,
             showCharacters = state.characterIndex != null,
             onOpenCharacters = { characterListOpen = true },
+            showNotes = state.notesAvailable,
+            onOpenNotes = onOpenNotes,
         )
         if (state.lessonFormat == "modes_v1" && state.track == "nghe") {
             NgheModeControls(
@@ -227,7 +232,7 @@ fun NowPlayingScreen(
     }
 }
 @Composable
-private fun NowPlayingHeader(title: String, onCollapse: () -> Unit, showCharacters: Boolean, onOpenCharacters: () -> Unit) {
+private fun NowPlayingHeader(title: String, onCollapse: () -> Unit, showCharacters: Boolean, onOpenCharacters: () -> Unit, showNotes: Boolean, onOpenNotes: () -> Unit) {
     var menuOpen by remember { mutableStateOf(false) }
     Row(
         modifier = Modifier.fillMaxWidth().padding(horizontal = Spacing.xs, vertical = Spacing.xs),
@@ -246,6 +251,7 @@ private fun NowPlayingHeader(title: String, onCollapse: () -> Unit, showCharacte
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.weight(1f),
         )
+        if (showNotes) TextButton(onClick = onOpenNotes, modifier = Modifier.testTag(NotesButtonTestTag)) { Text("Ghi chú") }
         Box {
             IconButton(onClick = { menuOpen = true }) {
                 Icon(

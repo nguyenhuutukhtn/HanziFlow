@@ -23,6 +23,7 @@ class ModePickerViewModel @Inject constructor(
         _uiState.value = ModePickerUiState(
             lessonId = lesson.id,
             title = lesson.title,
+            notesAvailable = courseRepository.notesFile(lesson.id) != null,
             modes = ModeInfo.all.mapNotNull { mode ->
                 lesson.tracks.forName(mode.id)?.let { track ->
                     ModePickerItem(mode.id, mode.label, mode.whenToUse, track.durationMs)

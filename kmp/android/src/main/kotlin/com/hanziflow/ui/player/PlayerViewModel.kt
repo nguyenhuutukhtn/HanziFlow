@@ -281,6 +281,7 @@ class PlayerViewModel @Inject constructor(
             val catalogLesson = courseRepository.catalogLesson(lessonId)
             val tracks = catalogLesson?.tracks
             val chineseOnlyDownloaded = courseRepository.trackFile(lessonId, "guided_zh") != null
+            val notesDownloaded = courseRepository.notesFile(lessonId) != null
             _uiState.update { state ->
                 if (state.lessonId != lessonId) state else applyModePresentation(
                     state.copy(
@@ -288,6 +289,7 @@ class PlayerViewModel @Inject constructor(
                         lessonFormat = catalogLesson?.format ?: "linear_v1",
                         practiceAvailable = tracks?.practice != null,
                         chineseOnlyAvailable = chineseOnlyDownloaded,
+                        notesAvailable = notesDownloaded,
                     ),
                     state.positionMs,
                 )

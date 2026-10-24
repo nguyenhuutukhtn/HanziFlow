@@ -32,6 +32,8 @@ import com.hanziflow.ui.library.LibraryScreen
 import com.hanziflow.ui.library.LibraryUiState
 import com.hanziflow.ui.modes.ModePickerScreen
 import com.hanziflow.ui.modes.ModePickerUiState
+import com.hanziflow.ui.notes.NotesScreen
+import com.hanziflow.ui.notes.NotesUiState
 import com.hanziflow.ui.player.NowPlayingScreen
 import com.hanziflow.ui.player.PlayerUiState
 import com.hanziflow.ui.review.ReviewScreen
@@ -43,6 +45,7 @@ object Routes {
     const val SETTINGS = "settings"
     const val NOW_PLAYING = "now_playing"
     const val MODE_PICKER = "mode_picker"
+    const val NOTES = "notes"
 }
 
 /** Bottom-nav destinations; Review and Settings are G2b/G2c placeholders in this pass. */
@@ -101,6 +104,8 @@ fun AppShell(
     modePickerState: ModePickerUiState = ModePickerUiState(),
     onOpenModePicker: (LessonEntity) -> Unit = {},
     onPlayMode: (String, String) -> Unit = { _, _ -> },
+    notesState: NotesUiState = NotesUiState(),
+    onOpenNotes: (String) -> Unit = {},
 ) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -120,7 +125,7 @@ fun AppShell(
     Scaffold(
         modifier = modifier,
         bottomBar = {
-            if (onTabRoute) {
+            if (onTabRoute || currentRoute == Routes.NOTES) {
                 Column {
                     if (playerState.lessonId != null) {
                         MiniPlayer(
@@ -137,7 +142,7 @@ fun AppShell(
                             onNextSection = onNextSection,
                         )
                     }
-                    NavigationBar {
+                    if (onTabRoute) NavigationBar {
                         Tab.entries.forEach { tab ->
                             NavigationBarItem(
                                 selected = currentRoute == tab.route,
@@ -198,8 +203,13 @@ fun AppShell(
                         modePickerState.lessonId?.let { lessonId -> onPlayMode(lessonId, track) }
                         navController.navigate(Routes.NOW_PLAYING)
                     },
+                    onOpenNotes = {
+                        modePickerState.lessonId?.let(onOpenNotes)
+                        navController.navigate(Routes.NOTES)
+                    },
                 )
             }
+            composable(Routes.NOTES) { NotesScreen(notesState) }
             composable(Routes.NOW_PLAYING) {
                 NowPlayingScreen(
                     state = playerState,
@@ -228,6 +238,10 @@ fun AppShell(
                     onPauseForGap = onPauseForGap,
                     onRevealNgheCue = onRevealNgheCue,
                     onToggleRepeatEach = onToggleRepeatEach,
+                    onOpenNotes = {
+                        playerState.lessonId?.let(onOpenNotes)
+                        navController.navigate(Routes.NOTES)
+                    },
                 )
             }
         }

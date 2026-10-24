@@ -126,16 +126,16 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 ## Android app (main) (`kmp/android/src/main/`)
 
 - `kotlin/com/hanziflow/HanziFlowApplication.kt` [15] — HanziFlowApplication
-- `kotlin/com/hanziflow/MainActivity.kt` [101] — MainActivity — Thin composition root: wires the activity-scoped screen ViewModels (via Hilt) to
+- `kotlin/com/hanziflow/MainActivity.kt` [106] — MainActivity — Thin composition root: wires the activity-scoped screen ViewModels (via Hilt) to
 - `kotlin/com/hanziflow/data/CourseDatabase.kt` [93] — LessonEntity, SettingEntity, PlaybackEntity, CourseDao
-- `kotlin/com/hanziflow/data/CourseRepository.kt` [33] — CourseRepository — Course catalog, downloads, and the downloaded lesson package file store.
-- `kotlin/com/hanziflow/data/CourseRepositoryImpl.kt` [184] — CourseRepositoryImpl
+- `kotlin/com/hanziflow/data/CourseRepository.kt` [34] — CourseRepository — Course catalog, downloads, and the downloaded lesson package file store.
+- `kotlin/com/hanziflow/data/CourseRepositoryImpl.kt` [191] — CourseRepositoryImpl
 - `kotlin/com/hanziflow/data/ProgressRepository.kt` [24] — ProgressRepository, ProgressRepositoryImpl — Local listening resumption. Sync and completion status remain D2 work.
 - `kotlin/com/hanziflow/data/SettingsRepository.kt` [85] — SettingsRepository, SettingsRepositoryImpl — Simple key/value app settings (catalog base URL, transcript view, Vietnamese toggle, theme).
 - `kotlin/com/hanziflow/di/AppModule.kt` [28] — AppModule — Room DB / DAO and the shared OkHttp client: the only places this app talks to disk/network directly.
 - `kotlin/com/hanziflow/di/PlaybackModule.kt` [22] — PlaybackModule — [PlayerConnection] wraps the single [androidx.media3.session.MediaController] the UI
 - `kotlin/com/hanziflow/di/RepositoryModule.kt` [29] — RepositoryModule
-- `kotlin/com/hanziflow/download/LessonDownloadWorker.kt` [144] — LessonDownloadWorker
+- `kotlin/com/hanziflow/download/LessonDownloadWorker.kt` [145] — LessonDownloadWorker
 - `kotlin/com/hanziflow/playback/CueSeekPlayer.kt` [49] — CueSeekPlayer — Makes next/previous available on the session (notification, lock screen, media
 - `kotlin/com/hanziflow/playback/CueSkipper.kt` [51] — CueSkipper — Headset / transport cue navigation and section lookups, driven from the timeline
 - `kotlin/com/hanziflow/playback/LoopController.kt` [103] — LoopController — Owns the single active loop (line or section) and the position-check logic that
@@ -158,20 +158,23 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `kotlin/com/hanziflow/ui/library/LibraryScreen.kt` [228] — LibraryScreen, SyncControls, EmptyLibrary, LessonCard — Learn tab: the existing library wired into the new shell. Stateless — Room,
 - `kotlin/com/hanziflow/ui/library/LibraryUiState.kt` [10] — LibraryUiState
 - `kotlin/com/hanziflow/ui/library/LibraryViewModel.kt` [53] — LibraryViewModel
-- `kotlin/com/hanziflow/ui/modes/ModePickerScreen.kt` [54] — ModePickerScreen, formatModeDuration
-- `kotlin/com/hanziflow/ui/modes/ModePickerUiState.kt` [14] — ModePickerUiState, ModePickerItem
-- `kotlin/com/hanziflow/ui/modes/ModePickerViewModel.kt` [33] — ModePickerViewModel
-- `kotlin/com/hanziflow/ui/navigation/AppShell.kt` [235] — Routes, Tab — Bottom-nav destinations; Review and Settings are G2b/G2c placeholders in this pass.
+- `kotlin/com/hanziflow/ui/modes/ModePickerScreen.kt` [60] — ModePickerScreen, formatModeDuration
+- `kotlin/com/hanziflow/ui/modes/ModePickerUiState.kt` [15] — ModePickerUiState, ModePickerItem
+- `kotlin/com/hanziflow/ui/modes/ModePickerViewModel.kt` [34] — ModePickerViewModel
+- `kotlin/com/hanziflow/ui/navigation/AppShell.kt` [249] — Routes, Tab — Bottom-nav destinations; Review and Settings are G2b/G2c placeholders in this pass.
+- `kotlin/com/hanziflow/ui/notes/NotesScreen.kt` [112] — NotesScreen, SectionTitle, ExampleBlock, WordRow — Read-it-all-at-once notes: Mẫu câu, Câu hỏi, Từ vựng. No reveals or steps; hanzi large,
+- `kotlin/com/hanziflow/ui/notes/NotesUiState.kt` [14] — NotesUiState — Everything on the "Ghi chú" screen, in reading order: patterns, questions, vocabulary.
+- `kotlin/com/hanziflow/ui/notes/NotesViewModel.kt` [40] — NotesViewModel — Read-only: never touches the player, so audio keeps playing while notes are open.
 - `kotlin/com/hanziflow/ui/player/LookupSheet.kt` [59] — LookupSheet
 - `kotlin/com/hanziflow/ui/player/ModeGapControls.kt` [64] — ModeGapControls, NgheModeControls, RepeatEachChip
 - `kotlin/com/hanziflow/ui/player/NowPlayingPreview.kt` [41] — previewLine, NowPlayingPreview
-- `kotlin/com/hanziflow/ui/player/NowPlayingScreen.kt` [271] — NowPlayingScreen, NowPlayingHeader — Full-screen Now Playing route. Stateless; [PlayerViewModel] owns all command logic.
+- `kotlin/com/hanziflow/ui/player/NowPlayingScreen.kt` [277] — NowPlayingScreen, NowPlayingHeader — Full-screen Now Playing route. Stateless; [PlayerViewModel] owns all command logic.
 - `kotlin/com/hanziflow/ui/player/PlaybackProgressSaver.kt` [30] — PlaybackProgressSaver, NoOpProgressRepository
 - `kotlin/com/hanziflow/ui/player/PlayerLessonMeta.kt` [13] — PlayerUiState.forPlaybackLesson — Clears metadata that only belongs to the previously playing lesson.
 - `kotlin/com/hanziflow/ui/player/PlayerModePresentation.kt` [32] — ModePresentation
 - `kotlin/com/hanziflow/ui/player/PlayerTranscriptLoader.kt` [37] — LoadedTranscript
-- `kotlin/com/hanziflow/ui/player/PlayerUiState.kt` [51] — PlayerUiState, TranscriptUiState
-- `kotlin/com/hanziflow/ui/player/PlayerViewModel.kt` [297] — PlayerViewModel
+- `kotlin/com/hanziflow/ui/player/PlayerUiState.kt` [52] — PlayerUiState, TranscriptUiState
+- `kotlin/com/hanziflow/ui/player/PlayerViewModel.kt` [299] — PlayerViewModel
 - `kotlin/com/hanziflow/ui/player/SectionControls.kt` [128] — SectionRow, SectionLoopChip, SectionListSheet — "▤ <section title> · n/N ▾" on the left (opens the section list), "↻ Lặp phần này"
 - `kotlin/com/hanziflow/ui/player/TranscriptPanel.kt` [300] — TranscriptPanel, TranscriptLineRow, TokenRow, TokenCell — One-dataset, several-views karaoke transcript. Pure rendering decisions come from
 - `kotlin/com/hanziflow/ui/player/TranscriptViewSwitcher.kt` [24] — TranscriptViewSwitcher
@@ -188,7 +191,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `kotlin/com/hanziflow/data/CourseRepositoryTest.kt` [25] — CourseRepositoryTest
 - `kotlin/com/hanziflow/data/M1ContractTest.kt` [35] — M1ContractTest
 - `kotlin/com/hanziflow/data/ProgressRepositoryTest.kt` [31] — ProgressRepositoryTest
-- `kotlin/com/hanziflow/fakes/FakeCourseRepository.kt` [54] — FakeCourseRepository — In-memory [CourseRepository] fake: no Room/OkHttp/WorkManager, just recorded calls and canned returns.
+- `kotlin/com/hanziflow/fakes/FakeCourseRepository.kt` [56] — FakeCourseRepository — In-memory [CourseRepository] fake: no Room/OkHttp/WorkManager, just recorded calls and canned returns.
 - `kotlin/com/hanziflow/fakes/FakePlayerConnection.kt` [83] — FakePlayerConnection — Lets a ViewModel test drive the service's published state without Media3 or a device.
 - `kotlin/com/hanziflow/fakes/FakeProgressRepository.kt` [15] — FakeProgressRepository
 - `kotlin/com/hanziflow/fakes/FakeSettingsRepository.kt` [43] — FakeSettingsRepository
@@ -206,6 +209,9 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `kotlin/com/hanziflow/ui/modes/ModePickerScreenshotTest.kt` [35] — ModePickerScreenshotTest
 - `kotlin/com/hanziflow/ui/modes/ModePickerViewModelTest.kt` [44] — ModePickerViewModelTest
 - `kotlin/com/hanziflow/ui/navigation/AppShellTest.kt` [154] — AppShellTest
+- `kotlin/com/hanziflow/ui/notes/NotesScreenTest.kt` [152] — NotesScreenTest — Lesson 2 notes built from the real contract fixtures (notes_modes.json + items_modes.json).
+- `kotlin/com/hanziflow/ui/notes/NotesScreenshotTest.kt` [45] — NotesScreenshotTest
+- `kotlin/com/hanziflow/ui/notes/NotesViewModelTest.kt` [134] — NotesViewModelTest
 - `kotlin/com/hanziflow/ui/player/ModePlayerUiTest.kt` [89] — ModePlayerUiTest
 - `kotlin/com/hanziflow/ui/player/PlayerLessonMetaTest.kt` [57] — PlayerLessonMetaTest
 - `kotlin/com/hanziflow/ui/player/PlayerModeViewModelTest.kt` [180] — PlayerModeViewModelTest

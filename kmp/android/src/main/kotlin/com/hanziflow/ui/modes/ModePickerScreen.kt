@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,12 +19,14 @@ import androidx.compose.ui.platform.testTag
 import com.hanziflow.ui.theme.Spacing
 
 const val ModePickerTestTag = "mode_picker"
+const val ModePickerNotesTestTag = "mode_picker_notes"
 
 @Composable
 fun ModePickerScreen(
     state: ModePickerUiState,
     onSelect: (String) -> Unit,
     modifier: Modifier = Modifier,
+    onOpenNotes: () -> Unit = {},
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize().testTag(ModePickerTestTag),
@@ -31,6 +34,9 @@ fun ModePickerScreen(
         verticalArrangement = Arrangement.spacedBy(Spacing.md),
     ) {
         item { Text(state.title, style = MaterialTheme.typography.headlineMedium) }
+        if (state.notesAvailable) item {
+            OutlinedButton(onClick = onOpenNotes, modifier = Modifier.fillMaxWidth().testTag(ModePickerNotesTestTag)) { Text("Ghi chú") }
+        }
         item { Text("Chọn cách học", style = MaterialTheme.typography.titleMedium) }
         items(state.modes, key = { it.id }) { mode ->
             Card(Modifier.fillMaxWidth().clickable { onSelect(mode.id) }) {

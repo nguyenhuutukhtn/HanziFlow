@@ -20,6 +20,7 @@ data class PlayerUiState(
     val modeName: String? = null,
     val practiceAvailable: Boolean = false,
     val chineseOnlyAvailable: Boolean = false,
+    val notesAvailable: Boolean = false,
     val positionMs: Long = 0,
     val durationMs: Long = 0,
     val speed: Float = 1f,
