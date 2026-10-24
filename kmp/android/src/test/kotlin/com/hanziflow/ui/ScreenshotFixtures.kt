@@ -55,7 +55,11 @@ fun MiniPlayerFrame(
 }
 
 @Composable
-fun NowPlayingFrame(state: PlayerUiState, darkTheme: Boolean = true) {
+fun NowPlayingFrame(
+    state: PlayerUiState,
+    darkTheme: Boolean = true,
+    explainSheet: @Composable (ReferenceLine, () -> Unit) -> Unit = { _, _ -> },
+) {
     HanziFlowTheme(darkTheme = darkTheme) {
         Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
             NowPlayingScreen(
@@ -80,6 +84,7 @@ fun NowPlayingFrame(state: PlayerUiState, darkTheme: Boolean = true) {
                 onStopSectionLoopAfterPass = {},
                 onNextSection = {},
                 onSeekToSection = {},
+                explainSheet = explainSheet,
             )
         }
     }

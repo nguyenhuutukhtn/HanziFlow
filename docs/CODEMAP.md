@@ -65,7 +65,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `test_ledger.py` [88]
 - `test_lesson_001_story.py` [114]
 - `test_lesson_schema.py` [113]
-- `test_llm_compare.py` [121] — Tests for scripts/llm_compare.py. No network: HTTP is monkeypatched.
+- `test_llm_compare.py` [122] — Tests for scripts/llm_compare.py. No network: HTTP is monkeypatched.
 - `test_m3_modes.py` [99]
 - `test_metrics_rows.py` [88]
 - `test_publish.py` [437] ⚠
@@ -164,20 +164,24 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `kotlin/com/hanziflow/ui/components/AppChips.kt` [12] — appFilterChipColors — Selected chips use the amber primary container, not M3's default teal secondary.
 - `kotlin/com/hanziflow/ui/components/MiniPlayer.kt` [183] — MiniPlayer — Persistent mini-player, docked above the bottom navigation on every tab.
 - `kotlin/com/hanziflow/ui/components/TrackLabels.kt` [15] — trackDisplayName — Display names only: internal ids stay `guided` / `practice` everywhere in data,
+- `kotlin/com/hanziflow/ui/explain/ExplainSheet.kt` [169] — ExplainSheet, ExplainSheetContent, Messages, UserBubble
+- `kotlin/com/hanziflow/ui/explain/ExplainSheetHost.kt` [27] — ExplainSheetHost — Hilt-backed sheet for one transcript line; used by the app shell (previews/tests use [ExplainSheet]).
+- `kotlin/com/hanziflow/ui/explain/ExplainTargets.kt` [17] — ExplainTargets — Up to [CONTEXT_LINES] Chinese lines each side of [line], taken from the same track's [lines].
+- `kotlin/com/hanziflow/ui/explain/LineMenu.kt` [50] — hasLineMenu, LineMenuAnchor — Any row with Chinese text in the data; Vietnamese narration rows have no menu.
 - `kotlin/com/hanziflow/ui/library/LibraryScreen.kt` [228] — LibraryScreen, SyncControls, EmptyLibrary, LessonCard — Learn tab: the existing library wired into the new shell. Stateless — Room,
 - `kotlin/com/hanziflow/ui/library/LibraryUiState.kt` [10] — LibraryUiState
 - `kotlin/com/hanziflow/ui/library/LibraryViewModel.kt` [53] — LibraryViewModel
 - `kotlin/com/hanziflow/ui/modes/ModePickerScreen.kt` [60] — ModePickerScreen, formatModeDuration
 - `kotlin/com/hanziflow/ui/modes/ModePickerUiState.kt` [15] — ModePickerUiState, ModePickerItem
 - `kotlin/com/hanziflow/ui/modes/ModePickerViewModel.kt` [34] — ModePickerViewModel
-- `kotlin/com/hanziflow/ui/navigation/AppShell.kt` [249] — Routes, Tab — Bottom-nav destinations; Review and Settings are G2b/G2c placeholders in this pass.
+- `kotlin/com/hanziflow/ui/navigation/AppShell.kt` [251] — Routes, Tab — Bottom-nav destinations; Review and Settings are G2b/G2c placeholders in this pass.
 - `kotlin/com/hanziflow/ui/notes/NotesScreen.kt` [112] — NotesScreen, SectionTitle, ExampleBlock, WordRow — Read-it-all-at-once notes: Mẫu câu, Câu hỏi, Từ vựng. No reveals or steps; hanzi large,
 - `kotlin/com/hanziflow/ui/notes/NotesUiState.kt` [14] — NotesUiState — Everything on the "Ghi chú" screen, in reading order: patterns, questions, vocabulary.
 - `kotlin/com/hanziflow/ui/notes/NotesViewModel.kt` [40] — NotesViewModel — Read-only: never touches the player, so audio keeps playing while notes are open.
 - `kotlin/com/hanziflow/ui/player/LookupSheet.kt` [59] — LookupSheet
 - `kotlin/com/hanziflow/ui/player/ModeGapControls.kt` [64] — ModeGapControls, NgheModeControls, RepeatEachChip
 - `kotlin/com/hanziflow/ui/player/NowPlayingPreview.kt` [41] — previewLine, NowPlayingPreview
-- `kotlin/com/hanziflow/ui/player/NowPlayingScreen.kt` [277] — NowPlayingScreen, NowPlayingHeader — Full-screen Now Playing route. Stateless; [PlayerViewModel] owns all command logic.
+- `kotlin/com/hanziflow/ui/player/NowPlayingScreen.kt` [282] — NowPlayingScreen, NowPlayingHeader — Full-screen Now Playing route. Stateless; [PlayerViewModel] owns all command logic.
 - `kotlin/com/hanziflow/ui/player/PlaybackProgressSaver.kt` [30] — PlaybackProgressSaver, NoOpProgressRepository
 - `kotlin/com/hanziflow/ui/player/PlayerLessonMeta.kt` [13] — PlayerUiState.forPlaybackLesson — Clears metadata that only belongs to the previously playing lesson.
 - `kotlin/com/hanziflow/ui/player/PlayerModePresentation.kt` [32] — ModePresentation
@@ -185,7 +189,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `kotlin/com/hanziflow/ui/player/PlayerUiState.kt` [52] — PlayerUiState, TranscriptUiState
 - `kotlin/com/hanziflow/ui/player/PlayerViewModel.kt` [299] — PlayerViewModel
 - `kotlin/com/hanziflow/ui/player/SectionControls.kt` [128] — SectionRow, SectionLoopChip, SectionListSheet — "▤ <section title> · n/N ▾" on the left (opens the section list), "↻ Lặp phần này"
-- `kotlin/com/hanziflow/ui/player/TranscriptPanel.kt` [300] — TranscriptPanel, TranscriptLineRow, TokenRow, TokenCell — One-dataset, several-views karaoke transcript. Pure rendering decisions come from
+- `kotlin/com/hanziflow/ui/player/TranscriptPanel.kt` [292] — TranscriptPanel, TranscriptLineRow, TokenRow, TokenCell — One-dataset, several-views karaoke transcript. Pure rendering decisions come from
 - `kotlin/com/hanziflow/ui/player/TranscriptViewSwitcher.kt` [24] — TranscriptViewSwitcher
 - `kotlin/com/hanziflow/ui/player/TransportSection.kt` [201] — TransportSection, SeekBar, formatTime — Track switch, seek bar, speed chips and primary transport controls. Split out of NowPlayingScreen (line budget).
 - `kotlin/com/hanziflow/ui/review/ReviewScreen.kt` [44] — ReviewScreen, ReviewScreenPreview — G2c placeholder: test flow + attempt history land here. Copy is the final Vietnamese copy.
@@ -198,6 +202,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 
 - `kotlin/com/hanziflow/ai/ExplainPromptTest.kt` [29] — ExplainPromptTest
 - `kotlin/com/hanziflow/ai/ExplainRepositoryTest.kt` [111] — FakeChat, ExplainRepositoryTest
+- `kotlin/com/hanziflow/ai/ExplainTestEnv.kt` [29] — CountingChat, ExplainTestEnv — In-memory Room + counting fake chat client; kept out of composable test files (layering rule).
 - `kotlin/com/hanziflow/ai/MigrationTest.kt` [48] — MigrationTest
 - `kotlin/com/hanziflow/ai/OpenAiCompatibleClientTest.kt` [53] — OpenAiCompatibleClientTest
 - `kotlin/com/hanziflow/architecture/LayeringTest.kt` [86] — LayeringTest — Enforces the dependency rules from docs/app_architecture.md "Code architecture (Android)",
@@ -212,11 +217,14 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `kotlin/com/hanziflow/playback/LoopPublisherTest.kt` [74] — LoopPublisherTest
 - `kotlin/com/hanziflow/ui/ModePlayerScreenshotTest.kt` [93] — ModePlayerScreenshotTest
 - `kotlin/com/hanziflow/ui/PlayerUiTest.kt` [216] — PlayerUiTest
-- `kotlin/com/hanziflow/ui/ScreenshotFixtures.kt` [223] — ComposeContentTestRule.captureScreen, MiniPlayerFrame, NowPlayingFrame, nowPlayingState — Fake-state fixtures shared by the Roborazzi screenshot tests (kept out of the test files for the line budget).
+- `kotlin/com/hanziflow/ui/ScreenshotFixtures.kt` [228] — ComposeContentTestRule.captureScreen, MiniPlayerFrame, NowPlayingFrame, nowPlayingState — Fake-state fixtures shared by the Roborazzi screenshot tests (kept out of the test files for the line budget).
 - `kotlin/com/hanziflow/ui/SectionReplayScreenshotTest.kt` [44] — SectionReplayScreenshotTest — Section replay / Chinese-only visuals; split out of [UiScreenshotTest] for the line budget.
-- `kotlin/com/hanziflow/ui/TranscriptInteractionTest.kt` [96] — TranscriptInteractionTest
+- `kotlin/com/hanziflow/ui/TranscriptInteractionTest.kt` [97] — TranscriptInteractionTest
 - `kotlin/com/hanziflow/ui/UiScreenshotTest.kt` [82] — UiScreenshotTest — Fake-state visuals, recorded into kmp/android/build/outputs/roborazzi until the
 - `kotlin/com/hanziflow/ui/characters/StrokePathTest.kt` [27] — StrokePathTest
+- `kotlin/com/hanziflow/ui/explain/ExplainScreenshotTest.kt` [64] — ExplainScreenshotTest
+- `kotlin/com/hanziflow/ui/explain/ExplainSheetTest.kt` [126] — ExplainSheetTest — Player screen whose explain sheet is wired to a real ViewModel on a fake chat client.
+- `kotlin/com/hanziflow/ui/explain/LineMenuTest.kt` [50] — LineMenuTest
 - `kotlin/com/hanziflow/ui/library/LibraryViewModelTest.kt` [77] — LibraryViewModelTest
 - `kotlin/com/hanziflow/ui/modes/ModePickerScreenTest.kt` [48] — ModePickerScreenTest
 - `kotlin/com/hanziflow/ui/modes/ModePickerScreenshotTest.kt` [35] — ModePickerScreenshotTest

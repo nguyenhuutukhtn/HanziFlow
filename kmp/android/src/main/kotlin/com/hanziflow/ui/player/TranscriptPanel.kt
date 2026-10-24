@@ -1,6 +1,5 @@
 package com.hanziflow.ui.player
 
-import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -31,12 +30,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import com.hanziflow.R
 import com.hanziflow.shared.Items
@@ -48,6 +44,7 @@ import com.hanziflow.shared.transcript.TokenRenderDecision
 import com.hanziflow.shared.transcript.TranscriptCues
 import com.hanziflow.shared.transcript.TranscriptRendering
 import com.hanziflow.shared.transcript.TranscriptViewMode
+import com.hanziflow.ui.explain.LineMenuAnchor
 import com.hanziflow.ui.theme.appColors
 import com.hanziflow.ui.theme.appTextStyles
 
@@ -75,13 +72,8 @@ fun TranscriptPanel(
     onVietnameseToggle: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     showSwitcher: Boolean = true,
+    onExplainLine: (ReferenceLine) -> Unit = {},
 ) {
-    val clipboard = LocalClipboardManager.current
-    val context = LocalContext.current
-    val copyLine: (String) -> Unit = { hanzi ->
-        clipboard.setText(AnnotatedString(hanzi))
-        Toast.makeText(context, "Đã sao chép", Toast.LENGTH_SHORT).show()
-    }
     val activeCue = remember(cues, positionMs) { TranscriptCues.activeCue(cues, positionMs) }
     val activeLineIds = remember(activeCue) { activeCue?.let(TranscriptCues::lineIdsFor)?.toSet() ?: emptySet() }
 
@@ -118,17 +110,19 @@ fun TranscriptPanel(
                     TranscriptRendering.decide(line, viewMode, showVietnamese, revealed, nextLine)
                 }
                 if (decision.lineVisible) {
-                    TranscriptLineRow(
-                        line = line,
-                        decision = decision,
-                        isActive = line.id in activeLineIds,
-                        isLooped = loopedLineId == line.id,
-                        onSeek = { onSeek(line.id) },
-                        onToggleLoop = { onToggleLoop(line.id) },
-                        onLookupToken = { itemId -> items?.words?.any { it.id == itemId }?.let { onLookup(itemId) } },
-                        onCopyLine = { copyLine(line.text) },
-                        useRawHanziFallback = items != null && items.words.isEmpty(),
-                    )
+                    LineMenuAnchor(line, onExplain = { onExplainLine(line) }) { onLongClick ->
+                        TranscriptLineRow(
+                            line = line,
+                            decision = decision,
+                            isActive = line.id in activeLineIds,
+                            isLooped = loopedLineId == line.id,
+                            onSeek = { onSeek(line.id) },
+                            onToggleLoop = { onToggleLoop(line.id) },
+                            onLookupToken = { itemId -> items?.words?.any { it.id == itemId }?.let { onLookup(itemId) } },
+                            onCopyLine = onLongClick,
+                            useRawHanziFallback = items != null && items.words.isEmpty(),
+                        )
+                    }
                 }
             }
         }
@@ -144,7 +138,7 @@ private fun TranscriptLineRow(
     onSeek: () -> Unit,
     onToggleLoop: () -> Unit,
     onLookupToken: (String) -> Unit,
-    onCopyLine: () -> Unit,
+    onCopyLine: (() -> Unit)?,
     useRawHanziFallback: Boolean,
 ) {
     val rowBackground = if (isActive) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface
@@ -160,9 +154,7 @@ private fun TranscriptLineRow(
             .fillMaxWidth()
             .background(rowBackground)
             .padding(horizontal = 12.dp, vertical = 8.dp)
-            .combinedClickable(onClick = onSeek, onLongClick = if (
-                decision.placeholder || (!decision.showHanzi && !decision.showPinyinLine)
-            ) null else onCopyLine),
+            .combinedClickable(onClick = onSeek, onLongClick = onCopyLine),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(4.dp),
     ) {
@@ -240,7 +232,7 @@ private fun TokenRow(
     pinyinColor: Color,
     onSeek: () -> Unit,
     onLookupToken: (String) -> Unit,
-    onCopyLine: () -> Unit,
+    onCopyLine: (() -> Unit)?,
 ) {
     FlowRow(
         // Bottom alignment keeps punctuation (no pinyin column) on the Hanzi
@@ -273,7 +265,7 @@ private fun TokenCell(
     pinyinColor: Color,
     onSeek: () -> Unit,
     onLookupToken: (String) -> Unit,
-    onCopyLine: () -> Unit,
+    onCopyLine: (() -> Unit)?,
 ) {
     Column(
         modifier = Modifier.combinedClickable(

@@ -65,6 +65,7 @@ class TranscriptInteractionTest {
         compose.setContent { HanziFlowTheme { NowPlayingFrame(nowPlayingState(TranscriptViewMode.HANZI_ONLY)) } }
 
         compose.onNodeWithText("这").performTouchInput { longClick() }
+        compose.onNodeWithText("Sao chép").performClick()
 
         assertEquals("这是外卖。你也要吗？", clipboard.primaryClip?.getItemAt(0)?.text?.toString())
         assertEquals("Đã sao chép", ShadowToast.getTextOfLatestToast())

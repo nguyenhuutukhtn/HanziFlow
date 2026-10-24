@@ -87,4 +87,16 @@
     <string name="settings_default_view_practice">Hiển thị mặc định (Luyện nghe)</string>
     <string name="settings_show_vietnamese">Hiện tiếng Việt</string>
     <string name="settings_dark_theme">Giao diện tối</string>
+
+    <!-- AI explain -->
+    <string name="line_menu_explain">Giải thích</string>
+    <string name="line_menu_copy">Sao chép</string>
+    <string name="line_copied">Đã sao chép</string>
+    <string name="explain_prompt_chip">Giải thích câu này</string>
+    <string name="explain_not_configured">Chưa cấu hình AI (llm.* trong local.properties)</string>
+    <string name="explain_retry">Thử lại</string>
+    <string name="explain_stale">Câu này đã thay đổi trong bài mới</string>
+    <string name="explain_reexplain">Giải thích lại</string>
+    <string name="explain_input_hint">Hỏi thêm về câu này</string>
+    <string name="explain_send">Gửi</string>
 </resources>

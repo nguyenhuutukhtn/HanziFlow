@@ -33,6 +33,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.hanziflow.R
+import com.hanziflow.shared.ReferenceLine
 import com.hanziflow.shared.transcript.SectionNavigation
 import com.hanziflow.shared.transcript.TranscriptViewMode
 import com.hanziflow.ui.theme.Spacing
@@ -80,9 +81,11 @@ fun NowPlayingScreen(
     onRevealNgheCue: () -> Unit = {},
     onToggleRepeatEach: () -> Unit = {},
     onOpenNotes: () -> Unit = {},
+    explainSheet: @Composable (ReferenceLine, () -> Unit) -> Unit = { _, _ -> },
 ) {
     var sectionSheetOpen by remember { mutableStateOf(false) }
     var characterListOpen by remember { mutableStateOf(false) }
+    var explainLine by remember { mutableStateOf<ReferenceLine?>(null) }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -175,6 +178,7 @@ fun NowPlayingScreen(
                     onViewModeChange = onViewModeChange,
                     onVietnameseToggle = onVietnameseToggle,
                     showSwitcher = false,
+                    onExplainLine = { explainLine = it },
                     modifier = Modifier.fillMaxSize(),
                 )
             }
@@ -197,6 +201,7 @@ fun NowPlayingScreen(
             onSpeed = onSpeed,
         )
     }
+    explainLine?.let { explainSheet(it) { explainLine = null } }
     state.transcript.lookupWord?.let { word ->
         LookupSheet(word = word, lineText = state.transcript.lookupLineText, onPlayClip = onPlayLookupClip, onDismiss = onDismissLookup, characterIndex = state.characterIndex, onCharacter = onCharacter)
     }

@@ -28,6 +28,7 @@ import com.hanziflow.shared.CourseJson
 import com.hanziflow.shared.transcript.TranscriptViewMode
 import com.hanziflow.ui.components.MiniPlayer
 import com.hanziflow.ui.components.trackDisplayName
+import com.hanziflow.ui.explain.ExplainSheetHost
 import com.hanziflow.ui.library.LibraryScreen
 import com.hanziflow.ui.library.LibraryUiState
 import com.hanziflow.ui.modes.ModePickerScreen
@@ -242,6 +243,7 @@ fun AppShell(
                         playerState.lessonId?.let(onOpenNotes)
                         navController.navigate(Routes.NOTES)
                     },
+                    explainSheet = { line, dismiss -> ExplainSheetHost(playerState, line, dismiss) },
                 )
             }
         }
