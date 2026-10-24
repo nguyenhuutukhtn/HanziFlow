@@ -50,6 +50,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `build_radicals.py` [62] — Build the radical metadata from a pinned UCD skeleton and authored names.
 - `codemap.py` [100] — Regenerate docs/CODEMAP.md: one line per source file, so agents open only what they need.
 - `fake_generate.py` [54] — Run the real `generate` path on lesson files with a fake TTS, in scratch dirs.
+- `llm_compare.py` [249] — Send the same 5 lesson-2 lines to every configured LLM provider and write the answers side by side.
 
 ## Python tests (`tests/`)
 
@@ -64,6 +65,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `test_ledger.py` [88]
 - `test_lesson_001_story.py` [114]
 - `test_lesson_schema.py` [113]
+- `test_llm_compare.py` [121] — Tests for scripts/llm_compare.py. No network: HTTP is monkeypatched.
 - `test_m3_modes.py` [99]
 - `test_metrics_rows.py` [88]
 - `test_publish.py` [437] ⚠
