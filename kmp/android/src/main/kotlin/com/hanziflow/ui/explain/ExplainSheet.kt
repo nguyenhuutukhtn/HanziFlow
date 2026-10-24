@@ -8,9 +8,8 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
@@ -97,15 +96,15 @@ fun ExplainSheetContent(
 @Composable
 private fun Messages(state: ExplainUiState.Ready, pending: String, onRetry: () -> Unit, onReexplain: () -> Unit) {
     val thread: ExplainThread = state.thread
-    val listState = rememberLazyListState()
-    // Prompt (messages[0]) is never shown; stale/error/sending rows follow the messages.
-    val extra = (if (thread.isStale) 1 else 0) + (if (state.error != null) 1 else 0) + (if (state.sending) 2 else 0)
+    // A plain scrolling Column, not LazyColumn: lazy items re-parse their Markdown when they scroll
+    // back in, change height, and a fast fling to the end jitters up and down. Threads are short.
+    val scrollState = rememberScrollState()
     LaunchedEffect(thread.messages.size, state.sending, state.error) {
-        val last = thread.messages.size + extra - 1
-        if (last >= 0) listState.animateScrollToItem(last)
+        scrollState.animateScrollTo(scrollState.maxValue)
     }
-    LazyColumn(state = listState, verticalArrangement = Arrangement.spacedBy(Spacing.sm), modifier = Modifier.fillMaxWidth()) {
-        itemsIndexed(thread.messages) { index, message ->
+    // Prompt (messages[0]) is never shown; stale/error/sending rows follow the messages.
+    Column(Modifier.fillMaxWidth().verticalScroll(scrollState), verticalArrangement = Arrangement.spacedBy(Spacing.sm)) {
+        thread.messages.forEachIndexed { index, message ->
             when {
                 index == 0 -> AssistChip(onClick = {}, label = { Text(stringResource(R.string.explain_prompt_chip)) })
                 message.role == ChatMessage.USER -> UserBubble(message)
@@ -121,20 +120,22 @@ private fun Messages(state: ExplainUiState.Ready, pending: String, onRetry: () -
                 )
             }
         }
-        if (thread.isStale) item {
+        if (thread.isStale) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(stringResource(R.string.explain_stale), Modifier.weight(1f), color = MaterialTheme.colorScheme.tertiary)
                 TextButton(onClick = onReexplain) { Text(stringResource(R.string.explain_reexplain)) }
             }
         }
-        if (state.error != null) item {
+        if (state.error != null) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(state.error, Modifier.weight(1f), color = MaterialTheme.colorScheme.error)
                 TextButton(onClick = onRetry, enabled = !state.sending) { Text(stringResource(R.string.explain_retry)) }
             }
         }
-        if (state.sending) item { UserBubble(ChatMessage(ChatMessage.USER, pending)) }
-        if (state.sending) item { CircularProgressIndicator(Modifier.padding(Spacing.sm)) }
+        if (state.sending) {
+            UserBubble(ChatMessage(ChatMessage.USER, pending))
+            CircularProgressIndicator(Modifier.padding(Spacing.sm))
+        }
     }
 }
 
