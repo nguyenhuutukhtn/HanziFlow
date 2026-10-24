@@ -126,6 +126,7 @@ def pick_lines(reference: dict) -> list[dict]:
 def http_json(method: str, url: str, headers: dict[str, str], body: dict | None = None,
               timeout: int = TIMEOUT_S) -> dict:
     data = json.dumps(body).encode("utf-8") if body is not None else None
+    headers = {**headers, "User-Agent": "mandarin-course-llm-compare/1.0"}
     req = urllib.request.Request(url, data=data, method=method, headers=headers)
     with urllib.request.urlopen(req, timeout=timeout) as resp:
         return json.loads(resp.read().decode("utf-8"))
