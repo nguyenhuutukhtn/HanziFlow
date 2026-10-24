@@ -127,6 +127,195 @@ h121 | wang_fang | 陈东，我在这里！你能看见我吗？ | Chén Dōng, 
 h122 | chen_dong | 看见你了！好，我们一起进去开会。 | Kànjiàn nǐ le! Hǎo, wǒmen yìqǐ jìnqù kāihuì. | Thấy cô rồi! Được, chúng ta cùng vào họp.
 ```
 
+## Từ vựng
+
+```
+v1 | narrator | 今天我们听几个词。 | Jīntiān wǒmen tīng jǐ ge cí. | Hôm nay chúng ta nghe vài từ.
+v2 | narrator | 我说一个词，你听。 | Wǒ shuō yí ge cí, nǐ tīng. | Tôi nói một từ, bạn nghe.
+v3 | narrator | 我说，你听。你跟我说。 | Wǒ shuō, nǐ tīng. Nǐ gēn wǒ shuō. | Tôi nói, bạn nghe. Bạn nói theo tôi.
+v4 | narrator | 好，我们来听。 | Hǎo, wǒmen lái tīng. | Được, ta nghe nào.
+v4.g | gap | — | — | —
+v5 | narrator | 门口。 | Ménkǒu. | Cửa ra vào.
+v6 | narrator | 门口，门口。 | Ménkǒu, ménkǒu. | Cửa ra vào, cửa ra vào.
+v7 | narrator | 门口，意思是门那里。 | Ménkǒu, yì sī shì mén nàlǐ. | 门口 nghĩa là chỗ ở cửa.
+v8 | narrator | 听句子。 | Tīng jùzi. | Nghe câu.
+v9 | narrator | 她在一座楼的门口，进不去。 | Tā zài yí zuò lóu de ménkǒu, jìn bu qù. | Cô ấy đứng ở cửa một tòa nhà, không vào được. (trong truyện)
+v10 | chen_dong | 我在门口等你。 | Wǒ zài ménkǒu děng nǐ. | Tôi đợi bạn ở cửa.
+v11 | wang_fang | 好，我马上过来。 | Hǎo, wǒ mǎshàng guòlái. | Được, tôi sang ngay.
+v12 | narrator | 门口。你说。 | Ménkǒu. Nǐ shuō. | Cửa ra vào. Bạn nói.
+v12.g | gap | — | — | —
+v13 | narrator | 大厅。 | Dàtīng. | Sảnh.
+v14 | narrator | 大厅，大厅。 | Dàtīng, dàtīng. | Sảnh, sảnh.
+v15 | narrator | 大厅在楼里面。大厅最大。 | Dàtīng zài lóu lǐmiàn. Dàtīng zuì dà. | Sảnh ở trong tòa nhà. Sảnh là chỗ lớn nhất.
+v16 | narrator | 陈东从八楼下来，在大厅找王芳。 | Chén Dōng cóng bā lóu xiàlái, zài dàtīng zhǎo Wáng Fāng. | Trần Đông từ tầng tám xuống, tìm Vương Phương ở sảnh. (trong truyện)
+v17 | chen_dong | 我在大厅，你在哪个门口？ | Wǒ zài dàtīng, nǐ zài nǎ ge ménkǒu? | Tôi ở sảnh, bạn ở cửa nào? (trong truyện)
+v18 | narrator | 大厅。你说。 | Dàtīng. Nǐ shuō. | Sảnh. Bạn nói.
+v18.g | gap | — | — | —
+v19 | narrator | 楼下。 | Lóuxià. | Dưới lầu.
+v20 | narrator | 八楼，在上面。楼下，在下面。 | Bālóu, zài shàngmiàn. Lóuxià, zài xiàmiàn. | Tầng tám ở trên. 楼下 ở dưới.
+v21 | narrator | 我在楼下，门口这里。 | Wǒ zài lóu xià, ménkǒu zhèlǐ. | Tôi ở dưới lầu, ngay cửa này. (trong truyện)
+v22 | wang_fang | 你在八楼，我在楼下。 | Nǐ zài bā lóu, wǒ zài lóu xià. | Bạn ở tầng tám, tôi ở dưới lầu.
+v23 | narrator | 楼下。你说。 | Lóuxià. Nǐ shuō. | Dưới lầu. Bạn nói.
+v23.g | gap | — | — | —
+v24 | narrator | 哪儿。 | Nǎr. | Ở đâu.
+v25 | narrator | 哪儿，哪儿。 | Nǎr, nǎr. | Ở đâu, ở đâu.
+v26 | narrator | 不知道他在哪儿，你问：他在哪儿？ | Bù zhīdào tā zài nǎr, nǐ wèn: tā zài nǎr? | Không biết anh ấy ở đâu thì hỏi: Anh ấy ở đâu?
+v27 | narrator | 你在哪儿？ | Nǐ zài nǎr? | Bạn ở đâu? (trong truyện)
+v28 | chen_dong | 你在哪儿？我看不见你。 | Nǐ zài nǎr? Wǒ kàn bu jiàn nǐ. | Bạn ở đâu? Tôi không thấy bạn.
+v29 | narrator | 哪儿。你说。 | Nǎr. Nǐ shuō. | Ở đâu. Bạn nói.
+v29.g | gap | — | — | —
+v30 | narrator | 旁边。 | Pángbiān. | Bên cạnh.
+v31 | narrator | 旁边，旁边。 | Pángbiān, pángbiān. | Bên cạnh, bên cạnh.
+v32 | narrator | 我在你旁边。你在我旁边。 | Wǒ zài nǐ pángbiān. Nǐ zài wǒ pángbiān. | Tôi ở cạnh bạn. Bạn ở cạnh tôi.
+v33 | narrator | 我旁边有一家咖啡店。 | Wǒ pángbiān yǒu yì jiā kāfēidiàn. | Bên cạnh tôi có một quán cà phê. (trong truyện)
+v34 | narrator | 咖啡店。卖咖啡的店。 | Kāfēidiàn. Mài kā fēi de diàn. | Quán cà phê: quán bán cà phê.
+v35 | narrator | 我旁边有一家咖啡店。你说。 | Wǒ pángbiān yǒu yì jiā kāfēidiàn. Nǐ shuō. | Bên cạnh tôi có một quán cà phê. Bạn nói.
+v35.g | gap | — | — | —
+v36 | narrator | 对面。 | Duìmiàn. | Đối diện.
+v37 | narrator | 对面，对面。 | Duìmiàn, duìmiàn. | Đối diện, đối diện.
+v38 | narrator | 我在这里，你在那里，我们面对面。 | Wǒ zài zhèlǐ, nǐ zài nàlǐ, wǒmen miànduìmiàn. | Tôi ở đây, bạn ở kia, hai ta đối mặt nhau.
+v39 | narrator | 这座楼在那座楼对面。 | Zhè zuò lóu zài nà zuò lóu duìmiàn. | Tòa nhà này ở đối diện tòa nhà kia.
+v40 | wang_fang | 咖啡店在楼的对面。 | Kāfēidiàn zài lóu de duìmiàn. | Quán cà phê ở đối diện tòa nhà.
+v41 | narrator | 对面。你说。 | Duìmiàn. Nǐ shuō. | Đối diện. Bạn nói.
+v41.g | gap | — | — | —
+v42 | narrator | 看见。 | Kànjiàn. | Nhìn thấy.
+v43 | narrator | 看见，看见。 | Kànjiàn, kànjiàn. | Nhìn thấy.
+v44 | narrator | 看见，意思是：我看到了。 | Kànjiàn, yì sī shì: wǒ kàn dào le. | 看见 nghĩa là: tôi đã nhìn thấy.
+v45 | wang_fang | 陈东，我在这里！你能看见我吗？ | Chén Dōng, wǒ zài zhèlǐ! Nǐ néng kànjiàn wǒ ma? | Trần Đông, tôi ở đây! Anh có thấy tôi không? (trong truyện)
+v46 | chen_dong | 看见你了！ | Kànjiàn nǐ le! | Thấy cô rồi! (trong truyện)
+v47 | narrator | 看见。你说。 | Kànjiàn. Nǐ shuō. | Nhìn thấy. Bạn nói.
+v47.g | gap | — | — | —
+v48 | narrator | 进去。 | Jìnqù. | Đi vào.
+v49 | narrator | 进去，进去。 | Jìnqù, jìnqù. | Đi vào.
+v50 | narrator | 门口在外面，大厅在里面。我从门口进去。 | Ménkǒu zài wàimiàn, dàtīng zài lǐmiàn. Wǒ cóng ménkǒu jìnqù. | Cửa ở ngoài, sảnh ở trong. Tôi từ cửa đi vào.
+v51 | narrator | 我们一起进去开会。 | Wǒmen yìqǐ jìnqù kāihuì. | Chúng ta cùng vào họp. (trong truyện)
+v52 | narrator | 开会，意思是大家在一起说话。 | Kāihuì, yì sī shì dà jiā zài yìqǐ shuō huà. | 开会 nghĩa là mọi người ở cùng nhau nói chuyện.
+v53 | narrator | 进去。你说。 | Jìnqù. Nǐ shuō. | Đi vào. Bạn nói.
+v53.g | gap | — | — | —
+v54 | narrator | 等一下。 | Děng yíxià. | Đợi một chút.
+v55 | narrator | 等一下，等一下。 | Děng yíxià, děng yíxià. | Đợi một chút.
+v56 | narrator | 等一下，意思是：你别走，我马上来。 | Děng yíxià, yì sī shì: nǐ bié zǒu, wǒ mǎshàng lái. | 等一下 nghĩa là: bạn đừng đi, tôi đến ngay.
+v57 | narrator | 你等一下，我马上下楼接你。 | Nǐ děng yíxià, wǒ mǎshàng xià lóu jiē nǐ. | Bạn đợi một chút, tôi xuống lầu đón bạn ngay. (trong truyện)
+v58 | narrator | 马上，意思是：一分钟后，我来。 | Mǎshàng, yì sī shì: yì fēnzhōng hòu, wǒ lái. | 马上 nghĩa là: một phút nữa tôi đến.
+v59 | narrator | 接你，意思是：我去找你，我们一起走。 | Jiē nǐ, yì sī shì: wǒ qù zhǎo nǐ, wǒmen yìqǐ zǒu. | 接你 nghĩa là: tôi đi tìm bạn, rồi cùng đi.
+v60 | narrator | 等一下。马上。接你。你说。 | Děng yíxià. Mǎshàng. Jiē nǐ. Nǐ shuō. | Đợi một chút. Ngay. Đón bạn. Bạn nói.
+v60.g | gap | — | — | —
+v61 | narrator | 别急。 | Bié jí. | Đừng vội.
+v62 | narrator | 别急，别急。 | Bié jí, bié jí. | Đừng vội.
+v63 | narrator | 她说"怎么办"，他说"别急"。 | Tā shuō "zěnme bàn", tā shuō "bié jí". | Cô ấy nói "làm sao đây", anh ấy nói "đừng vội".
+v64 | narrator | 别急，你马上过来，我在门口等你。 | Bié jí, nǐ mǎshàng guòlái, wǒ zài ménkǒu děng nǐ. | Đừng vội, bạn sang ngay đi, tôi đợi bạn ở cửa. (trong truyện)
+v65 | narrator | 别急。你说。 | Bié jí. Nǐ shuō. | Đừng vội. Bạn nói.
+v65.g | gap | — | — | —
+v66 | narrator | 以为。 | Yǐwéi. | Tưởng là.
+v67 | narrator | 以为，以为。 | Yǐwéi, yǐwéi. | Tưởng là.
+v68 | narrator | 我以为他在八楼。他不在八楼。 | Wǒ yǐwéi tā zài bā lóu. Tā bú zài bā lóu. | Tôi tưởng anh ấy ở tầng tám. Anh ấy không ở tầng tám.
+v69 | narrator | 我以为我在八楼。 | Wǒ yǐwéi wǒ zài bā lóu. | Tôi tưởng mình ở tầng tám.
+v70 | narrator | 以为。你说。 | Yǐwéi. Nǐ shuō. | Tưởng là. Bạn nói.
+v70.g | gap | — | — | —
+v71 | narrator | 好，我们听一个句子。 | Hǎo, wǒmen tīng yí ge jùzi. | Được, ta nghe một mẫu câu.
+v72 | narrator | "在"，意思是：他在那里。 | "zài", yì sī shì: tā zài nàlǐ. | 在 nghĩa là: anh ấy ở đó.
+v73 | narrator | 先说谁，再说"在"，再说哪儿。 | Xiān shuō shuí, zài shuō "zài", zài shuō nǎr. | Nói ai trước, rồi 在, rồi nói ở đâu.
+v74 | narrator | 我在八楼。 | Wǒ zài bā lóu. | Tôi ở tầng tám.
+v75 | narrator | 我在大厅。 | Wǒ zài dàtīng. | Tôi ở sảnh.
+v76 | narrator | 陈东在八楼。 | Chén Dōng zài bā lóu. | Trần Đông ở tầng tám.
+v77 | narrator | 王芳在门口。 | Wáng Fāng zài ménkǒu. | Vương Phương ở cửa.
+v78 | narrator | 我在门口。我不在门口。 | Wǒ zài ménkǒu. Wǒ bú zài ménkǒu. | Tôi ở cửa. Tôi không ở cửa.
+v79 | narrator | 他在八楼。他不在八楼。 | Tā zài bā lóu. Tā bú zài bā lóu. | Anh ấy ở tầng tám. Anh ấy không ở tầng tám.
+v80 | narrator | 我在楼下。我不在楼下。 | Wǒ zài lóu xià. Wǒ bú zài lóu xià. | Tôi ở dưới lầu. Tôi không ở dưới lầu.
+v81 | narrator | "不在"，意思是：他没有在那里。 | "bú zài", yì sī shì: tā méiyǒu zài nàlǐ. | 不在 nghĩa là: anh ấy không có ở đó.
+v82 | narrator | 你说。我在八楼。 | Nǐ shuō. Wǒ zài bā lóu. | Bạn nói. Tôi ở tầng tám.
+v82.g | gap | — | — | —
+v83 | narrator | 我在大厅。 | Wǒ zài dàtīng. | Tôi ở sảnh.
+v83.g | gap | — | — | —
+v84 | narrator | 我不在门口。 | Wǒ bú zài ménkǒu. | Tôi không ở cửa.
+v84.g | gap | — | — | —
+v85 | narrator | 再听"在哪儿"。 | Zài tīng "zài nǎr". | Nghe tiếp 在哪儿.
+v86 | narrator | "哪儿"在后面，是问：他在哪儿？ | "nǎr"zài hòumiàn, shì wèn: tā zài nǎr? | 哪儿 đứng sau thì hỏi: anh ấy ở đâu?
+v87 | narrator | 你在哪儿？ | Nǐ zài nǎr? | Bạn ở đâu?
+v88 | narrator | 王芳在哪儿？ | Wáng Fāng zài nǎr? | Vương Phương ở đâu?
+v89 | narrator | 陈东在哪儿？ | Chén Dōng zài nǎr? | Trần Đông ở đâu?
+v90 | narrator | 你在哪儿？回答：我在大厅。 | Nǐ zài nǎr? Huídá: wǒ zài dàtīng. | Bạn ở đâu? Trả lời: Tôi ở sảnh.
+v91 | narrator | 听，哪儿是问题，大厅是回答。 | Tīng, nǎr shì wèntí, dàtīng shì huídá. | 哪儿 là câu hỏi, 大厅 là câu trả lời.
+v92 | narrator | 我问，你回答。 | Wǒ wèn, nǐ huídá. | Tôi hỏi, bạn trả lời.
+v93 | narrator | 你在哪儿？ | Nǐ zài nǎr? | Bạn ở đâu?
+v93.g | gap | — | — | —
+v94 | narrator | 王芳在哪儿？ | Wáng Fāng zài nǎr? | Vương Phương ở đâu?
+v94.g | gap | — | — | —
+v95 | narrator | 再听"进不去"。 | Zài tīng "jìn bu qù". | Nghe tiếp 进不去.
+v96 | narrator | 进去，是我进了门。进不去，是我没进门。 | Jìnqù, shì wǒ jìn le mén. Jìn bu qù, shì wǒ méi jìn mén. | 进去: tôi đã vào cửa. 进不去: tôi chưa vào được cửa.
+v97 | narrator | 进去。进不去。 | Jìnqù. Jìn bu qù. | Vào. Không vào được.
+v98 | narrator | 我没有卡，进不去。 | Wǒ méiyǒu kǎ, jìn bu qù. | Tôi không có thẻ, không vào được. (trong truyện)
+v99 | narrator | 你在这里，我在那里，我看不见你。 | Nǐ zài zhèlǐ, wǒ zài nàlǐ, wǒ kàn bu jiàn nǐ. | Bạn ở đây, tôi ở kia, tôi không thấy bạn.
+v100 | narrator | 看见。看不见。 | Kànjiàn. Kàn bu jiàn. | Thấy. Không thấy.
+v101 | wang_fang | 看不见。我在这里，你在哪儿？ | Kàn bu jiàn. Wǒ zài zhèlǐ, nǐ zài nǎr? | Không thấy. Tôi ở đây, bạn ở đâu? (trong truyện)
+v102 | narrator | 进，不，去。进不去。 | Jìn, bù, qù. Jìn bu qù. | Vào, không, đi. Không vào được.
+v103 | narrator | 不能进去，你说"进不去"。 | Bù néng jìnqù, nǐ shuō "jìn bu qù". | Không vào được thì nói 进不去.
+v104 | narrator | 不能看见，你说"看不见"。 | Bù néng kànjiàn, nǐ shuō "kàn bu jiàn". | Không thấy được thì nói 看不见.
+v105 | narrator | "没有卡"。你说：进不去。 | "méiyǒu kǎ". Nǐ shuō: jìn bu qù. | Không có thẻ. Bạn nói: 进不去.
+v105.g | gap | — | — | —
+v106 | narrator | "我在楼下"。你说：看不见。 | "wǒ zài lóu xià". Nǐ shuō: kàn bu jiàn. | Tôi ở dưới lầu. Bạn nói: 看不见.
+v106.g | gap | — | — | —
+v107 | narrator | 好，我们来听问题。 | Hǎo, wǒmen lái tīng wèntí. | Được, ta nghe các câu hỏi.
+v108 | narrator | 问题不一样，回答也不一样。 | Wèntí bù yíyàng, huídá yě bù yíyàng. | Câu hỏi khác nhau thì câu trả lời cũng khác nhau.
+v109 | narrator | 我问，你回答。 | Wǒ wèn, nǐ huídá. | Tôi hỏi, bạn trả lời.
+v110 | narrator | 先听这个问题。你在哪儿？ | Xiān tīng zhè ge wèntí. Nǐ zài nǎr? | Nghe câu hỏi này trước. Bạn ở đâu?
+v111 | narrator | 问"哪儿"，回答：我在大厅。 | Wèn "nǎr", huídá: wǒ zài dàtīng. | Hỏi 哪儿 thì trả lời một nơi chốn.
+v112 | narrator | 你在哪儿？我在大厅。 | Nǐ zài nǎr? Wǒ zài dàtīng. | Bạn ở đâu? Tôi ở sảnh.
+v113 | narrator | 你在哪儿？我在门口。 | Nǐ zài nǎr? Wǒ zài ménkǒu. | Bạn ở đâu? Tôi ở cửa.
+v114 | narrator | 你在哪儿？ | Nǐ zài nǎr? | Bạn ở đâu?
+v114.g | gap | — | — | —
+v115 | narrator | 下一个问题。王芳在八楼吗？ | Xià yí ge wèntí. Wáng Fāng zài bā lóu ma? | Câu hỏi tiếp theo. Vương Phương ở tầng tám phải không?
+v116 | narrator | 有"吗"的问题，回答"在"，或者"不在"。 | Yǒu "ma"de wèntí, huídá "zài", huòzhě "bú zài". | Câu có 吗 thì đáp 在 hoặc 不在.
+v117 | narrator | 王芳在八楼吗？不在，王芳在楼下。 | Wáng Fāng zài bā lóu ma? Bú zài, Wáng Fāng zài lóu xià. | Vương Phương ở tầng tám không? Không, ở dưới lầu.
+v118 | narrator | 陈东在八楼吗？在，陈东在八楼。 | Chén Dōng zài bā lóu ma? Zài, Chén Dōng zài bā lóu. | Trần Đông ở tầng tám không? Có, ở tầng tám.
+v119 | narrator | 陈东在八楼吗？ | Chén Dōng zài bā lóu ma? | Trần Đông ở tầng tám phải không?
+v119.g | gap | — | — | —
+v120 | narrator | 下一个问题。王芳是不是在八楼？ | Xià yí ge wèntí. Wáng Fāng shì bu shì zài bā lóu? | Câu hỏi tiếp theo. Có phải Vương Phương ở tầng tám không?
+v121 | narrator | "是不是"，回答"是"，或者"不是"。 | "shì bu shì", huídá "shì", huòzhě "bú shì". | 是不是 thì đáp 是 hoặc 不是.
+v122 | narrator | 是，王芳在八楼。 | Shì, Wáng Fāng zài bā lóu. | Phải, Vương Phương ở tầng tám.
+v123 | narrator | 不是。王芳不在八楼，她在楼下。 | Bú shì. Wáng Fāng bú zài bā lóu, tā zài lóu xià. | Không phải. Vương Phương không ở tầng tám, cô ấy ở dưới lầu.
+v124 | narrator | 王芳是不是在大厅？ | Wáng Fāng shì bu shì zài dàtīng? | Có phải Vương Phương ở sảnh không?
+v124.g | gap | — | — | —
+v125 | narrator | 下一个问题。王芳在楼下还是八楼？ | Xià yí ge wèntí. Wáng Fāng zài lóu xià háishì bā lóu? | Câu hỏi tiếp theo. Vương Phương ở dưới lầu hay tầng tám?
+v126 | narrator | "还是"，你选一个：在楼下，或者在八楼。 | "háishì", nǐ xuǎn yí ge: zài lóu xià, huòzhě zài bā lóu. | 还是: bạn chọn một: ở dưới lầu hoặc ở tầng tám.
+v127 | narrator | 王芳在楼下。 | Wáng Fāng zài lóu xià. | Vương Phương ở dưới lầu.
+v128 | narrator | 陈东在八楼。 | Chén Dōng zài bā lóu. | Trần Đông ở tầng tám.
+v129 | narrator | 陈东在大厅还是八楼？ | Chén Dōng zài dàtīng háishì bā lóu? | Trần Đông ở sảnh hay tầng tám?
+v129.g | gap | — | — | —
+v130 | narrator | 下一个问题。王芳旁边有什么？ | Xià yí ge wèntí. Wáng Fāng pángbiān yǒu shénme? | Câu hỏi tiếp theo. Bên cạnh Vương Phương có gì?
+v131 | narrator | 问"什么"，回答一个名字。 | Wèn "shénme", huídá yí ge míngzì. | Hỏi 什么 thì trả lời một cái tên.
+v132 | narrator | 咖啡店。 | Kāfēidiàn. | Quán cà phê.
+v133 | narrator | 我旁边有一家咖啡店。 | Wǒ pángbiān yǒu yì jiā kāfēidiàn. | Bên cạnh tôi có một quán cà phê.
+v134 | narrator | 你旁边有什么？ | Nǐ pángbiān yǒu shénme? | Bên cạnh bạn có gì?
+v134.g | gap | — | — | —
+v135 | narrator | 下一个问题。谁在八楼？ | Xià yí ge wèntí. Shuí zài bā lóu? | Câu hỏi tiếp theo. Ai ở tầng tám?
+v136 | narrator | 问"谁"，回答一个名字。 | Wèn "shuí", huídá yí ge míngzì. | Hỏi 谁 thì trả lời một cái tên.
+v137 | narrator | 陈东。 | Chén Dōng. | Trần Đông.
+v138 | narrator | 陈东在八楼。 | Chén Dōng zài bā lóu. | Trần Đông ở tầng tám.
+v139 | narrator | 谁在大厅？ | Shuí zài dàtīng? | Ai ở sảnh?
+v139.g | gap | — | — | —
+v140 | narrator | 下一个问题。陈东在哪个楼找王芳？ | Xià yí ge wèntí. Chén Dōng zài nǎ ge lóu zhǎo Wáng Fāng? | Câu hỏi tiếp theo. Trần Đông tìm Vương Phương ở tòa nào?
+v141 | narrator | "哪个"，意思是：哪一个？ | "nǎ ge", yì sī shì: nǎ yí ge? | 哪个 nghĩa là: cái nào?
+v142 | narrator | 陈东在大厅找王芳。 | Chén Dōng zài dàtīng zhǎo Wáng Fāng. | Trần Đông tìm Vương Phương ở sảnh.
+v143 | narrator | 你在哪个门口？我在大厅门口。 | Nǐ zài nǎ ge ménkǒu? Wǒ zài dàtīng ménkǒu. | Bạn ở cửa nào? Tôi ở cửa sảnh.
+v144 | narrator | 你在哪个楼？ | Nǐ zài nǎ ge lóu? | Bạn ở tòa nào?
+v144.g | gap | — | — | —
+v145 | narrator | 下一个问题。陈东在几楼？ | Xià yí ge wèntí. Chén Dōng zài jǐ lóu? | Câu hỏi tiếp theo. Trần Đông ở tầng mấy?
+v146 | narrator | 问"几楼"，回答：八楼，或者一楼。 | Wèn "jǐ lóu", huídá: bā lóu, huòzhě yìlóu. | Hỏi 几楼 thì đáp: tầng tám, hoặc tầng một.
+v147 | narrator | 陈东在八楼。 | Chén Dōng zài bā lóu. | Trần Đông ở tầng tám.
+v148 | narrator | 王芳在一楼。 | Wáng Fāng zài yìlóu. | Vương Phương ở tầng một.
+v149 | narrator | 你在几楼？ | Nǐ zài jǐ lóu? | Bạn ở tầng mấy?
+v149.g | gap | — | — | —
+v150 | narrator | 最后一个问题。怎么办？ | Zuìhòu yí ge wèntí. Zěnme bàn? | Câu hỏi cuối. Làm sao đây?
+v151 | narrator | "怎么办"，是我不知道，我问你。 | "zěnme bàn", shì wǒ bù zhīdào, wǒ wèn nǐ. | 怎么办: tôi không biết, tôi hỏi bạn.
+v152 | narrator | 别急，你马上过来。 | Bié jí, nǐ mǎshàng guòlái. | Đừng vội, bạn sang ngay đi.
+v153 | narrator | 你等一下，我下楼接你。 | Nǐ děng yíxià, wǒ xià lóu jiē nǐ. | Bạn đợi một chút, tôi xuống đón bạn.
+v154 | narrator | 我没有卡，进不去，怎么办？ | Wǒ méiyǒu kǎ, jìn bu qù, zěnme bàn? | Tôi không có thẻ, không vào được, làm sao đây?
+v154.g | gap | — | — | —
+v155 | narrator | 好。你听了这些词，也听了这些问题。 | Hǎo. Nǐ tīng le zhè xiē cí, yě tīng le zhè xiē wèntí. | Tốt. Bạn đã nghe những từ này và những câu hỏi này.
+v156 | narrator | 再听一遍，你会说。 | Zài tīng yíbiàn, nǐ huì shuō. | Nghe lại một lần nữa, bạn sẽ nói được.
+```
+
 ## Nghe
 
 ```
