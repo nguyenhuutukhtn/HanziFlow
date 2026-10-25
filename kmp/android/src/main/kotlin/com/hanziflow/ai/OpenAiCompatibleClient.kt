@@ -47,7 +47,12 @@ class OpenAiCompatibleClient(http: OkHttpClient, private val config: AiConfig) :
         try {
             http.newCall(request).execute().use { response ->
                 val text = response.body.string()
-                if (!response.isSuccessful) throw ChatFailure(response.code, "HTTP ${response.code}: ${redact(text.take(200))}")
+                if (!response.isSuccessful) {
+                    val msg = "HTTP ${response.code}: ${redact(text.take(200))}"
+                    if (response.code != 429) throw ChatFailure(response.code, msg)
+                    val q = QuotaParser.parse(response.header("Retry-After"), text)
+                    throw ChatFailure(429, msg, retryAfterMs = q.retryAfterMs, window = q.window)
+                }
                 ChatAnswer(parseContent(text) ?: throw ChatFailure(response.code, "Unexpected response shape"), config.model)
             }
         } catch (e: IOException) {

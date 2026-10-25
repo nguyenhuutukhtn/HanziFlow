@@ -35,7 +35,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.hanziflow.R
 import com.hanziflow.ai.ChatMessage
+import android.text.format.DateFormat
+import androidx.compose.ui.platform.LocalContext
 import com.hanziflow.ai.ExplainError
+import java.util.Date
 import com.hanziflow.ai.ExplainThread
 import com.hanziflow.ai.ExplainUiState
 import com.hanziflow.shared.ReferenceLine
@@ -147,7 +150,9 @@ private fun Messages(state: ExplainUiState.Ready, pending: String, onRetry: () -
 
 @Composable
 private fun errorText(e: ExplainError): String = when (e.kind) {
-    ExplainError.Kind.QUOTA -> stringResource(R.string.explain_error_quota)
+    ExplainError.Kind.QUOTA -> e.resetAtMs?.let {
+        stringResource(R.string.explain_error_quota_until, DateFormat.getTimeFormat(LocalContext.current).format(Date(it)))
+    } ?: stringResource(R.string.explain_error_quota)
     ExplainError.Kind.NETWORK -> stringResource(R.string.explain_error_network)
     ExplainError.Kind.OTHER -> stringResource(R.string.explain_error_other, e.code?.toString() ?: "?")
 }

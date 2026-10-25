@@ -11,13 +11,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 /** What went wrong, for a friendly localized message; never carries a response body. */
-data class ExplainError(val kind: Kind, val code: Int? = null) {
+data class ExplainError(val kind: Kind, val code: Int? = null, val resetAtMs: Long? = null) {
     enum class Kind { QUOTA, NETWORK, OTHER }
 
     companion object {
         fun from(e: Throwable?): ExplainError? = when {
             e == null -> null
-            e is ChatFailure && (e.quotaExhausted || e.httpCode == 429) -> ExplainError(Kind.QUOTA, 429)
+            e is ChatFailure && (e.quotaExhausted || e.httpCode == 429) -> ExplainError(Kind.QUOTA, 429, e.resetAtMs)
             e is ChatFailure && e.httpCode != null -> ExplainError(Kind.OTHER, e.httpCode)
             else -> ExplainError(Kind.NETWORK)
         }

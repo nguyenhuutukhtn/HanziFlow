@@ -51,4 +51,16 @@ class OpenAiCompatibleClientTest {
             assertTrue(e.message!!.contains("429"))
         }
     }
+
+    @Test
+    fun `429 carries Retry-After header into the failure`() = runTest {
+        server.enqueue(MockResponse().setResponseCode(429).setHeader("Retry-After", "20").setBody(""))
+        try {
+            client().complete(listOf(ChatMessage("user", "hi")))
+            fail("expected ChatFailure")
+        } catch (e: ChatFailure) {
+            assertEquals(20_000L, e.retryAfterMs)
+            assertEquals(QuotaWindow.UNKNOWN, e.window)
+        }
+    }
 }

@@ -1,11 +1,16 @@
 package com.hanziflow.ai
 
+import android.content.Context
+import androidx.test.core.app.ApplicationProvider
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
 private class Fake(val model: String, val code: Int? = null) : ChatClient {
     var calls = 0
@@ -16,6 +21,8 @@ private class Fake(val model: String, val code: Int? = null) : ChatClient {
     }
 }
 
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [34])
 class FallbackChatClientTest {
     private val msgs = listOf(ChatMessage("user", "hi"))
 
@@ -32,14 +39,18 @@ class FallbackChatClientTest {
         assertEquals("b", FallbackChatClient(listOf(Fake("net-a"), Fake("b"))).complete(msgs).model)
     }
 
-    @Test fun `401 does not fall back`() = runTest {
-        val second = Fake("b")
+    @Test fun `4xx config errors fall back too`() = runTest {
+        assertEquals("b", FallbackChatClient(listOf(Fake("a", 401), Fake("b"))).complete(msgs).model)
+        assertEquals("b", FallbackChatClient(listOf(Fake("a", 404), Fake("b"))).complete(msgs).model)
+    }
+
+    @Test fun `all failing reports the last error`() = runTest {
         try {
-            FallbackChatClient(listOf(Fake("a", 401), second)).complete(msgs)
+            FallbackChatClient(listOf(Fake("a", 429), Fake("b", 401))).complete(msgs)
             fail("expected ChatFailure")
         } catch (e: ChatFailure) {
             assertEquals(401, e.httpCode)
-            assertEquals(0, second.calls)
+            assertFalse(e.quotaExhausted)
         }
     }
 
@@ -60,5 +71,47 @@ class FallbackChatClientTest {
         } catch (e: ChatFailure) {
             assertFalse(e.quotaExhausted)
         }
+    }
+
+    private fun cooldowns(clock: () -> Long) = ProviderCooldowns(
+        ApplicationProvider.getApplicationContext<Context>().getSharedPreferences("fb_cd", Context.MODE_PRIVATE).also { it.edit().clear().commit() },
+        clock,
+    )
+
+    @Test fun `cooling provider is skipped until its minute passes`() = runTest {
+        var now = 1_000_000L
+        val a = Fake("a", 429)
+        val b = Fake("b")
+        val client = FallbackChatClient(listOf(a, b), cooldowns { now }, listOf("a", "b"))
+        assertEquals("b", client.complete(msgs).model)
+        assertEquals(1, a.calls)
+        now += 30_000
+        assertEquals("b", client.complete(msgs).model)
+        assertEquals(1, a.calls)
+        now += 31_000
+        client.complete(msgs)
+        assertEquals(2, a.calls)
+    }
+
+    @Test fun `all providers cooling makes no calls and reports earliest reset`() = runTest {
+        val now = 1_000_000L
+        val a = Fake("a", 429)
+        val b = Fake("b", 429)
+        val client = FallbackChatClient(listOf(a, b), cooldowns { now }, listOf("a", "b"))
+        try { client.complete(msgs); fail() } catch (e: ChatFailure) { assertTrue(e.quotaExhausted) }
+        try { client.complete(msgs); fail() } catch (e: ChatFailure) {
+            assertTrue(e.quotaExhausted)
+            assertEquals(429, e.httpCode)
+            assertEquals(now + 60_000, e.resetAtMs)
+        }
+        assertEquals(1, a.calls)
+        assertEquals(1, b.calls)
+    }
+
+    @Test fun `non-429 failures set no cooldown`() = runTest {
+        val a = Fake("a", 503)
+        val client = FallbackChatClient(listOf(a, Fake("b")), cooldowns { 1L }, listOf("a", "b"))
+        client.complete(msgs); client.complete(msgs)
+        assertEquals(2, a.calls)
     }
 }

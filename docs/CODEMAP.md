@@ -130,17 +130,19 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `kotlin/com/hanziflow/HanziFlowApplication.kt` [15] — HanziFlowApplication
 - `kotlin/com/hanziflow/MainActivity.kt` [106] — MainActivity — Thin composition root: wires the activity-scoped screen ViewModels (via Hilt) to
 - `kotlin/com/hanziflow/ai/AiConfig.kt` [44] — AiConfig, AiProviders — One chat-LLM provider from local.properties. The key is never logged.
-- `kotlin/com/hanziflow/ai/ChatClient.kt` [48] — ChatMessage, ChatAnswer, ChatFailure, ChatClient — One chat message. `failed` marks a user message whose request did not get an answer (kept for retry).
+- `kotlin/com/hanziflow/ai/ChatClient.kt` [73] — ChatMessage, ChatAnswer, ChatFailure, ChatClient — One chat message. `failed` marks a user message whose request did not get an answer (kept for retry).
 - `kotlin/com/hanziflow/ai/ExplainPrompt.kt` [33] — ExplainPrompt — Renders prompts/explain_line.md (copied into assets/prompts/ at build time).
 - `kotlin/com/hanziflow/ai/ExplainRepository.kt` [145] — ExplainTarget, ExplainThread, ExplainRepository — The line to explain plus up to 2 same-track Chinese lines either side.
 - `kotlin/com/hanziflow/ai/ExplainViewModel.kt` [96] — ExplainError, ExplainUiState, ExplainViewModel — What went wrong, for a friendly localized message; never carries a response body.
-- `kotlin/com/hanziflow/ai/OpenAiCompatibleClient.kt` [66] — OpenAiCompatibleClient
+- `kotlin/com/hanziflow/ai/OpenAiCompatibleClient.kt` [71] — OpenAiCompatibleClient
+- `kotlin/com/hanziflow/ai/ProviderCooldowns.kt` [51] — ProviderCooldowns — Per-provider "locked until" times after a 429, persisted so a daily lock survives a restart.
+- `kotlin/com/hanziflow/ai/QuotaParser.kt` [44] — QuotaWindow, QuotaInfo, QuotaParser — What a 429 told us about when to come back.
 - `kotlin/com/hanziflow/data/CourseDatabase.kt` [126] — LessonEntity, SettingEntity, PlaybackEntity, ExplainThreadEntity — One AI explanation thread per lesson line; `messagesJson` excludes the system message.
 - `kotlin/com/hanziflow/data/CourseRepository.kt` [34] — CourseRepository — Course catalog, downloads, and the downloaded lesson package file store.
 - `kotlin/com/hanziflow/data/CourseRepositoryImpl.kt` [191] — CourseRepositoryImpl
 - `kotlin/com/hanziflow/data/ProgressRepository.kt` [24] — ProgressRepository, ProgressRepositoryImpl — Local listening resumption. Sync and completion status remain D2 work.
 - `kotlin/com/hanziflow/data/SettingsRepository.kt` [85] — SettingsRepository, SettingsRepositoryImpl — Simple key/value app settings (catalog base URL, transcript view, Vietnamese toggle, theme).
-- `kotlin/com/hanziflow/di/AiModule.kt` [32] — AiModule
+- `kotlin/com/hanziflow/di/AiModule.kt` [37] — AiModule
 - `kotlin/com/hanziflow/di/AppModule.kt` [28] — AppModule — Room DB / DAO and the shared OkHttp client: the only places this app talks to disk/network directly.
 - `kotlin/com/hanziflow/di/PlaybackModule.kt` [22] — PlaybackModule — [PlayerConnection] wraps the single [androidx.media3.session.MediaController] the UI
 - `kotlin/com/hanziflow/di/RepositoryModule.kt` [29] — RepositoryModule
@@ -164,7 +166,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `kotlin/com/hanziflow/ui/components/AppChips.kt` [12] — appFilterChipColors — Selected chips use the amber primary container, not M3's default teal secondary.
 - `kotlin/com/hanziflow/ui/components/MiniPlayer.kt` [183] — MiniPlayer — Persistent mini-player, docked above the bottom navigation on every tab.
 - `kotlin/com/hanziflow/ui/components/TrackLabels.kt` [15] — trackDisplayName — Display names only: internal ids stay `guided` / `practice` everywhere in data,
-- `kotlin/com/hanziflow/ui/explain/ExplainSheet.kt` [183] — ExplainSheet, ExplainSheetContent, Messages, errorText
+- `kotlin/com/hanziflow/ui/explain/ExplainSheet.kt` [188] — ExplainSheet, ExplainSheetContent, Messages, errorText
 - `kotlin/com/hanziflow/ui/explain/ExplainSheetHost.kt` [27] — ExplainSheetHost — Hilt-backed sheet for one transcript line; used by the app shell (previews/tests use [ExplainSheet]).
 - `kotlin/com/hanziflow/ui/explain/ExplainTargets.kt` [17] — ExplainTargets — Up to [CONTEXT_LINES] Chinese lines each side of [line], taken from the same track's [lines].
 - `kotlin/com/hanziflow/ui/explain/LineMenu.kt` [50] — hasLineMenu, LineMenuAnchor — Any row with Chinese text in the data; Vietnamese narration rows have no menu.
@@ -204,9 +206,11 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `kotlin/com/hanziflow/ai/ExplainPromptTest.kt` [29] — ExplainPromptTest
 - `kotlin/com/hanziflow/ai/ExplainRepositoryTest.kt` [143] — FakeChat, ExplainRepositoryTest
 - `kotlin/com/hanziflow/ai/ExplainTestEnv.kt` [32] — CountingChat, ExplainTestEnv — In-memory Room + counting fake chat client; kept out of composable test files (layering rule).
-- `kotlin/com/hanziflow/ai/FallbackChatClientTest.kt` [64] — Fake, FallbackChatClientTest
+- `kotlin/com/hanziflow/ai/FallbackChatClientTest.kt` [117] — Fake, FallbackChatClientTest
 - `kotlin/com/hanziflow/ai/MigrationTest.kt` [48] — MigrationTest
-- `kotlin/com/hanziflow/ai/OpenAiCompatibleClientTest.kt` [54] — OpenAiCompatibleClientTest
+- `kotlin/com/hanziflow/ai/OpenAiCompatibleClientTest.kt` [66] — OpenAiCompatibleClientTest
+- `kotlin/com/hanziflow/ai/ProviderCooldownsTest.kt` [98] — ProviderCooldownsTest
+- `kotlin/com/hanziflow/ai/QuotaParserTest.kt` [41] — QuotaParserTest — Fixtures are hand-written from the documented Gemini / Groq error shapes, not recorded responses.
 - `kotlin/com/hanziflow/architecture/LayeringTest.kt` [86] — LayeringTest — Enforces the dependency rules from docs/app_architecture.md "Code architecture (Android)",
 - `kotlin/com/hanziflow/data/CourseRepositoryTest.kt` [25] — CourseRepositoryTest
 - `kotlin/com/hanziflow/data/M1ContractTest.kt` [35] — M1ContractTest

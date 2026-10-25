@@ -99,6 +99,7 @@
     <string name="explain_reexplain">Giải thích lại</string>
     <string name="explain_input_hint">Hỏi thêm về câu này</string>
     <string name="explain_send">Gửi</string>
+    <string name="explain_error_quota_until">Hết lượt miễn phí của AI. Thử lại sau %1$s.</string>
     <string name="explain_error_quota">Hết lượt miễn phí của AI. Thử lại sau ít phút hoặc thêm nhà cung cấp khác.</string>
     <string name="explain_error_network">Không kết nối được AI. Kiểm tra mạng rồi thử lại.</string>
     <string name="explain_error_other">AI báo lỗi (%1$s).</string>
