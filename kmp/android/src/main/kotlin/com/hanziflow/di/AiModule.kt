@@ -1,9 +1,10 @@
 package com.hanziflow.di
 
 import android.content.Context
-import com.hanziflow.ai.AiConfig
+import com.hanziflow.ai.AiProviders
 import com.hanziflow.ai.ChatClient
 import com.hanziflow.ai.ExplainPrompt
+import com.hanziflow.ai.FallbackChatClient
 import com.hanziflow.ai.OpenAiCompatibleClient
 import dagger.Module
 import dagger.Provides
@@ -18,11 +19,12 @@ import okhttp3.OkHttpClient
 object AiModule {
     @Provides
     @Singleton
-    fun provideAiConfig(): AiConfig = AiConfig.fromBuildConfig()
+    fun provideAiProviders(): AiProviders = AiProviders.fromBuildConfig()
 
     @Provides
     @Singleton
-    fun provideChatClient(http: OkHttpClient, config: AiConfig): ChatClient = OpenAiCompatibleClient(http, config)
+    fun provideChatClient(http: OkHttpClient, providers: AiProviders): ChatClient =
+        FallbackChatClient(providers.list.map { OpenAiCompatibleClient(http, it) })
 
     @Provides
     @Singleton

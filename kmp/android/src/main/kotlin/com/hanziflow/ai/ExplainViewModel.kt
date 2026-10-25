@@ -10,19 +10,33 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+/** What went wrong, for a friendly localized message; never carries a response body. */
+data class ExplainError(val kind: Kind, val code: Int? = null) {
+    enum class Kind { QUOTA, NETWORK, OTHER }
+
+    companion object {
+        fun from(e: Throwable?): ExplainError? = when {
+            e == null -> null
+            e is ChatFailure && (e.quotaExhausted || e.httpCode == 429) -> ExplainError(Kind.QUOTA, 429)
+            e is ChatFailure && e.httpCode != null -> ExplainError(Kind.OTHER, e.httpCode)
+            else -> ExplainError(Kind.NETWORK)
+        }
+    }
+}
+
 sealed interface ExplainUiState {
     data object NotConfigured : ExplainUiState
     data object Loading : ExplainUiState
 
     /** First explanation failed and nothing is saved; `retry()` tries again. */
-    data class Failed(val error: String) : ExplainUiState
-    data class Ready(val thread: ExplainThread, val sending: Boolean = false, val error: String? = null) : ExplainUiState
+    data class Failed(val error: ExplainError) : ExplainUiState
+    data class Ready(val thread: ExplainThread, val sending: Boolean = false, val error: ExplainError? = null) : ExplainUiState
 }
 
 @HiltViewModel
 class ExplainViewModel @Inject constructor(
     private val repository: ExplainRepository,
-    private val config: AiConfig,
+    private val config: AiProviders,
 ) : ViewModel() {
     private val _state = MutableStateFlow<ExplainUiState>(if (config.isConfigured) ExplainUiState.Loading else ExplainUiState.NotConfigured)
     val state: StateFlow<ExplainUiState> = _state.asStateFlow()
@@ -59,7 +73,7 @@ class ExplainViewModel @Inject constructor(
         job = viewModelScope.launch {
             val result = call()
             val thread = repository.load(t.lessonId, t.line.id, t.line.text) ?: ready.thread
-            _state.value = ExplainUiState.Ready(thread, sending = false, error = result.exceptionOrNull()?.message)
+            _state.value = ExplainUiState.Ready(thread, sending = false, error = ExplainError.from(result.exceptionOrNull()))
         }
     }
 
@@ -75,7 +89,7 @@ class ExplainViewModel @Inject constructor(
             val result = repository.explain(t, force)
             _state.value = result.fold(
                 onSuccess = { ExplainUiState.Ready(it) },
-                onFailure = { ExplainUiState.Failed(it.message ?: "Error") },
+                onFailure = { ExplainUiState.Failed(ExplainError.from(it) ?: ExplainError(ExplainError.Kind.OTHER)) },
             )
         }
     }

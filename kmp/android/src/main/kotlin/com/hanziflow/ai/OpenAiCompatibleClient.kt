@@ -23,7 +23,7 @@ class OpenAiCompatibleClient(http: OkHttpClient, private val config: AiConfig) :
         .readTimeout(60, TimeUnit.SECONDS)
         .build()
 
-    override suspend fun complete(messages: List<ChatMessage>): String = withContext(Dispatchers.IO) {
+    override suspend fun complete(messages: List<ChatMessage>): ChatAnswer = withContext(Dispatchers.IO) {
         val base = config.baseUrl.let { if (it.endsWith("/")) it else "$it/" }
         val body = JsonObject(
             mapOf(
@@ -48,7 +48,7 @@ class OpenAiCompatibleClient(http: OkHttpClient, private val config: AiConfig) :
             http.newCall(request).execute().use { response ->
                 val text = response.body.string()
                 if (!response.isSuccessful) throw ChatFailure(response.code, "HTTP ${response.code}: ${redact(text.take(200))}")
-                parseContent(text) ?: throw ChatFailure(response.code, "Unexpected response shape")
+                ChatAnswer(parseContent(text) ?: throw ChatFailure(response.code, "Unexpected response shape"), config.model)
             }
         } catch (e: IOException) {
             throw ChatFailure(null, "Network error: ${redact(e.message.orEmpty().take(200))}")

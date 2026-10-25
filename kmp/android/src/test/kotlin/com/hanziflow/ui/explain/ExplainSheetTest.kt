@@ -13,6 +13,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTouchInput
 import com.hanziflow.ai.ChatMessage
+import com.hanziflow.ai.ExplainError
 import com.hanziflow.ai.ExplainTestEnv
 import com.hanziflow.ai.ExplainThread
 import com.hanziflow.ai.ExplainUiState
@@ -122,5 +123,27 @@ class ExplainSheetTest {
         compose.onNodeWithText("Câu này đã thay đổi trong bài mới").assertExists()
         compose.onNodeWithText("Giải thích lại").assertExists()
         compose.onNodeWithText("我们听故事。").assertExists()
+    }
+
+    @Test
+    fun `quota failure shows the friendly text and an answer shows its model`() {
+        val thread = ExplainThread("l", "n1", "我们听故事。", 1, listOf(
+            ChatMessage("user", "P", 1), ChatMessage("assistant", "Câu trả lời", 2, model = "gemini-test"),
+        ), 2)
+        compose.setContent {
+            HanziFlowTheme {
+                ExplainSheetContent(line, ExplainUiState.Ready(thread, error = ExplainError(ExplainError.Kind.QUOTA, 429)), {}, {}, {})
+            }
+        }
+        compose.onNodeWithText("gemini-test").assertExists()
+        compose.onNodeWithText("Hết lượt miễn phí của AI. Thử lại sau ít phút hoặc thêm nhà cung cấp khác.").assertExists()
+    }
+
+    @Test
+    fun `failed first explanation with quota shows the quota text`() {
+        compose.setContent {
+            HanziFlowTheme { ExplainSheetContent(line, ExplainUiState.Failed(ExplainError(ExplainError.Kind.QUOTA, 429)), {}, {}, {}) }
+        }
+        compose.onNodeWithText("Hết lượt miễn phí của AI. Thử lại sau ít phút hoặc thêm nhà cung cấp khác.").assertExists()
     }
 }

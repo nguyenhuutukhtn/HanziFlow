@@ -22,11 +22,11 @@ private class FakeChat : ChatClient {
     var calls = 0
     var lastSent: List<ChatMessage> = emptyList()
     var fail = false
-    override suspend fun complete(messages: List<ChatMessage>): String {
+    override suspend fun complete(messages: List<ChatMessage>): ChatAnswer {
         calls++
         lastSent = messages
         if (fail) throw ChatFailure(500, "boom")
-        return "answer $calls"
+        return ChatAnswer("answer $calls", "fake-model")
     }
 }
 
@@ -103,9 +103,41 @@ class ExplainRepositoryTest {
 
     @Test
     fun `blank key is NotConfigured and the client is never called`() = runTest {
-        val vm = ExplainViewModel(repo, AiConfig("https://x/v1/", "m", ""))
+        val vm = ExplainViewModel(repo, AiProviders.parse("""[{"base_url":"https://x/v1/","model":"m","api_key":""}]"""))
         vm.open(target())
         assertEquals(ExplainUiState.NotConfigured, vm.state.value)
         assertEquals(0, chat.calls)
+    }
+
+    private fun lineAt(id: String, text: String) = ReferenceLine(id, "sentence", "zh", "A", text, pinyin = "py", translation = "vi")
+
+    @Test
+    fun `identical hanzi on another line reuses the explanation with no call and without follow-ups`() = runTest {
+        val a = ExplainTarget("lesson_002", 4, lineAt("a", "大厅很大。"))
+        repo.explain(a).getOrThrow()
+        repo.ask("lesson_002", "a", "Tại sao?").getOrThrow()
+        assertEquals(2, chat.calls)
+        val b = repo.explain(ExplainTarget("lesson_002", 4, lineAt("b", "大厅很大。"))).getOrThrow()
+        assertEquals(2, chat.calls)
+        assertEquals(2, b.messages.size)
+        assertEquals("b", b.messages.let { repo.load("lesson_002", "b")!!.lineId })
+        assertEquals(2, repo.load("lesson_002", "b")!!.messages.size)
+        assertEquals("fake-model", b.messages[1].model)
+        assertEquals(4, repo.load("lesson_002", "a")!!.messages.size)
+        repo.explain(ExplainTarget("lesson_002", 4, lineAt("c", "别的。"))).getOrThrow()
+        assertEquals(3, chat.calls)
+    }
+
+    @Test
+    fun `old stored thread json without model still loads`() = runTest {
+        db.dao().putExplainThread(
+            com.hanziflow.data.ExplainThreadEntity(
+                "lesson_002", "old", "你好", 1,
+                """[{"role":"user","content":"p","createdAtMs":1},{"role":"assistant","content":"a","createdAtMs":2}]""", 2,
+            ),
+        )
+        val t = repo.load("lesson_002", "old")!!
+        assertEquals(2, t.messages.size)
+        assertEquals(null, t.messages[1].model)
     }
 }

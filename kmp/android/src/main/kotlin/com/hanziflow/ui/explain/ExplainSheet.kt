@@ -35,6 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.hanziflow.R
 import com.hanziflow.ai.ChatMessage
+import com.hanziflow.ai.ExplainError
 import com.hanziflow.ai.ExplainThread
 import com.hanziflow.ai.ExplainUiState
 import com.hanziflow.shared.ReferenceLine
@@ -83,7 +84,7 @@ fun ExplainSheetContent(
                 ExplainUiState.NotConfigured -> Text(stringResource(R.string.explain_not_configured))
                 ExplainUiState.Loading -> CircularProgressIndicator(Modifier.align(Alignment.Center))
                 is ExplainUiState.Failed -> Column(verticalArrangement = Arrangement.spacedBy(Spacing.sm)) {
-                    Text(state.error, color = MaterialTheme.colorScheme.error)
+                    Text(errorText(state.error), color = MaterialTheme.colorScheme.error)
                     Button(onClick = onRetry) { Text(stringResource(R.string.explain_retry)) }
                 }
                 is ExplainUiState.Ready -> Messages(state, pending, onRetry, onReexplain)
@@ -108,16 +109,21 @@ private fun Messages(state: ExplainUiState.Ready, pending: String, onRetry: () -
             when {
                 index == 0 -> AssistChip(onClick = {}, label = { Text(stringResource(R.string.explain_prompt_chip)) })
                 message.role == ChatMessage.USER -> UserBubble(message)
-                else -> Markdown(
-                    message.content,
-                    typography = markdownTypography(
-                        h1 = MaterialTheme.typography.titleLarge,
-                        h2 = MaterialTheme.typography.titleMedium,
-                        h3 = MaterialTheme.typography.titleSmall,
-                    ),
-                    dimens = markdownDimens(tableCellWidth = 96.dp),
-                    modifier = Modifier.fillMaxWidth(),
-                )
+                else -> Column {
+                    Markdown(
+                        message.content,
+                        typography = markdownTypography(
+                            h1 = MaterialTheme.typography.titleLarge,
+                            h2 = MaterialTheme.typography.titleMedium,
+                            h3 = MaterialTheme.typography.titleSmall,
+                        ),
+                        dimens = markdownDimens(tableCellWidth = 96.dp),
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                    message.model?.let {
+                        Text(it, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                }
             }
         }
         if (thread.isStale) {
@@ -128,7 +134,7 @@ private fun Messages(state: ExplainUiState.Ready, pending: String, onRetry: () -
         }
         if (state.error != null) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(state.error, Modifier.weight(1f), color = MaterialTheme.colorScheme.error)
+                Text(errorText(state.error), Modifier.weight(1f), color = MaterialTheme.colorScheme.error)
                 TextButton(onClick = onRetry, enabled = !state.sending) { Text(stringResource(R.string.explain_retry)) }
             }
         }
@@ -137,6 +143,13 @@ private fun Messages(state: ExplainUiState.Ready, pending: String, onRetry: () -
             CircularProgressIndicator(Modifier.padding(Spacing.sm))
         }
     }
+}
+
+@Composable
+private fun errorText(e: ExplainError): String = when (e.kind) {
+    ExplainError.Kind.QUOTA -> stringResource(R.string.explain_error_quota)
+    ExplainError.Kind.NETWORK -> stringResource(R.string.explain_error_network)
+    ExplainError.Kind.OTHER -> stringResource(R.string.explain_error_other, e.code?.toString() ?: "?")
 }
 
 @Composable

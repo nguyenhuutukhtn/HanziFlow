@@ -26,7 +26,8 @@ class OpenAiCompatibleClientTest {
     fun `posts chat completions with bearer key model and ordered messages and parses content`() = runTest {
         server.enqueue(MockResponse().setBody("""{"choices":[{"index":0,"message":{"role":"assistant","content":"Xin chào"}}]}"""))
         val out = client().complete(listOf(ChatMessage("system", "sys"), ChatMessage("user", "hi")))
-        assertEquals("Xin chào", out)
+        assertEquals("Xin chào", out.text)
+        assertEquals("test-model", out.model)
         val req = server.takeRequest()
         assertEquals("POST", req.method)
         assertTrue(req.path!!.endsWith("/chat/completions"))

@@ -58,6 +58,9 @@ interface CourseDao {
     @Query("SELECT * FROM explain_threads WHERE lessonId = :lessonId AND lineId = :lineId")
     suspend fun explainThread(lessonId: String, lineId: String): ExplainThreadEntity?
 
+    @Query("SELECT * FROM explain_threads WHERE lessonId = :lessonId AND hanzi = :hanzi AND lineId != :lineId ORDER BY updatedAt DESC LIMIT 1")
+    suspend fun explainThreadWithSameHanzi(lessonId: String, lineId: String, hanzi: String): ExplainThreadEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun putExplainThread(thread: ExplainThreadEntity)
 

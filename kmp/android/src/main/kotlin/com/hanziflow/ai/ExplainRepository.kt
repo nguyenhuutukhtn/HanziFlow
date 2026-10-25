@@ -11,6 +11,7 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.booleanOrNull
+import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
@@ -57,10 +58,17 @@ class ExplainRepository @Inject constructor(
     suspend fun explain(target: ExplainTarget, force: Boolean = false): Result<ExplainThread> {
         val id = target.line.id
         if (!force) load(target.lessonId, id, target.line.text)?.let { return Result.success(it) }
+        if (!force) {
+            // The same sentence in another mode/line of this lesson: copy its explanation, no network.
+            dao.explainThreadWithSameHanzi(target.lessonId, id, target.line.text)?.let { src ->
+                val first = decode(src.messagesJson).take(2)
+                if (first.size == 2) return Result.success(save(target.lessonId, id, target.line.text, target.lessonVersion, first))
+            }
+        }
         val user = ChatMessage(ChatMessage.USER, prompt.render(target.line, target.before, target.after), now())
         return try {
             val answer = client.complete(listOf(system(), user))
-            val saved = listOf(user, ChatMessage(ChatMessage.ASSISTANT, answer, now()))
+            val saved = listOf(user, ChatMessage(ChatMessage.ASSISTANT, answer.text, now(), model = answer.model))
             Result.success(save(target.lessonId, id, target.line.text, target.lessonVersion, saved))
         } catch (e: ChatFailure) {
             Result.failure(e)
@@ -86,7 +94,7 @@ class ExplainRepository @Inject constructor(
         val send = withQuestion.filter { !it.failed }
         return try {
             val reply = client.complete(listOf(system()) + send)
-            val all = withQuestion + ChatMessage(ChatMessage.ASSISTANT, reply, now())
+            val all = withQuestion + ChatMessage(ChatMessage.ASSISTANT, reply.text, now(), model = reply.model)
             Result.success(save(entity.lessonId, entity.lineId, entity.hanzi, entity.lessonVersion, all))
         } catch (e: ChatFailure) {
             val kept = withQuestion.dropLast(1) + withQuestion.last().copy(failed = true)
@@ -117,6 +125,7 @@ class ExplainRepository @Inject constructor(
                         put("content", JsonPrimitive(it.content))
                         put("createdAtMs", JsonPrimitive(it.createdAtMs))
                         if (it.failed) put("failed", JsonPrimitive(true))
+                        it.model?.let { m -> put("model", JsonPrimitive(m)) }
                     },
                 )
             },
@@ -129,6 +138,7 @@ class ExplainRepository @Inject constructor(
                 content = o.getValue("content").jsonPrimitive.content,
                 createdAtMs = o["createdAtMs"]?.jsonPrimitive?.long ?: 0,
                 failed = o["failed"]?.jsonPrimitive?.booleanOrNull ?: false,
+                model = o["model"]?.jsonPrimitive?.contentOrNull,
             )
         }
     }

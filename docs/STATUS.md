@@ -14,6 +14,7 @@ Last updated: 2026-10-24 (B1 verified; device check pending) · branch `main` (a
 
 ## Done
 
+- **X4:** AI explain tries up to 4 providers (`llm.*`, `llm.2..4.*`; model-only entries reuse provider 1's URL/key) via `FallbackChatClient` (falls back on 429/5xx/network, not 4xx), answers show their model, Vietnamese quota/network/other errors, identical hanzi in a lesson reuses the saved explanation with no call. Device check pending (user).
 - **X3:** long-press any Chinese transcript row (hidden/placeholder too; not Vietnamese narration) opens a menu "Giải thích" / "Sao chép"; "Giải thích" opens `ui/explain/ExplainSheet` (Markdown via mikepenz markdown-renderer-m3 0.37.0, chat input, stale/error/not-configured states) on the X2 ViewModel; device check pending (user).
 - **X2:** `com.hanziflow.ai` (AiConfig from optional `llm.*` local.properties, OpenAI-compatible OkHttp client, ExplainPrompt from APK assets `prompts/`, Room `explain_threads` v3 + `MIGRATION_2_3`, ExplainRepository, ExplainViewModel); 9 new JVM tests pass; X3 UI next. Unrelated: `tests/test_llm_compare.py::test_env_parse_and_process_override` fails when `.env` has a real key (test reads the real `.env` and its assert prints the key).
 

@@ -19,9 +19,11 @@ val supabaseUrl = localProperties.getProperty("supabase.url")
     ?: error("Add supabase.url=https://<project-ref>.supabase.co to kmp/local.properties")
 fun llmProp(key: String): String =
     (localProperties.getProperty(key) ?: "").trim().replace("\\", "").replace("\"", "")
-val llmBaseUrl = llmProp("llm.base_url")
-val llmModel = llmProp("llm.model")
-val llmApiKey = llmProp("llm.api_key")
+// Providers 1..4: llm.* is provider 1, llm.N.* the fallbacks. Blank fields are resolved in AiProviders.parse.
+val llmProvidersJson = (1..4).joinToString(prefix = "[", postfix = "]") { n ->
+    val p = if (n == 1) "llm." else "llm.$n."
+    """{"base_url":"${llmProp(p + "base_url")}","model":"${llmProp(p + "model")}","api_key":"${llmProp(p + "api_key")}"}"""
+}
 val contentBaseUrl = "$supabaseUrl/storage/v1/object/public/course/"
 
 android {
@@ -38,9 +40,7 @@ android {
         buildConfigField("String", "SUPABASE_URL", "\"$supabaseUrl\"")
         buildConfigField("String", "CONTENT_BASE_URL", "\"$contentBaseUrl\"")
         // Optional AI explain config (docs/tasks/X2.md); blank means the feature is off.
-        buildConfigField("String", "LLM_BASE_URL", "\"$llmBaseUrl\"")
-        buildConfigField("String", "LLM_MODEL", "\"$llmModel\"")
-        buildConfigField("String", "LLM_API_KEY", "\"$llmApiKey\"")
+        buildConfigField("String", "LLM_PROVIDERS", "\"" + llmProvidersJson.replace("\\", "\\\\").replace("\"", "\\\"") + "\"")
     }
 
     buildTypes {

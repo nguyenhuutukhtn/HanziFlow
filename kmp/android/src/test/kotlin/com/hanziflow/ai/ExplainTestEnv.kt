@@ -7,10 +7,12 @@ import com.hanziflow.data.CourseDatabase
 class CountingChat : ChatClient {
     var calls = 0
     var fail = false
-    override suspend fun complete(messages: List<ChatMessage>): String {
+    var failure: ChatFailure? = null
+    override suspend fun complete(messages: List<ChatMessage>): ChatAnswer {
         calls++
+        failure?.let { throw it }
         if (fail) throw ChatFailure(500, "boom")
-        return if (calls == 1) "Đây là **lời giải thích** đầu tiên." else "Trả lời số $calls"
+        return ChatAnswer(if (calls == 1) "Đây là **lời giải thích** đầu tiên." else "Trả lời số $calls", "fake-model")
     }
 }
 
@@ -24,6 +26,7 @@ class ExplainTestEnv {
 
     fun repository() = ExplainRepository(db.dao(), chat, prompt)
     fun viewModel(configured: Boolean = true) =
-        ExplainViewModel(repository(), AiConfig(if (configured) "https://x" else "", "m", if (configured) "k" else ""))
+        ExplainViewModel(repository(), AiProviders(if (configured) listOf(AiConfig("https://x", "m", "k")) else emptyList()))
+    fun repository(client: ChatClient) = ExplainRepository(db.dao(), client, prompt)
     fun close() = db.close()
 }
