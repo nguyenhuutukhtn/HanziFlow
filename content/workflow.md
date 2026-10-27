@@ -30,7 +30,15 @@ ref | speaker | 中文 | pinyin | Tiếng Việt
 `ref` is short and unique (`s3`, `q12`, `c4`). One sentence per line. Every
 Chinese line counts — story, narration, coach talk, questions, answers.
 
-### Vocabulary balance (lesson 2 on; replaces "8–12 new words")
+### Independent lessons (lesson 3 on; user, 2026-10-27)
+
+Lessons 1–10 are **standalone and can be studied in any order**, equally effective.
+No checks against earlier lessons: no known-words pack, no recycle quota, no "only known
+words" rule. Words and sentences may repeat across lessons freely. Reason: the cross-lesson
+constraint made lessons hard to write, added review rounds and blocked natural content.
+Each lesson assumes a beginner who has heard roughly one lesson's worth of Mandarin.
+
+### Vocabulary balance (within one lesson)
 
 Lesson 1 problem: 73 new words, but 的 516× / 名字 139× / 袋 110× while 21 words
 were heard only 1–2 times (all coach words: 讲, 回答, 懂, 关系…). Every Chinese word
@@ -39,9 +47,8 @@ must be in exactly one tier below with its exposure band:
 | Tier | What | Count / lesson | Heard per word |
 |---|---|---|---|
 | Core phrases | reusable chunks of the situation (你想吃什么, 要不要…) | 10–15 | 10–30 |
-| Core words | new words inside those phrases / the story | 20–30 | 10–40 |
-| Coach | new words for narration, instructions, questions | ≤ 6 | ≥ 8 (and reused in later lessons) |
-| Recycle | lesson 1 words, **weak ones first** (heard < 10 in `00_known.md`) | 15–20 | ≥ 5 |
+| Core words | content words inside those phrases / the story | 20–35 | 10–40 |
+| Coach | words for narration, instructions, questions | ≤ 6 | ≥ 8 |
 | Function | 的 是 这 不 吗 有 你 我 他 … | free | no cap |
 | Names | 安娜 李明 … | free | no cap |
 
@@ -49,27 +56,26 @@ must be in exactly one tier below with its exposure band:
   or a few extra new words, are fine. Fix only clear outliers (a core word heard 1–2
   times, a content word in the hundreds without reason). No fix round just for counts.
 - **Cap:** no content word (noun/verb/adjective) above ~60 hearings; past that, vary the sentences.
-- **No stray words:** a Chinese word that is in no tier is either replaced by a known word or added to a tier and brought up to its band. Nothing heard only 1–2 times.
+- **No stray words:** a Chinese word that is in no tier is either replaced by a simpler word or added to a tier and brought up to its band. Nothing heard only 1–2 times.
 - **Characters are the bottleneck, not meaning** (Vietnamese ↔ Chinese share Hán-Việt):
-  new characters ≤ 50 per lesson (lesson 1: 83, mostly coach words). Prefer new words whose characters are
-  already known or whose Hán-Việt is transparent to a Vietnamese speaker.
-- **AIs miscount characters** (lesson 2 step 3: called 在/哪/儿 known and 上/说 new). Writers
-  only *list* items; character and length counts come from a script (PM runs it until a
-  `just` command exists). Prompts tell the writer which characters are known.
+  keep the lesson's distinct non-function characters moderate (soft, ~80–100). Prefer words whose
+  Hán-Việt is transparent to a Vietnamese speaker.
+- **AIs miscount characters** (lesson 2 step 3). Writers only *list* items; character and
+  length counts come from a script (PM runs it until a `just` command exists).
 
 ## Steps
 
 | # | Step | Who | Reads | Writes |
 |---|---|---|---|---|
-| 0 | Known-knowledge pack | PM (script) | — | `00_known.md` |
+| 0 | ~~Known-knowledge pack~~ — dropped from lesson 3 (independent lessons) | — | — | — |
 | 1 | Content brief | PM | user decisions | `01_brief.md` |
-| 2 | Topic: the user writes it in `01_brief.md` "Chosen topic"; brainstorm prompt below only if the user wants ideas | user (AI A optional) | 00, 01 | `01_brief.md` / `02_topics.md` |
-| 3 | Core sentences + word tiers | AI A | 00–02 | `03_core.md` |
-| 4 | Vocab review vs lesson 1 → ★ | AI B | 00, 01, 03 | `04_core_review.md` |
+| 2 | Topic: the user writes it in `01_brief.md` "Chosen topic"; brainstorm prompt below only if the user wants ideas | user (AI A optional) | 01 | `01_brief.md` / `02_topics.md` |
+| 3 | Core sentences + word tiers | AI A | 01–02 | `03_core.md` |
+| 4 | Vocab review (naturalness, frequency, tiers) → ★ | AI B | 01, 03 | `04_core_review.md` |
 | 4b | **Fact table** (added 2026-10-24 after lesson 2 contradictions): who is where at each moment, places and how they relate, what each character believes vs reality, how the problem is solved. Every later line (story, Từ vựng, Phản xạ answers, notes) must agree with it; retold variants are listed and announced as variants | AI A | 03 | `04b_facts.md` |
-| 5 | Story script | AI A | 00, 01, 03, 04b | `05_story.md` |
+| 5 | Story script | AI A | 01, 03, 04b | `05_story.md` |
 | 6 | Language review | AI B | 05 | `06_lang_review.md` |
-| 7 | Learner role-play review (+ the user reads too) | AI C | 00, 05 | `07_learner_review.md` |
+| 7 | Learner role-play review (+ the user reads too) | AI C | 05 | `07_learner_review.md` |
 | 8 | Fix flagged lines → ★ | AI A | 05–07 | `05_story.md` (v2) |
 | 9 | Five modes (Hiểu, Từ vựng — Chinese-only explanations, Nghe, Phản xạ, Nói) | AI A (one chat per mode is fine) | 01, 03, 04b, 05 | `09_modes.md` |
 | 10 | Characters: Hán-Việt + meaning, two AIs independently | AI A + AI B | 03, 09 | `10_hanzi_A.md`, `10_hanzi_B.md` |
@@ -80,54 +86,52 @@ must be in exactly one tier below with its exposure band:
 **Step 2 — topics**
 ```
 You help write a Mandarin listening course for a Vietnamese learner. Read 01_brief.md
-(goals, constraints) and 00_known.md (what they already know). Propose 6 everyday
+(goals, constraints). Propose 6 everyday
 situations they will really meet again (office/daily life). For each: 1 line why it is
-frequent, 3 sample sentences (中文 | pinyin | Tiếng Việt) using mostly known words, and
-the 3–5 new words it needs. Write the file 02_topics.md, end with "## Open doubts".
+frequent, 3 sample sentences (中文 | pinyin | Tiếng Việt) and
+the 5–8 key words/phrases it teaches. Write the file 02_topics.md, end with "## Open doubts".
 ```
 
 **Step 3 — core sentences + tiers**
 ```
-Read 01_brief.md (topic under "Chosen topic"), 00_known.md and workflow.md "Vocabulary
+Read 01_brief.md (topic under "Chosen topic") and workflow.md "Vocabulary
 balance". Write 03_core.md:
 1) 10–15 core phrases people really say in this situation, each with 1–2 example
    sentences, line format: ref | speaker | 中文 | pinyin | Tiếng Việt.
-2) Tiers: Core phrases, Core words, Coach, Recycle (from 00_known.md, weak words first),
-   each with pinyin, Vietnamese, Hán-Việt; new characters marked.
-3) New-character count (target ≤ 50). End with "## Open doubts".
+2) Tiers: Core phrases, Core words, Coach, each with pinyin, Vietnamese, Hán-Việt.
+3) List the distinct characters used (the PM counts them by script). End with "## Open doubts".
 ```
 
 **Step 4 — vocab review (different AI)**
 ```
-You review, you don't rewrite. Read 00_known.md, 01_brief.md, 03_core.md. Report by ref/word:
-- words listed as new that are already known (00_known.md), and known words missing from Recycle;
+You review, you don't rewrite. Read 01_brief.md, 03_core.md. Report by ref/word:
 - words too rare or too formal for daily talk; better everyday alternatives;
-- tier counts and new-character count vs the brief's limits;
+- clear outliers in tier counts (guidance, not gates);
 - sentences that are not natural spoken Mandarin; wrong pinyin/tones/translation.
 Severity per finding: block | fix | note. Write 04_core_review.md.
 ```
 
 **Step 5 — story**
 ```
-Read 01_brief.md, 00_known.md, 03_core.md (approved). Write 05_story.md: the story in
+Read 01_brief.md, 03_core.md (approved), 04b_facts.md. Write 05_story.md: the story in
 lesson 1's shape (one narrator, short lines from the characters, present time), using
-every core sentence at least once and only words in 03_core.md tiers or 00_known.md.
+every core sentence at least once; other words only if natural and simple.
 Line format: ref | speaker | 中文 | pinyin | Tiếng Việt. 20–35 lines. Then a word-count
-table: each Core/Recycle word × times it appears. End with "## Open doubts".
+table: each Core word × times it appears. End with "## Open doubts".
 ```
 
 **Step 6 — language review (different AI)**
 ```
 Review, don't rewrite. Read 05_story.md. By ref: unnatural Chinese, wrong measure words or
 word order, pinyin/tone errors, Vietnamese translation errors or awkward Vietnamese,
-words outside the allowed list (03_core.md + 00_known.md). Severity block | fix | note.
+rare or bookish words a simpler everyday word could replace. Severity block | fix | note.
 Write 06_lang_review.md.
 ```
 
 **Step 7 — learner role-play (different AI)**
 ```
-Role-play: you are a Vietnamese learner who knows ONLY the words in 00_known.md and
-finished lesson 1 understanding ~70%. Read 05_story.md line by line, Chinese only (cover
+Role-play: you are a Vietnamese beginner who has heard about one lesson of Mandarin
+(basic greetings, 我/你/是/不/吗/在, numbers). Read 05_story.md line by line, Chinese only (cover
 the Vietnamese). By ref: what you would not understand, sentences too long to repeat,
 moments that are boring or confusing, and words you'd forget because they appear too
 rarely. Then 3 lines: overall difficulty (too easy / right / too hard) and why.
@@ -155,14 +159,14 @@ sections, line format as before, every Chinese line counted:
 - Nói: chunk build-up for 6–8 core sentences (short chunk → longer → full), then
   shadowing of the story. Chinese only.
 Each Chinese-only mode starts with one fixed short line naming the mode, so it works
-when started cold. End with an exposure table: every Core/Coach/Recycle word × count per
+when started cold. End with an exposure table: every Core/Coach word × count per
 mode × total, flag anything outside its band.
 ```
 
 **Step 10 — characters (two AIs, separately)**
 ```
-Read 03_core.md and 09_modes.md. List every character not in 00_known.md "Known
-characters". For each: character | pinyin | Hán-Việt | short Vietnamese meaning | words in
+Read 03_core.md and 09_modes.md. List every character in the
+character list the PM attaches (script output). For each: character | pinyin | Hán-Việt | short Vietnamese meaning | words in
 this lesson that use it. Mark any Hán-Việt you are not sure of with "?". Don't look at
 another AI's list. Write 10_hanzi_<A|B>.md.
 ```

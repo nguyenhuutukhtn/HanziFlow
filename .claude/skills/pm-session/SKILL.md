@@ -154,6 +154,7 @@ Before every launch run `scripts/quota.sh` (one line per provider) and write `Su
 | Small fix with tests, Python/pipeline S–M with a scripted Verify | Codex `gpt-5.6-luna` · low |
 | Android timing/state, contract changes, hard algorithms, 2nd fix of the same bug | Codex `gpt-5.6-sol` or `gpt-5.6-terra` · medium — **ask first** (trial: sol 6.1 for 3–5 tasks, compare in token_log) |
 | Escalation after sol failed once, hard design-heavy code | Codex `gpt-6-astra` · medium, `--minutes 20`, only when Codex 5h < 50% — **ask first** |
+| Content steps with little creativity (apply reviewer-given fixes, lists) | script (mechanical) or cheap tier (qwen3.8-flash) · one output file per run |
 | Lesson content (`lesson-author`) | Codex `gpt-5.6-sol` · medium — **ask first**; review (`lesson-review`) on a different vendor (DeepSeek or Claude Sonnet) · medium |
 
 - **Effort defaults to low** (user rule, 2026-10-21). Codex: `-c model_reasoning_effort=low`; Haiku/Sonnet subagent: say "keep it short" in the prompt; DeepSeek: `reasoningEffort` in `.deepcode/settings.json`. Medium only where the table says; high = ask first. A low-effort run that fails goes to medium on the same model before a model upgrade.
