@@ -128,6 +128,11 @@ Note it in the brief's header too (`Suggested agent: continue <prev task> window
   skills via `.agents/skills/`. Read only `build/logs/<ID>.out` / the final message; log tail only on failure.
 - **Reviewer choice (2026-10-27, AM2):** DeepSeek via `agent-deepseek` reviews scripts/shell/code that can be exercised
   live (it builds real runs, found 7 real defects Haiku missed, ~0.03 USD/review, ~2–6 min); Haiku for fast mechanical checks.
+  Code review order: Haiku → `agent-deepseek`. Every review prompt says "each command must finish within 60 s; no watchers"
+  (AM-R4: deepcode hung 10 min on a self-written `node -e` watcher until the cap killed it).
+- **Qwen (Qwen Cloud Token Plan, monthly quota) is for lesson content only** (user, 2026-10-27): authoring or Chinese
+  review (content workflow step 11), never code review/tests — ~6% of the month went on a few worker tests (Qwen Code
+  sends ~40k tokens of tool schema per call). `agent-qwen` needs `--yolo --sandbox sandbox-exec` (headless hides shell/write tools otherwise).
 - **Claude Haiku subagent** (`Agent`, `model: haiku`): mechanical `task-review`, file search, log summaries. Inside the Claude plan, cheapest option.
 - Gradle in the codex sandbox cannot write `~/.gradle` unless the launch passes `-c 'sandbox_workspace_write.writable_roots=["<home>/.gradle"]'`; without it an Android/KMP task reports "partial, blocked by Gradle" and its code was never compiled.
 - Hand the user only what needs them: outline/story approval, device checks, listening QA, `upload`, paid TTS confirmation. Workers never run `upload` or non-dry-run `generate`.
