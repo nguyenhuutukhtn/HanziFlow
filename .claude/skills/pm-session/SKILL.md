@@ -68,11 +68,17 @@ worker looping through review → fix → review burns more than a stronger one 
   before reporting. It updates STATUS/token_log as usual, including its quota delta (see token_log).
 - **Checkpoints:** at the end of the wave, and **immediately after** any task that changes a contract
   or schema, or that a later task builds on (S1's contract error sank S2: never batch past one).
-- **Checkpoint review = cheap reviewer first, PM last (user, 2026-10-23: "PM tự tin quá").** At every
-  checkpoint PM launches `task-review` on a Haiku subagent (standing OK, no need to ask) for each task,
-  **including code PM wrote or fixed itself** — PM's own edits never get committed on PM's word alone
-  (M3: PM's review missed a `generate` crash on a speaker label). Then PM runs `check.sh` once and reads
-  only verdict flags + risk hunks + anything the reviewer could not run.
+- **Checkpoint review = reviewers first, PM last (user, 2026-10-23: "PM tự tin quá"; order user 2026-10-27).**
+  **Code:** (1) Codex review in a **fresh session, a different tier from the author** (luna wrote → sol reviews;
+  sol wrote → astra reviews), `agent-codex <ID>-R --sandbox read-only --minutes 10`, verdict in the final message;
+  skip this step when Codex 5h usage ≥ 60% (don't wait). (2) **DeepSeek is always the final reviewer**
+  (`agent-deepseek`, live tests; proven best on AM2/AM3). (3) PM: `check.sh` once + verdict flags + risk hunks
+  + anything no reviewer could run. Haiku (standing OK) only for PM's own fixes or when both others are unavailable.
+  Author not Codex (Claude/DeepSeek/Qwen) → Codex sol is the cross-vendor first reviewer, DeepSeek still last.
+  **Lesson content:** writer and reviewers always from different vendors (content/workflow.md) — no same-vendor review.
+  **Code PM wrote or fixed itself** goes through the same reviewers — never committed on PM's word alone
+  (M3: PM's review missed a `generate` crash on a speaker label; AM2: DeepSeek caught 2 bugs in PM's agent-stop fixes).
+  token_log rows record findings per reviewer; after ~5 tasks drop the Codex review step if it caught nothing DeepSeek missed.
   Write one fix brief per failing task (escalated a tier). Commit per task, exact paths.
 - **Model quality** = per-task quota delta (% of plan, not tokens: tokens don't compare across
   models) + fix rounds + escaped bugs (found after commit, charged back to the original row).
@@ -128,7 +134,7 @@ Note it in the brief's header too (`Suggested agent: continue <prev task> window
   skills via `.agents/skills/`. Read only `build/logs/<ID>.out` / the final message; log tail only on failure.
 - **Reviewer choice (2026-10-27, AM2):** DeepSeek via `agent-deepseek` reviews scripts/shell/code that can be exercised
   live (it builds real runs, found 7 real defects Haiku missed, ~0.03 USD/review, ~2–6 min); Haiku for fast mechanical checks.
-  Code review order: Haiku → `agent-deepseek`. Every review prompt says "each command must finish within 60 s; no watchers"
+  Code review order: see "Checkpoint review" (Codex fresh/other tier → DeepSeek last). Every review prompt says "each command must finish within 60 s; no watchers"
   (AM-R4: deepcode hung 10 min on a self-written `node -e` watcher until the cap killed it).
 - **Qwen (Qwen Cloud Token Plan, monthly quota) is for lesson content only** (user, 2026-10-27): authoring or Chinese
   review (content workflow step 11), never code review/tests — ~6% of the month went on a few worker tests (Qwen Code
@@ -143,9 +149,11 @@ Before every launch run `scripts/quota.sh` (one line per provider) and write `Su
 
 | Work | First choice (model · effort) |
 |---|---|
-| task-review, Verify re-run, log/diff summary | Haiku subagent · low; DeepSeek flash · low when a different vendor matters |
+| Code review (checkpoint) | Codex other tier · medium, `--sandbox read-only`, fresh session → DeepSeek (`agent-deepseek`) · last |
+| Review of PM's own small fixes, log/diff summary | Haiku subagent · low |
 | Small fix with tests, Python/pipeline S–M with a scripted Verify | Codex `gpt-5.6-luna` · low |
-| Android timing/state, contract changes, hard algorithms, 2nd fix of the same bug | Codex `gpt-5.6-sol` or `gpt-5.6-terra` · medium — **ask first** |
+| Android timing/state, contract changes, hard algorithms, 2nd fix of the same bug | Codex `gpt-5.6-sol` or `gpt-5.6-terra` · medium — **ask first** (trial: sol 6.1 for 3–5 tasks, compare in token_log) |
+| Escalation after sol failed once, hard design-heavy code | Codex `gpt-6-astra` · medium, `--minutes 20`, only when Codex 5h < 50% — **ask first** |
 | Lesson content (`lesson-author`) | Codex `gpt-5.6-sol` · medium — **ask first**; review (`lesson-review`) on a different vendor (DeepSeek or Claude Sonnet) · medium |
 
 - **Effort defaults to low** (user rule, 2026-10-21). Codex: `-c model_reasoning_effort=low`; Haiku/Sonnet subagent: say "keep it short" in the prompt; DeepSeek: `reasoningEffort` in `.deepcode/settings.json`. Medium only where the table says; high = ask first. A low-effort run that fails goes to medium on the same model before a model upgrade.
@@ -153,7 +161,7 @@ Before every launch run `scripts/quota.sh` (one line per provider) and write `Su
 - **Nothing launches without the user's OK** (user, 2026-10-21): even deepcode/Haiku for a
   `task-review` is proposed in one line and waits. The cost that matters is not the worker's
   price, it is PM's own context when a worker loops.
-- **Anything else needs the user's OK before launch** (user rule, 2026-10-21): one line — task, model, why the cheap one isn't enough, current `just quota`. This includes `gpt-reserve` until the user ranks it, DeepSeek's expensive model, Sonnet/Opus subagents and raising effort to high. Never `gpt-6-astra` (burns quota).
+- **Anything else needs the user's OK before launch** (user rule, 2026-10-21): one line — task, model, why the cheap one isn't enough, current `just quota`. This includes `gpt-reserve` until the user ranks it, DeepSeek's expensive model, Sonnet/Opus subagents and raising effort to high. `gpt-6-astra` (user, 2026-10-27): allowed as the escalation tier and as reviewer of sol-written code, ask first; Codex week quota is never above 50% used, the real risk is the 5h window → `--minutes` cap + 5h < 50% check.
 - **Tier by rework risk, not task size** (user, 2026-10-21: a cheap agent that loops costs more than an expensive one that finishes once). Use the low tier only when ALL hold: (1) Verify is a script that fails loudly on mismatch; (2) no timing/state/contract/new-UI work; (3) a similar pattern already exists in the repo to copy. Any one missing → start on the middle tier (`sol`/`terra`, asking as above).
 - **Escalate by default, don't retry:** a worker that needs a `-fix` for its own task → the fix goes one tier up, with the previous failure report in the prompt; the user only needs to veto. Never a third attempt on the same tier.
 - **Every `-fix` is a brief bug:** ask what the brief lacked (a concrete expected value, a pattern to copy, a "compiled for real" check) and fix the template in `docs/tasks/README.md`, not just the instance.

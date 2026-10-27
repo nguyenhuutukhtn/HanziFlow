@@ -54,4 +54,4 @@ Then: update STATUS.md + a token_log.md row, report with the AGENTS.md template,
 - Mechanical Python/test/docs edits with a precise brief → DeepSeek or Codex.
 - Multi-file Kotlin/Compose, device checks → Cursor or Claude.
 - Judgment (spec, review, curriculum) → PM session.
-- Mechanical review of a finished task → a cheap agent, ideally a different model than the author: `Use the task-review skill (.claude/skills/task-review/SKILL.md) for task <ID>.` Paste its verdict to the PM.
+- Code review of a finished task: Codex in a fresh session on a different tier, read-only → DeepSeek last (see pm-session "Checkpoint review"). Lesson content: reviewers from a different vendor than the writer.
