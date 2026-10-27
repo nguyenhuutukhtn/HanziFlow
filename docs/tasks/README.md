@@ -2,13 +2,13 @@
 
 One file per task: `docs/tasks/<ID>.md`. The PM session writes it; any agent (Codex, DeepSeek, Cursor, Claude) executes it after reading only `AGENTS.md` + the brief + files the brief names. No chat history needed.
 
-Lifecycle: `todo` → `in-progress` → `review` → `done` (set in the brief's `Status:` line). After `done`, the summary lives in [STATUS.md](../STATUS.md); delete the brief once the task is committed.
+Lifecycle: a brief exists only while its task is open. The task's commit also `git rm`s the brief (and its `-fix`/WAVE file once the wave is closed); the summary lives in [STATUS.md](../STATUS.md), the brief stays in git history. Pending user steps (device checks) move into STATUS before the WAVE file is removed.
 
 ## Template
 
 ```markdown
 # <ID> — <title>
-Status: todo · Suggested agent: <tool>/<model> (<effort>) · Session: <id or new> · Size: S/M/L · Device check: user | agent (<the scripted check>)
+Suggested agent: <tool>/<model> (<effort>) · Session: <id or new> · Size: S/M/L · Device check: user | agent (<the scripted check>)
 Wave: <n or none> · Owns: <files/dirs this task may edit; `docs/STATUS.md` + `docs/token_log.md` are always implied> · Depends on: <IDs or none> · Checkpoint after: yes | no
 
 ## Goal
