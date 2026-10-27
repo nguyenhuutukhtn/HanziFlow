@@ -81,28 +81,28 @@ quota:
 
 # Follow a running worker agent's live log (PM launches them; Ctrl-C only stops the tail).
 watch ID:
-    tail -f build/logs/{{ID}}.log
+    agent-watch {{ID}}
 
-# Kill every running worker agent (codex / deepcode) — take the session back.
+# Kill every running worker agent (codex / deepcode / qwen) — take the session back.
 stop-agents:
-    bash -c 'pkill -f "codex exec" || true; pkill -f deepcode || true; echo stopped'
+    agent-stop
 
 # Push a note to a running worker (it reads them at each checkpoint): just tell C2-fix "dùng Spacing.md"
 tell ID +MSG:
-    bash -c 'mkdir -p build/logs && printf "%s\n" "{{MSG}}" >> build/logs/{{ID}}.inbox && echo sent'
+    agent-tell {{ID}} {{MSG}}
 
 # Answer the question a worker is blocked on (see build/logs/<ID>.ask).
 answer ID +MSG:
-    bash -c 'mkdir -p build/logs && printf "%s\n" "{{MSG}}" > build/logs/{{ID}}.answer && echo answered'
+    agent-answer {{ID}} {{MSG}}
 
 # What is the worker waiting for, if anything?
 asking ID:
-    bash -c 'cat build/logs/{{ID}}.ask 2>/dev/null || echo "(not waiting)"'
+    agent-asking {{ID}}
 
-# Install the Agent Monitor editor extension (VSCode + Cursor), then reload the window.
+# Install agent-kit (commands, Agent Monitor extension, skill), then reload the window.
 agent-monitor-install:
-    bash -c 'set -e; for d in "$HOME/.vscode/extensions" "$HOME/.cursor/extensions"; do if [ -d "$d" ]; then t="$d/local.agent-monitor-0.1.0"; rm -rf "$t"; mkdir -p "$t"; cp -R tools/agent-monitor/. "$t/"; rm -rf "$t/test"; echo "installed $t"; fi; done; echo "reload the window (Developer: Reload Window)"'
+    bash ~/Documents/source_code/personal/agent-kit/install.sh
 
 # Fake worker run (~15 s, no quota) to check the Agent Monitor panel: just agent-fake T-fake
 agent-fake ID:
-    bash scripts/agent_run.sh {{ID}} --minutes 2 -- bash tools/agent-monitor/test/fake_agent.sh
+    agent-fake {{ID}}

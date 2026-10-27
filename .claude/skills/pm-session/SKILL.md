@@ -110,34 +110,24 @@ Note it in the brief's header too (`Suggested agent: continue <prev task> window
   user's OK — cheap tools no longer mean "launch without asking" (user, 2026-10-21).
 - **PM fixes code itself only under ~10 lines** (a missing import, a wrong map key, an
   `@OptIn`), never a compile-fix loop: that is a worker's job, in the user's window.
-- Launching anything from PM goes through `scripts/agent_run.sh` (wall-clock cap + loop
-  watchdog).
+- Launching anything from PM goes through agent-kit (`agent-codex` / `agent-deepseek` / `agent-qwen`,
+  all on `agent-run`: wall-clock cap + loop watchdog + run registry that auto-opens a monitor tab in
+  VSCode/Cursor). Mechanics, Monitor command and intervention ladder: skill `agent-orchestration`.
   Reason: a worker PM launched sends every one of its loops through PM's own context, and PM
   is blind while it runs (it is only woken when the command exits).
 
-## Callback channel (so a worker can be corrected without restarting it)
+## Callback channel and worker commands → skill `agent-orchestration` (agent-kit, user-level)
 
-Every launch prompt ends with these two lines, and the brief's Verify stays unchanged:
-
-```text
-Before each major step run: bash scripts/agent_ask.sh <ID> --inbox (new notes = instructions).
-Missing information? Run: bash scripts/agent_ask.sh <ID> "<question>" and use its answer instead of guessing.
-```
-
-- The user pushes a note mid-run with `just tell <ID> "..."` — the worker picks it up at its
-  next checkpoint, no restart, nothing redone.
-- A blocked worker writes `build/logs/<ID>.ask` and waits up to 15 minutes; `just asking <ID>`
-  shows the question, `just answer <ID> "..."` releases it.
-- When PM launched the run itself, PM arms a `Monitor` on `tail -f build/logs/<ID>.log` filtered
-  to `ASK-PM:|FAIL|Error|Traceback|KILLED` so the question wakes PM mid-run. Monitors expire
-  after 30 minutes — re-arm while the run is alive.
-- `just watch <ID>` tails the live log; `just stop-agents` kills codex/deepcode (the codex
-  session stays on disk, so `codex exec resume` continues from there).
-
-## Worker command shapes (PM-run launches; the same commands are what PM hands the user)
-
-- **Codex:** flags come **before** the subcommand; `resume` only accepts `-c`. `codex exec -m <model> -c model_reasoning_effort=<effort> -s workspace-write -o build/logs/<ID>.out "<prompt>" > build/logs/<ID>.log 2>&1` in the background (Bash `run_in_background`). Read only `build/logs/<ID>.out`; read the `.log` tail only if the run failed. Continue a window: `codex exec -m <model> -c model_reasoning_effort=<effort> -s workspace-write -o build/logs/<ID>.out resume <session id> "<prompt>"` (id from the brief's header line `Session:`; record it after each run, newest file in `~/.codex/sessions/`).
-- **DeepSeek:** `deepcode -x -p "<prompt>" > build/logs/<ID>.deepseek.out 2>&1`; continue with `-r <id>`. Skills reach it via `.agents/skills/` symlinks.
+- The wrappers append the callback footer (`agent-ask <ID> --inbox` / `agent-ask <ID> "<question>"`) to every prompt.
+- The user only talks to PM (chat, or the tab's "Nhắn PM" box → `build/logs/<ID>.pm`); PM decides `agent-tell` /
+  `agent-stop <ID>` + resume / `-fix` brief. Claude subagents: tab is a read-only mirror (AM3), steer via `SendMessage`.
+- Monitor: `tail -q -n0 -F build/logs/<ID>.pm build/logs/<ID>.ask | grep --line-buffered .` (never grep the worker log
+  for `ASK-PM:`: a worker reading a file with that string fires a false alarm). Re-arm on expiry while the run lives.
+- Codex: `agent-codex <ID> [--model M] [--effort E] "<prompt>"` (defaults luna/low, reasoning summaries on); resume
+  `codex exec -c … resume <session id> "<msg>"` (only `-c` flags). DeepSeek: `agent-deepseek <ID> "<prompt>"`, resume `deepcode -r <id>`;
+  skills via `.agents/skills/`. Read only `build/logs/<ID>.out` / the final message; log tail only on failure.
+- **Reviewer choice (2026-10-27, AM2):** DeepSeek via `agent-deepseek` reviews scripts/shell/code that can be exercised
+  live (it builds real runs, found 7 real defects Haiku missed, ~0.03 USD/review, ~2–6 min); Haiku for fast mechanical checks.
 - **Claude Haiku subagent** (`Agent`, `model: haiku`): mechanical `task-review`, file search, log summaries. Inside the Claude plan, cheapest option.
 - Gradle in the codex sandbox cannot write `~/.gradle` unless the launch passes `-c 'sandbox_workspace_write.writable_roots=["<home>/.gradle"]'`; without it an Android/KMP task reports "partial, blocked by Gradle" and its code was never compiled.
 - Hand the user only what needs them: outline/story approval, device checks, listening QA, `upload`, paid TTS confirmation. Workers never run `upload` or non-dry-run `generate`.
