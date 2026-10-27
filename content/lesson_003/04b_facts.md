@@ -43,6 +43,8 @@ below. F8 and F14 keep the numbering `03_core.md` already refers to.
 
 ## Nghe-mode retold variants
 
+PM 2026-10-28: Nghe retellings may change one story detail (e.g. a number, who likes spicy food) when the version is announced as different; V items apply to the canonical retelling.
+
 Rule: a retelling may rephrase inside the tiers only (Core / Coach / Function / Names); numbers,
 dish names, who-did-what and the solution never change. **V** items are allowed in Nghe mode
 only — Hiểu, Từ vựng, Phản xạ and Nói use the canonical form.

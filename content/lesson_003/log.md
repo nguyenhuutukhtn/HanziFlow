@@ -14,3 +14,4 @@ Qwen Lite plan: 93.4% remaining while L3-CORE was running (2026-10-27, baseline 
 | 6 lang review | Codex gpt-5.6-sol medium | ~2 | 2 block / 12 fix / 1 note | — | Codex 5h 0→6% | block: s13 contradicts F9 (刘洋 fetched), s24 换一个→换一份; many textbook narrator lines |
 | 7 learner review | Claude Haiku subagent | ~2 | 0 block / 11 fix / 15 note | — | Claude plan (65k subagent tokens) | not fully blind; PM kept s1/s23 split, who-ordered-what (s8), pay confusion (s29/s31); dropped 点 ambiguity + once-only words (modes carry them) |
 | 8 fix | Codex gpt-5.6-luna low | ~3 | applied 06 all block/fix + 3 of 07 | 1 | Codex 5h ~0 | 37 lines, avg 10.6, max 18, 141 distinct chars; who-gets-what put in s21 (not s8) |
+| 11 fixes | Codex gpt-5.6-luna low | ~3 | applied both reviews except PM-kept items | 1 | Codex ~0 | missed Claude's Nghe V2 block → PM fixed l64 (1 line); PM demoted 2 stray ## headings |
