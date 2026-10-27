@@ -98,3 +98,11 @@ answer ID +MSG:
 # What is the worker waiting for, if anything?
 asking ID:
     bash -c 'cat build/logs/{{ID}}.ask 2>/dev/null || echo "(not waiting)"'
+
+# Install the Agent Monitor editor extension (VSCode + Cursor), then reload the window.
+agent-monitor-install:
+    bash -c 'set -e; for d in "$HOME/.vscode/extensions" "$HOME/.cursor/extensions"; do if [ -d "$d" ]; then t="$d/local.agent-monitor-0.1.0"; rm -rf "$t"; mkdir -p "$t"; cp -R tools/agent-monitor/. "$t/"; rm -rf "$t/test"; echo "installed $t"; fi; done; echo "reload the window (Developer: Reload Window)"'
+
+# Fake worker run (~15 s, no quota) to check the Agent Monitor panel: just agent-fake T-fake
+agent-fake ID:
+    bash scripts/agent_run.sh {{ID}} --minutes 2 -- bash tools/agent-monitor/test/fake_agent.sh

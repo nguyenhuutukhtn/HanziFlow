@@ -25,6 +25,20 @@ rm -f "$KILLED"
 
 "$@" >"$LOG" 2>&1 &
 PID=$!
+
+# Run registry for the editor extension (tools/agent-monitor): atomic write.
+RUNFILE="$LOGS/$ID.run.json"
+AGENT="$(basename "$1")"
+STARTED="$(date +%Y-%m-%dT%H:%M:%S%z)"
+json_esc() { local v="${1//\\/\\\\}"; v="${v//\"/\\\"}"; printf '%s' "$v"; }
+write_run() { # status [ended]
+    local tmp="$RUNFILE.tmp.$$" ended=""
+    [[ -n "${2:-}" ]] && ended=",\"ended\":\"$2\""
+    printf '{"id":"%s","agent":"%s","pid":%s,"started":"%s","log":"%s","status":"%s"%s}\n' \
+        "$(json_esc "$ID")" "$(json_esc "$AGENT")" "$PID" "$STARTED" "$(json_esc "$LOG")" "$(json_esc "$1")" "$ended" >"$tmp" \
+        && mv "$tmp" "$RUNFILE"
+}
+write_run running
 echo "$ID: pid $PID, cap ${MINUTES}m, log $LOG"
 
 # Watchdog: wall-clock cap, plus "the same line repeated 25+ times in the last
@@ -54,8 +68,10 @@ wait "$PID"
 STATUS=$?
 kill "$WATCHDOG" 2>/dev/null
 if [[ -f "$KILLED" ]]; then
+    write_run "killed: $(head -1 "$KILLED")" "$(date +%Y-%m-%dT%H:%M:%S%z)"
     echo "$ID: KILLED — $(cat "$KILLED")"
     exit 124
 fi
+write_run "exit $STATUS" "$(date +%Y-%m-%dT%H:%M:%S%z)"
 echo "$ID: exit $STATUS"
 exit "$STATUS"
