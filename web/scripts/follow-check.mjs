@@ -104,6 +104,16 @@ try {
   await cdp.send("Emulation.setCPUThrottlingRate", { rate: 4 });
   await page.goto(url, { waitUntil: "domcontentloaded" });
   await page.getByText("Đồ ăn mang về của đồng nghiệp", { exact: false }).click();
+  // Edge jump: from the last section back to the first, whose centring target is above the scroll range.
+  await page.locator(".section-marker").last().click();
+  await page.waitForTimeout(2000);
+  await page.locator(".section-marker").first().click();
+  for (const second of [1, 2, 3]) {
+    await page.waitForTimeout(1000);
+    const follow = await page.locator(".transcript-wrap").getAttribute("data-follow");
+    console.log(`first marker from end ${second}s follow=${follow}`);
+    if (follow !== "on") throw new Error(`first marker from end: follow turned ${follow} at ${second}s`);
+  }
   for (const marker of ["Nghe lại", "Kể lại"]) {
     const pause = page.getByRole("button", { name: "Tạm dừng", exact: true });
     if (await pause.isVisible().catch(() => false)) await pause.click();

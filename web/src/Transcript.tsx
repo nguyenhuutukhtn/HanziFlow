@@ -17,7 +17,7 @@ type Props = {
 };
 let reportedMissingCuePlaceJson = false;
 
-type ProgrammaticTarget = { target: number; maximum: () => number };
+type ProgrammaticTarget = { target: number };
 
 const scrollToVisibleCenter = (target: HTMLElement): ProgrammaticTarget | undefined => {
   const doc = target.ownerDocument;
@@ -31,10 +31,7 @@ const scrollToVisibleCenter = (target: HTMLElement): ProgrammaticTarget | undefi
     const scrollerRect = scroller.getBoundingClientRect();
     const top = scroller.scrollTop + targetRect.top - scrollerRect.top - (scrollerRect.height - targetRect.height) / 2;
     scroller.scrollTo({ top, behavior: "smooth" });
-    return {
-      target: top,
-      maximum: () => Math.max(0, scroller.scrollHeight - scroller.clientHeight),
-    };
+    return { target: top };
   }
 
   const win = doc.defaultView ?? window;
@@ -47,11 +44,7 @@ const scrollToVisibleCenter = (target: HTMLElement): ProgrammaticTarget | undefi
   const targetCenter = win.scrollY + targetRect.top + targetRect.height / 2;
   const top = targetCenter - visibleBottom / 2;
   win.scrollTo({ top, behavior: "smooth" });
-  return {
-    target: top,
-    maximum: () =>
-      Math.max(0, Math.max(doc.documentElement.scrollHeight, doc.body?.scrollHeight ?? 0) - win.innerHeight),
-  };
+  return { target: top };
 };
 
 export function Transcript({
@@ -103,13 +96,9 @@ export function Transcript({
     setFollow(true);
     setOutOfView(false);
     if (activeRef.current) programmedTarget.current = scrollToVisibleCenter(activeRef.current);
-    const destination = programmedTarget.current;
-    if (destination && (destination.target < 0 || destination.target > destination.maximum())) {
-      finishProgrammaticScroll();
-    } else {
-      // Safari may not fire scrollend. Keep extending this while smooth-scroll events arrive.
-      finishProgrammaticScrollAfterIdle();
-    }
+    // Out-of-range targets still smooth-scroll to the clamped edge, so they stay programmatic too.
+    // Safari may not fire scrollend. Keep extending this while smooth-scroll events arrive.
+    finishProgrammaticScrollAfterIdle();
   };
   useEffect(() => {
     if (follow && activeRef.current) returnToActive();
