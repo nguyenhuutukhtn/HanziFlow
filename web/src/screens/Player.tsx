@@ -201,7 +201,7 @@ export function PlayerScreen({ onBack }: { onBack: () => void }) {
                   player.seek(Math.min(player.duration, player.position + 30000));
                 } else if (event.key === "PageDown") {
                   event.preventDefault();
-                  player.seek(Math.max(0, player.position - 30000));
+                  player.seek(Math.max(0, Math.min(player.duration, player.position) - 30000));
                 }
               }}
               onValueChange={([value]) => player.seek(value)}

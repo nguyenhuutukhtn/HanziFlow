@@ -123,6 +123,7 @@ describe("WF2 PiP and seeking acceptance", () => {
     const pipDocument = document.implementation.createHTMLDocument("PiP");
     const pipWindow = { document: pipDocument, addEventListener: vi.fn() } as unknown as Window;
     const requestWindow = vi.fn().mockResolvedValue(pipWindow);
+    const originalPip = Object.getOwnPropertyDescriptor(window, "documentPictureInPicture");
     Object.defineProperty(window, "documentPictureInPicture", {
       configurable: true,
       value: { requestWindow },
@@ -152,7 +153,8 @@ describe("WF2 PiP and seeking acceptance", () => {
     } finally {
       if (originalSheets) Object.defineProperty(document, "styleSheets", originalSheets);
       else delete (document as unknown as Record<string, unknown>).styleSheets;
-      delete (window as Window & { documentPictureInPicture?: unknown }).documentPictureInPicture;
+      if (originalPip) Object.defineProperty(window, "documentPictureInPicture", originalPip);
+      else delete (window as Window & { documentPictureInPicture?: unknown }).documentPictureInPicture;
     }
   });
 
@@ -193,6 +195,7 @@ describe("WF2 PiP and seeking acceptance", () => {
 
   it.each([
     ["macOS", "MacIntel", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"],
+    ["Windows", "Win32", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"],
     ["Android", "Linux armv8l", "Mozilla/5.0 (Linux; Android 15; Pixel 9)"],
   ])("does not show the pin or hint on %s", (_name, platform, userAgent) => {
     setUserAgent(platform, userAgent);
