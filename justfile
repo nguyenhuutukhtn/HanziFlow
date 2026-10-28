@@ -88,13 +88,13 @@ stop-agents:
     agent-stop
 
 task-start ID:
-    bash scripts/task_start.sh {{ID}}
+    agent-task start {{ID}}
 
 task-pr ID:
-    bash scripts/task_pr.sh {{ID}}
+    agent-task pr {{ID}}
 
 task-done ID:
-    bash scripts/task_done.sh {{ID}}
+    agent-task done {{ID}}
 
 code-delta:
     .venv/bin/python3 scripts/code_delta.py

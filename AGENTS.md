@@ -23,7 +23,7 @@ Mandarin listening/speaking course for a Vietnamese-speaking learner.
 
 - Never print, log or write secret values (`.env`: ElevenLabs, Supabase keys). The service-role key and TTS keys never go into `kmp/` or any client. Exception (user, 2026-10-24, personal app): the chat-LLM key may ship in the Android build, read from git-ignored `local.properties` → BuildConfig; never committed, never in the publicly deployed web bundle.
 - Never make paid TTS calls without the dry-run count and explicit user confirmation. `publish` never calls ElevenLabs.
-- Code tasks run on branch `task/<ID>` (PM creates it with `scripts/task_start.sh`). Leave your changes uncommitted; the PM commits the paths in your brief's `Owns:` after Verify. Never commit on `main`, never push. Content tasks: do not commit unless the brief says so.
+- Code tasks run on branch `task/<ID>` (PM creates it with `agent-task start <ID>`). Leave your changes uncommitted; the PM commits the paths in your brief's `Owns:` after Verify. Never commit on `main`, never push. Content tasks: do not commit unless the brief says so.
 
 ## Token budget (app and pipeline tasks)
 

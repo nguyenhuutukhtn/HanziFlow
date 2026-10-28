@@ -1,0 +1,19 @@
+[repo]
+forge = "github"
+base_branch = "main"
+branch_prefix = "task/"
+check = "scripts/check.sh"
+code_delta = "scripts/code_delta.py main"
+regen_paths = ["docs/CODEMAP.md"]
+
+[pm]
+pm_dir = "docs"
+briefs_dir = "docs/tasks"
+attribution = "default"
+
+[agents]
+allowed = ["codex", "deepseek", "qwen", "claude"]
+
+[review]
+post = "inline"
+label = "AI review"
