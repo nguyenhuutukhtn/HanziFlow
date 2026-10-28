@@ -154,7 +154,7 @@ describe("W3a PiP learning transcript", () => {
     expect(pipDocument.querySelectorAll("rt")).toHaveLength(0);
   });
 
-  it("keeps the main transcript's pinyin as its existing line below", () => {
+  it("renders the main transcript's pinyin above its token", () => {
     const { container } = render(
       <Transcript
         session={session as any}
@@ -165,7 +165,7 @@ describe("W3a PiP learning transcript", () => {
         onSeek={vi.fn()}
       />,
     );
-    expect(container.querySelector(".pinyin")).toHaveTextContent("nǐ hǎo");
-    expect(container.querySelector("ruby")).toBeNull();
+    expect(container.querySelector("ruby")).toHaveTextContent("你nǐ");
+    expect(container.querySelector("rt")).toHaveTextContent("nǐ");
   });
 });

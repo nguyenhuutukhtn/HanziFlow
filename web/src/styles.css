@@ -475,7 +475,17 @@ select:focus-visible,
 .hanzi {
   font-family: var(--font-hanzi);
   font-size: var(--hanzi-size);
-  line-height: 1.55;
+  line-height: 1.9;
+}
+.hanzi ruby {
+  margin-inline-end: 0.2em;
+  ruby-position: over;
+}
+.hanzi rt {
+  color: var(--accent);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
 }
 .pinyin {
   color: var(--accent);
@@ -640,14 +650,8 @@ select:focus-visible,
   font-size: clamp(16px, 6vw, var(--hanzi-size));
   line-height: 1.9;
 }
-.compact-transcript ruby {
-  margin-inline-end: 0.2em;
-}
 .compact-transcript rt {
-  color: var(--accent);
-  font-family: var(--font-body);
   font-size: 12px;
-  font-weight: 600;
 }
 .player-layout {
   display: grid;
