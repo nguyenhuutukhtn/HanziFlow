@@ -87,6 +87,18 @@ watch ID:
 stop-agents:
     agent-stop
 
+task-start ID:
+    bash scripts/task_start.sh {{ID}}
+
+task-pr ID:
+    bash scripts/task_pr.sh {{ID}}
+
+task-done ID:
+    bash scripts/task_done.sh {{ID}}
+
+code-delta:
+    .venv/bin/python3 scripts/code_delta.py
+
 # Push a note to a running worker (it reads them at each checkpoint): just tell C2-fix "dùng Spacing.md"
 tell ID +MSG:
     agent-tell {{ID}} {{MSG}}

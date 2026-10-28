@@ -2,7 +2,7 @@
 
 One file per task: `docs/tasks/<ID>.md`. The PM session writes it; any agent (Codex, DeepSeek, Cursor, Claude) executes it after reading only `AGENTS.md` + the brief + files the brief names. No chat history needed.
 
-Lifecycle: a brief exists only while its task is open. The task's commit also `git rm`s the brief (and its `-fix`/WAVE file once the wave is closed); the summary lives in [STATUS.md](../STATUS.md), the brief stays in git history. Pending user steps (device checks) move into STATUS before the WAVE file is removed.
+Lifecycle: PM starts a clean `task/<ID>` branch, the worker commits, PM verifies, then runs `task_pr` to open the PR; reviewers post findings with `pr_review`, the user merges on the web, and PM runs `task_done`. The task commit removes the brief (and its `-fix`/WAVE file once the wave is closed); the summary lives in [STATUS.md](../STATUS.md), and pending user steps move there.
 
 ## Template
 
