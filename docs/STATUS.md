@@ -2,7 +2,7 @@
 
 Read this first in a new session instead of past chat history. Keep it short; update it at the end of every task.
 
-Last updated: 2026-10-28 (T-PR-fix complete; 9 focused tests pass, PM verify/commit pending) · branch `task/T-PR`
+Last updated: 2026-10-28 (T-PR-fix2 complete; 17 focused tests pass, PM verify/commit pending) · branch `task/T-PR`
 
 ## Working rules
 
@@ -14,7 +14,7 @@ Last updated: 2026-10-28 (T-PR-fix complete; 9 focused tests pass, PM verify/com
 
 ## Done
 
-- **T-PR:** task lifecycle tooling now creates/cleans branches, opens or updates PRs with preserved brief sections, check output and symbol-aware code deltas, and posts one review with valid RIGHT-side inline comments. Nine isolated temp-repo/fake-GitHub tests pass; no real GitHub calls, commit, push, full check, or device check were run per the fix brief.
+- **T-PR:** task lifecycle tooling now creates/cleans branches, opens or updates PRs with preserved brief sections, check output and symbol-aware code deltas, and posts one review with valid RIGHT-side inline comments. Fix2 closes all 11 DeepSeek findings: safe merged-branch deletion, finished-PR preflight, prefix headings, binary/non-ASCII/merge-base deltas, robust diff hunks, and URL-only review output. Seventeen isolated temp-repo/fake-GitHub tests pass; no real GitHub calls, commit, push, full check, or device check were run per the brief.
 
 - **L3a:** Lesson 3 `modes_v1` importer supports 张静/刘洋, metadata and five generated tracks meet the required counts/gaps; dry-run cast and fake generation pass. Paid TTS, publish and upload were not run.
 

@@ -18,17 +18,23 @@ def right_side_lines(diff: str) -> dict[str, set[int]]:
     allowed: dict[str, set[int]] = {}
     path = None
     new_line = None
+    in_hunk = False
     for row in diff.splitlines():
-        if row.startswith("+++ b/"):
-            path = row[6:]
+        if row.startswith("diff --git "):
+            path = None
+            new_line = None
+            in_hunk = False
+        elif not in_hunk and row.startswith("+++ b/"):
+            path = row[6:].rstrip("\t")
             allowed.setdefault(path, set())
         elif match := HUNK.match(row):
             new_line = int(match.group(1))
-        elif path is not None and new_line is not None:
-            if row.startswith("+") and not row.startswith("+++"):
+            in_hunk = True
+        elif in_hunk and path is not None and new_line is not None:
+            if row.startswith("+"):
                 allowed[path].add(new_line)
                 new_line += 1
-            elif row.startswith("-") and not row.startswith("---"):
+            elif row.startswith("-"):
                 continue
             elif not row.startswith("\\"):
                 new_line += 1
@@ -53,6 +59,8 @@ def build_payload(findings: Path, reviewer: str, allowed: dict[str, set[int]]) -
 
 
 def command_output(*command: str) -> str:
+    if command[0] == "git":
+        command = ("git", "-c", "core.quotePath=false", *command[1:])
     return subprocess.check_output(command, text=True)
 
 
@@ -74,7 +82,7 @@ def main() -> None:
     owner_repo = command_output(
         "gh", "repo", "view", "--json", "nameWithOwner", "--jq", ".nameWithOwner"
     ).strip()
-    subprocess.run(
+    result = subprocess.run(
         [
             "gh",
             "api",
@@ -86,8 +94,10 @@ def main() -> None:
         ],
         input=encoded,
         text=True,
+        stdout=subprocess.PIPE,
         check=True,
     )
+    print(json.loads(result.stdout)["html_url"])
 
 
 if __name__ == "__main__":

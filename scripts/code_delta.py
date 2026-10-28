@@ -35,7 +35,11 @@ class Change:
 
 def git(*args: str, check: bool = True) -> str:
     result = subprocess.run(
-        ["git", *args], text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False
+        ["git", "-c", "core.quotePath=false", *args],
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
     )
     if check and result.returncode:
         raise SystemExit(result.stderr.strip() or f"git {' '.join(args)} failed")
@@ -124,10 +128,11 @@ def counts(base: str, change: Change) -> tuple[str, str]:
     return row[0], row[1]
 
 
-def symbol_delta(base: str, change: Change) -> list[str]:
-    if is_data(change.path):
+def symbol_delta(before_ref: str, change: Change) -> list[str]:
+    supported = (".py", ".kt", ".js", ".jsx", ".ts", ".tsx")
+    if is_data(change.path) or not change.path.endswith(supported):
         return []
-    before = symbols(file_at(base, change.old_path), change.old_path)
+    before = symbols(file_at(before_ref, change.old_path), change.old_path)
     after = symbols(file_at("HEAD", change.path), change.path)
     return (
         [f"+{name}" for name in sorted(after.keys() - before.keys())]
@@ -142,6 +147,7 @@ def symbol_delta(base: str, change: Change) -> list[str]:
 
 def main() -> None:
     base = sys.argv[1] if len(sys.argv) > 1 else "main"
+    before_ref = git("merge-base", base, "HEAD").strip()
     grouped: dict[str, list[str]] = defaultdict(list)
     for change in changes(base):
         added, removed = counts(base, change)
@@ -153,7 +159,7 @@ def main() -> None:
             if change.status in {"R", "C"}
             else change.path
         )
-        details = symbol_delta(base, change)
+        details = symbol_delta(before_ref, change)
         suffix = f" {' '.join(details)}" if details else ""
         grouped[area].append(f"{change.status} {display} +{added} −{removed}{suffix}")
     for area in AREAS:
