@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { catalogLesson, contentUrl, fetchJson, fetchText } from "./content";
-import { json, shared, type Cue, type Section, type Session, type Track } from "./facade";
+import { json, shared, type Cue, type CuePlace, type Section, type Session, type Track } from "./facade";
 import type { ViewMode } from "./settings";
 
 const savedTrack = (lessonId: string) => {
@@ -68,6 +68,18 @@ export function PlayerProvider({
   const [speed, setSpeed] = useState(1);
   const [view, setView] = useState<ViewMode>(initialView);
   const [vietnamese, setVietnamese] = useState(true);
+  const pendingSeek = useRef<{
+    lessonId: string;
+    track: string;
+    position: number;
+    playing: boolean;
+    speed: number;
+  }>();
+  const trackChange = useRef(0);
+  useEffect(() => {
+    pendingSeek.current = undefined;
+    trackChange.current += 1;
+  }, [lessonId]);
   useEffect(() => {
     const lesson = catalogLesson(catalog, lessonId);
     if (!lesson || !lesson.tracks[track]) return;
@@ -116,29 +128,46 @@ export function PlayerProvider({
     if (value != null) seek(value);
   };
   const replay = () => {
-    const cue = session && json<Cue>(session.cueJson(session.activeCueIndex(position)));
+    const place = session && json<CuePlace>(session.cuePlaceJson(position));
+    const cueIndex = place ? (place.speaking >= 0 ? place.speaking : place.last) : -1;
+    const cue = session && cueIndex >= 0 ? json<Cue>(session.cueJson(cueIndex)) : null;
     if (cue) seek(cue.start_ms);
   };
   const tracks = session ? (json<Track[]>(session.tracksJson()) ?? []) : [];
   const sections = session ? (json<Section[]>(session.sectionsJson?.() ?? null) ?? []) : [];
   const changeTrack = (name: string) => {
     if (name === track || !session) return;
+    pendingSeek.current = undefined;
+    const request = ++trackChange.current;
     const old = timeline;
     const time = audio.current?.currentTime ?? 0;
     fetchText(session.timelinePath(name)!).then((text) => {
-      setTrack(name);
+      if (request !== trackChange.current) return;
       const lesson = catalogLesson(catalog, lessonId);
       const modeTracks = lesson && !lesson.tracks.guided;
       const nextPosition = modeTracks
         ? 0
         : shared()!.com.hanziflow.shared.web.TrackSwitchJs.positionFor(old, text, time * 1000);
-      seek(nextPosition);
+      pendingSeek.current = { lessonId, track: name, position: nextPosition, playing, speed };
+      setPosition(nextPosition);
+      setTrack(name);
       try {
         localStorage.setItem(`hanziflow-track:${lessonId}`, name);
       } catch {
         // Storage is optional (private browsing and embedded webviews can reject it).
       }
     });
+  };
+  const mediaReady = (element: HTMLAudioElement) => {
+    setDuration(element.duration * 1000);
+    const pending = pendingSeek.current;
+    if (!pending || pending.lessonId !== lessonId || pending.track !== track) return;
+    pendingSeek.current = undefined;
+    element.currentTime = pending.position / 1000;
+    element.playbackRate = pending.speed;
+    element.preservesPitch = true;
+    setPosition(pending.position);
+    if (pending.playing) void element.play();
   };
   const value: PlayerState = {
     session,
@@ -183,7 +212,8 @@ export function PlayerProvider({
           ref={audio}
           src={contentUrl(session.audioPath(track)!)}
           onTimeUpdate={(event) => setPosition(event.currentTarget.currentTime * 1000)}
-          onLoadedMetadata={(event) => setDuration(event.currentTarget.duration * 1000)}
+          onLoadedMetadata={(event) => mediaReady(event.currentTarget)}
+          onCanPlay={(event) => mediaReady(event.currentTarget)}
           onPlay={() => setPlaying(true)}
           onPause={() => setPlaying(false)}
         />

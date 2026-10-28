@@ -2,7 +2,7 @@
 
 Read this first in a new session instead of past chat history. Keep it short; update it at the end of every task.
 
-Last updated: 2026-10-28 (WR1 live web review filed; lesson 3 JSON waits for native-speaker check) · branch `main`
+Last updated: 2026-10-28 (WF1 track position/replay fixes implemented; live Chrome check awaits PM outside sandbox) · branch `task/WF1`
 
 ## Working rules
 
@@ -14,6 +14,7 @@ Last updated: 2026-10-28 (WR1 live web review filed; lesson 3 JSON waits for nat
 
 ## Done
 
+- **WF1 (2026-10-28):** web lesson-1 track switches now apply the shared mapped position after the new source loads, preserving speed and play state; `modes_v1` switches still reset to zero. Replay uses the transcript's gap-aware last-started cue. Focused WF1+M5 tests pass 8/8 and the production build passes; the real-catalog Chrome check and full facade smoke await PM outside this sandbox (Chrome launch and Gradle wrapper lock blocked).
 - **WR1 (2026-10-28):** live Chrome/Linux review of the web player (production preview, Playwright, 1280×800 + 390×844, headed Document PiP). Found 1 P1 (track switch loses position: 422.006 s mapped vs 0.000 s actual), 4 P2 (default “Hán tự + pinyin” renders no pinyin; auto-follow turns off after long programmatic scrolls; R/“Nghe lại câu” no-ops in cue gaps; PiP’s cloned stylesheet links never load, so its transcript is unstyled/does not follow) and 1 P3 (slider arrow key = 1 ms, raw-ms ARIA value). Full repro/evidence and passed-flow coverage in [reviews/web_review_linux.md](reviews/web_review_linux.md). No code changes; preview server stopped.
 - **T-PR:** task lifecycle tooling now creates/cleans branches, opens or updates PRs with preserved brief sections, check output and symbol-aware code deltas, and posts one review with valid RIGHT-side inline comments. Fix2 closes all 11 DeepSeek findings: safe merged-branch deletion, finished-PR preflight, prefix headings, binary/non-ASCII/merge-base deltas, robust diff hunks, and URL-only review output. Seventeen isolated temp-repo/fake-GitHub tests pass; no real GitHub calls, commit, push, full check, or device check were run per the brief.
 

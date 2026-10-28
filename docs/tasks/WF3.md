@@ -1,6 +1,6 @@
 # WF3 — Pinyin in "Hán tự + pinyin"; auto-follow survives long scrolls
 Suggested agent: codex/gpt-5.6-sol (medium) · Session: new · Size: M · Device check: user
-Wave: WF · Owns: `web/src/Transcript.tsx`, `web/src/styles.css`, `web/src/WF3.test.tsx`, `web/scripts/follow-check.mjs` · Depends on: WF2 merged · Checkpoint after: yes (wave end)
+Wave: WF · Owns: `web/src/Transcript.tsx`, `web/src/styles.css`, `web/src/WF3.test.tsx`, `web/scripts/follow-check.mjs` (+ `docs/STATUS.md`, `docs/token_log.md`) · Depends on: WF2 merged · Checkpoint after: yes (wave end)
 
 ## Goal
 

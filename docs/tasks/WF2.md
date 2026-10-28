@@ -1,6 +1,6 @@
 # WF2 — PiP styled in production, Linux "always on top" hint, usable seek slider
 Suggested agent: codex/gpt-5.6-luna (medium) · Session: new · Size: M · Device check: user
-Wave: WF · Owns: `web/src/screens/Player.tsx`, `web/src/pip/`, `web/src/components/ui/slider.tsx`, `web/src/settings.ts`, `web/src/styles.css`, `web/src/WF2.test.tsx`, `web/scripts/pip-check.mjs` · Depends on: none · Checkpoint after: yes
+Wave: WF · Owns: `web/src/screens/Player.tsx`, `web/src/pip/`, `web/src/components/ui/slider.tsx`, `web/src/settings.ts`, `web/src/styles.css`, `web/src/WF2.test.tsx`, `web/scripts/pip-check.mjs` (+ `docs/STATUS.md`, `docs/token_log.md`) · Depends on: none · Checkpoint after: yes
 
 ## Goal
 
