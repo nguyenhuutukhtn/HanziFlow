@@ -17,7 +17,7 @@ type Props = {
 };
 let reportedMissingCuePlaceJson = false;
 
-type ProgrammaticTarget = { current: () => number; target: number };
+type ProgrammaticTarget = { target: number; maximum: () => number };
 
 const scrollToVisibleCenter = (target: HTMLElement): ProgrammaticTarget | undefined => {
   const doc = target.ownerDocument;
@@ -31,7 +31,10 @@ const scrollToVisibleCenter = (target: HTMLElement): ProgrammaticTarget | undefi
     const scrollerRect = scroller.getBoundingClientRect();
     const top = scroller.scrollTop + targetRect.top - scrollerRect.top - (scrollerRect.height - targetRect.height) / 2;
     scroller.scrollTo({ top, behavior: "smooth" });
-    return { current: () => scroller.scrollTop, target: top };
+    return {
+      target: top,
+      maximum: () => Math.max(0, scroller.scrollHeight - scroller.clientHeight),
+    };
   }
 
   const win = doc.defaultView ?? window;
@@ -44,7 +47,11 @@ const scrollToVisibleCenter = (target: HTMLElement): ProgrammaticTarget | undefi
   const targetCenter = win.scrollY + targetRect.top + targetRect.height / 2;
   const top = targetCenter - visibleBottom / 2;
   win.scrollTo({ top, behavior: "smooth" });
-  return { current: () => win.scrollY, target: top };
+  return {
+    target: top,
+    maximum: () =>
+      Math.max(0, Math.max(doc.documentElement.scrollHeight, doc.body?.scrollHeight ?? 0) - win.innerHeight),
+  };
 };
 
 export function Transcript({
@@ -82,17 +89,27 @@ export function Transcript({
   const pinyinEnabled = view === "HANZI_WITH_PINYIN";
   const selected = () =>
     Boolean(activeRef.current?.ownerDocument.getSelection?.()?.toString() ?? window.getSelection?.()?.toString());
+  const finishProgrammaticScroll = () => {
+    window.clearTimeout(programmedTimer.current);
+    programmed.current = false;
+    programmedTarget.current = undefined;
+  };
+  const finishProgrammaticScrollAfterIdle = () => {
+    window.clearTimeout(programmedTimer.current);
+    programmedTimer.current = window.setTimeout(finishProgrammaticScroll, 250);
+  };
   const returnToActive = () => {
     programmed.current = true;
     setFollow(true);
     setOutOfView(false);
     if (activeRef.current) programmedTarget.current = scrollToVisibleCenter(activeRef.current);
-    // Fallback when scrollend never fires (older Safari) or the target is out of scroll range.
-    window.clearTimeout(programmedTimer.current);
-    programmedTimer.current = window.setTimeout(() => {
-      programmed.current = false;
-      programmedTarget.current = undefined;
-    }, 1500);
+    const destination = programmedTarget.current;
+    if (destination && (destination.target < 0 || destination.target > destination.maximum())) {
+      finishProgrammaticScroll();
+    } else {
+      // Safari may not fire scrollend. Keep extending this while smooth-scroll events arrive.
+      finishProgrammaticScrollAfterIdle();
+    }
   };
   useEffect(() => {
     if (follow && activeRef.current) returnToActive();
@@ -127,18 +144,13 @@ export function Transcript({
     };
   });
   const stopFollowing = () => {
+    finishProgrammaticScroll();
     setFollow(false);
     setOutOfView(true);
   };
   const stopFollowingOnScroll = () => {
-    if (!programmed.current) stopFollowing();
-  };
-  const finishProgrammaticScroll = () => {
-    const destination = programmedTarget.current;
-    if (!destination || Math.abs(destination.current() - destination.target) <= 2) {
-      programmed.current = false;
-      programmedTarget.current = undefined;
-    }
+    if (programmed.current) finishProgrammaticScrollAfterIdle();
+    else stopFollowing();
   };
   const stopFollowingOnScrollKey = (event: globalThis.KeyboardEvent) => {
     const target = event.target as HTMLElement | null;
@@ -220,7 +232,8 @@ export function Transcript({
                           ? line.tokens.map((token, index) => {
                               const tokenId = `${id}-${index}`;
                               const showPinyin =
-                                Boolean(token.pinyin) && ((compact && pinyinEnabled) || peekedToken === tokenId);
+                                Boolean(token.pinyin) &&
+                                ((pinyinEnabled && token.showPinyin) || peekedToken === tokenId);
                               const openCharacter = (event: MouseEvent | KeyboardEvent) => {
                                 event.stopPropagation();
                                 if (event.currentTarget.ownerDocument.getSelection?.()?.toString()) return;
@@ -234,6 +247,7 @@ export function Transcript({
                                 <span
                                   className="character"
                                   role="button"
+                                  aria-label={token.hanzi}
                                   tabIndex={0}
                                   key={tokenId}
                                   onClick={openCharacter}

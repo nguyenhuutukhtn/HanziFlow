@@ -2,7 +2,7 @@
 
 Read this first in a new session instead of past chat history. Keep it short; update it at the end of every task.
 
-Last updated: 2026-10-28 (WF2-fix: PiP hint dismissal isolated from App settings writes; real-wiring acceptance tests) · branch `task/WF2`
+Last updated: 2026-10-28 (WF3: token ruby pinyin + durable long-scroll follow) · branch `task/WF3`
 
 ## Working rules
 
@@ -13,6 +13,8 @@ Last updated: 2026-10-28 (WF2-fix: PiP hint dismissal isolated from App settings
 - Every task (code or content) logs its token use in [token_log.md](token_log.md); review the log periodically to cut the most expensive steps.
 
 ## Done
+
+- **WF3 (2026-10-28):** the main web transcript now renders facade-approved pinyin as ruby above each token at desktop/mobile sizes while keeping PiP peek and Hanzi/Pinyin-only modes intact. Main and PiP programmatic follow now ends on `scrollend`, an unreachable target, or 250 ms without another scroll event instead of a fixed 1.5 s cutoff; user wheel/touch/key/scrollbar input still opts out immediately. Real lesson-1 `PlayerScreen` coverage and all 51 web tests/build pass. The expanded 4×-CPU live follow script awaits the PM desktop run because Chrome launch is blocked in this sandbox; full check reached the known Gradle wrapper lock after pytest/web passed. User Zorin Chrome check pending.
 
 - **WF2 + WF2-fix (2026-10-28):** production PiP copies readable CSS rules and uses absolute fallback stylesheet URLs; Linux PiP shows a dismissible Always on Top hint whose dedicated storage key survives App theme/view/size writes; progress seeking uses 5-second arrows, 30-second PageUp/PageDown, and readable ARIA time. Real `PlayerScreen`/PiP wiring tests cover CSS, slider keys/ARIA, Linux dismissal/remount/settings regression, and macOS/Android exclusion; 46/46 web tests and build pass. Headed PiP check awaits PM's desktop session; full check reached the known sandbox Gradle wrapper lock after web passed.
 

@@ -96,6 +96,44 @@ try {
     }
     await page.close();
   }
+
+  const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+  page.setDefaultTimeout(10000);
+  await page.route("**/favicon.ico", (route) => route.fulfill({ status: 204 }));
+  const cdp = await page.context().newCDPSession(page);
+  await cdp.send("Emulation.setCPUThrottlingRate", { rate: 4 });
+  await page.goto(url, { waitUntil: "domcontentloaded" });
+  await page.getByText("Đồ ăn mang về của đồng nghiệp", { exact: false }).click();
+  for (const marker of ["Nghe lại", "Kể lại"]) {
+    const pause = page.getByRole("button", { name: "Tạm dừng", exact: true });
+    if (await pause.isVisible().catch(() => false)) await pause.click();
+    await page.getByRole("button", { name: marker, exact: true }).click();
+    let previousSecond = 0;
+    for (const second of [1, 2, 3, 5]) {
+      await page.waitForTimeout((second - previousSecond) * 1000);
+      previousSecond = second;
+      const follow = await page.locator(".transcript-wrap").getAttribute("data-follow");
+      console.log(`${marker} ${second}s follow=${follow}`);
+      if (follow !== "on") throw new Error(`${marker} follow turned ${follow} at ${second}s`);
+    }
+    await page.getByRole("button", { name: "Phát", exact: true }).click();
+    await page.waitForTimeout(20000);
+    const visible = await page.evaluate(() => {
+      const active = document.querySelector(".line.active");
+      const playerBar = document.querySelector(".player-bar");
+      if (!active || !playerBar) return { inside: false, reason: "active line or player bar missing" };
+      const activeRect = active.getBoundingClientRect();
+      const visibleBottom = Math.min(innerHeight, Math.max(0, playerBar.getBoundingClientRect().top));
+      return {
+        inside: activeRect.top >= 0 && activeRect.bottom <= visibleBottom,
+        reason: `line ${activeRect.top.toFixed(0)}..${activeRect.bottom.toFixed(0)}, viewport 0..${visibleBottom.toFixed(0)}`,
+      };
+    });
+    console.log(`${marker} play 20s active ${visible.reason}`);
+    if (!visible.inside)
+      throw new Error(`${marker} active line is outside the visible transcript area: ${visible.reason}`);
+  }
+  await page.close();
   console.log("PiP document unavailable in headless Chrome; PiP scroller offset is covered by W3b.test.tsx");
 } catch (error) {
   console.log(`FAIL follow: ${error instanceof Error ? error.message : String(error)}`);
