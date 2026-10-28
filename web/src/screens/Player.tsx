@@ -22,7 +22,12 @@ export function isPlayerShortcutTarget(event: Pick<KeyboardEvent, "target" | "me
 }
 export function Player(props: Props) {
   return (
-    <PlayerProvider catalog={props.catalog} lessonId={props.lessonId} initialView={props.initialView}>
+    <PlayerProvider
+      key={props.lessonId}
+      catalog={props.catalog}
+      lessonId={props.lessonId}
+      initialView={props.initialView}
+    >
       <PlayerScreen onBack={props.onBack} />
     </PlayerProvider>
   );
@@ -99,7 +104,7 @@ function PlayerScreen({ onBack }: { onBack: () => void }) {
         className="track-switch"
         type="single"
         value={player.track}
-        onValueChange={(value) => value && player.setTrack(value)}
+        onValueChange={(value) => player.setTrack(value)}
       >
         {player.tracks.map((track) => (
           <ToggleGroupItem key={track.name} value={track.name}>
