@@ -48,7 +48,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 ## Python scripts (`scripts/`)
 
 - `build_radicals.py` [62] — Build the radical metadata from a pinned UCD skeleton and authored names.
-- `code_delta.py` [166] — Print a compact, symbol-aware summary of ``base...HEAD``.
+- `code_delta.py` [167] — Print a compact, symbol-aware summary of ``base...HEAD``.
 - `codemap.py` [100] — Regenerate docs/CODEMAP.md: one line per source file, so agents open only what they need.
 - `fake_generate.py` [54] — Run the real `generate` path on lesson files with a fake TTS, in scratch dirs.
 - `llm_compare.py` [250] — Send the same 5 lesson-2 lines to every configured LLM provider and write the answers side by side.

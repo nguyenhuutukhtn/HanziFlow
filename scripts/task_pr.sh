@@ -14,6 +14,17 @@ cd "$root"
     exit 1
 }
 
+# check.sh first: it regenerates docs/CODEMAP.md, which then belongs in the PR.
+check_output_file=$(mktemp)
+if [[ -n ${TASK_PR_CHECK_CMD:-} ]]; then
+    bash -c "$TASK_PR_CHECK_CMD" >"$check_output_file" 2>&1 || true
+else
+    "$root/scripts/check.sh" >"$check_output_file" 2>&1 || true
+fi
+if [[ $(git status --porcelain) == " M docs/CODEMAP.md" ]]; then
+    git commit --quiet -m "$id: regenerate CODEMAP" -- docs/CODEMAP.md
+fi
+
 brief_path="docs/tasks/$id.md"
 brief_commit=$(git log --reverse --format=%H HEAD -- "$brief_path" | head -n 1)
 [[ -n $brief_commit ]] || {
@@ -71,11 +82,7 @@ body_file="build/pr/$id.md"
     echo "## check.sh"
     echo
     echo '```'
-    if [[ -n ${TASK_PR_CHECK_CMD:-} ]]; then
-        bash -c "$TASK_PR_CHECK_CMD" || true
-    else
-        "$root/scripts/check.sh" || true
-    fi
+    cat "$check_output_file"
     echo '```'
 } >"$body_file"
 
