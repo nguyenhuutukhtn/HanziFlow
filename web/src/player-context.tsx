@@ -59,7 +59,9 @@ export function PlayerProvider({
   children: ReactNode;
 }) {
   const audio = useRef<HTMLAudioElement>(null);
+  // `track` is the target the toggle highlights (last requested); `loadedTrack` owns the audio source.
   const [track, setTrack] = useState(() => firstTrack(catalog, lessonId));
+  const [loadedTrack, setLoadedTrack] = useState(track);
   const [session, setSession] = useState<Session>();
   const [timeline, setTimeline] = useState("");
   const [position, setPosition] = useState(0);
@@ -72,10 +74,16 @@ export function PlayerProvider({
     lessonId: string;
     track: string;
     position: number;
+    timeline: string;
     playing: boolean;
     speed: number;
   }>();
   const trackChange = useRef(0);
+  // Synchronous mirrors: a second click can arrive before React re-renders the first one.
+  const targetRef = useRef(track);
+  const loadedRef = useRef(loadedTrack);
+  targetRef.current = track;
+  loadedRef.current = loadedTrack;
   const live = useRef({ playing, speed });
   live.current = { playing, speed };
   useEffect(() => {
@@ -84,10 +92,10 @@ export function PlayerProvider({
   }, [lessonId]);
   useEffect(() => {
     const lesson = catalogLesson(catalog, lessonId);
-    if (!lesson || !lesson.tracks[track]) return;
+    if (!lesson || !lesson.tracks[loadedTrack]) return;
     let stale = false;
     void Promise.all([
-      fetchText(`${lesson.base_url}${lesson.tracks[track].timeline.file}`),
+      fetchText(`${lesson.base_url}${lesson.tracks[loadedTrack].timeline.file}`),
       fetchJson<string | object>(`${lesson.base_url}${lesson.files.reference.file}`),
       lesson.files.characters
         ? fetchJson<string | object>(`${lesson.base_url}${lesson.files.characters.file}`).catch(() => null)
@@ -103,7 +111,7 @@ export function PlayerProvider({
             tl,
             typeof reference === "string" ? reference : JSON.stringify(reference),
             characters ? (typeof characters === "string" ? characters : JSON.stringify(characters)) : null,
-            track,
+            loadedTrack,
           ),
         );
       })
@@ -111,7 +119,7 @@ export function PlayerProvider({
     return () => {
       stale = true;
     };
-  }, [catalog, lessonId, track]);
+  }, [catalog, lessonId, loadedTrack]);
   useEffect(() => {
     if (audio.current) {
       audio.current.playbackRate = speed;
@@ -122,9 +130,20 @@ export function PlayerProvider({
     if (audio.current) audio.current.currentTime = ms / 1000;
     setPosition(ms);
   };
+  // play() rejects when a load/pause interrupts it; that is expected during a track switch.
+  const playSafely = (element: HTMLAudioElement) => {
+    element.play().catch((error: unknown) => {
+      const name = (error as { name?: string } | undefined)?.name;
+      const message = error instanceof Error ? error.message : String(error);
+      if (name === "AbortError" || /interrupted by (a new load|pause)/i.test(message)) return;
+      console.warn("play() failed", error);
+    });
+  };
   const toggle = () => {
     const element = audio.current;
-    if (element) void element[playing ? "pause" : "play"]();
+    if (!element) return;
+    if (playing) element.pause();
+    else playSafely(element);
   };
   const previous = () => {
     const value = session?.previousCueStartMs(position);
@@ -142,40 +161,79 @@ export function PlayerProvider({
   };
   const tracks = session ? (json<Track[]>(session.tracksJson()) ?? []) : [];
   const sections = session ? (json<Section[]>(session.sectionsJson?.() ?? null) ?? []) : [];
-  const changeTrack = (name: string) => {
-    if (name === track || !session) return;
+  const cancelTrackChange = () => {
+    trackChange.current += 1;
     pendingSeek.current = undefined;
+    targetRef.current = loadedRef.current;
+    setTrack(loadedRef.current);
+    setPosition((audio.current?.currentTime ?? 0) * 1000);
+    try {
+      localStorage.setItem(`hanziflow-track:${lessonId}`, loadedRef.current);
+    } catch {
+      // Storage is optional (private browsing and embedded webviews can reject it).
+    }
+  };
+  const changeTrack = (requested: string) => {
+    const name = requested || "";
+    // Radix sends "" when the already-selected item is clicked: cancel a switch that has not loaded yet.
+    if (!name) {
+      if (targetRef.current !== loadedRef.current) cancelTrackChange();
+      return;
+    }
+    if (!session || name === targetRef.current) return;
+    if (name === loadedRef.current) {
+      // Back to the loaded track before the pending switch committed: drop it, the last click wins.
+      if (pendingSeek.current || targetRef.current !== loadedRef.current) cancelTrackChange();
+      return;
+    }
+    const path = session.timelinePath(name);
+    if (!path) return;
+    // A switch while another is pending maps from the pending position on the pending track's timeline,
+    // not from the old element (whose currentTime/timeline may already belong to another source).
+    const pending = pendingSeek.current;
+    const fromTimeline = pending ? pending.timeline : timeline;
+    const fromPosition = pending ? pending.position : (audio.current?.currentTime ?? 0) * 1000;
     const request = ++trackChange.current;
-    const old = timeline;
-    const time = audio.current?.currentTime ?? 0;
-    fetchText(session.timelinePath(name)!).then((text) => {
-      if (request !== trackChange.current) return;
-      const lesson = catalogLesson(catalog, lessonId);
-      const modeTracks = lesson && !lesson.tracks.guided;
-      const nextPosition = modeTracks
-        ? 0
-        : shared()!.com.hanziflow.shared.web.TrackSwitchJs.positionFor(old, text, time * 1000);
-      // Read play state and speed now, not at click time: the user may change them while the timeline loads.
-      pendingSeek.current = { lessonId, track: name, position: nextPosition, ...live.current };
-      setPosition(nextPosition);
-      setTrack(name);
-      try {
-        localStorage.setItem(`hanziflow-track:${lessonId}`, name);
-      } catch {
-        // Storage is optional (private browsing and embedded webviews can reject it).
-      }
-    });
+    // The toggle highlights the target immediately; the source follows once the timeline is mapped.
+    targetRef.current = name;
+    setTrack(name);
+    fetchText(path)
+      .then((text) => {
+        if (request !== trackChange.current) return;
+        const lesson = catalogLesson(catalog, lessonId);
+        const modeTracks = lesson && !lesson.tracks.guided;
+        const nextPosition = modeTracks
+          ? 0
+          : shared()!.com.hanziflow.shared.web.TrackSwitchJs.positionFor(fromTimeline, text, fromPosition);
+        // Read play state and speed now, not at click time: the user may change them while the timeline loads.
+        pendingSeek.current = { lessonId, track: name, position: nextPosition, timeline: text, ...live.current };
+        setPosition(nextPosition);
+        loadedRef.current = name;
+        setLoadedTrack(name);
+        try {
+          localStorage.setItem(`hanziflow-track:${lessonId}`, name);
+        } catch {
+          // Storage is optional (private browsing and embedded webviews can reject it).
+        }
+      })
+      .catch(() => {
+        if (request !== trackChange.current) return;
+        pendingSeek.current = undefined;
+        targetRef.current = loadedRef.current;
+        setTrack(loadedRef.current);
+        setPosition((audio.current?.currentTime ?? 0) * 1000);
+      });
   };
   const mediaReady = (element: HTMLAudioElement) => {
     setDuration(element.duration * 1000);
     const pending = pendingSeek.current;
-    if (!pending || pending.lessonId !== lessonId || pending.track !== track) return;
+    if (!pending || pending.lessonId !== lessonId || pending.track !== loadedTrack) return;
     pendingSeek.current = undefined;
     element.currentTime = pending.position / 1000;
     element.playbackRate = pending.speed;
     element.preservesPitch = true;
     setPosition(pending.position);
-    if (pending.playing) void element.play();
+    if (pending.playing) playSafely(element);
   };
   const value: PlayerState = {
     session,
@@ -218,7 +276,7 @@ export function PlayerProvider({
       {session && (
         <audio
           ref={audio}
-          src={contentUrl(session.audioPath(track)!)}
+          src={contentUrl(session.audioPath(loadedTrack)!)}
           onTimeUpdate={(event) => setPosition(event.currentTarget.currentTime * 1000)}
           onLoadedMetadata={(event) => mediaReady(event.currentTarget)}
           onCanPlay={(event) => mediaReady(event.currentTarget)}

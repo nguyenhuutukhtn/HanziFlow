@@ -17,6 +17,32 @@ const freePort = () =>
 
 let preview;
 let browser;
+// `npm run preview` is only a wrapper: kill the whole detached process group so Vite goes with it.
+const stopPreview = async () => {
+  const pid = preview?.pid;
+  if (!pid) return;
+  try {
+    process.kill(-pid, "SIGTERM");
+  } catch {
+    return; // the group is already gone
+  }
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    await delay(50);
+    try {
+      process.kill(-pid, 0);
+    } catch {
+      return;
+    }
+  }
+  try {
+    process.kill(-pid, "SIGKILL");
+  } catch {}
+};
+process.on("exit", () => {
+  try {
+    if (preview?.pid) process.kill(-preview.pid, "SIGKILL");
+  } catch {}
+});
 try {
   run("npm", ["--prefix", "web", "run", "build"]);
   browser = await chromium.launch({ channel: "chrome" });
@@ -24,7 +50,7 @@ try {
   preview = spawn(
     "npm",
     ["--prefix", "web", "run", "preview", "--", "--host", "127.0.0.1", "--port", String(port), "--strictPort"],
-    { cwd: root, stdio: "ignore" },
+    { cwd: root, stdio: "ignore", detached: true },
   );
   const url = `http://127.0.0.1:${port}`;
   for (let attempt = 0; attempt < 40; attempt += 1) {
@@ -75,5 +101,5 @@ try {
   process.exitCode = 1;
 } finally {
   await browser?.close();
-  preview?.kill();
+  await stopPreview();
 }

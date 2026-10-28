@@ -35,6 +35,7 @@ const Probe = () => {
       <output data-testid="position">{player.position}</output>
       <output data-testid="playing">{String(player.playing)}</output>
       <button onClick={() => player.setTrack("guided_zh")}>Chỉ tiếng Trung</button>
+      <button onClick={() => player.setTrack("guided")}>Học có hướng dẫn</button>
       <button onClick={() => player.setTrack("noi")}>Nói</button>
       <button onClick={() => player.setSpeed(0.8)}>0.8</button>
       <button onClick={player.replay}>Nghe lại câu</button>
@@ -57,13 +58,24 @@ const fakeSession = (lessonId: string) => ({
   lessonTitle: () => lessonId,
 });
 
-const renderPlayer = (catalog: string, lessonId: string, mappedPosition = 422_006) => {
+const timelineText = (url: string, lessonId: string) =>
+  url.includes("guided_zh") ? "guided-zh-timeline" : `${lessonId}-timeline`;
+
+const renderPlayer = (
+  catalog: string,
+  lessonId: string,
+  options: { positions?: number[]; fetch?: (url: string) => Promise<Response> | Response } = {},
+) => {
+  const positions = [...(options.positions ?? [422_006])];
   vi.spyOn(globalThis, "fetch").mockImplementation((input) => {
     const url = String(input);
-    const timeline = url.includes("guided_zh") ? "guided-zh-timeline" : `${lessonId}-timeline`;
-    return Promise.resolve({ text: () => Promise.resolve(timeline), json: () => Promise.resolve({}) } as Response);
+    const response = {
+      text: () => Promise.resolve(timelineText(url, lessonId)),
+      json: () => Promise.resolve({}),
+    } as Response;
+    return Promise.resolve(options.fetch ? options.fetch(url) : response);
   });
-  const positionFor = vi.fn(() => mappedPosition);
+  const positionFor = vi.fn(() => (positions.length > 1 ? positions.shift()! : positions[0]));
   vi.stubGlobal("HanziFlow:shared", {
     com: {
       hanziflow: {
@@ -117,6 +129,95 @@ describe("WF1 track switching and replay", () => {
     expect(audio.playbackRate).toBe(0.8);
     expect(play).toHaveBeenCalled();
     expect(screen.getByTestId("playing")).toHaveTextContent("true");
+  });
+
+  it("maps back through the pending position when the previous switch has not loaded metadata", async () => {
+    const { positionFor } = renderPlayer(catalogLesson1, "lesson_001", { positions: [422_006, 500_658] });
+    await waitFor(() => expect(document.querySelector("audio")).toBeInTheDocument());
+    const audio = document.querySelector("audio") as HTMLAudioElement;
+    audio.currentTime = 500;
+    fireEvent.timeUpdate(audio);
+
+    fireEvent.click(screen.getByRole("button", { name: "Chỉ tiếng Trung" }));
+    await waitFor(() => expect(audio.getAttribute("src")).toMatch(/guided_zh\.mp3$/));
+    audio.currentTime = 0;
+
+    fireEvent.click(screen.getByRole("button", { name: "Học có hướng dẫn" }));
+    await waitFor(() => expect(audio.getAttribute("src")).toMatch(/\/guided\.mp3$/));
+    expect(positionFor).toHaveBeenNthCalledWith(1, "lesson_001-timeline", "guided-zh-timeline", 500_000);
+    expect(positionFor).toHaveBeenNthCalledWith(2, "guided-zh-timeline", "lesson_001-timeline", 422_006);
+
+    audio.currentTime = 0;
+    fireEvent.loadedMetadata(audio);
+
+    expect(audio.currentTime).toBe(500.658);
+    expect(screen.getByTestId("position")).toHaveTextContent("500658");
+  });
+
+  it("cancels a pending switch when the loaded track is selected again", async () => {
+    let release = () => {};
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const { positionFor } = renderPlayer(catalogLesson1, "lesson_001", {
+      fetch: (url) =>
+        url.includes("guided_zh")
+          ? gate.then(
+              () =>
+                ({
+                  text: () => Promise.resolve("guided-zh-timeline"),
+                  json: () => Promise.resolve({}),
+                }) as Response,
+            )
+          : ({
+              text: () => Promise.resolve(timelineText(url, "lesson_001")),
+              json: () => Promise.resolve({}),
+            } as Response),
+    });
+    await waitFor(() => expect(document.querySelector("audio")).toBeInTheDocument());
+    const audio = document.querySelector("audio") as HTMLAudioElement;
+    audio.currentTime = 500;
+    fireEvent.timeUpdate(audio);
+    const source = audio.getAttribute("src");
+
+    fireEvent.click(screen.getByRole("button", { name: "Chỉ tiếng Trung" }));
+    expect(screen.getByTestId("track")).toHaveTextContent("guided_zh");
+    fireEvent.click(screen.getByRole("button", { name: "Học có hướng dẫn" }));
+    release();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(positionFor).not.toHaveBeenCalled();
+    expect(screen.getByTestId("track")).toHaveTextContent("guided");
+    expect(audio.getAttribute("src")).toBe(source);
+    expect(audio.currentTime).toBe(500);
+    expect(screen.getByTestId("position")).toHaveTextContent("500000");
+    expect(localStorage.getItem("hanziflow-track:lesson_001")).toBe("guided");
+  });
+
+  it("catches a play() rejection interrupted by a new load", async () => {
+    const play = vi
+      .spyOn(HTMLMediaElement.prototype, "play")
+      .mockRejectedValue(new DOMException("The play() request was interrupted by a new load request.", "AbortError"));
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    renderPlayer(catalogLesson1, "lesson_001");
+    await waitFor(() => expect(document.querySelector("audio")).toBeInTheDocument());
+    const audio = document.querySelector("audio") as HTMLAudioElement;
+    fireEvent.play(audio);
+    audio.currentTime = 500;
+    fireEvent.timeUpdate(audio);
+
+    fireEvent.click(screen.getByRole("button", { name: "Chỉ tiếng Trung" }));
+    await waitFor(() => expect(audio.getAttribute("src")).toMatch(/guided_zh\.mp3$/));
+    fireEvent.loadedMetadata(audio);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(play).toHaveBeenCalled();
+    expect(warn).not.toHaveBeenCalled();
+
+    play.mockRejectedValue(new Error("boom"));
+    fireEvent.click(screen.getByRole("button", { name: "Học có hướng dẫn" }));
+    await waitFor(() => expect(audio.getAttribute("src")).toMatch(/\/guided\.mp3$/));
+    fireEvent.loadedMetadata(audio);
+    await waitFor(() => expect(warn).toHaveBeenCalledWith("play() failed", expect.any(Error)));
   });
 
   it("keeps a modes_v1 track switch at position zero", async () => {

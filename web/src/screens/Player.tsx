@@ -99,7 +99,7 @@ function PlayerScreen({ onBack }: { onBack: () => void }) {
         className="track-switch"
         type="single"
         value={player.track}
-        onValueChange={(value) => value && player.setTrack(value)}
+        onValueChange={(value) => player.setTrack(value)}
       >
         {player.tracks.map((track) => (
           <ToggleGroupItem key={track.name} value={track.name}>

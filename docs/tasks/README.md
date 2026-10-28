@@ -47,6 +47,7 @@ Then: update STATUS.md + a token_log.md row, report with the AGENTS.md template,
 - **Existing behaviour the brief relies on (M5: "restore the saved track" — HEAD had none, the worker invented a global key):** PM greps HEAD for it before writing; if it does not exist, the brief either specifies it (key, scope) or drops it.
 - **"Use the real fixture" in Acceptance (M5: test used an inline catalog):** Verify greps the test file for the fixture path and for each named expected value (e.g. `noi.mp3`), so a hand-written substitute fails loudly.
 - **Tests near secrets (X1: a test read the real `.env` once keys existed and printed a key fragment):** script tests use `tmp_path` env files and `monkeypatch.delenv` every key name they assert on — the pipeline's `config.py` loads the real `.env` into `os.environ` during a full pytest run.
+- **Live browser scripts (WF1: 13 `vite preview` left running, scripts written in a no-network sandbox never ran):** spawn servers `detached` and kill the process group in `finally`; Acceptance includes `pgrep -af "vite.*preview"` empty after pass and fail. A worker that cannot run the script (sandbox) reports it and the PM runs it before review, never a reviewer first.
 - Device check order for features that need downloaded data: confirm the data is uploaded (`curl` the public URL, HTTP 200) before blaming the app.
 
 ## Agent choice (cheapest that fits)
