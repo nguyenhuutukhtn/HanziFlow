@@ -39,11 +39,11 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `story/parser.py` [143] — Parse a lesson story source (`lessons/src/lesson_XXX.story.md`) into blocks.
 - `story/report.py` [46] — Short build-lesson output: ≤ 20 lines, errors with source line numbers.
 - `story/rows.py` [149] — Export and import row-scoped story-source revisions.
-- `transcript.py` [78] — Learner-facing Markdown transcripts.
+- `transcript.py` [79] — Learner-facing Markdown transcripts.
 - `tts.py` [247] — ElevenLabs TTS adapter and deterministic audio cache.
 - `upload.py` [197] — Upload published lesson packages to Supabase Storage.
 - `upload_storage.py` [199] — HTTP and Storage REST helpers for the lesson uploader.
-- `voice_registry.py` [254] — ElevenLabs voice registry: synced once, cached locally, used for deterministic per-lesson voice selection.
+- `voice_registry.py` [256] — ElevenLabs voice registry: synced once, cached locally, used for deterministic per-lesson voice selection.
 
 ## Python scripts (`scripts/`)
 
@@ -61,7 +61,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `test_bundle.py` [78]
 - `test_characters.py` [127]
 - `test_cli.py` [31]
-- `test_import_modes.py` [48]
+- `test_import_modes.py` [78]
 - `test_ledger.py` [88]
 - `test_lesson_001_story.py` [114]
 - `test_lesson_schema.py` [113]

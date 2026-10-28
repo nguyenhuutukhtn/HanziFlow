@@ -6,6 +6,8 @@ Cost = **quota delta**, not tokens (user, 2026-10-22: subscriptions bill in % of
 
 Older rows (token-based):
 - Claude Code: `/cost` (or `/usage`) at the end of the session; one session per task.
+
+| 2026-10-28 | L3a lesson 3 modes import + dry-run | pipeline-py | Codex GPT-5 | 5h 0→1% · wk 1→1% | ~15 min | 1 | Full check blocked by Gradle sandbox socket permission; pytest and focused acceptance pass | Schema allowlist also needed the two newly requested speakers for dry-run/fake generation | Keep lesson-mode speaker additions synchronized across parser, schema, and transcript labels in the initial brief |
 - Cursor: Settings → Usage for the request range.
 - DeepSeek: platform usage page for the day/time range.
 - If the agent can't see its usage, it writes `?` and the user fills it in.

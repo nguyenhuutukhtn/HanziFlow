@@ -7,9 +7,9 @@ ROOT = Path(__file__).parents[1]
 PYTHON = ROOT / ".venv/bin/python"
 
 
-def run_import() -> None:
+def run_import(lesson_id: str = "002") -> None:
     subprocess.run(
-        [str(PYTHON), "-m", "mandarin_course.cli", "import-modes", "002"],
+        [str(PYTHON), "-m", "mandarin_course.cli", "import-modes", lesson_id],
         cwd=ROOT, env={"PYTHONPATH": "src"}, check=True, capture_output=True, text=True,
     )
 
@@ -46,3 +46,33 @@ def test_import_is_deterministic():
     first = {p.name: p.read_bytes() for p in (ROOT / "lessons").glob("lesson_002_*.json")}
     run_import()
     assert first == {p.name: p.read_bytes() for p in (ROOT / "lessons").glob("lesson_002_*.json")}
+
+
+def test_real_lesson_003_modes_counts_and_acceptance_samples():
+    run_import("003")
+    lessons = {
+        mode: json.loads((ROOT / f"lessons/lesson_003_{mode}.json").read_text())
+        for mode in ("hieu", "tu_vung", "nghe", "phan_xa", "noi")
+    }
+    assert {mode: len(lesson["segments"]) for mode, lesson in lessons.items()} == {
+        "hieu": 161, "tu_vung": 108, "nghe": 119, "phan_xa": 146, "noi": 58
+    }
+    assert sum(1 for s in lessons["tu_vung"]["segments"] if s.get("gap") == "answer") == 16
+    assert sum(1 for s in lessons["phan_xa"]["segments"] if s.get("gap") == "answer") == 48
+    assert sum(1 for s in lessons["noi"]["segments"] if s.get("gap") == "repeat") == 56
+    assert all("gap" not in s for mode in ("hieu", "nghe") for s in lessons[mode]["segments"])
+    assert lessons["hieu"]["segments"][0]["speaker"] == "coach"
+    assert lessons["hieu"]["segments"][0]["language"] == "vi-VN"
+    assert lessons["tu_vung"]["segments"][0]["text"] == "今天我们听几个词。"
+    assert lessons["nghe"]["segments"][0]["text"] == "我们听故事。"
+    assert lessons["phan_xa"]["segments"][0]["text"] == "我来问，你来回答。"
+    assert lessons["noi"]["segments"][0]["text"] == "跟我说。"
+    for lesson in lessons.values():
+        assert lesson["format"] == "modes_v1"
+        assert lesson["voice_genders"] == {"coach_zh": "male", "zhang_jing": "female", "liu_yang": "male"}
+        assert len({s["id"] for s in lesson["segments"]}) == len(lesson["segments"])
+        assert all(s["language"] == "zh-CN" for s in lesson["segments"] if s["speaker"] != "coach")
+    speakers = {s["speaker"] for lesson in lessons.values() for s in lesson["segments"]}
+    assert speakers <= {"coach", "coach_zh", "zhang_jing", "liu_yang"}
+    nghe_speakers = {s["speaker"] for s in lessons["nghe"]["segments"]}
+    assert {"zhang_jing", "liu_yang"} <= nghe_speakers

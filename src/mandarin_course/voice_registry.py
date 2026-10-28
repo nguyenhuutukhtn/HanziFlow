@@ -83,6 +83,8 @@ KNOWN_ROLE_GENDER: dict[str, str] = {
     "li_ming": "male",
     "wang_fang": "female",
     "chen_dong": "male",
+    "zhang_jing": "female",
+    "liu_yang": "male",
 }
 
 

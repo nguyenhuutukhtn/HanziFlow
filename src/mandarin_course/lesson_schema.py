@@ -9,7 +9,7 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 Language = Literal["zh-CN", "en-US", "vi-VN"]
-Speaker = Literal["anna", "li_ming", "wang_fang", "chen_dong", "coach", "coach_zh"]
+Speaker = Literal["anna", "li_ming", "wang_fang", "chen_dong", "zhang_jing", "liu_yang", "coach", "coach_zh"]
 SegmentType = Literal[
     "narration", "dialogue", "pattern", "prompt", "model_answer", "context", "review"
 ]
@@ -59,7 +59,7 @@ class Segment(BaseModel):
     def require_mandarin_learning_fields(self) -> "Segment":
         if self.language == "zh-CN" and (not self.pinyin or not self.translation):
             raise ValueError("Mandarin segments require pinyin and translation")
-        if self.speaker in {"anna", "li_ming", "wang_fang", "chen_dong"} and self.language != "zh-CN":
+        if self.speaker in {"anna", "li_ming", "wang_fang", "chen_dong", "zhang_jing", "liu_yang"} and self.language != "zh-CN":
             raise ValueError("Anna, Li Ming, Wang Fang and Chen Dong must use Mandarin segments")
         if self.speaker == "coach" and self.language not in {"en-US", "vi-VN"}:
             raise ValueError("coach must use an English or Vietnamese segment")
@@ -105,7 +105,7 @@ class Lesson(BaseModel):
             raise ValueError("modes_v1 lessons require a mode variant")
         if self.format == "linear_v1" and self.variant not in {None, "guided", "practice"}:
             raise ValueError("linear_v1 lessons allow only guided or practice variants")
-        speakers = {"anna", "li_ming", "wang_fang", "chen_dong", "coach", "coach_zh"}
+        speakers = {"anna", "li_ming", "wang_fang", "chen_dong", "zhang_jing", "liu_yang", "coach", "coach_zh"}
         if unknown := set(self.voice_genders) - speakers:
             raise ValueError(f"voice_genders has unknown speakers: {sorted(unknown)}")
         return self

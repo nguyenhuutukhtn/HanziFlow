@@ -11,7 +11,7 @@ from .blocks import LINE_PAUSE
 from .metrics import VI_SECONDS_PER_CHAR, ZH_SECONDS_PER_CHAR, _hanzi
 
 MODES = {"Hiểu": "hieu", "Từ vựng": "tu_vung", "Nghe": "nghe", "Phản xạ": "phan_xa", "Nói": "noi"}
-SPEAKERS = {"narrator", "wang_fang", "chen_dong", "coach_vi", "gap"}
+SPEAKERS = {"narrator", "wang_fang", "chen_dong", "zhang_jing", "liu_yang", "coach_vi", "gap"}
 WH_WORDS = "谁哪什么几还是怎么"
 
 

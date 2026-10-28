@@ -10,6 +10,7 @@ from .lesson_schema import Lesson, Segment
 def _entry(segment: Segment, *, show_translation: bool, show_hanzi: bool) -> list[str]:
     labels = {
         "anna": "Anna", "li_ming": "Li Ming", "wang_fang": "Wang Fang", "chen_dong": "Chen Dong",
+        "zhang_jing": "Zhang Jing", "liu_yang": "Liu Yang",
         "coach": "Coach", "coach_zh": "Narrator",
     }
     lines: list[str] = []
