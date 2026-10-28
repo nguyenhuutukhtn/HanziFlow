@@ -73,7 +73,7 @@ worker looping through review → fix → review burns more than a stronger one 
   sol wrote → astra reviews), `agent-codex <ID>-R --sandbox read-only --minutes 10`, verdict in the final message;
   skip this step when Codex 5h usage ≥ 60% (don't wait). (2) **DeepSeek is always the final reviewer**
   (`agent-deepseek`, live tests; proven best on AM2/AM3). (3) PM: `check.sh` once + verdict flags + risk hunks
-  + anything no reviewer could run. Haiku (standing OK) only for PM's own fixes or when both others are unavailable.
+  + anything no reviewer could run. PM's own fixes: Haiku (standing OK) when the fix is checkable by reading (asserts, messages, docs); DeepSeek when it changes runtime behaviour that needs live runs (shell, processes, git, timing — AK-brief: 3 live-found defects in PM's agent-run guard). Haiku also when both others are unavailable.
   Author not Codex (Claude/DeepSeek/Qwen) → Codex sol is the cross-vendor first reviewer, DeepSeek still last.
   **Lesson content:** writer and reviewers always from different vendors (content/workflow.md) — no same-vendor review.
   **Code PM wrote or fixed itself** goes through the same reviewers — never committed on PM's word alone
@@ -158,7 +158,8 @@ Before every launch run `scripts/quota.sh` (one line per provider) and write `Su
 | Work | First choice (model · effort) |
 |---|---|
 | Code review (checkpoint) | Codex other tier · medium, `--sandbox read-only`, fresh session → DeepSeek (`agent-deepseek`) · last |
-| Review of PM's own small fixes, log/diff summary | Haiku subagent · low |
+| Review of PM's own small fixes checkable by reading (asserts, messages, docs), log/diff summary | Haiku subagent · low |
+| Review of PM's own fixes to runtime behaviour (shell, processes, git, timing) | DeepSeek (`agent-deepseek`), live runs |
 | Small fix with tests, Python/pipeline S–M with a scripted Verify | Codex `gpt-5.6-luna` · low |
 | Android timing/state, contract changes, hard algorithms, 2nd fix of the same bug | Codex `gpt-5.6-sol` or `gpt-5.6-terra` · medium — **ask first** (trial: sol 6.1 for 3–5 tasks, compare in token_log) |
 | Escalation after sol failed once, hard design-heavy code | Codex `gpt-6-astra` · medium, `--minutes 20`, only when Codex 5h < 50% — **ask first** |
