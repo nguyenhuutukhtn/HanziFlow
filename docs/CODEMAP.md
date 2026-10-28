@@ -48,11 +48,11 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 ## Python scripts (`scripts/`)
 
 - `build_radicals.py` [62] — Build the radical metadata from a pinned UCD skeleton and authored names.
-- `code_delta.py` [167] — Print a compact, symbol-aware summary of ``base...HEAD``.
+- `code_delta.py` [173] — Print a compact, symbol-aware summary of ``base...HEAD``.
 - `codemap.py` [100] — Regenerate docs/CODEMAP.md: one line per source file, so agents open only what they need.
 - `fake_generate.py` [54] — Run the real `generate` path on lesson files with a fake TTS, in scratch dirs.
 - `llm_compare.py` [250] — Send the same 5 lesson-2 lines to every configured LLM provider and write the answers side by side.
-- `pr_review.py` [94] — Post one GitHub review, demoting out-of-diff findings to its body.
+- `pr_review.py` [104] — Post one GitHub review, demoting out-of-diff findings to its body.
 
 ## Python tests (`tests/`)
 
@@ -78,7 +78,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `test_storage.py` [12]
 - `test_story_builder.py` [78]
 - `test_stroke_pack.py` [27]
-- `test_task_scripts.py` [256]
+- `test_task_scripts.py` [448] ⚠
 - `test_transcript.py` [45]
 - `test_tts.py` [136]
 - `test_upload.py` [298] — Upload tests use httpx.MockTransport: no network, no real Supabase project.
