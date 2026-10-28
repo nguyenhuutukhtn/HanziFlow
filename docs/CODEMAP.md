@@ -35,7 +35,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `story/bundle.py` [213] — Export/import lesson story-source bundles (docs/workflow.md "Content loop").
 - `story/ledger.py` [163] — Lesson ledger: what lessons before N taught (words, characters, patterns, premise, bible).
 - `story/metrics.py` [139] — Advisory lesson metrics for the authoring loop.
-- `story/modes.py` [139] — Import the five lesson-2 listening/speaking modes.
+- `story/modes.py` [139] — Import the five listening/speaking modes of a `modes_v1` lesson (lesson 2 onward).
 - `story/parser.py` [143] — Parse a lesson story source (`lessons/src/lesson_XXX.story.md`) into blocks.
 - `story/report.py` [46] — Short build-lesson output: ≤ 20 lines, errors with source line numbers.
 - `story/rows.py` [149] — Export and import row-scoped story-source revisions.
@@ -48,9 +48,11 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 ## Python scripts (`scripts/`)
 
 - `build_radicals.py` [62] — Build the radical metadata from a pinned UCD skeleton and authored names.
+- `code_delta.py` [166] — Print a compact, symbol-aware summary of ``base...HEAD``.
 - `codemap.py` [100] — Regenerate docs/CODEMAP.md: one line per source file, so agents open only what they need.
 - `fake_generate.py` [54] — Run the real `generate` path on lesson files with a fake TTS, in scratch dirs.
 - `llm_compare.py` [250] — Send the same 5 lesson-2 lines to every configured LLM provider and write the answers side by side.
+- `pr_review.py` [94] — Post one GitHub review, demoting out-of-diff findings to its body.
 
 ## Python tests (`tests/`)
 
@@ -61,7 +63,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `test_bundle.py` [78]
 - `test_characters.py` [127]
 - `test_cli.py` [31]
-- `test_import_modes.py` [78]
+- `test_import_modes.py` [81]
 - `test_ledger.py` [88]
 - `test_lesson_001_story.py` [114]
 - `test_lesson_schema.py` [113]
@@ -76,6 +78,7 @@ Lesson content and generated data (lessons/*.json, publish/, cache/, output/) ar
 - `test_storage.py` [12]
 - `test_story_builder.py` [78]
 - `test_stroke_pack.py` [27]
+- `test_task_scripts.py` [256]
 - `test_transcript.py` [45]
 - `test_tts.py` [136]
 - `test_upload.py` [298] — Upload tests use httpx.MockTransport: no network, no real Supabase project.
