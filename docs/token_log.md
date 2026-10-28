@@ -7,6 +7,9 @@ Cost = **quota delta**, not tokens (user, 2026-10-22: subscriptions bill in % of
 Older rows (token-based):
 - Claude Code: `/cost` (or `/usage`) at the end of the session; one session per task.
 
+| 2026-10-28 | T-PR task branch + PR review flow | tooling | Codex | 5h 2→15% · wk 2→4% | ~75 min | 1 | Full check intentionally skipped by fix brief | Temp-git lifecycle tests and the stateful fake-gh PR flow; macOS sed exposed invalid multibyte title bytes | Keep task scripts covered by isolated fixtures and parse Unicode headings without locale-sensitive sed |
+| 2026-10-28 | T-PR-fix2 DeepSeek review fixes | tooling | Codex | 5h 19%→reset→7% · wk 4%→reset→1% | ~10 min | 1 | Full check intentionally skipped by fix2 brief | Expanding temp-repo fixtures across branch/PR safety and adversarial diff parsing | Keep safety invariants as isolated regression tests; validate immutable inputs before checks or commits |
+
 | 2026-10-28 | L3a lesson 3 modes import + dry-run | pipeline-py | Codex GPT-5 | 5h 0→1% · wk 1→1% | ~15 min | 1 | Full check blocked by Gradle sandbox socket permission; pytest and focused acceptance pass | Schema allowlist also needed the two newly requested speakers for dry-run/fake generation | Keep lesson-mode speaker additions synchronized across parser, schema, and transcript labels in the initial brief |
 - Cursor: Settings → Usage for the request range.
 - DeepSeek: platform usage page for the day/time range.

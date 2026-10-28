@@ -33,3 +33,10 @@ Compare AIs by logging each lesson-writing run in [token_log.md](token_log.md) (
 - **T1** — `justfile` (check, app, lesson, approve-screens) and short-by-default CLI output with `--json` and log files.
 - **T2** — compact lesson story source + one generic builder (replacing per-lesson Python builder scripts) + `export-lesson` / `import-lesson` bundles + condensed authoring checklist. Before writing lesson 2.
 - **T3** — in-app "Báo lỗi câu này" (debug build) → feedback TSV → mapped back to story-source lines in the next export.
+
+## Code-task PR flow
+
+`task-start ID` creates the clean task branch and brief commit.
+The worker leaves changes uncommitted; PM verifies and commits the brief's `Owns:` paths, then runs `task-pr ID`.
+Reviewers submit findings with `pr_review`; the user merges the PR on github.com.
+PM then runs `task-done ID` to clean up the merged local branch.

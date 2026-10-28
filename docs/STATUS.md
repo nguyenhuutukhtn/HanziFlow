@@ -2,7 +2,7 @@
 
 Read this first in a new session instead of past chat history. Keep it short; update it at the end of every task.
 
-Last updated: 2026-10-24 (B1 verified; device check pending) · branch `main` (app-publish-pipeline merged + deleted 2026-10-23)
+Last updated: 2026-10-28 (T-PR-fix2 complete; 17 focused tests pass, PM verify/commit pending) · branch `task/T-PR`
 
 ## Working rules
 
@@ -13,6 +13,8 @@ Last updated: 2026-10-24 (B1 verified; device check pending) · branch `main` (a
 - Every task (code or content) logs its token use in [token_log.md](token_log.md); review the log periodically to cut the most expensive steps.
 
 ## Done
+
+- **T-PR:** task lifecycle tooling now creates/cleans branches, opens or updates PRs with preserved brief sections, check output and symbol-aware code deltas, and posts one review with valid RIGHT-side inline comments. Fix2 closes all 11 DeepSeek findings: safe merged-branch deletion, finished-PR preflight, prefix headings, binary/non-ASCII/merge-base deltas, robust diff hunks, and URL-only review output. Seventeen isolated temp-repo/fake-GitHub tests pass; no real GitHub calls, commit, push, full check, or device check were run per the brief.
 
 - **L3a:** Lesson 3 `modes_v1` importer supports 张静/刘洋, metadata and five generated tracks meet the required counts/gaps; dry-run cast and fake generation pass. Paid TTS, publish and upload were not run.
 
@@ -97,6 +99,8 @@ Last updated: 2026-10-24 (B1 verified; device check pending) · branch `main` (a
 - **T6b:** Added advisory `lesson-metrics --against` and row-scoped `export-rows`/`import-rows`; repeated story refs now require `ref#n`, with transactional imports through build/validate/audit/dry-run.
 
 ## Next (in order)
+
+- T-PR: PM verifies and commits the owned paths, then runs `task_pr T-PR`; reviewers use `pr_review`, and the user merges on GitHub.
 
 **Wave 6 code done (2026-10-24, PM + Claude Sonnet subagents, Haiku review per task):** B1 `2c79408` (title reset, hanzi always, long-press copy hanzi, Nghe whole-transcript toggle), B2 `8aa77cb` (lesson 2 vocab 88 words, text notes lessons 1+2), B5 `8d9e466` + B5-fix `85c256f` (Từ vựng script, Chinese only, DeepSeek-reviewed), B6 `1172b2c` (5th mode `tu_vung`), B3 `80500e8` (items words, notes.json, LessonNotes, modes reference item_ids; lesson 1 v8 + lesson 2 v3), B4 `8a62fde` (Ghi chú screen). Paid TTS tu_vung done (122 clips, 9.66 min). Uploaded 2026-10-24: lesson 1 v8 + lesson 2 v3 (156 files, verified against the public endpoint; pruned lesson 1 v6 + lesson 2 v1). **Lesson 2 v4 (2026-10-24):** outside reviews (docs/reviews/lesson_002_review_gpt.md, lesson_002_review_qwen.md) applied in `e01f633` (fact table content/lesson_002/09_facts.md, 104 rows fixed); 96 TTS clips regenerated (user-confirmed); published + uploaded v4 (verified, pruned v2). Content workflow now has a fact-table step + dual-vendor review incl. Qwen (`9c249fc`). Open: 89 lesson 2 characters lack Hán-Việt data (workflow step 10 not done) → next wave; user plans Qwen CLI/API integration → pilot Qwen as lesson 3 author (Claude/GPT + DeepSeek review), compare fix rounds vs lesson 2. **Next: user device check** (`just app`): 1) lesson 1 → lesson 2 header shows "你在哪儿？"; 2) lesson 2 picker: 5 cards, "Từ vựng" second, Chinese only, full transcript; 3) Nghe "Hiện transcript" shows hanzi+pinyin until "Ẩn transcript"; 4) long-press a line → "Đã sao chép", pastes hanzi only; 5) Hiểu: tap a word → meaning sheet; 6) "Ghi chú" from player header and picker reads well, audio keeps playing; 7) lesson 1 "Ghi chú": 7 patterns; 8) X3: long-press a Chinese line → Giải thích sheet + follow-up chat. Known: flaky `PlayerModeViewModelTest` (Dispatchers.Main absent) and web smoke follow-cue flake; 5 slightly stiff Từ vựng lines (v38/v39, v52, v59, v96) — regenerate only if heard wrong; **Lesson 3 (2026-10-27, Qwen-author experiment):** topic 午饭点错菜 (lunch delivery, wrong dish), content/lesson_003/ steps 1–11 done (2026-10-28): story v2, five modes in 09_modes.md (canonical; 09_<mode>.md are drafts), Hán-Việt 10_hanzi.md, two final reviews applied; cost in content/lesson_003/log.md (Qwen Lite 93.4→77.4%). **Next: outside native reader for the flagged lines (11_final_review_claude.md list + 着/很/怎/怕), then a code task: convert 09_modes.md → story.md/lesson JSON** (story/modes.py SPEAKERS is still the lesson-2 set: add zhang_jing/liu_yang + per-lesson narrator male), dry-run, user-confirmed paid TTS. Author-model verdict after the outside read. Lessons are independent from lesson 3 (user, 2026-10-27): any order, no cross-lesson vocab checks; content/workflow.md updated (step 0 + Recycle tier dropped).
 

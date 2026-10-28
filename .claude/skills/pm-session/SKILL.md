@@ -119,6 +119,13 @@ looping worker before it eats PM's context. So:
 - **Gradle/Android tasks:** pass `-c 'sandbox_workspace_write.writable_roots=["<home>/.gradle"]'` (see
   below), or the run reports "blocked by Gradle" without compiling (C2). If a task needs approvals the
   sandbox can't grant, say so and let the user run that one in the Codex IDE extension.
+- **Code tasks = branch + PR (user, 2026-10-28; T-PR).** `scripts/task_start.sh <ID>` (branch `task/<ID>` +
+  brief commit) → launch → worker leaves changes **uncommitted** (Codex's sandbox can't write `.git`) → PM runs
+  Verify + `check.sh`, commits the brief's `Owns:` paths → `scripts/task_pr.sh <ID>` (push, PR with Goal/Acceptance,
+  report, code map delta, check.sh) → reviewers write `path:line — text` findings, PM posts them with
+  `scripts/pr_review.py <PR> <file> --reviewer NAME` → PM's verdict comment → **the user reads and merges on
+  github.com** (branch auto-deleted) → `scripts/task_done.sh <ID>`. Next task waits for the merge. Purpose: the
+  user keeps a map of the code (which file/function changed), not line-by-line approval. Content tasks keep the old flow.
 - **PM fixes code itself only under ~10 lines** (a missing import, a wrong map key, an
   `@OptIn`), never a compile-fix loop: that is a worker's job.
 - Read only `build/logs/<ID>.out` / the final message; the log tail only on failure.
