@@ -158,8 +158,9 @@ def main() -> None:
         grouped[area].append(f"{change.status} {display} +{added} −{removed}{suffix}")
     for area in AREAS:
         if grouped[area]:
-            print(f"## {area}")
-            print("\n".join(grouped[area]))
+            print(f"### {area}\n")
+            print("\n".join(f"- {line}" for line in grouped[area]))
+            print()
 
 
 if __name__ == "__main__":

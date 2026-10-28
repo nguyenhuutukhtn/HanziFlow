@@ -32,7 +32,10 @@ done
 if ((${#removed[@]})); then
     git commit --quiet -m "$id: remove brief"
 fi
-git push --quiet -u origin "task/$id"
+if ! push_output="$(git push --quiet -u origin "task/$id" 2>&1)"; then
+    printf '%s\n' "$push_output" >&2
+    exit 1
+fi
 
 section() {
     local name=$1
@@ -52,11 +55,16 @@ body_file="build/pr/$id.md"
     section Acceptance
     echo "## Worker report"
     echo
-    if [[ -f "build/logs/$id.out" ]]; then
-        cat "build/logs/$id.out"
+    report="$(ls -t "build/logs/$id.out" "build/logs/$id"-fix*.out 2>/dev/null | head -1 || true)"
+    if [[ -n "$report" ]]; then
+        echo "From \`$report\` (latest run):"
+        echo
+        cat "$report"
+        echo
     else
         echo "(no report file)"
     fi
+    echo
     echo "## Code map delta"
     echo
     "$root/scripts/code_delta.py" main
