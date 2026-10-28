@@ -2,7 +2,7 @@
 
 Read this first in a new session instead of past chat history. Keep it short; update it at the end of every task.
 
-Last updated: 2026-10-28 (WF1-fix: rapid track switching, cancel, play() rejection and preview-process cleanup verified live) · branch `task/WF1`
+Last updated: 2026-10-28 (WF2-fix: PiP hint dismissal isolated from App settings writes; real-wiring acceptance tests) · branch `task/WF2`
 
 ## Working rules
 
@@ -13,6 +13,8 @@ Last updated: 2026-10-28 (WF1-fix: rapid track switching, cancel, play() rejecti
 - Every task (code or content) logs its token use in [token_log.md](token_log.md); review the log periodically to cut the most expensive steps.
 
 ## Done
+
+- **WF2 + WF2-fix (2026-10-28):** production PiP copies readable CSS rules and uses absolute fallback stylesheet URLs; Linux PiP shows a dismissible Always on Top hint whose dedicated storage key survives App theme/view/size writes; progress seeking uses 5-second arrows, 30-second PageUp/PageDown, and readable ARIA time. Real `PlayerScreen`/PiP wiring tests cover CSS, slider keys/ARIA, Linux dismissal/remount/settings regression, and macOS/Android exclusion; 46/46 web tests and build pass. Headed PiP check awaits PM's desktop session; full check reached the known sandbox Gradle wrapper lock after web passed.
 
 - **WF1 + WF1-fix (2026-10-28):** web lesson-1 track switches now apply the shared mapped position after the new source loads, preserving speed and play state; `modes_v1` switches still reset to zero. Replay uses the transcript's gap-aware last-started cue. WF1-fix adds a target/loaded split so rapid switches map back through the pending position (500 → 500.658), a click on the loaded track cancels a pending switch, and interrupted `play()` rejections are swallowed (other errors warn). All three live scripts spawn Vite detached and kill its process group, so no preview survives pass or fail. Verified: 40/40 web tests (3 new WF1), typecheck/build, track-check 8/8 lines at ±0.3 s, follow-check and smoke pass, no `vite preview` after each; no device check (user).
 - **WR1 (2026-10-28):** live Chrome/Linux review of the web player (production preview, Playwright, 1280×800 + 390×844, headed Document PiP). Found 1 P1 (track switch loses position: 422.006 s mapped vs 0.000 s actual), 4 P2 (default “Hán tự + pinyin” renders no pinyin; auto-follow turns off after long programmatic scrolls; R/“Nghe lại câu” no-ops in cue gaps; PiP’s cloned stylesheet links never load, so its transcript is unstyled/does not follow) and 1 P3 (slider arrow key = 1 ms, raw-ms ARIA value). Full repro/evidence and passed-flow coverage in [reviews/web_review_linux.md](reviews/web_review_linux.md). No code changes; preview server stopped.

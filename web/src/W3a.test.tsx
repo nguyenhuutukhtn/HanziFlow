@@ -1,9 +1,24 @@
 import "@testing-library/jest-dom/vitest";
 import { act, cleanup, render } from "@testing-library/react";
 import { createPortal } from "react-dom";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 import { PipPlayer } from "./pip/PipPlayer";
 import { Transcript } from "./Transcript";
+
+const navigatorDescriptors = new Map<PropertyKey, PropertyDescriptor | undefined>();
+const setNavigatorProperty = (property: PropertyKey, value: unknown) => {
+  if (!navigatorDescriptors.has(property)) {
+    navigatorDescriptors.set(property, Object.getOwnPropertyDescriptor(Navigator.prototype, property));
+  }
+  Object.defineProperty(Navigator.prototype, property, { configurable: true, value });
+};
+const restoreNavigator = () => {
+  navigatorDescriptors.forEach((descriptor, property) => {
+    if (descriptor) Object.defineProperty(Navigator.prototype, property, descriptor);
+    else delete (Navigator.prototype as unknown as Record<PropertyKey, unknown>)[property];
+  });
+  navigatorDescriptors.clear();
+};
 
 const cueIds = ["a", "b", "c"];
 const line = (id: string, view: string) =>
@@ -64,6 +79,10 @@ const renderPip = () => {
 const click = (element: Element) => element.dispatchEvent(new Event("click", { bubbles: true }));
 
 describe("W3a PiP learning transcript", () => {
+  setNavigatorProperty("userAgentData", undefined);
+  setNavigatorProperty("platform", "MacIntel");
+  setNavigatorProperty("userAgent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)");
+
   afterEach(() => {
     cleanup();
     player.position = 700;
@@ -71,6 +90,8 @@ describe("W3a PiP learning transcript", () => {
     player.vietnamese = true;
     vi.clearAllMocks();
   });
+
+  afterAll(restoreNavigator);
 
   it("lists every cue in its scroll container and pins five controls outside it", () => {
     const { pipDocument } = renderPip();
