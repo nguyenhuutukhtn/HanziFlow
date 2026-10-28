@@ -22,7 +22,12 @@ export function isPlayerShortcutTarget(event: Pick<KeyboardEvent, "target" | "me
 }
 export function Player(props: Props) {
   return (
-    <PlayerProvider catalog={props.catalog} lessonId={props.lessonId} initialView={props.initialView}>
+    <PlayerProvider
+      key={props.lessonId}
+      catalog={props.catalog}
+      lessonId={props.lessonId}
+      initialView={props.initialView}
+    >
       <PlayerScreen onBack={props.onBack} />
     </PlayerProvider>
   );

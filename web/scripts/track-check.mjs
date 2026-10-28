@@ -39,6 +39,7 @@ const stopPreview = async () => {
     process.kill(-pid, "SIGKILL");
   } catch {}
 };
+for (const signal of ["SIGINT", "SIGTERM"]) process.on(signal, () => process.exit(130));
 process.on("exit", () => {
   try {
     if (preview?.pid) process.kill(-preview.pid, "SIGKILL");

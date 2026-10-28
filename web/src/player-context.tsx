@@ -84,6 +84,8 @@ export function PlayerProvider({
   const loadedRef = useRef(loadedTrack);
   targetRef.current = track;
   loadedRef.current = loadedTrack;
+  // Timeline text of the loaded source: `timeline` state lags until the new session finishes loading.
+  const loadedTimeline = useRef("");
   const live = useRef({ playing, speed });
   live.current = { playing, speed };
   useEffect(() => {
@@ -103,6 +105,7 @@ export function PlayerProvider({
     ])
       .then(([tl, reference, characters]) => {
         if (stale) return;
+        loadedTimeline.current = tl;
         setTimeline(tl);
         setSession(
           new (shared()!.com.hanziflow.shared.web.LessonSessionJs)(
@@ -191,7 +194,7 @@ export function PlayerProvider({
     // A switch while another is pending maps from the pending position on the pending track's timeline,
     // not from the old element (whose currentTime/timeline may already belong to another source).
     const pending = pendingSeek.current;
-    const fromTimeline = pending ? pending.timeline : timeline;
+    const fromTimeline = pending ? pending.timeline : loadedTimeline.current || timeline;
     const fromPosition = pending ? pending.position : (audio.current?.currentTime ?? 0) * 1000;
     const request = ++trackChange.current;
     // The toggle highlights the target immediately; the source follows once the timeline is mapped.
@@ -209,6 +212,7 @@ export function PlayerProvider({
         pendingSeek.current = { lessonId, track: name, position: nextPosition, timeline: text, ...live.current };
         setPosition(nextPosition);
         loadedRef.current = name;
+        loadedTimeline.current = text;
         setLoadedTrack(name);
         try {
           localStorage.setItem(`hanziflow-track:${lessonId}`, name);
@@ -218,10 +222,10 @@ export function PlayerProvider({
       })
       .catch(() => {
         if (request !== trackChange.current) return;
-        pendingSeek.current = undefined;
+        // Keep a committed-but-unloaded switch's pending seek: only this request failed.
         targetRef.current = loadedRef.current;
         setTrack(loadedRef.current);
-        setPosition((audio.current?.currentTime ?? 0) * 1000);
+        setPosition(pendingSeek.current?.position ?? (audio.current?.currentTime ?? 0) * 1000);
       });
   };
   const mediaReady = (element: HTMLAudioElement) => {
