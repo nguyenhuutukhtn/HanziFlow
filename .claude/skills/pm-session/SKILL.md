@@ -53,17 +53,17 @@ report.
    - Check against the spec section the brief named: contract consistency across files, safety (deletes, paid TTS, secrets), and whether STATUS/token_log were updated.
    - Verdict: **commit** (stage the exact paths, commit only when the user says so; the same commit `git rm`s the task's brief and `-fix` brief, and the WAVE file when the wave closes, after moving pending device checks into STATUS) or **fix**. A fix goes into a `docs/tasks/<ID>-fix.md` brief. Fix it yourself only if it's under ~10 lines and cheaper than a brief.
 3. **Device check per brief:** set `Device check: user` unless an objective number only a device can give is the acceptance (e.g. a logcat timing); then `agent (<one scripted command>)`. Listening, looks and feel are always the user's.
-4. **Next wave:** plan 3–6 tasks from STATUS "Next" as one wave (see "Waves"), write or refresh each `docs/tasks/<ID>.md` with the template in `docs/tasks/README.md` (follow its "Writing Acceptance + Verify": concrete expected values, a script that fails on mismatch), and name the cheapest agent that fits. Before writing the launch prompt, decide **continue vs fresh** (below), then hand the user the matching prompt.
+4. **Next wave:** plan 3–6 tasks from STATUS "Next" as one wave (see "Waves"), write or refresh each `docs/tasks/<ID>.md` with the template in `docs/tasks/README.md` (follow its "Writing Acceptance + Verify": concrete expected values, a script that fails on mismatch), and name the cheapest agent that fits. Decide **continue vs fresh** (below), propose the launch in one line, and on the user's OK launch it yourself via agent-kit.
 5. **Features/improvements:** ask the fewest questions that change the design, record decisions in STATUS "Open decisions" or the relevant architecture file, then write briefs.
 
 ## Waves (user, 2026-10-22 — replaces "PM reviews each task")
 
 Per-task PM review cost more in total than it saved: PM re-orients for every task, and a cheap
 worker looping through review → fix → review burns more than a stronger one finishing once.
-- **PM plans, the user runs.** PM writes a wave of 3–6 briefs plus `docs/tasks/WAVE-<n>.md`: order,
+- **PM plans and launches** (see "Who runs the worker"). PM writes a wave of 3–6 briefs plus `docs/tasks/WAVE-<n>.md`: order,
   `Owns:` / `Depends on:` per task, suggested agent, and the **review checkpoints**.
 - **Still one agent at a time** (user: easier to monitor, and the quota delta per task stays exact).
-  The user resets the agent between tasks and calls PM only at a checkpoint.
+  Each task is a fresh agent-kit run unless "continue" applies (then resume its session).
 - **Self-verify gate:** the worker runs its brief's Verify and fixes failures in its own window
   before reporting. It updates STATUS/token_log as usual, including its quota delta (see token_log).
 - **Checkpoints:** at the end of the wave, and **immediately after** any task that changes a contract
@@ -86,41 +86,42 @@ worker looping through review → fix → review burns more than a stronger one 
 
 ## Continue the old agent window vs start a fresh agent
 
-An agent that just finished a task still holds the files, tests and fixtures it read. Re-reading them in a new window often costs more than the extra history the old window carries. Decide for every fix brief and every next task, and **say the choice explicitly to the user** ("chat tiếp cửa sổ agent cũ" or "mở agent mới").
+An agent that just finished a task still holds the files, tests and fixtures it read. Re-reading them in a new window often costs more than the extra history the old window carries. Decide for every fix brief and every next task, and **say the choice explicitly to the user** ("resume session agent cũ" or "chạy agent mới").
 
 **Continue the old window** when all of these hold:
 - the work touches mostly the same files/area the agent just worked in (a `-fix` for its own task almost always does);
 - most of that agent's context is still useful for the new work (files, tests, decisions it will need again), not dead weight (long logs, old diffs, failed attempts);
-- that context is under a soft ceiling of ~150–200k (quality, not window size: long stale context makes agents mix up old and new decisions); ask the user if unsure, their tool shows it;
+- that context is under a soft ceiling of ~150–200k (quality, not window size: long stale context makes agents mix up old and new decisions); check the run's log/session size if unsure;
 - the same agent/model is a fit for the work.
 
 Why the ratio matters, not the size: every tool call re-sends the whole context (cached at ~10% of input price), and a task makes 30–80 calls. A fresh agent re-reads what it needs, and that also stays in context, so the real extra cost of continuing is only the *unused* part of the old context × calls. Mostly-useful 150k → continue; mostly-dead 40k → fresh.
 
 **Start a fresh agent** when the work is in a different area, most of the old context is dead weight, the old window was compacted, a cheaper/different agent fits better, or the old agent went wrong in a way its context would keep repeating.
 
-Prompts:
+Prompts (PM passes them to `agent-codex`/`agent-deepseek`; continue = resume that run's session, see `agent-orchestration`):
 - Fresh: `Read AGENTS.md and docs/tasks/<ID>.md, do the task.`
 - Continue (no AGENTS.md re-read, no re-explaining what it already knows): `Next: docs/tasks/<ID>.md. You already know <files/area>; read only the brief and anything new it names. Report with the same template.` For a fix, list the review findings in 1–3 lines in the prompt itself, and point to the `-fix` brief only if one was written.
 
 Note it in the brief's header too (`Suggested agent: continue <prev task> window` or a named agent), so the choice survives a PM reset.
 
-## Who runs the worker (user, 2026-10-21 — PM is back to brief + review)
+## Who runs the worker (user, 2026-10-28 — PM launches; replaces the 2026-10-21 "user runs it" rule)
 
-- **The user runs every real task**, in the Codex IDE extension (it is interactive, so Gradle
-  and anything else needing network or `~/.gradle` just asks for approval and works — the
-  reason both `codex exec` attempts at C2 reported "blocked by Gradle" and never compiled).
-  PM writes the brief, hands over one paste-ready prompt, then only reads the report, runs
-  `scripts/check.sh` and reviews.
-- **PM may run, after asking:** `task-review` and other mechanical, Gradle-free work on
-  deepcode or a Haiku subagent. PM proposes it in one line (task, tool, why) and waits for the
-  user's OK — cheap tools no longer mean "launch without asking" (user, 2026-10-21).
+Since AM1–AM3 (2026-10-27) agent-kit closed the two reasons the user used to run workers by hand:
+the extension's tab shows each run live (no blind PM), and the wall-clock cap + loop watchdog stop a
+looping worker before it eats PM's context. So:
+- **PM launches every worker itself** via agent-kit (`agent-codex` / `agent-deepseek` / `agent-qwen`,
+  `run_in_background`), arms the Monitor on `build/logs/<ID>.pm` + `.ask`, answers questions, and
+  reviews when the exit notification arrives. Mechanics and intervention ladder: skill `agent-orchestration`.
+  **Never hand the user a paste-ready prompt** unless they ask for one or agent-kit is broken.
+- **Before launching:** one line to the user — task, agent/model/effort, why, `scripts/quota.sh` — and
+  launch on their OK (the "Nothing launches without the user's OK" rule still holds). The user watches
+  the tab and talks to PM through its "Nhắn PM" box.
+- **Gradle/Android tasks:** pass `-c 'sandbox_workspace_write.writable_roots=["<home>/.gradle"]'` (see
+  below), or the run reports "blocked by Gradle" without compiling (C2). If a task needs approvals the
+  sandbox can't grant, say so and let the user run that one in the Codex IDE extension.
 - **PM fixes code itself only under ~10 lines** (a missing import, a wrong map key, an
-  `@OptIn`), never a compile-fix loop: that is a worker's job, in the user's window.
-- Launching anything from PM goes through agent-kit (`agent-codex` / `agent-deepseek` / `agent-qwen`,
-  all on `agent-run`: wall-clock cap + loop watchdog + run registry that auto-opens a monitor tab in
-  VSCode/Cursor). Mechanics, Monitor command and intervention ladder: skill `agent-orchestration`.
-  Reason: a worker PM launched sends every one of its loops through PM's own context, and PM
-  is blind while it runs (it is only woken when the command exits).
+  `@OptIn`), never a compile-fix loop: that is a worker's job.
+- Read only `build/logs/<ID>.out` / the final message; the log tail only on failure.
 
 ## Callback channel and worker commands → skill `agent-orchestration` (agent-kit, user-level)
 
