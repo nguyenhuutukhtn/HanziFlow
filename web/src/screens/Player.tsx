@@ -36,7 +36,7 @@ function clock(ms: number) {
   const seconds = Math.max(0, Math.floor(ms / 1000));
   return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
 }
-function PlayerScreen({ onBack }: { onBack: () => void }) {
+export function PlayerScreen({ onBack }: { onBack: () => void }) {
   const player = usePlayer();
   const [char, setChar] = useState<string>();
   const [compact, setCompact] = useState(() => window.innerWidth <= 720);
@@ -49,10 +49,24 @@ function PlayerScreen({ onBack }: { onBack: () => void }) {
     ).documentPictureInPicture;
     if (!api) return;
     const win = await api.requestWindow({ width: 360, height: 200 });
-    // The PiP document starts empty: give it the app's stylesheets (Vite <style> in dev, <link> in build).
-    document
-      .querySelectorAll('style, link[rel="stylesheet"]')
-      .forEach((node) => win.document.head.append(node.cloneNode(true)));
+    // The PiP document starts empty. CSS links resolve against about:blank there, so copy
+    // readable CSSOM rules into styles and use an absolute URL only for unreadable sheets.
+    document.querySelectorAll("style").forEach((node) => win.document.head.append(node.cloneNode(true)));
+    Array.from(document.styleSheets).forEach((sheet: CSSStyleSheet) => {
+      if (sheet.ownerNode?.nodeName === "STYLE") return;
+      try {
+        const css = Array.from(sheet.cssRules, (rule: CSSRule) => rule.cssText).join("\n");
+        const style = win.document.createElement("style");
+        style.textContent = css;
+        win.document.head.append(style);
+      } catch {
+        if (!sheet.href) return;
+        const link = win.document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = new URL(sheet.href, document.baseURI).href;
+        win.document.head.append(link);
+      }
+    });
     win.addEventListener("pagehide", () => setPip(undefined), { once: true });
     setPip(win);
   };
@@ -178,7 +192,18 @@ function PlayerScreen({ onBack }: { onBack: () => void }) {
               aria-label="Thanh tiến trình"
               min={0}
               max={Math.max(player.duration, 1)}
+              step={5000}
+              aria-valuetext={`${clock(player.position)} / ${clock(player.duration)}`}
               value={[Math.min(player.position, player.duration || player.position)]}
+              onKeyDown={(event) => {
+                if (event.key === "PageUp") {
+                  event.preventDefault();
+                  player.seek(Math.min(player.duration, player.position + 30000));
+                } else if (event.key === "PageDown") {
+                  event.preventDefault();
+                  player.seek(Math.max(0, Math.min(player.duration, player.position) - 30000));
+                }
+              }}
               onValueChange={([value]) => player.seek(value)}
             />
             {player.sections.map((section) => (

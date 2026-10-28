@@ -605,6 +605,21 @@ select:focus-visible,
   background: var(--accent);
   color: var(--color-content-on-accent);
 }
+.pip-top-hint {
+  flex: none;
+  margin-top: var(--space-2);
+  padding: var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--surface-soft);
+  font-size: var(--text-secondary);
+}
+.pip-top-hint p {
+  margin: 0 0 var(--space-2);
+}
+.pip-top-hint p:last-of-type {
+  margin-bottom: var(--space-2);
+}
 .compact-transcript .transcript {
   grid-template-columns: minmax(0, 1fr);
   gap: var(--space-1);

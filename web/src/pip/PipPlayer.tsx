@@ -6,11 +6,20 @@ import { PortalContainerProvider } from "../components/ui/portal-container";
 import { usePlayer } from "../player-context";
 import { isPlayerShortcutTarget } from "../screens/Player";
 import type { ViewMode } from "../settings";
+import { readPipAlwaysOnTopHintDismissed, writePipAlwaysOnTopHintDismissed } from "../settings";
 import { Transcript } from "../Transcript";
+
+export function isLinuxPlatform() {
+  const nav = navigator as Navigator & { userAgentData?: { platform?: string } };
+  const platform = nav.userAgentData?.platform || nav.platform || nav.userAgent;
+  return /linux/i.test(platform) && !/android/i.test(`${platform} ${nav.userAgent}`);
+}
 
 export function PipPlayer({ win }: { win: Window }) {
   const player = usePlayer();
   const [char, setChar] = useState<string>();
+  const linux = isLinuxPlatform();
+  const [hintOpen, setHintOpen] = useState(() => linux && !readPipAlwaysOnTopHintDismissed());
   const pinyinOn = player.view === "HANZI_WITH_PINYIN";
   useEffect(() => {
     const key = (event: KeyboardEvent) => {
@@ -78,7 +87,34 @@ export function PipPlayer({ win }: { win: Window }) {
           >
             拼
           </Button>
+          {linux && (
+            <Button
+              aria-label="Giữ cửa sổ trên cùng"
+              aria-expanded={hintOpen}
+              onClick={() => setHintOpen((open) => !open)}
+            >
+              📌
+            </Button>
+          )}
         </div>
+        {linux && hintOpen && (
+          <div className="pip-top-hint" role="status">
+            <p>
+              Chuột phải lên thanh tiêu đề cửa sổ này → <strong>Always on Top</strong> (Luôn ở trên cùng).
+            </p>
+            <p>
+              Tự động mỗi lần: chạy Chrome với <code>--ozone-platform=x11</code>.
+            </p>
+            <Button
+              onClick={() => {
+                writePipAlwaysOnTopHintDismissed(true);
+                setHintOpen(false);
+              }}
+            >
+              Đã hiểu
+            </Button>
+          </div>
+        )}
         {char && player.session && (
           <CharacterCard
             session={player.session}

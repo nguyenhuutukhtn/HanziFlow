@@ -1,8 +1,23 @@
 import "@testing-library/jest-dom/vitest";
 import { cleanup, render } from "@testing-library/react";
 import { createPortal } from "react-dom";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 import { PipPlayer } from "./pip/PipPlayer";
+
+const navigatorDescriptors = new Map<PropertyKey, PropertyDescriptor | undefined>();
+const setNavigatorProperty = (property: PropertyKey, value: unknown) => {
+  if (!navigatorDescriptors.has(property)) {
+    navigatorDescriptors.set(property, Object.getOwnPropertyDescriptor(Navigator.prototype, property));
+  }
+  Object.defineProperty(Navigator.prototype, property, { configurable: true, value });
+};
+const restoreNavigator = () => {
+  navigatorDescriptors.forEach((descriptor, property) => {
+    if (descriptor) Object.defineProperty(Navigator.prototype, property, descriptor);
+    else delete (Navigator.prototype as unknown as Record<PropertyKey, unknown>)[property];
+  });
+  navigatorDescriptors.clear();
+};
 
 const player = {
   session: {
@@ -49,11 +64,17 @@ const renderPip = () => {
 };
 
 describe("W2d PiP acceptance", () => {
+  setNavigatorProperty("userAgentData", undefined);
+  setNavigatorProperty("platform", "MacIntel");
+  setNavigatorProperty("userAgent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)");
+
   afterEach(() => {
     cleanup();
     document.documentElement.className = "";
     vi.clearAllMocks();
   });
+
+  afterAll(restoreNavigator);
 
   it("keeps all controls outside the scrolling transcript and shows the paused gap state", () => {
     const pipDocument = renderPip();

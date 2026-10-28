@@ -70,7 +70,7 @@ worker looping through review → fix → review burns more than a stronger one 
   or schema, or that a later task builds on (S1's contract error sank S2: never batch past one).
 - **Checkpoint review = reviewers first, PM last (user, 2026-10-23: "PM tự tin quá"; order user 2026-10-27).**
   **Code:** (1) Codex review in a **fresh session, a different tier from the author** (luna wrote → sol reviews;
-  sol wrote → astra reviews), `agent-codex <ID>-R --sandbox read-only --minutes 10`, verdict in the final message;
+  sol wrote → astra reviews), `agent-codex <ID>-R --sandbox read-only --minutes 10`, verdict in the final message (`agent-task pr` deletes the briefs from the branch: the review prompt names them as `git show main:docs/tasks/<ID>.md` / `git show <task commit>:docs/tasks/<ID>-fix.md`; WF2-R reported them "missing");
   skip this step when Codex 5h usage ≥ 60% (don't wait). (2) **DeepSeek is always the final reviewer**
   (`agent-deepseek`, live tests; proven best on AM2/AM3). (3) PM: `check.sh` once + verdict flags + risk hunks
   + anything no reviewer could run. PM's own fixes: Haiku (standing OK) when the fix is checkable by reading (asserts, messages, docs); DeepSeek when it changes runtime behaviour that needs live runs (shell, processes, git, timing — AK-brief: 3 live-found defects in PM's agent-run guard). Haiku also when both others are unavailable.

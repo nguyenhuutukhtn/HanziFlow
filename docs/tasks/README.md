@@ -35,6 +35,7 @@ Then: update STATUS.md + a token_log.md row, report with the AGENTS.md template,
 ## Writing Acceptance + Verify
 
 - Check **content, not only counts**: name concrete expected values (`听 = tīng, hsk 1`, `走 = tẩu`), not just "≥ 95% non-empty". Coverage passed on data that was wrong (C1-fix: 听 = "smile").
+- Acceptance tests render the real owner of the behaviour (the screen/PiP that wires it), not a primitive with hand-passed props or a helper in isolation (WF2: a bare `<Slider step={5000}>` test passed while PageUp and the PiP hint had no test). Headed scripts a sandboxed worker cannot run name the exact browser API in the brief (WF2: `documentPictureInPicture.getWindow()` does not exist).
 - Tests named in Acceptance are part of the deliverable, not polish (W2b: UI done, 0 of 5 tests → fix round). Workers write them before styling details; briefs for UI tasks say "write the Acceptance tests first". Don't ask jsdom to prove CSS layout (media queries, visibility): W2b's 390px test could only check that classes exist — leave layout to the user's visual check.
 - Verify is a script that prints those values and exits non-zero on mismatch, so the PM re-runs it instead of reading code.
 - Data tasks: sample at least 5 specific records spread across the dataset, not only the first entries.
