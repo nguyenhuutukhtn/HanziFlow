@@ -67,6 +67,9 @@ def test_real_lesson_003_modes_counts_and_acceptance_samples():
     assert lessons["nghe"]["segments"][0]["text"] == "我们听故事。"
     assert lessons["phan_xa"]["segments"][0]["text"] == "我来问，你来回答。"
     assert lessons["noi"]["segments"][0]["text"] == "跟我说。"
+    for mode in ("tu_vung", "nghe", "phan_xa", "noi"):
+        assert lessons[mode]["segments"][0]["speaker"] == "coach_zh"
+        assert all(s["language"] == "zh-CN" for s in lessons[mode]["segments"])
     for lesson in lessons.values():
         assert lesson["format"] == "modes_v1"
         assert lesson["voice_genders"] == {"coach_zh": "male", "zhang_jing": "female", "liu_yang": "male"}

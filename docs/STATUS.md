@@ -157,7 +157,7 @@ tap-a-character → card. **Planned as Wave 1: W1a ✅ (shared JS facade) → PM
 1. **G2b** — Learn tab card states + lesson detail, lookup sheet actions (copy word/line, select text, send to), Settings tab (incl. MIUI battery/autostart help).
 2. **G2c** — Review tab + test flow + result; pass-rule change in `kmp/shared` TestSession (passed = no first-try mistakes and no reveal); attempts stored in Room.
 3. **D2** — Android sign-in + progress sync. Starts with a migration fix: lesson_progress merge monotonic in a trigger (status max started<listened<passed, keep earliest passed_at, never downgrade even if the incoming write is newer); drop the update policy on test_attempts (push = insert ignore-duplicates).
-4. Known follow-ups: test question type balancing (C2: cloze dominates); merge multi-character names in tokenizer + vocab (A3: 李明 split into 李/明). `upload` re-uploads an unchanged catalog.json every run (skip when remote sha256 matches). Split `publish.py` (714) / `upload.py` (406) before extending them again.
+4. Known follow-ups: **before G2c:** `modes_v1` lessons publish `sentences: []` (`publish_modes.py:155`), so the test generator gets no sentences for lessons 2–3; and the linear path still hardcodes speakers (`publish_core.py:163` keeps only coach_zh/anna/li_ming, `story/blocks.py:17`) — derive from `lesson_schema.Speaker` (L3a DeepSeek review, 2026-10-28). test question type balancing (C2: cloze dominates); merge multi-character names in tokenizer + vocab (A3: 李明 split into 李/明). `upload` re-uploads an unchanged catalog.json every run (skip when remote sha256 matches). Split `publish.py` (714) / `upload.py` (406) before extending them again.
 
 ## Open decisions (user)
 

@@ -1,4 +1,4 @@
-"""Import the five lesson-2 listening/speaking modes."""
+"""Import the five listening/speaking modes of a `modes_v1` lesson (lesson 2 onward)."""
 
 from __future__ import annotations
 

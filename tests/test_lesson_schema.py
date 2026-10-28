@@ -102,7 +102,7 @@ def test_lesson_format_rejects_wrong_variant(lesson_data, format, variant):
 def test_wang_fang_must_speak_mandarin(lesson_data):
     invalid = deepcopy(lesson_data)
     invalid["segments"][0].update(speaker="wang_fang", language="vi-VN", pinyin=None, translation=None)
-    with pytest.raises(ValidationError, match="Wang Fang"):
+    with pytest.raises(ValidationError, match="Character speakers must use Mandarin"):
         Lesson.model_validate(invalid)
 
 

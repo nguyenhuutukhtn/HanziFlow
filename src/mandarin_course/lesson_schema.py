@@ -60,7 +60,7 @@ class Segment(BaseModel):
         if self.language == "zh-CN" and (not self.pinyin or not self.translation):
             raise ValueError("Mandarin segments require pinyin and translation")
         if self.speaker in {"anna", "li_ming", "wang_fang", "chen_dong", "zhang_jing", "liu_yang"} and self.language != "zh-CN":
-            raise ValueError("Anna, Li Ming, Wang Fang and Chen Dong must use Mandarin segments")
+            raise ValueError("Character speakers must use Mandarin segments")
         if self.speaker == "coach" and self.language not in {"en-US", "vi-VN"}:
             raise ValueError("coach must use an English or Vietnamese segment")
         if self.speaker == "coach_zh" and self.language != "zh-CN":
