@@ -76,6 +76,8 @@ export function PlayerProvider({
     speed: number;
   }>();
   const trackChange = useRef(0);
+  const live = useRef({ playing, speed });
+  live.current = { playing, speed };
   useEffect(() => {
     pendingSeek.current = undefined;
     trackChange.current += 1;
@@ -83,6 +85,7 @@ export function PlayerProvider({
   useEffect(() => {
     const lesson = catalogLesson(catalog, lessonId);
     if (!lesson || !lesson.tracks[track]) return;
+    let stale = false;
     void Promise.all([
       fetchText(`${lesson.base_url}${lesson.tracks[track].timeline.file}`),
       fetchJson<string | object>(`${lesson.base_url}${lesson.files.reference.file}`),
@@ -91,6 +94,7 @@ export function PlayerProvider({
         : null,
     ])
       .then(([tl, reference, characters]) => {
+        if (stale) return;
         setTimeline(tl);
         setSession(
           new (shared()!.com.hanziflow.shared.web.LessonSessionJs)(
@@ -103,7 +107,10 @@ export function PlayerProvider({
           ),
         );
       })
-      .catch(() => setSession(undefined));
+      .catch(() => !stale && setSession(undefined));
+    return () => {
+      stale = true;
+    };
   }, [catalog, lessonId, track]);
   useEffect(() => {
     if (audio.current) {
@@ -148,7 +155,8 @@ export function PlayerProvider({
       const nextPosition = modeTracks
         ? 0
         : shared()!.com.hanziflow.shared.web.TrackSwitchJs.positionFor(old, text, time * 1000);
-      pendingSeek.current = { lessonId, track: name, position: nextPosition, playing, speed };
+      // Read play state and speed now, not at click time: the user may change them while the timeline loads.
+      pendingSeek.current = { lessonId, track: name, position: nextPosition, ...live.current };
       setPosition(nextPosition);
       setTrack(name);
       try {
