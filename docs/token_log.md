@@ -7,6 +7,7 @@ Cost = **quota delta**, not tokens (user, 2026-10-22: subscriptions bill in % of
 Older rows (token-based):
 - Claude Code: `/cost` (or `/usage`) at the end of the session; one session per task.
 
+| 2026-10-28 | WR1 live web review (Chrome/Linux) | web-review | DeepSeek | ds $4.15→4.08 | ~19 min | 0 (review only; no code changed) | none | Production preview + six Playwright walks across two viewports; the PiP page needed 4 runs (DOM geometry, stylesheet state, injected-CSS control) to separate “unstyled” from “follow logic broken” | Add one deterministic PiP CSS/follow check (inline the CSS in the test and assert `float-text` scrolls) before the next web-fix wave; long-smooth-scroll follow needs a CPU-throttle repro in the test suite |
 | 2026-10-28 | T-PR task branch + PR review flow | tooling | Codex | 5h 2→15% · wk 2→4% | ~75 min | 1 | Full check intentionally skipped by fix brief | Temp-git lifecycle tests and the stateful fake-gh PR flow; macOS sed exposed invalid multibyte title bytes | Keep task scripts covered by isolated fixtures and parse Unicode headings without locale-sensitive sed |
 | 2026-10-28 | T-PR-fix2 DeepSeek review fixes | tooling | Codex | 5h 19%→reset→7% · wk 4%→reset→1% | ~10 min | 1 | Full check intentionally skipped by fix2 brief | Expanding temp-repo fixtures across branch/PR safety and adversarial diff parsing | Keep safety invariants as isolated regression tests; validate immutable inputs before checks or commits |
 
