@@ -2,7 +2,7 @@
 
 One file per task: `docs/tasks/<ID>.md`. The PM session writes it; any agent (Codex, DeepSeek, Cursor, Claude) executes it after reading only `AGENTS.md` + the brief + files the brief names. No chat history needed.
 
-Lifecycle: PM starts a clean `task/<ID>` branch; the worker leaves changes uncommitted, then PM verifies and commits the brief's `Owns:` paths before running `task_pr` to open the PR. Reviewers post findings with `pr_review`, the user merges on the web, and PM runs `task_done`. The task commit removes the brief (and its `-fix`/WAVE file once the wave is closed); the summary lives in [STATUS.md](../STATUS.md), and pending user steps move there.
+Lifecycle: PM starts a clean `task/<ID>` branch; the worker leaves changes uncommitted, then PM verifies and commits the brief's `Owns:` paths before running `agent-task pr` to open the PR. Reviewers post findings with `agent-review`, the user merges on the web, and PM runs `agent-task done`. The task commit removes the brief (and its `-fix`/WAVE file once the wave is closed); the summary lives in [STATUS.md](../STATUS.md), and pending user steps move there.
 
 ## Template
 

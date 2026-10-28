@@ -38,5 +38,5 @@ Compare AIs by logging each lesson-writing run in [token_log.md](token_log.md) (
 
 `task-start ID` creates the clean task branch and brief commit.
 The worker leaves changes uncommitted; PM verifies and commits the brief's `Owns:` paths, then runs `task-pr ID`.
-Reviewers submit findings with `pr_review`; the user merges the PR on github.com.
+Reviewers submit findings with `agent-review`; the user merges the PR on github.com.
 PM then runs `task-done ID` to clean up the merged local branch.

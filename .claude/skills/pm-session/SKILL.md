@@ -119,12 +119,12 @@ looping worker before it eats PM's context. So:
 - **Gradle/Android tasks:** pass `-c 'sandbox_workspace_write.writable_roots=["<home>/.gradle"]'` (see
   below), or the run reports "blocked by Gradle" without compiling (C2). If a task needs approvals the
   sandbox can't grant, say so and let the user run that one in the Codex IDE extension.
-- **Code tasks = branch + PR (user, 2026-10-28; T-PR).** `scripts/task_start.sh <ID>` (branch `task/<ID>` +
+- **Code tasks = branch + PR (user, 2026-10-28; T-PR).** `agent-task start <ID>` (branch `task/<ID>` +
   brief commit) → launch → worker leaves changes **uncommitted** (Codex's sandbox can't write `.git`) → PM runs
-  Verify + `check.sh`, commits the brief's `Owns:` paths → `scripts/task_pr.sh <ID>` (push, PR with Goal/Acceptance,
+  Verify + `check.sh`, commits the brief's `Owns:` paths → `agent-task pr <ID>` (push, PR with Goal/Acceptance,
   report, code map delta, check.sh) → reviewers write `path:line — text` findings, PM posts them with
-  `scripts/pr_review.py <PR> <file> --reviewer NAME` → PM's verdict comment → **the user reads and merges on
-  github.com** (branch auto-deleted) → `scripts/task_done.sh <ID>`. Next task waits for the merge. Purpose: the
+  `agent-review <PR> <file> --reviewer NAME` → PM's verdict comment → **the user reads and merges on
+  github.com** (branch auto-deleted) → `agent-task done <ID>`. Next task waits for the merge. Purpose: the
   user keeps a map of the code (which file/function changed), not line-by-line approval. Content tasks keep the old flow.
 - **PM fixes code itself only under ~10 lines** (a missing import, a wrong map key, an
   `@OptIn`), never a compile-fix loop: that is a worker's job.
@@ -176,6 +176,7 @@ Before every launch run `scripts/quota.sh` (one line per provider) and write `Su
 - **Escalate by default, don't retry:** a worker that needs a `-fix` for its own task → the fix goes one tier up, with the previous failure report in the prompt; the user only needs to veto. Never a third attempt on the same tier.
 - **Every `-fix` is a brief bug:** ask what the brief lacked (a concrete expected value, a pattern to copy, a "compiled for real" check) and fix the template in `docs/tasks/README.md`, not just the instance.
 - **Measure:** `docs/token_log.md` rows carry model and fix-rounds, so after ~10 tasks the cheapest total cost per kind of work is visible, not guessed.
+- **5h budget (user, 2026-10-28; the 5h window binds, week rarely does):** launch a Codex run only if `5h used + expected ≤ 80%`, expected from token_log (WAVE-AK1: luna low S ≈ 2–5%, luna M ≈ 13%, sol medium M ≈ 30%, astra review ≈ 17%). Read the reset time from `scripts/quota.sh`; one sol/astra run per window, put it right after a reset, fill the rest with luna/DeepSeek. First code reviewer = luna read-only (other tier, cheap) unless the task is a contract change and the window has room for sol; astra only as escalation.
 - **Quota routing:** Codex 5h > 80% → wait or use DeepSeek; Codex week < 50% used with ≤ 2 days to reset → move DeepSeek work to Codex, and offer (ask) one tier up for pending hard tasks; DeepSeek balance < 1 USD → tell the user.
 - **PM model:** Sonnet for the routine loop (report → Verify → commit → next prompt). Say **"Nên chuyển /model opus"** (after a reset, see below) for feature design, architecture decisions, timing/state/contract risk reviews, the first brief of a new area. On Opus, say when the remaining work is routine and Sonnet is enough.
 - **Switching models costs a full re-read:** caches are per model, so a switch re-processes the whole history uncached. Switch only at session start: write state to disk, reset, open the new session on the new model.
